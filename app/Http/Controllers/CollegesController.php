@@ -7,9 +7,15 @@ use App\College;
 use App\Faculty;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Gate;
 
 class CollegesController extends Controller
 {
+    public function __construct() {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -17,6 +23,10 @@ class CollegesController extends Controller
      */
     public function index()
     {
+        if(!Gate::allows('isDean')) {
+            return abort('401', 'Unauthorized');
+        }
+
         $colleges = College::all();
         return view('colleges.index')->with('colleges', $colleges);
     }

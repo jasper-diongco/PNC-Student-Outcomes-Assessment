@@ -34,11 +34,15 @@
   @include('includes/navbar');
   <div class="wrapper">
   @include('includes/sidebar');
-    <div id="content" class="mt-5 pb-5 mb-5">
+    <div id="content" class="mt-5 pb-5 mb-5 {{ !Auth::check() ? 'active' : '' }}">
            @yield('content')
     </div>
 
   </div>
+
+  <footer class="fixed-bottom" style="background: #e8e8e8;">
+    <small class="d-block text-sm-right mr-3 p-1 text-muted">PNC &copy; 2019 &mdash; Student Outcomes Assessments</small>
+  </footer>
 
 
     
