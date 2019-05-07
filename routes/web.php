@@ -17,7 +17,9 @@ Route::get('/', function () {
 
 
 Route::resource('/colleges', 'CollegesController');
+
 Route::resource('/faculties', 'FacultiesController');
+Route::put('/faculties/{faculty}/update_account', 'FacultiesController@updateAccount');
 
 // Auth::routes(['register' => false]);
 // Authentication Routes...
@@ -29,3 +31,5 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/test', function() {
   return view('layouts.test');
 });
+
+Route::get('/profile/faculty/{id}', 'ProfileController@faculty');

@@ -76,7 +76,7 @@ class FacultiesController extends Controller
             'address' => 'nullable|string|max:255',
             'college_id' => 'required',
             'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|min:6|max:20'
+            'password' => 'required|min:8|max:20'
         ]);
 
         try {
@@ -169,7 +169,7 @@ class FacultiesController extends Controller
             'address' => 'nullable|string|max:255',
             'college_id' => 'required',
             'email' => 'required|email|max:255|unique:users,email,' . $faculty->user_id,
-            'password' => 'required|min:6|max:20'
+            'password' => 'required|min:8|max:20'
         ]);
 
         try {
@@ -230,5 +230,26 @@ class FacultiesController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function updateAccount(Request $request, $id) {
+
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|min:8'
+        ]);
+
+
+        $faculty = Faculty::findOrFail($id);
+
+        $user = $faculty->user;
+
+        $user->email = request('email');
+        $user->password = Hash::make(request('password'));
+
+        $user->update();
+
+        return $user;
+
     }
 }

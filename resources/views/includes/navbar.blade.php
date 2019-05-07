@@ -50,9 +50,14 @@ NAVBAR -->
                     </a>
 
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">
-                           <i class="fa fa-user-circle"></i> My Profile 
-                        </a>
+
+                        @if(Auth::user()->user_type_id == 'dean' || Auth::user()->user_type_id == 'prof')
+                            <a class="dropdown-item" href="{{ url('/profile/faculty/' . Auth::user()->getFaculty()->id ) }}">
+                               <i class="fa fa-user-circle"></i> My Profile 
+                            </a>
+                        @endif
+
+
                         <a class="dropdown-item" href="{{ route('logout') }}"
                            onclick="event.preventDefault();
                                          document.getElementById('logout-form').submit();">
