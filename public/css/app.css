@@ -11226,3 +11226,20 @@ ul ul a {
   border: 1px solid #ced4da;
 }
 
+.avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background: #ededed;
+  width: 32px;
+  height: 32px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.btn-round {
+  border-radius: 20px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
+}
+

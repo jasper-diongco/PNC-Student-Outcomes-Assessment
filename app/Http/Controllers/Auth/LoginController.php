@@ -28,7 +28,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/colleges';
+    //protected $redirectTo = '/colleges';
 
     /**
      * Create a new controller instance.
@@ -38,6 +38,14 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    public function redirectTo() {
+        if(Auth::user()->user_type_id == 'dean') {
+            return url('/colleges/' . Auth::user()->getFaculty()->college_id . '/dashboard');
+        } else if(Auth::user()->user_type_id == 's_admin') {
+            return url('/colleges');
+        }
     }
 
     // protected function loggedOut(Request $request) {

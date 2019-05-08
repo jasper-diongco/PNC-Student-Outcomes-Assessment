@@ -23,7 +23,7 @@ class CollegesController extends Controller
      */
     public function index()
     {
-        if(!Gate::allows('isDean')) {
+        if(!Gate::allows('isSAdmin')) {
             return abort('401', 'Unauthorized');
         }
 
@@ -38,6 +38,10 @@ class CollegesController extends Controller
      */
     public function create()
     {
+        if(!Gate::allows('isSAdmin')) {
+            return abort('401', 'Unauthorized');
+        }
+
         return view('colleges.edit');
     }
 
@@ -49,6 +53,10 @@ class CollegesController extends Controller
      */
     public function store(Request $request)
     {
+        if(!Gate::allows('isSAdmin')) {
+            return abort('401', 'Unauthorized');
+        }
+
         $request->validate([
             'college_code' => 'required|max:10|unique:colleges',
             'name'=> 'required|max:255',
@@ -94,6 +102,10 @@ class CollegesController extends Controller
      */
     public function show($id)
     {
+        if(!Gate::allows('isSAdmin')) {
+            return abort('401', 'Unauthorized');
+        }
+
         $college = College::findOrFail($id);
 
         return view('colleges.show')->with('college', $college);
@@ -107,6 +119,10 @@ class CollegesController extends Controller
      */
     public function edit($id)
     {
+        if(!Gate::allows('isSAdmin')) {
+            return abort('401', 'Unauthorized');
+        }
+
         $college = College::findOrFail($id);
 
         return view('colleges.edit')->with('college', $college);
@@ -121,6 +137,10 @@ class CollegesController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if(!Gate::allows('isSAdmin')) {
+            return abort('401', 'Unauthorized');
+        }
+        
         $request->validate([
             'college_code' => 'required|max:10|unique:colleges,college_code,'. $id,
             'name'=> 'required|max:255',
@@ -168,5 +188,15 @@ class CollegesController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function dashboard($id) {
+        if(Auth::user()->getFaculty()->college_id != $id) {
+            return abort('401', 'Unauthorized');
+        }
+
+        $college = College::findOrFail($id);
+
+        return view('colleges.dashboard')->with('college', $college);
     }
 }

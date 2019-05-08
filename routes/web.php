@@ -12,14 +12,18 @@
 */
 
 Route::get('/', function () {
-    return view('test');
+    return redirect('/login');
 });
 
 
 Route::resource('/colleges', 'CollegesController');
+Route::get('/colleges/{college}/dashboard', 'CollegesController@dashboard');
 
 Route::resource('/faculties', 'FacultiesController');
 Route::put('/faculties/{faculty}/update_account', 'FacultiesController@updateAccount');
+
+Route::resource('/programs', 'ProgramsController');
+Route::post('/programs/check_code', 'ProgramsController@check_code');
 
 // Auth::routes(['register' => false]);
 // Authentication Routes...

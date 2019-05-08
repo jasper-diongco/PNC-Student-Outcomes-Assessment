@@ -9,7 +9,8 @@
   rel="stylesheet">
 
     <!-- Font Awesome JS -->
-    <script
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    {{-- <script
         defer
         src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js"
         integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ"
@@ -20,14 +21,27 @@
         src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js"
         integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY"
         crossorigin="anonymous"
-    ></script>
-    {{-- ion icon --}}
+    ></script> --}}
+
+
+     <!-- ion icon -->
     <link href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
-  
+
+
+    {{-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css"> --}}
+
+
+    <!-- Main style -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+
+    <!-- CSRF TOKEN -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <!-- Media queries -->
+    @auth
+        <link rel="stylesheet" href="{{ asset('css/media_queries.css') }}">
+    @endauth
 
 </head>
 <body>

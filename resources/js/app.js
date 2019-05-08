@@ -21,6 +21,7 @@ window.ApiClient = ApiClient;
 window.myRootURL = "/pnc_soa/public";
 
 Vue.use(VeeValidate);
+window.VeeValidate = VeeValidate;
 
 /**
  * The following block of code may be used to automatically register your

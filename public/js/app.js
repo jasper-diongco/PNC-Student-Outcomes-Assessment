@@ -66666,6 +66666,7 @@ window.Services = _services_Services_js__WEBPACK_IMPORTED_MODULE_4__["default"];
 window.ApiClient = _services_ApiClient_js__WEBPACK_IMPORTED_MODULE_5__["default"];
 window.myRootURL = "/pnc_soa/public";
 Vue.use(vee_validate__WEBPACK_IMPORTED_MODULE_2__["default"]);
+window.VeeValidate = vee_validate__WEBPACK_IMPORTED_MODULE_2__["default"];
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue

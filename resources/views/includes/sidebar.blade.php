@@ -3,9 +3,25 @@
 @else
     <nav id="sidebar" class="{{ !Auth::check() ? 'active' : '' }}">
         <ul class="list-unstyled components">
-            <li>
-                <a href="{{ url('/colleges') }}"><i class="fa fa-university"></i> Colleges</a>
-            </li>
+            {{-- DEAN DASHBOARD --}}
+            @can('isDean')
+                <li>
+                    <a href="{{ url('/colleges/' . Auth::user()->getFaculty()->college_id . '/dashboard') }}"><i class="fa fa-home"></i> Dashboard</a>
+                </li>
+                
+            @endcan
+
+            @if(Gate::check('isDean') || Gate::check('isSAdmin'))
+                <li>
+                    <a href="{{ url('/programs') }}"><i class="fa fa-graduation-cap"></i> Programs</a>
+                </li>
+            @endif
+            
+            @can('isSAdmin')
+                <li>
+                    <a href="{{ url('/colleges') }}"><i class="fa fa-university"></i> Colleges</a>
+                </li>
+            @endcan
             <li>
                 <a href="#userSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-users"></i> Users</a>
                 <ul class="collapse list-unstyled" id="userSubmenu">
