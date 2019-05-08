@@ -25,6 +25,14 @@ Route::put('/faculties/{faculty}/update_account', 'FacultiesController@updateAcc
 Route::resource('/programs', 'ProgramsController');
 Route::post('/programs/check_code', 'ProgramsController@check_code');
 
+
+//Route::resource('/courses', 'CoursesController');
+//Route::get('/courses', 'CoursesController@index');
+//Route::get('/courses/{course}', 'CoursesController@show');
+//Route::post('/courses', 'CoursesController@store');
+//Route::get('/courses/get_courses', 'CoursesController@get_courses');
+Route::resource('/courses', 'CoursesController');
+
 // Auth::routes(['register' => false]);
 // Authentication Routes...
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');

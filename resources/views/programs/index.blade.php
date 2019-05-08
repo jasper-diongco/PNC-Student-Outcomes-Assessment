@@ -10,8 +10,6 @@
     </div>
 
     <div>
-      {{-- <a href="{{ url('programs/create') }}" class="btn btn-success valign-center">Add New Program&nbsp;<i class="fa fa-plus"></i></a> --}}
-      <!-- Button trigger modal -->
       @if(Gate::check('isDean') || Gate::check('isSAdmin'))
         <button v-on:click="getRandColor" type="button" class="btn btn-success btn-success btn-round" data-toggle="modal" data-target="#programModal">
           Add New Program <i class="fa fa-plus"></i>

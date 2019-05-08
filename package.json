@@ -26,6 +26,7 @@
     "dependencies": {
         "sweetalert2": "^8.10.0",
         "vee-validate": "^2.2.6",
+        "vform": "^1.0.0",
         "vue-select": "^3.1.0",
         "vuejs-datepicker": "^1.5.4"
     }

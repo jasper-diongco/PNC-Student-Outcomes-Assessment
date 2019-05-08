@@ -23,6 +23,13 @@ window.myRootURL = "/pnc_soa/public";
 Vue.use(VeeValidate);
 window.VeeValidate = VeeValidate;
 
+// vform
+import { Form, HasError, AlertError } from "vform";
+window.Form = Form;
+Vue.component(HasError.name, HasError);
+Vue.component(AlertError.name, AlertError);
+// end vform
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -38,6 +45,7 @@ Vue.component(
   "example-component",
   require("./components/ExampleComponent.vue").default
 );
+Vue.component("course-modal", require("./components/CourseModal.vue").default);
 
 Vue.component("my-table", require("./components/Table.vue").default);
 
@@ -69,6 +77,14 @@ window.swalError = function() {
     text: "Something went wrong!"
   });
 };
+window.serverError = function() {
+  swal.fire({
+    type: "error",
+    title: "Oops...",
+    text: "Something went wrong! Try refreshing the page."
+  });
+};
+
 window.toast = swal.mixin({
   toast: true,
   position: "top-end",

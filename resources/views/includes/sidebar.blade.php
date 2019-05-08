@@ -15,6 +15,9 @@
                 <li>
                     <a href="{{ url('/programs') }}"><i class="fa fa-graduation-cap"></i> Programs</a>
                 </li>
+                <li>
+                    <a href="{{ url('/courses') }}"><i class="fa fa-book"></i> Courses</a>
+                </li>
             @endif
             
             @can('isSAdmin')
