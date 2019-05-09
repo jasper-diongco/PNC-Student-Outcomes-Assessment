@@ -25,6 +25,8 @@ Route::put('/faculties/{faculty}/update_account', 'FacultiesController@updateAcc
 Route::resource('/programs', 'ProgramsController');
 Route::post('/programs/check_code', 'ProgramsController@check_code');
 
+Route::resource('/curricula', 'CurriculaController');
+
 
 //Route::resource('/courses', 'CoursesController');
 //Route::get('/courses', 'CoursesController@index');

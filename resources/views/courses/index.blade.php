@@ -18,13 +18,11 @@
       @endif
     </div>
   </div>
-
-
   <div class="card">
     <div class="card-body">
-      <div class="row d-flex justify-content-between">
+      <div class="row d-flex justify-content-between mb-3">
         <div class="col-md-4">
-          <div class="input-group mb-3">
+          <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text"><i class="fa fa-search"></i></span>
             </div>
@@ -37,7 +35,7 @@
               <label class="col-form-label"><b>Filter By College: </b></label>
             </div>
             <div class="col-6">
-              <select v-on:change="getCourses" class="form-control" name="filter_by_college" id="filter_by_college" v-model="filter_by_college">
+              <select v-on:change="getCourses" class="form-control mt-3" name="filter_by_college" id="filter_by_college" v-model="filter_by_college">
                 <option value="">All</option>
                 @foreach($colleges as $college)
                   <option value="{{ $college->id }}">{{ $college->college_code }}</option>
@@ -60,55 +58,57 @@
         </div>
         
       </div>
-      <table class="table">
-        <thead class="bg-light">
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Course ID</th>
-            <th scope="col">Course Code</th>
-            <th scope="col">Description</th>
-            <th scope="col">Units</th>
-            <th scope="col">College</th>
-            <th scope="col">Privacy</th>
-            <th scope="col">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <template v-if="tableLoading">
+      <div class="table-responsive">
+        <table class="table">
+          <thead class="bg-light">
             <tr>
-              <td colspan="8"><table-loading></table-loading></td>
+              <th scope="col">#</th>
+              <th scope="col">Course ID</th>
+              <th scope="col">Course Code</th>
+              <th scope="col">Description</th>
+              <th scope="col">Units</th>
+              <th scope="col">College</th>
+              <th scope="col">Privacy</th>
+              <th scope="col">Action</th>
             </tr>
-          </template>
-          <template v-else-if="courses.length <= 0">
-            <tr>
-              <td class="text-center" colspan="8">No Record Found in Database.</td>
-            </tr>
-          </template>
-          <template v-else>
-            <tr v-for="course in courses" :key="course.id">
-              <th><div class="avatar-course" :style="{ 'background': course.color }">@{{ course.course_code }}</div></th>
-              <td>@{{ course.id }}</td>
-              <td>@{{ course.course_code }}</td>
-              <td>@{{ course.description }}</td>
-              <td>@{{ course.lec_unit + course.lab_unit }}</td>
-              <td>@{{ course.college_code}}</td>
-              <td>
-                <span v-if="course.is_public" class="badge badge-success">public <i class="fa fa-globe-americas"></i></span>
-                <span v-else class="badge badge-secondary">private <i class="fa fa-lock"></i></span></td>
+          </thead>
+          <tbody>
+            <template v-if="tableLoading">
+              <tr>
+                <td colspan="8"><table-loading></table-loading></td>
+              </tr>
+            </template>
+            <template v-else-if="courses.length <= 0">
+              <tr>
+                <td class="text-center" colspan="8">No Record Found in Database.</td>
+              </tr>
+            </template>
+            <template v-else>
+              <tr v-for="course in courses" :key="course.id">
+                <th><div class="avatar-course" :style="{ 'background': course.color }">@{{ course.course_code }}</div></th>
+                <td>@{{ course.id }}</td>
+                <td>@{{ course.course_code }}</td>
+                <td>@{{ course.description }}</td>
+                <td>@{{ course.lec_unit + course.lab_unit }}</td>
+                <td>@{{ course.college_code}}</td>
+                <td>
+                  <span v-if="course.is_public" class="badge badge-success">public <i class="fa fa-globe-americas"></i></span>
+                  <span v-else class="badge badge-secondary">private <i class="fa fa-lock"></i></span></td>
 
 
 
-              <td>
-                <a title="View Details" class="btn btn-primary btn-sm" :href=" 'courses/' + course.id">
-                  <i class="fa fa-eye"></i>
-                </a>
-              </td>
-            </tr>
-          </template>
-        </tbody>
-      </table>
+                <td>
+                  <a title="View Details" class="btn btn-primary btn-sm" :href=" 'courses/' + course.id">
+                    <i class="fa fa-eye"></i>
+                  </a>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
       <!-- Pagination -->
-      <div>Showing @{{ courses.length }} records</div>
+      <div>Showing @{{ courses.length }} of {{ $courses_count }} records</div>
       <nav v-show="search.trim() == ''">
         <ul class="pagination justify-content-end">
           <li class="page-item" :class="{ disabled: meta.current_page == 1 }">

@@ -1,7 +1,8 @@
 <!-- Sidebar  -->
 @guest
 @else
-    <nav id="sidebar" class="{{ !Auth::check() ? 'active' : '' }}">
+    {{-- <nav id="sidebar" class="{{ !Auth::check() ? 'active' : '' }}"> --}}
+    <nav id="sidebar" class="active">
         <ul class="list-unstyled components">
             {{-- DEAN DASHBOARD --}}
             @if(Gate::check('isDean') || Gate::check('isProf'))
@@ -17,6 +18,9 @@
                 </li>
                 <li>
                     <a href="{{ url('/courses') }}"><i class="fa fa-book"></i> Courses</a>
+                </li>
+                <li>
+                    <a href="{{ url('/curricula') }}"><i class="fa fa-book-open"></i> Curricula</a>
                 </li>
             @endif
             

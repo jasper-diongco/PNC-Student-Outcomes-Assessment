@@ -91,8 +91,19 @@ class CoursesController extends Controller
             
         }
 
+        $courses_count = 0;
+
+        if(Gate::check('isSAdmin')) {
+            $courses_count = Course::count();
+        } else {
+            $courses_count = Course::where('college_id', Session::get('college_id'))->count();
+        }
+
         $colleges = College::all();
-        return view('courses.index')->with('colleges', $colleges);
+
+        return view('courses.index')
+            ->with('colleges', $colleges)
+            ->with('courses_count', $courses_count);
     }
 
     public function get_courses() {

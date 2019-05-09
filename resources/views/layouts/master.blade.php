@@ -48,8 +48,13 @@
   @include('includes/navbar');
   <div class="wrapper">
   @include('includes/sidebar');
-    <div id="content" class="mt-5 pb-5 mb-5 {{ !Auth::check() ? 'active' : '' }}">
+{{--     <div id="content" class="mt-5 pb-5 mb-5 {{ !Auth::check() ? 'active' : '' }}">
            @yield('content')
+    </div> --}}
+    <div id="content" class="mt-5 pb-5 mb-5 active">
+      <div class="container">
+        @yield('content')
+      </div>
     </div>
 
   </div>

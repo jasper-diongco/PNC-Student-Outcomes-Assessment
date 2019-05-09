@@ -30,28 +30,38 @@
   @endif
   
   <div class="row">
-    @foreach ($programs as $program)
-      <div class="col-md-4 mb-3">
-        <div class="card" style="height: 100%">
-          <div class="card-body">
-            <div class="d-flex align-items-center justify-content-start mb-2">
-              <div class="avatar mr-2" style="background: {{ $program->color  }}">
-                {{ substr($program->program_code, 0 , 2) == 'BS' ? substr($program->program_code, 2) :  $program->program_code }}
+    @if(count($programs) > 0)
+      @foreach ($programs as $program)
+        <div class="col-md-4 mb-3">
+          <div class="card" style="height: 100%">
+            <div class="card-body">
+              <div class="d-flex align-items-center justify-content-start mb-2">
+                <div class="avatar mr-2" style="background: {{ $program->color  }}">
+                  {{ substr($program->program_code, 0 , 2) == 'BS' ? substr($program->program_code, 2) :  $program->program_code }}
+                </div>
+                <div>
+                  <h4 class="card-title my-0">{{ $program->program_code }} </h4>
+                </div>
               </div>
-              <div>
-                <h4 class="card-title my-0">{{ $program->program_code }} </h4>
-              </div>
+              <small class="text-muted">{{ $program->college->name }}</small>
+              <p class="card-text mt-2">{{ $program->description }}</p>
+              
             </div>
-            <small class="text-muted">{{ $program->college->name }}</small>
-            <p class="card-text mt-2">{{ $program->description }}</p>
-            
+            <div class="card-footer bg-white">
+              <a href="{{ url('programs/' . $program->id) }}" class="btn btn-primary btn-sm card-link">View <i class="fa fa-chevron-right"></i></a>
+            </div>
           </div>
-          <div class="card-footer bg-white">
-            <a href="{{ url('programs/' . $program->id) }}" class="btn btn-primary btn-sm card-link">View <i class="fa fa-chevron-right"></i></a>
+        </div>
+      @endforeach
+    @else
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <h3 class="text-center">No Program Found In Database.</h3>
           </div>
         </div>
       </div>
-    @endforeach
+    @endif
   </div>
 
   <!-- Modal -->
