@@ -7,9 +7,13 @@ use App\College;
 use App\Course;
 use App\Http\Resources\CourseResource;
 use Illuminate\Support\Facades\Session;
+use Gate;
 
 class CoursesController extends Controller
 {
+    public function __construct() {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -17,8 +21,74 @@ class CoursesController extends Controller
      */
     public function index(Request $request)
     {
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
+
+
         if($request->ajax()) {
-            return CourseResource::collection(Course::all());
+            if(request('q') != '') {
+                if(Gate::check('isSAdmin')) {
+                    $courses_result = Course::where('course_code', 'LIKE', '%' . request('q') . '%')
+                    ->orWhere('description', 'LIKE', '%' . request('q') . '%')
+                    ->get();
+                } else {
+                    // $courses_result = Course::where('course_code', 'LIKE', '%' . request('q') . '%')
+                    // ->orWhere('description', 'LIKE', '%' . request('q') . '%')
+                    // ->orWhere('is_public', true)
+                    // ->where('college_id', Session::get('college_id'))
+                    // ->get();
+                    $courses_result = Course::where(function($query) {
+                        $query->where('course_code', 'LIKE', '%' . request('q') . '%')
+                        ->orWhere('description', 'LIKE', '%' . request('q') . '%')
+                        ->orWhere('is_public', true);
+                    })
+                    ->where(function($query) {
+                        $query->where('college_id', Session::get('college_id'));
+                    })
+                    ->get();
+
+                }
+
+
+                return CourseResource::collection($courses_result);
+
+            } else if(request('filter_by_college') != '' && request('filter_by_privacy') != '') {
+                if(Gate::check('isSAdmin')) {
+                    return CourseResource::collection(Course::where('college_id', request('filter_by_college'))
+                        ->where('is_public', request('filter_by_privacy') == 'public' ? true : false )
+                        ->paginate(10));
+                } else {
+                    return CourseResource::collection(Course::where('college_id', Session::get('college_id'))
+                        ->where('is_public', request('filter_by_privacy') == 'public' ? true : false)
+                        ->paginate(10));
+                }
+                
+            } else if(request('filter_by_college') != '') {
+                if(Gate::check('isSAdmin')) {
+                    return CourseResource::collection(Course::where('college_id', request('filter_by_college'))
+                        ->paginate(10));
+                }
+            } else if(request('filter_by_privacy') != '') {
+                if(Gate::check('isSAdmin')) {
+                    return CourseResource::collection(Course::
+                        where('is_public', request('filter_by_privacy') == 'public' ? true : false )
+                        ->paginate(10));
+                } else {
+                    return CourseResource::collection(Course::where('college_id', Session::get('college_id'))
+                        ->where('is_public', request('filter_by_privacy') == 'public' ? true : false)
+                        ->paginate(10));
+                }
+            } else {
+                if(Gate::check('isSAdmin')) {
+                    return CourseResource::collection(Course::paginate(10));
+                } else {
+                    return CourseResource::collection(Course::where('college_id', Session::get('college_id'))
+                        ->orWhere('is_public', true)
+                        ->paginate(10));
+                }
+            }
+            
         }
 
         $colleges = College::all();
@@ -47,6 +117,11 @@ class CoursesController extends Controller
      */
     public function store(Request $request)
     {
+
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin')) {
+            return abort('401', 'Unauthorized');
+        }
+
         $request->validate([
             'course_code' => 'required|max:10|unique:courses',
             'description' => 'required|max:255|string',
@@ -80,6 +155,10 @@ class CoursesController extends Controller
      */
     public function show($id)
     {
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
+
         $course = Course::findOrFail($id);
         $colleges = College::all();
 
@@ -108,6 +187,11 @@ class CoursesController extends Controller
      */
     public function update(Request $request, $id)
     {
+
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin')) {
+            return abort('401', 'Unauthorized');
+        }
+
         $request->validate([
             'course_code' => 'required|max:10|unique:courses,course_code,' . $id,
             'description' => 'required|max:255|string',

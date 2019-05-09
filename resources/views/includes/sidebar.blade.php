@@ -4,14 +4,14 @@
     <nav id="sidebar" class="{{ !Auth::check() ? 'active' : '' }}">
         <ul class="list-unstyled components">
             {{-- DEAN DASHBOARD --}}
-            @can('isDean')
+            @if(Gate::check('isDean') || Gate::check('isProf'))
                 <li>
                     <a href="{{ url('/colleges/' . Auth::user()->getFaculty()->college_id . '/dashboard') }}"><i class="fa fa-home"></i> Dashboard</a>
                 </li>
                 
-            @endcan
+            @endif
 
-            @if(Gate::check('isDean') || Gate::check('isSAdmin'))
+            @if(Gate::check('isDean') || Gate::check('isSAdmin') || Gate::check('isProf'))
                 <li>
                     <a href="{{ url('/programs') }}"><i class="fa fa-graduation-cap"></i> Programs</a>
                 </li>

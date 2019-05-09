@@ -11,17 +11,54 @@
     </div>
 
     <div>
-      <course-modal :colleges='@json($colleges)'></course-modal>
+      @if(Gate::check('isDean') || Gate::check('isSAdmin'))
+        <!-- COURSE MODAL -->
+        <course-modal :college-id="college_id" :colleges='@json($colleges)'></course-modal>
+        <!-- END MODAL -->
+      @endif
     </div>
   </div>
 
 
   <div class="card">
     <div class="card-body">
-      <div class="row">
+      <div class="row d-flex justify-content-between">
         <div class="col-md-4">
-          <input class="form-control mb-3" type="search" placeholder="Search course...">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fa fa-search"></i></span>
+            </div>
+            <input v-on:input="searchCourses" v-model="search" type="search" class="form-control" placeholder="Search faculty...">
+          </div>
         </div>
+        @can('isSAdmin')
+          <div class="col-md-4 d-flex row">
+            <div class="col-6 text-right">
+              <label class="col-form-label"><b>Filter By College: </b></label>
+            </div>
+            <div class="col-6">
+              <select v-on:change="getCourses" class="form-control" name="filter_by_college" id="filter_by_college" v-model="filter_by_college">
+                <option value="">All</option>
+                @foreach($colleges as $college)
+                  <option value="{{ $college->id }}">{{ $college->college_code }}</option>
+                @endforeach
+              </select>
+            </div>   
+          </div>
+        @endcan
+        <div class="col-md-4 d-flex row">
+          <div class="col-6 text-right">
+            <label class="col-form-label"><b>Filter By Privacy: </b></label>
+          </div>
+          <div class="col-6">
+            <select v-on:change="getCourses" class="form-control" name="filter_by_privacy" id="filter_by_college" v-model="filter_by_privacy">
+              <option value="">All</option>
+              <option value="public">Public</option>
+              <option value="private">Private</option>
+            </select>
+          </div>   
+        </div>
+        
       </div>
       <table class="table">
         <thead class="bg-light">
@@ -37,27 +74,57 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="course in courses" :key="course.id">
-            <th><div class="avatar-course" :style="{ 'background': course.color }">@{{ course.course_code }}</div></th>
-            <td>@{{ course.id }}</td>
-            <td>@{{ course.course_code }}</td>
-            <td>@{{ course.description }}</td>
-            <td>@{{ course.lec_unit + course.lab_unit }}</td>
-            <td>@{{ course.college_code}}</td>
-            <td>
-              <span v-if="course.is_public" class="badge badge-success">public <i class="fa fa-globe-americas"></i></span>
-              <span v-else class="badge badge-secondary">private <i class="fa fa-lock"></i></span></td>
+          <template v-if="tableLoading">
+            <tr>
+              <td colspan="8"><table-loading></table-loading></td>
+            </tr>
+          </template>
+          <template v-else-if="courses.length <= 0">
+            <tr>
+              <td class="text-center" colspan="8">No Record Found in Database.</td>
+            </tr>
+          </template>
+          <template v-else>
+            <tr v-for="course in courses" :key="course.id">
+              <th><div class="avatar-course" :style="{ 'background': course.color }">@{{ course.course_code }}</div></th>
+              <td>@{{ course.id }}</td>
+              <td>@{{ course.course_code }}</td>
+              <td>@{{ course.description }}</td>
+              <td>@{{ course.lec_unit + course.lab_unit }}</td>
+              <td>@{{ course.college_code}}</td>
+              <td>
+                <span v-if="course.is_public" class="badge badge-success">public <i class="fa fa-globe-americas"></i></span>
+                <span v-else class="badge badge-secondary">private <i class="fa fa-lock"></i></span></td>
 
 
 
-            <td>
-              <a title="View Details" class="btn btn-primary btn-sm" :href=" 'courses/' + course.id">
-                <i class="fa fa-eye"></i>
-              </a>
-            </td>
-          </tr>
+              <td>
+                <a title="View Details" class="btn btn-primary btn-sm" :href=" 'courses/' + course.id">
+                  <i class="fa fa-eye"></i>
+                </a>
+              </td>
+            </tr>
+          </template>
         </tbody>
       </table>
+      <!-- Pagination -->
+      <div>Showing @{{ courses.length }} records</div>
+      <nav v-show="search.trim() == ''">
+        <ul class="pagination justify-content-end">
+          <li class="page-item" :class="{ disabled: meta.current_page == 1 }">
+            <a class="page-link" href="#" v-on:click.prevent="paginate(meta.current_page - 1)">Previous</a>
+          </li>
+          <template v-for="num in totalPagination">
+            <li class="page-item" :class="{ active : num == meta.current_page }">
+              <a class="page-link" href="#" v-on:click.prevent="paginate(num)">@{{ num }}</a>
+            </li>
+          </template>
+          <li class="page-item" :class="{ disabled: meta.current_page == meta.last_page }">
+            <a class="page-link" href="#" v-on:click.prevent="paginate(meta.current_page + 1)">Next</a>
+          </li>
+        </ul>
+      </nav>
+       <!-- End Pagination -->
     </div>
   </div>
 </div>
@@ -66,27 +133,66 @@
 
 @push('scripts')
 <script>
-  new Vue({
+  const vm = new Vue({
     el: '#app',
     data: {
-      courses: []
+      courses: [],
+      tableLoading: true,
+      search: '',
+      meta: {
+          total: 0,
+          per_page: 0,
+          current_page: 1
+        },
+      links: {},
+      totalPagination: 0,
+      filter_by_college: '',
+      college_id: '{{ Session::get('college_id') }}',
+      filter_by_privacy: ''
     },
     methods: {
-      getCourses() {
-        ApiClient.get('/courses')
+      getCourses(page=1) {
+        this.tableLoading = true;
+        ApiClient.get('/courses/?page=' + page + '&filter_by_college=' + this.filter_by_college + '&filter_by_privacy=' + this.filter_by_privacy)
         .then(response => {
           this.courses = response.data.data;
+          this.tableLoading = false;
+          this.meta = response.data.meta;
+          this.links = response.data.links;
+          this.totalPagination = Math.ceil(this.meta.total / this.meta.per_page);
         }).
         catch(err => {
           console.log(err);
           serverError();
+          this.tableLoading = false;
         })
+      },
+      searchCourses : _.debounce(() => {
+        if(vm.search == '') {
+          return vm.getCourses();
+        }
+        vm.filter_by_college = '';
+        vm.filter_by_privacy = '';
+        vm.tableLoading = true;
+        ApiClient.get('/courses/?q=' + vm.search)
+        .then(response => {
+          vm.courses = response.data.data;
+          vm.tableLoading = false;
+        }).
+        catch(err => {
+          console.log(err);
+          vm.tableLoading = false;
+        })
+      }, 400),
+      paginate(page) {
+          this.getCourses(page);
       }
     },
     created() {
       setTimeout(() => {
         this.getCourses();
-      }, 300);
+      }, 
+      300);
       
     }
   });

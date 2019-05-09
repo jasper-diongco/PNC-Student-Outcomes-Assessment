@@ -110,6 +110,7 @@
                     v-model="form.college_id"
                     v-uppercase
                     :class="{ 'is-invalid': form.errors.has('college_id') }"
+                    :disabled="this.collegeId != 'all'"
                   >
                     <option value="" style="display: none"
                       >Select College</option
@@ -234,7 +235,7 @@
 
 <script>
 export default {
-  props: ["colleges", "isUpdate", "courseProp"],
+  props: ["colleges", "isUpdate", "courseProp", "collegeId"],
   data() {
     return {
       form: new Form({
@@ -329,6 +330,10 @@ export default {
     this.form.privacy = this.course.is_public;
     this.form.college_id = this.course.college_id;
     this.form.color = this.course.color;
+
+    if (this.collegeId != "all") {
+      this.form.college_id = this.collegeId;
+    }
 
     // form: new Form({
     //     course_code: "",

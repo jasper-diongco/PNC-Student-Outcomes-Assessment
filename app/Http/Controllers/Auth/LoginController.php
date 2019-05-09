@@ -42,9 +42,14 @@ class LoginController extends Controller
 
     public function redirectTo() {
         if(Auth::user()->user_type_id == 'dean') {
+            Session::put('college_id', Auth::user()->getFaculty()->college_id);
             return url('/colleges/' . Auth::user()->getFaculty()->college_id . '/dashboard');
         } else if(Auth::user()->user_type_id == 's_admin') {
+            Session::put('college_id', 'all');
             return url('/colleges');
+        } else if(Auth::user()->user_type_id == 'prof') {
+            Session::put('college_id', Auth::user()->getFaculty()->college_id);
+            return url('/colleges/' . Auth::user()->getFaculty()->college_id . '/dashboard');
         }
     }
 

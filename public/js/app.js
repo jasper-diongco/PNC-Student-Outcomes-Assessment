@@ -1997,8 +1997,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["colleges", "isUpdate", "courseProp"],
+  props: ["colleges", "isUpdate", "courseProp", "collegeId"],
   data: function data() {
     return {
       form: new Form({
@@ -2069,7 +2070,11 @@ __webpack_require__.r(__webpack_exports__);
     this.form.lab_unit = this.course.lab_unit;
     this.form.privacy = this.course.is_public;
     this.form.college_id = this.course.college_id;
-    this.form.color = this.course.color; // form: new Form({
+    this.form.color = this.course.color;
+
+    if (this.collegeId != "all") {
+      this.form.college_id = this.collegeId;
+    } // form: new Form({
     //     course_code: "",
     //     description: "",
     //     lec_unit: "",
@@ -2078,6 +2083,7 @@ __webpack_require__.r(__webpack_exports__);
     //     college_id: "",
     //     color: ""
     //   })
+
   }
 });
 
@@ -53619,7 +53625,11 @@ var render = function() {
                               class: {
                                 "is-invalid": _vm.form.errors.has("college_id")
                               },
-                              attrs: { id: "college_id", name: "college_id" },
+                              attrs: {
+                                id: "college_id",
+                                name: "college_id",
+                                disabled: this.collegeId != "all"
+                              },
                               on: {
                                 change: function($event) {
                                   var $$selectedVal = Array.prototype.filter

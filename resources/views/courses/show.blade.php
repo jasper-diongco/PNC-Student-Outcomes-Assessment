@@ -20,7 +20,9 @@
           </div>
 
           <!-- COURSE MODAL -->
-          <course-modal :colleges='@json($colleges)' :is-update="true" :course-prop='@json($course)'></course-modal>
+          @if(Gate::check('isDean') || Gate::check('isSAdmin'))
+            <course-modal college-id="{{ Session::get('college_id') }}" :colleges='@json($colleges)' :is-update="true" :course-prop='@json($course)'></course-modal>
+          @endif
           <!-- END COURSE MODAL -->
 
         </div>
