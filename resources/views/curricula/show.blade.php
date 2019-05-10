@@ -5,8 +5,19 @@
 @section('content')
   <div id="app">
     <!-- Modal -->
-    <curriculum-course-modal :curriculum-id="{{ $curriculum->id }}" :max-year-level="maxYearLevel" :course="selectedCourse"></curriculum-course-modal>
+    <curriculum-course-modal v-on:refresh-curriculum="courseAddedSuccessfully" :curriculum-id="{{ $curriculum->id }}" :max-year-level="maxYearLevel" :course="selectedCourse"></curriculum-course-modal>
     <!-- End Modal -->
+
+    <!-- Update modal -->
+    <curriculum-course-modal 
+      v-on:refresh-curriculum="courseAddedSuccessfully" :curriculum-id="{{ $curriculum->id }}" 
+      :max-year-level="maxYearLevel" 
+      :is-update="true"
+      :curriculum-course="selectedCurriculumCourse"
+      :course="selectedCourse"></curriculum-course-modal>
+    <!-- end update modal  -->
+    
+
     <h1 class="h4">{{ $curriculum->name }}</h1>
     <p><i class="fa fa-file-alt"></i> {{ $curriculum->description }}</p>
     <div class="alert alert-info"><i class="fa fa-info-circle"></i> You can search existing courses to add to this curriculum or you add a new course if you want.
@@ -95,7 +106,7 @@
                       <th>Lec Unit</th>
                       <th>Lab Unit</th>
                       <th>Pre requsite</th>
-                      <th class="text-center">Action</th>
+                      <th class="text-center">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -105,9 +116,21 @@
                       <td>@{{ curriculumCourse.lec_unit }}</td>
                       <td>@{{ curriculumCourse.lab_unit }}</td>
                       <td>none</td>
-                      <td class="text-right">
-                        <button v-on:click="removeCurriculumCourse(curriculumCourse.id)" class="btn btn-secondary btn-sm">Remove <i class="fa fa-minus-circle text-danger"></i></button>
+                      <td class="justify-content-end d-flex">
+                        <div class="mr-2">
+                          <button v-on:click="removeCurriculumCourse(curriculumCourse.id)" class="btn btn-secondary btn-sm">Remove <i class="fa fa-minus-circle text-danger"></i></button>
+                          <button
+                            data-toggle="modal"
+                            data-target="#curriculumCourseModalUpdate"
+                            class="btn btn-success btn-sm"
+                            v-on:click="selectCurriculumCourse(curriculumCourse)"
+                          >
+                            Update <i class="fa fa-edit"></i>
+                          </button>
+                        </div>
+                        
                       </td>
+                        
                     </tr>
                   </tbody>
                   <tfoot>
@@ -144,7 +167,12 @@
         searchCourseText: '',
         searched_courses: [],
         maxYearLevel: {{ $curriculum->year_level }},
-        selectedCourse: '',
+        selectedCourse: {
+          id: '',
+          course_code: '',
+          description: ''
+        },
+        selectedCurriculumCourse: '',
         curriculum_id: {{ $curriculum->id }},
         curriculum: {
           author: '',
@@ -180,6 +208,13 @@
           }, 400),
         selectCourse(selectedCourse) {
           this.selectedCourse = selectedCourse;
+        },
+        selectCurriculumCourse(selectedCurriculumCourse) {
+          this.selectedCurriculumCourse = Object.assign({}, selectedCurriculumCourse);
+          const course = Object.assign({}, this.selectedCurriculumCourse);
+          this.selectedCourse.id = course.course_id;
+          this.selectedCourse.course_code = course.course_code;
+          this.selectedCourse.description = course.description;
         },
         getCurriculum() {
           this.isLoading = true;
@@ -250,8 +285,10 @@
                   'Deleted!',
                   'The course has been removed.',
                   'success'
-                );
-                this.getCurriculum();//refresh
+                ).then(() => {
+                  this.getCurriculum();//refresh
+                });
+                
               })
               .catch(err => {
                 swalError();
@@ -259,6 +296,11 @@
               
             }
           });
+        },
+        courseAddedSuccessfully() {
+          this.getCurriculum();
+          this.searchCourseText = '';
+          this.searchCourses();
         }
       },
       created() {

@@ -91,7 +91,36 @@ class CurriculumCoursesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'course_id' => 'required',
+            'curriculum_id' => 'required',
+            'year_level' => 'required',
+            'semester' => 'required'
+        ]);
+
+        // if(CurriculumCourse::where('curriculum_id', '=', request('curriculum_id'))->where('course_id', request('course_id'))->exists()) {
+
+        //     return response()->json(["message" => "The given data was invalid.","errors" => ["course_id" => ["This course is already added in this curriculum."]]],422);
+        // }
+
+
+        // $curriculum_course = CurriculumCourse::create([
+        //     'course_id' => request('course_id'),
+        //     'curriculum_id' => request('curriculum_id'),
+        //     'year_level' => request('year_level'),
+        //     'semester' => request('semester')
+        // ]);
+
+        $curriculum_course = CurriculumCourse::findOrFail($id);
+        $curriculum_course->course_id = request('course_id');
+        $curriculum_course->curriculum_id = request('curriculum_id');
+        $curriculum_course->year_level = request('year_level');
+        $curriculum_course->semester = request('semester');
+
+        $curriculum_course->update();
+
+
+        return $curriculum_course;
     }
 
     /**

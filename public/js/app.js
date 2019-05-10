@@ -2268,11 +2268,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["course", "maxYearLevel", "curriculumId"],
+  props: ["course", "maxYearLevel", "curriculumId", "isUpdate", "curriculumCourse"],
   data: function data() {
     return {
       form: new Form({
+        curriculum_course_id: "",
         course_id: "",
         curriculum_id: "",
         year_level: "",
@@ -2283,19 +2286,29 @@ __webpack_require__.r(__webpack_exports__);
   watch: {
     course: function course(val) {
       this.form.course_id = val.id;
+    },
+    curriculumCourse: function curriculumCourse(val) {
+      this.form.curriculum_course_id = val.id;
+      this.form.course_id = val.course_id;
+      this.form.year_level = val.year_level;
+      this.form.semester = val.semester;
     }
   },
   computed: {
     modalTitle: function modalTitle() {
-      return "Add new Course to Curriculum";
+      return this.isUpdate ? "Edit course" : "Add new Course to Curriculum";
     },
     saveTitle: function saveTitle() {
-      return "Add";
+      return this.isUpdate ? "Update" : "Add";
     }
   },
   methods: {
     saveCourse: function saveCourse() {
-      this.addCourse();
+      if (this.isUpdate) {
+        this.updateCourse();
+      } else {
+        this.addCourse();
+      }
     },
     addCourse: function addCourse() {
       var _this = this;
@@ -2307,6 +2320,8 @@ __webpack_require__.r(__webpack_exports__);
           title: "The course is successfully added."
         });
 
+        _this.$emit("refresh-curriculum");
+
         _this.closeModal();
       })["catch"](function (err) {
         console.log(err);
@@ -2316,15 +2331,47 @@ __webpack_require__.r(__webpack_exports__);
         });
       });
     },
+    updateCourse: function updateCourse() {
+      var _this2 = this;
+
+      this.form.put("../curriculum_courses/" + this.form.curriculum_course_id).then(function (_ref2) {
+        var data = _ref2.data;
+        toast.fire({
+          type: "success",
+          title: "The course is successfully updated."
+        });
+
+        _this2.$emit("refresh-curriculum");
+
+        _this2.closeModal();
+      })["catch"](function (err) {
+        console.log(err);
+        toast.fire({
+          type: "error",
+          title: "Please enter valid data."
+        });
+      });
+    },
     closeModal: function closeModal() {
-      $("#curriculumCourseModal").modal("hide");
+      if (this.isUpdate) {
+        $("#curriculumCourseModalUpdate").modal("hide");
+      } else {
+        $("#curriculumCourseModal").modal("hide");
+      }
+
       this.form.clear();
       this.form.year_level = "";
       this.form.semester = "";
     }
   },
   created: function created() {
-    this.form.curriculum_id = this.curriculumId;
+    this.form.curriculum_id = this.curriculumId; //update
+    // if (this.isUpdate) {
+    //   this.form.course_id = this.curriculumCourse.course_id;
+    //   this.form.year_level = this.curriculumCourse.year_level;
+    //   this.form.semester = this.curriculumCourse.semester;
+    //   console.log(this.form);
+    // }
   }
 });
 
@@ -54541,7 +54588,9 @@ var render = function() {
       {
         staticClass: "modal fade",
         attrs: {
-          id: "curriculumCourseModal",
+          id: _vm.isUpdate
+            ? "curriculumCourseModalUpdate"
+            : "curriculumCourseModal",
           tabindex: "-1",
           role: "dialog",
           "aria-hidden": "true"

@@ -1,19 +1,21 @@
 <template>
   <div>
     <!-- Activator -->
-    <!--     <button
+    <!-- <button
+      v-if="isUpdate"
       data-toggle="modal"
       data-target="#curriculumCourseModal"
-      class="btn btn-primary btn-round"
+      class="btn btn-success btn-sm"
     >
-      Add new Course to Curriculum <i class="fa fa-plus"></i>
+      Update <i class="fa fa-edit"></i>
     </button> -->
+    <!-- <button v-on:click="removeCurriculumCourse(curriculumCourse.id)" class="btn btn-success btn-sm">Update <i class="fa fa-edit"></i></button> -->
     <!-- End Activator -->
 
     <!-- Modal -->
     <div
       class="modal fade"
-      id="curriculumCourseModal"
+      :id="isUpdate ? 'curriculumCourseModalUpdate' : 'curriculumCourseModal'"
       tabindex="-1"
       role="dialog"
       aria-hidden="true"
@@ -170,10 +172,17 @@
 
 <script>
 export default {
-  props: ["course", "maxYearLevel", "curriculumId"],
+  props: [
+    "course",
+    "maxYearLevel",
+    "curriculumId",
+    "isUpdate",
+    "curriculumCourse"
+  ],
   data() {
     return {
       form: new Form({
+        curriculum_course_id: "",
         course_id: "",
         curriculum_id: "",
         year_level: "",
@@ -184,19 +193,29 @@ export default {
   watch: {
     course(val) {
       this.form.course_id = val.id;
+    },
+    curriculumCourse(val) {
+      this.form.curriculum_course_id = val.id;
+      this.form.course_id = val.course_id;
+      this.form.year_level = val.year_level;
+      this.form.semester = val.semester;
     }
   },
   computed: {
     modalTitle() {
-      return "Add new Course to Curriculum";
+      return this.isUpdate ? "Edit course" : "Add new Course to Curriculum";
     },
     saveTitle() {
-      return "Add";
+      return this.isUpdate ? "Update" : "Add";
     }
   },
   methods: {
     saveCourse() {
-      this.addCourse();
+      if (this.isUpdate) {
+        this.updateCourse();
+      } else {
+        this.addCourse();
+      }
     },
     addCourse() {
       this.form
@@ -206,6 +225,26 @@ export default {
             type: "success",
             title: "The course is successfully added."
           });
+          this.$emit("refresh-curriculum");
+          this.closeModal();
+        })
+        .catch(err => {
+          console.log(err);
+          toast.fire({
+            type: "error",
+            title: "Please enter valid data."
+          });
+        });
+    },
+    updateCourse() {
+      this.form
+        .put("../curriculum_courses/" + this.form.curriculum_course_id)
+        .then(({ data }) => {
+          toast.fire({
+            type: "success",
+            title: "The course is successfully updated."
+          });
+          this.$emit("refresh-curriculum");
           this.closeModal();
         })
         .catch(err => {
@@ -217,7 +256,12 @@ export default {
         });
     },
     closeModal() {
-      $("#curriculumCourseModal").modal("hide");
+      if (this.isUpdate) {
+        $("#curriculumCourseModalUpdate").modal("hide");
+      } else {
+        $("#curriculumCourseModal").modal("hide");
+      }
+
       this.form.clear();
       this.form.year_level = "";
       this.form.semester = "";
@@ -225,6 +269,14 @@ export default {
   },
   created() {
     this.form.curriculum_id = this.curriculumId;
+
+    //update
+    // if (this.isUpdate) {
+    //   this.form.course_id = this.curriculumCourse.course_id;
+    //   this.form.year_level = this.curriculumCourse.year_level;
+    //   this.form.semester = this.curriculumCourse.semester;
+    //   console.log(this.form);
+    // }
   }
 };
 </script>
