@@ -11031,6 +11031,10 @@ a.text-dark:focus {
   }
 }
 
+/* ---------------------------------------------------
+    CONTENT STYLE
+----------------------------------------------------- */
+
 .navbar-laravel {
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
@@ -11179,10 +11183,6 @@ ul ul a {
   padding-left: 30px !important;
 }
 
-/* ---------------------------------------------------
-    CONTENT STYLE
------------------------------------------------------ */
-
 #content {
   width: calc(100% - 250px);
   padding: 40px;
@@ -11272,5 +11272,15 @@ ul ul a {
 .btn-round {
   border-radius: 20px;
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.search-course {
+  max-height: 300px;
+  overflow-y: auto;
+  position: absolute;
+  top: 40px;
+  width: 100%;
+  border: 1px solid #ededed;
+  z-index: 999;
 }
 

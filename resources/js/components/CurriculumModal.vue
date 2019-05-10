@@ -138,7 +138,6 @@
                 <div class="col-md-9">
                   <select
                     id="year"
-                    type="text"
                     class="form-control"
                     name="year"
                     v-model="form.year"
@@ -151,6 +150,28 @@
                 </div>
               </div>
               <!-- /end Field for year -->
+
+              <!-- Field for year level  -->
+              <div class="form-group row">
+                <label for="year" class="col-md-3 col-form-label text-md-right"
+                  ><b>Year Level</b></label
+                >
+
+                <div class="col-md-9">
+                  <select
+                    id="year_level"
+                    class="form-control"
+                    name="year_level"
+                    v-model="form.year_level"
+                    :class="{ 'is-invalid': form.errors.has('year_level') }"
+                  >
+                    <option :value="4" selected>4</option>
+                    <option :value="5 + 1">5</option>
+                  </select>
+                  <has-error :form="form" field="year_level"></has-error>
+                </div>
+              </div>
+              <!-- /end Field for year level -->
             </div>
             <div class="modal-footer">
               <button
@@ -195,7 +216,8 @@ export default {
         program_id: "",
         name: "",
         description: "",
-        year: new Date().getFullYear()
+        year: new Date().getFullYear(),
+        year_level: "4"
       }),
       selectedProgram: {},
       yearNow: ""

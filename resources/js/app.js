@@ -46,7 +46,10 @@ Vue.component(
   require("./components/ExampleComponent.vue").default
 );
 Vue.component("course-modal", require("./components/CourseModal.vue").default);
-
+Vue.component(
+  "curriculum-course-modal",
+  require("./components/CurriculumCourseModal.vue").default
+);
 Vue.component(
   "curriculum-modal",
   require("./components/CurriculumModal.vue").default

@@ -26,6 +26,7 @@ Route::resource('/programs', 'ProgramsController');
 Route::post('/programs/check_code', 'ProgramsController@check_code');
 
 Route::resource('/curricula', 'CurriculaController');
+Route::resource('/curriculum_courses', 'CurriculumCoursesController');
 
 
 //Route::resource('/courses', 'CoursesController');

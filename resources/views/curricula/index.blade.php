@@ -35,28 +35,37 @@
         </div>
     </div>
 
+    @if(count($curricula) > 0)
+      <div class="row">
+        @foreach($curricula as $curriculum)
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-body">
 
-    <div class="row">
-      @foreach($curricula as $curriculum)
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
+                <h3>{{ $curriculum->program->program_code }}</h3>
+                <div class="cirriculum-name"> <i class="fa fa-book-open"></i> {{ $curriculum->name }}</div>
 
-              <h3>{{ $curriculum->program->program_code }}</h3>
-              <div class="cirriculum-name"> <i class="fa fa-book-open"></i> {{ $curriculum->name }}</div>
-
-              <ul class="list-group list-group-flush mt-2">
-                <li class="list-group-item"><i class="fa fa-file-alt"></i> {{ $curriculum->description}}</li>
-                <li class="list-group-item"><i class="fa fa-calendar-alt"></i> {{ $curriculum->year }}</li>
-              </ul>
+                <ul class="list-group list-group-flush mt-2">
+                  <li class="list-group-item"><i class="fa fa-file-alt"></i> {{ $curriculum->description}}</li>
+                  <li class="list-group-item"><i class="fa fa-calendar-alt"></i> {{ $curriculum->year }}</li>
+                </ul>
 
 
-              <a href="{{ url('/curricula/' . $curriculum->id) }}" class="btn btn-sm btn-primary mt-3">View <i class="fa fa-chevron-right"></i></a>
+                <a href="{{ url('/curricula/' . $curriculum->id) }}" class="btn btn-sm btn-primary mt-3">View <i class="fa fa-chevron-right"></i></a>
+              </div>
             </div>
           </div>
+        @endforeach
+      </div>
+    @else
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <h3 class="text-center">No Curriculum Found In Database.</h3>
+          </div>
         </div>
-      @endforeach
-    </div>
+      </div>
+    @endif
   </div>
 @endsection
 

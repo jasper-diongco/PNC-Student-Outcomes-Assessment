@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Program;
 use App\Curriculum;
+use App\Http\Resources\CurriculumResource;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 
@@ -50,7 +51,8 @@ class CurriculaController extends Controller
             'program_id' => 'required',
             'name' => 'required|max:255|regex:/^[\pL\s\-0-9]+$/u',
             'description' => 'required|max:255|regex:/^[\pL\s\-0-9]+$/u',
-            'year' => 'required|digits:4'
+            'year' => 'required|digits:4',
+            'year_level' => 'required'
         ]);
 
         $curriculum = Curriculum::create([
@@ -58,7 +60,8 @@ class CurriculaController extends Controller
             'name' => strtoupper(request('name')),
             'description' => request('description'),
             'year' => request('year'),
-            'user_id' => Auth::user()->id
+            'user_id' => Auth::user()->id,
+            'year_level' => request('year_level')
         ]);
 
         Session::flash('message', 'Curriculum successfully added to database');
@@ -73,9 +76,14 @@ class CurriculaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $curriculum = Curriculum::findOrFail($id);
+
+        if($request->ajax() && request('json') == 'yes') {
+            return new CurriculumResource($curriculum);
+        }
+        
 
         return view('curricula.show')->with('curriculum', $curriculum);
     }

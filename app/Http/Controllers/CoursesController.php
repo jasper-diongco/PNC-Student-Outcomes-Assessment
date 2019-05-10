@@ -40,12 +40,13 @@ class CoursesController extends Controller
                     // ->get();
                     $courses_result = Course::where(function($query) {
                         $query->where('course_code', 'LIKE', '%' . request('q') . '%')
-                        ->orWhere('description', 'LIKE', '%' . request('q') . '%')
-                        ->orWhere('is_public', true);
+                        ->orWhere('description', 'LIKE', '%' . request('q') . '%');
+                        
                     })
                     ->where(function($query) {
-                        $query->where('college_id', Session::get('college_id'));
-                    })
+                        $query->where('college_id', Session::get('college_id'))
+                        ->orWhere('is_public', true);
+                    })   
                     ->get();
 
                 }
