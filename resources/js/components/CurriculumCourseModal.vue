@@ -21,7 +21,11 @@
       aria-hidden="true"
     >
       <div class="modal-dialog" role="document">
-        <form @submit.prevent="saveCourse" @keydown="form.onKeydown($event)">
+        <form
+          @submit.prevent="saveCourse"
+          @keydown="form.onKeydown($event)"
+          autocomplete="off"
+        >
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLabel">

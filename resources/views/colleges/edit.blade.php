@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.pnc_layout')
 
 @if(isset($college))
   @section('title', 'Update College')
