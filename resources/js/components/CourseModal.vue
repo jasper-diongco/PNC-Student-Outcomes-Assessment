@@ -12,9 +12,19 @@
       Update Course <i class="fa fa-edit"></i>
     </button>
     <button
+      v-else-if="addDirectly"
+      type="button"
+      class="btn btn-primary btn-round"
+      data-toggle="modal"
+      data-target="#courseModal"
+      @click="getRandColor"
+    >
+      Add new Course <i class="fa fa-plus"></i>
+    </button>
+    <button
       v-else
       type="button"
-      class="btn btn-success btn-success btn-round"
+      class="btn btn-success btn-round"
       data-toggle="modal"
       data-target="#courseModal"
       @click="getRandColor"
@@ -239,7 +249,7 @@
 
 <script>
 export default {
-  props: ["colleges", "isUpdate", "courseProp", "collegeId"],
+  props: ["colleges", "isUpdate", "courseProp", "collegeId", "addDirectly"],
   data() {
     return {
       form: new Form({
@@ -284,10 +294,25 @@ export default {
       $("#courseModal").modal("hide");
     },
     createCourse() {
+      let link = "courses";
+      if (this.addDirectly) {
+        link = "../courses";
+      }
+
       this.form
-        .post("courses")
+        .post(link)
         .then(({ data }) => {
-          window.location.href = myRootURL + "/courses/" + data.id;
+          if (this.addDirectly) {
+            this.$emit("open-curriculum-course", data);
+            this.closeModal();
+            this.form.course_code = "";
+            this.form.description = "";
+            this.form.lec_unit = "";
+            this.form.lab_unit = "";
+            this.form.privacy = "";
+          } else {
+            window.location.href = myRootURL + "/courses/" + data.id;
+          }
         })
         .catch(err => {
           console.log(err);

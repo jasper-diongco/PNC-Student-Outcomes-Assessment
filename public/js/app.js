@@ -2002,8 +2002,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["colleges", "isUpdate", "courseProp", "collegeId"],
+  props: ["colleges", "isUpdate", "courseProp", "collegeId", "addDirectly"],
   data: function data() {
     return {
       form: new Form({
@@ -2032,9 +2042,30 @@ __webpack_require__.r(__webpack_exports__);
       $("#courseModal").modal("hide");
     },
     createCourse: function createCourse() {
-      this.form.post("courses").then(function (_ref) {
+      var _this = this;
+
+      var link = "courses";
+
+      if (this.addDirectly) {
+        link = "../courses";
+      }
+
+      this.form.post(link).then(function (_ref) {
         var data = _ref.data;
-        window.location.href = myRootURL + "/courses/" + data.id;
+
+        if (_this.addDirectly) {
+          _this.$emit("open-curriculum-course", data);
+
+          _this.closeModal();
+
+          _this.form.course_code = "";
+          _this.form.description = "";
+          _this.form.lec_unit = "";
+          _this.form.lab_unit = "";
+          _this.form.privacy = "";
+        } else {
+          window.location.href = myRootURL + "/courses/" + data.id;
+        }
       })["catch"](function (err) {
         console.log(err);
         toast.fire({
@@ -54129,10 +54160,27 @@ var render = function() {
             _c("i", { staticClass: "fa fa-edit" })
           ]
         )
+      : _vm.addDirectly
+      ? _c(
+          "button",
+          {
+            staticClass: "btn btn-primary btn-round",
+            attrs: {
+              type: "button",
+              "data-toggle": "modal",
+              "data-target": "#courseModal"
+            },
+            on: { click: _vm.getRandColor }
+          },
+          [
+            _vm._v("\n    Add new Course "),
+            _c("i", { staticClass: "fa fa-plus" })
+          ]
+        )
       : _c(
           "button",
           {
-            staticClass: "btn btn-success btn-success btn-round",
+            staticClass: "btn btn-success btn-round",
             attrs: {
               type: "button",
               "data-toggle": "modal",

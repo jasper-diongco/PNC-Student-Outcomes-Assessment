@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Program;
 use App\Curriculum;
+use App\College;
 use App\Http\Resources\CurriculumResource;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
@@ -79,13 +80,16 @@ class CurriculaController extends Controller
     public function show(Request $request, $id)
     {
         $curriculum = Curriculum::findOrFail($id);
+        $colleges = College::all();
 
         if($request->ajax() && request('json') == 'yes') {
             return new CurriculumResource($curriculum);
         }
         
 
-        return view('curricula.show')->with('curriculum', $curriculum);
+        return view('curricula.show')
+            ->with('curriculum', $curriculum)
+            ->with('colleges', $colleges);
     }
 
     /**

@@ -71,7 +71,16 @@
       
       <div>
 
-        <button class="btn btn-primary btn-round">Add new Course <i class="fa fa-plus"></i></button>
+        {{-- <button class="btn btn-primary btn-round">Add new Course <i class="fa fa-plus"></i></button> --}}
+        @if(Gate::check('isDean') || Gate::check('isSAdmin'))
+          <!-- COURSE MODAL -->
+          <course-modal 
+            :college-id="college_id" 
+            :colleges='@json($colleges)'
+            :add-directly="true"
+            v-on:open-curriculum-course="openCurriculumCourse"></course-modal>
+          <!-- END MODAL -->
+        @endif
       </div>
     </div>
     <div class="accordion" id="accordionExample">
@@ -192,7 +201,8 @@
           year: '',
           year_level: ''
         },
-        isLoading: true
+        isLoading: true,
+        college_id: '{{ Session::get('college_id') }}'
       },
       methods: {
         searchCourses :_.debounce(() => {
@@ -323,6 +333,14 @@
           this.getCurriculum();
           this.searchCourseText = '';
           this.searchCourses();
+        },
+        openCurriculumCourse(course) {
+          // v-on:click="selectCourse(course)" 
+          // class="btn btn-primary btn-sm" 
+          // data-toggle="modal"
+          // data-target="#curriculumCourseModal"
+          this.selectCourse(course);
+          $('#curriculumCourseModal').modal('show')
         }
       },
       created() {
