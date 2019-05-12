@@ -15,4 +15,8 @@ class CurriculumCourse extends Model
     public function course() {
       return $this->belongsTo('App\Course');
     }
+
+    public function courseRequisites() {
+      return $this->hasMany('App\CourseRequisite');
+    }
 }

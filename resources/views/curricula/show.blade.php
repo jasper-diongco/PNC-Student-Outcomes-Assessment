@@ -4,9 +4,14 @@
 
 @section('content')
   <div id="app">
-    <!-- Modal -->
-    <curriculum-course-modal v-on:refresh-curriculum="courseAddedSuccessfully" :curriculum-id="{{ $curriculum->id }}" :max-year-level="maxYearLevel" :course="selectedCourse"></curriculum-course-modal>
-    <!-- End Modal -->
+    <!-- Add Modal -->
+    <curriculum-course-modal 
+      v-on:refresh-curriculum="courseAddedSuccessfully" 
+      :curriculum-id="{{ $curriculum->id }}" 
+      :max-year-level="maxYearLevel" 
+      :course="selectedCourse"
+      :curriculum-courses="curriculum.curriculum_courses"></curriculum-course-modal>
+    <!-- Add End Modal -->
 
     <!-- Update modal -->
     <curriculum-course-modal 
@@ -14,7 +19,8 @@
       :max-year-level="maxYearLevel" 
       :is-update="true"
       :curriculum-course="selectedCurriculumCourse"
-      :course="selectedCourse"></curriculum-course-modal>
+      :course="selectedCourse"
+      :curriculum-courses="curriculum.curriculum_courses"></curriculum-course-modal>
     <!-- end update modal  -->
     
 
@@ -115,7 +121,7 @@
                       <td>@{{ curriculumCourse.description }}</td>
                       <td>@{{ curriculumCourse.lec_unit }}</td>
                       <td>@{{ curriculumCourse.lab_unit }}</td>
-                      <td>none</td>
+                      <td>@{{ formatPreRequisites(curriculumCourse) }}</td>
                       <td class="justify-content-end d-flex">
                         <div class="mr-2">
                           <button v-on:click="removeCurriculumCourse(curriculumCourse.id)" class="btn btn-secondary btn-sm">Remove <i class="fa fa-minus-circle text-danger"></i></button>
@@ -243,6 +249,18 @@
             return  num + 'th';
           }
         },
+        formatPreRequisites(curriculumCourse) {
+          let result = "";
+          if(curriculumCourse.pre_requisites.length <= 0) {
+            return "none;"
+          } else {
+            for(let i = 0; i < curriculumCourse.pre_requisites.length; i++) {
+              result += curriculumCourse.pre_requisites[i].pre_req_code;
+              result += '; ';
+            }
+          }
+          return result;
+        },
         getSemCourses(year, sem) {
           return this.curriculum.curriculum_courses.filter(curriculumCourse => {
             return curriculumCourse.year_level == year && curriculumCourse.semester == sem;
@@ -291,7 +309,11 @@
                 
               })
               .catch(err => {
-                swalError();
+                swal.fire(
+                  'Ooops... Error in deletion!',
+                  'The course maybe is a pre requisite of other courses',
+                  'error'
+                )
               })
               
             }
@@ -306,7 +328,7 @@
       created() {
         setTimeout(() => {
           this.getCurriculum();
-        }, 400);  
+        }, 1000);  
       }
     });
   </script>

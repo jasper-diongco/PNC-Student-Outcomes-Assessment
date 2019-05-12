@@ -140,6 +140,80 @@
                 </div>
               </div>
               <!-- /end Field for year level -->
+
+              <!-- Pre requisite section -->
+              <template>
+                <hr />
+                <p><b>Pre requisite(s)</b></p>
+                <div class="form-group">
+                  <div
+                    v-if="isSelectPreqMode || form.errors.has('pre_requisites')"
+                  >
+                    <label>Select pre requisite</label>
+                    <select
+                      class="form-control"
+                      name="_select_pre_preq"
+                      id="_select_pre_preq"
+                      v-model="selectedPreReq"
+                      @change="addPreRequisite"
+                      :class="{
+                        'is-invalid': form.errors.has('pre_requisites')
+                      }"
+                    >
+                      <template v-if="selectPreRequsiteCourses().length > 0">
+                        <option value="" style="display: none"
+                          >Select pre-req</option
+                        >
+                        <option
+                          v-for="c in selectPreRequsiteCourses()"
+                          :key="c.id"
+                          :value="c"
+                        >
+                          {{ c.course_code + " - " + c.description }}
+                        </option>
+                      </template>
+                      <template v-else>
+                        <option value="no-available" disabled
+                          >No Available</option
+                        >
+                      </template>
+                    </select>
+                    <has-error :form="form" field="pre_requisites"></has-error>
+                  </div>
+                  <button
+                    v-else
+                    @click="isSelectPreqMode = true"
+                    type="button"
+                    class="btn btn-primary btn-sm mb-2"
+                  >
+                    Add pre req <i class="fa fa-plus"></i>
+                  </button>
+                </div>
+
+                <ul class="list-group">
+                  <template v-if="form.pre_requisites.length > 0">
+                    <li
+                      v-for="preReq in form.pre_requisites"
+                      class="list-group-item d-flex justify-content-between align-items-center"
+                    >
+                      <div>
+                        {{ preReq.course_code + " - " + preReq.description }}
+                      </div>
+                      <button
+                        @click="removePreRequisite(preReq.id)"
+                        type="button"
+                        class="btn btn-sm btn-secondary"
+                      >
+                        <i class="fa fa-trash-alt"></i>
+                      </button>
+                    </li>
+                  </template>
+                  <template v-else>
+                    <li class="list-group-item">No Pre-requisite</li>
+                  </template>
+                </ul>
+              </template>
+              <!-- /END Pre requisite section -->
             </div>
             <div class="modal-footer">
               <button
@@ -181,7 +255,8 @@ export default {
     "maxYearLevel",
     "curriculumId",
     "isUpdate",
-    "curriculumCourse"
+    "curriculumCourse",
+    "curriculumCourses"
   ],
   data() {
     return {
@@ -190,8 +265,12 @@ export default {
         course_id: "",
         curriculum_id: "",
         year_level: "",
-        semester: ""
-      })
+        semester: "",
+        pre_requisites: []
+      }),
+      isSelectPreqMode: false,
+      selectedPreReq: "",
+      curriculumCourseAjax: ""
     };
   },
   watch: {
@@ -203,6 +282,9 @@ export default {
       this.form.course_id = val.course_id;
       this.form.year_level = val.year_level;
       this.form.semester = val.semester;
+
+      //get pre requisite through ajax
+      this.getPreRequisites();
     }
   },
   computed: {
@@ -231,6 +313,7 @@ export default {
           });
           this.$emit("refresh-curriculum");
           this.closeModal();
+          this.form.pre_requisites = [];
         })
         .catch(err => {
           console.log(err);
@@ -269,10 +352,60 @@ export default {
       this.form.clear();
       this.form.year_level = "";
       this.form.semester = "";
+    },
+    addPreRequisite() {
+      this.form.pre_requisites.push(this.selectedPreReq);
+      this.selectedPreReq = "";
+    },
+    removePreRequisite(id) {
+      for (let i = 0; i < this.form.pre_requisites.length; i++) {
+        if (this.form.pre_requisites[i].id == id) {
+          return this.form.pre_requisites.splice(i, 1);
+        }
+      }
+    },
+    selectPreRequsiteCourses() {
+      let available = [];
+
+      for (let i = 0; i < this.curriculumCourses.length; i++) {
+        let found = false;
+        for (let j = 0; j < this.form.pre_requisites.length; j++) {
+          if (this.curriculumCourses[i].id == this.form.pre_requisites[j].id) {
+            found = true;
+            break;
+          }
+        }
+        if (!found) {
+          available.push(this.curriculumCourses[i]);
+        }
+      }
+
+      return available;
+    },
+    getPreRequisites() {
+      ApiClient.get(
+        "curriculum_courses/" + this.form.curriculum_course_id
+      ).then(response => {
+        const resp_pre_requisites = response.data.data.pre_requisites;
+        this.form.pre_requisites = [];
+        for (let i = 0; i < resp_pre_requisites.length; i++) {
+          this.form.pre_requisites.push({
+            id: response.data.data.pre_requisites[i].pre_req_id,
+            course_code: resp_pre_requisites[i].pre_req_code,
+            description: resp_pre_requisites[i].pre_req_desc,
+            year_level: resp_pre_requisites[i].year_level,
+            semester: resp_pre_requisites[i].semester,
+            pre_req_id: resp_pre_requisites[i].id
+          });
+        }
+      });
     }
   },
   created() {
     this.form.curriculum_id = this.curriculumId;
+    // if (this.isUpdate) {
+    //   this.getCurriculumCourse();
+    // }
 
     //update
     // if (this.isUpdate) {

@@ -16,8 +16,17 @@ Route::get('/', function () {
 });
 
 
+/*
+ * Colleges Routes
+ */
 Route::resource('/colleges', 'CollegesController');
 Route::get('/colleges/{college}/dashboard', 'CollegesController@dashboard');
+/*
+ * End Colleges Routes
+ */
+
+
+
 
 Route::resource('/faculties', 'FacultiesController');
 Route::put('/faculties/{faculty}/update_account', 'FacultiesController@updateAccount');

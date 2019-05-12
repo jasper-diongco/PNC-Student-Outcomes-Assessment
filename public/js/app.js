@@ -2278,8 +2278,82 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["course", "maxYearLevel", "curriculumId", "isUpdate", "curriculumCourse"],
+  props: ["course", "maxYearLevel", "curriculumId", "isUpdate", "curriculumCourse", "curriculumCourses"],
   data: function data() {
     return {
       form: new Form({
@@ -2287,8 +2361,12 @@ __webpack_require__.r(__webpack_exports__);
         course_id: "",
         curriculum_id: "",
         year_level: "",
-        semester: ""
-      })
+        semester: "",
+        pre_requisites: []
+      }),
+      isSelectPreqMode: false,
+      selectedPreReq: "",
+      curriculumCourseAjax: ""
     };
   },
   watch: {
@@ -2299,7 +2377,9 @@ __webpack_require__.r(__webpack_exports__);
       this.form.curriculum_course_id = val.id;
       this.form.course_id = val.course_id;
       this.form.year_level = val.year_level;
-      this.form.semester = val.semester;
+      this.form.semester = val.semester; //get pre requisite through ajax
+
+      this.getPreRequisites();
     }
   },
   computed: {
@@ -2331,6 +2411,8 @@ __webpack_require__.r(__webpack_exports__);
         _this.$emit("refresh-curriculum");
 
         _this.closeModal();
+
+        _this.form.pre_requisites = [];
       })["catch"](function (err) {
         console.log(err);
         toast.fire({
@@ -2370,10 +2452,63 @@ __webpack_require__.r(__webpack_exports__);
       this.form.clear();
       this.form.year_level = "";
       this.form.semester = "";
+    },
+    addPreRequisite: function addPreRequisite() {
+      this.form.pre_requisites.push(this.selectedPreReq);
+      this.selectedPreReq = "";
+    },
+    removePreRequisite: function removePreRequisite(id) {
+      for (var i = 0; i < this.form.pre_requisites.length; i++) {
+        if (this.form.pre_requisites[i].id == id) {
+          return this.form.pre_requisites.splice(i, 1);
+        }
+      }
+    },
+    selectPreRequsiteCourses: function selectPreRequsiteCourses() {
+      var available = [];
+
+      for (var i = 0; i < this.curriculumCourses.length; i++) {
+        var found = false;
+
+        for (var j = 0; j < this.form.pre_requisites.length; j++) {
+          if (this.curriculumCourses[i].id == this.form.pre_requisites[j].id) {
+            found = true;
+            break;
+          }
+        }
+
+        if (!found) {
+          available.push(this.curriculumCourses[i]);
+        }
+      }
+
+      return available;
+    },
+    getPreRequisites: function getPreRequisites() {
+      var _this3 = this;
+
+      ApiClient.get("curriculum_courses/" + this.form.curriculum_course_id).then(function (response) {
+        var resp_pre_requisites = response.data.data.pre_requisites;
+        _this3.form.pre_requisites = [];
+
+        for (var i = 0; i < resp_pre_requisites.length; i++) {
+          _this3.form.pre_requisites.push({
+            id: response.data.data.pre_requisites[i].pre_req_id,
+            course_code: resp_pre_requisites[i].pre_req_code,
+            description: resp_pre_requisites[i].pre_req_desc,
+            year_level: resp_pre_requisites[i].year_level,
+            semester: resp_pre_requisites[i].semester,
+            pre_req_id: resp_pre_requisites[i].id
+          });
+        }
+      });
     }
   },
   created: function created() {
-    this.form.curriculum_id = this.curriculumId; //update
+    this.form.curriculum_id = this.curriculumId; // if (this.isUpdate) {
+    //   this.getCurriculumCourse();
+    // }
+    //update
     // if (this.isUpdate) {
     //   this.form.course_id = this.curriculumCourse.course_id;
     //   this.form.year_level = this.curriculumCourse.year_level;
@@ -54645,213 +54780,421 @@ var render = function() {
                     _vm._m(0)
                   ]),
                   _vm._v(" "),
-                  _c("div", { staticClass: "modal-body" }, [
-                    _c("div", { staticClass: "form-group row" }, [
-                      _vm._m(1),
+                  _c(
+                    "div",
+                    { staticClass: "modal-body" },
+                    [
+                      _c("div", { staticClass: "form-group row" }, [
+                        _vm._m(1),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "col-md-9" },
+                          [
+                            _c("input", {
+                              staticClass: "form-control",
+                              class: {
+                                "is-invalid": _vm.form.errors.has("course_id")
+                              },
+                              attrs: {
+                                id: "course_code",
+                                type: "text",
+                                readonly: ""
+                              },
+                              domProps: { value: _vm.course.course_code }
+                            }),
+                            _vm._v(" "),
+                            _c("has-error", {
+                              attrs: { form: _vm.form, field: "course_id" }
+                            })
+                          ],
+                          1
+                        )
+                      ]),
                       _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "col-md-9" },
-                        [
+                      _c("div", { staticClass: "form-group row" }, [
+                        _vm._m(2),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-md-9" }, [
                           _c("input", {
                             staticClass: "form-control",
-                            class: {
-                              "is-invalid": _vm.form.errors.has("course_id")
-                            },
                             attrs: {
-                              id: "course_code",
+                              id: "description",
                               type: "text",
                               readonly: ""
                             },
-                            domProps: { value: _vm.course.course_code }
-                          }),
-                          _vm._v(" "),
-                          _c("has-error", {
-                            attrs: { form: _vm.form, field: "course_id" }
+                            domProps: { value: _vm.course.description }
                           })
-                        ],
-                        1
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "form-group row" }, [
-                      _vm._m(2),
+                        ])
+                      ]),
                       _vm._v(" "),
-                      _c("div", { staticClass: "col-md-9" }, [
-                        _c("input", {
-                          staticClass: "form-control",
-                          attrs: {
-                            id: "description",
-                            type: "text",
-                            readonly: ""
-                          },
-                          domProps: { value: _vm.course.description }
-                        })
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "form-group row" }, [
-                      _vm._m(3),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "col-md-9" },
-                        [
-                          _c(
-                            "select",
-                            {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.form.year_level,
-                                  expression: "form.year_level"
-                                }
-                              ],
-                              staticClass: "form-control",
-                              class: {
-                                "is-invalid": _vm.form.errors.has("year_level")
-                              },
-                              attrs: { id: "year_level", name: "year_level" },
-                              on: {
-                                change: function($event) {
-                                  var $$selectedVal = Array.prototype.filter
-                                    .call($event.target.options, function(o) {
-                                      return o.selected
-                                    })
-                                    .map(function(o) {
-                                      var val =
-                                        "_value" in o ? o._value : o.value
-                                      return val
-                                    })
-                                  _vm.$set(
-                                    _vm.form,
-                                    "year_level",
-                                    $event.target.multiple
-                                      ? $$selectedVal
-                                      : $$selectedVal[0]
+                      _c("div", { staticClass: "form-group row" }, [
+                        _vm._m(3),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "col-md-9" },
+                          [
+                            _c(
+                              "select",
+                              {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.form.year_level,
+                                    expression: "form.year_level"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                class: {
+                                  "is-invalid": _vm.form.errors.has(
+                                    "year_level"
                                   )
-                                }
-                              }
-                            },
-                            [
-                              _c(
-                                "option",
-                                {
-                                  staticStyle: { display: "none" },
-                                  attrs: { value: "" }
                                 },
-                                [_vm._v("Select Year")]
-                              ),
-                              _vm._v(" "),
-                              _c("option", { attrs: { value: "1" } }, [
-                                _vm._v("1st year")
-                              ]),
-                              _vm._v(" "),
-                              _c("option", { attrs: { value: "2" } }, [
-                                _vm._v("2nd year")
-                              ]),
-                              _vm._v(" "),
-                              _c("option", { attrs: { value: "3" } }, [
-                                _vm._v("3rd year")
-                              ]),
-                              _vm._v(" "),
-                              _c("option", { attrs: { value: "4" } }, [
-                                _vm._v("4th year")
-                              ]),
-                              _vm._v(" "),
-                              _vm.maxYearLevel == 5
-                                ? _c("option", { attrs: { value: "5" } }, [
-                                    _vm._v("5th year")
+                                attrs: { id: "year_level", name: "year_level" },
+                                on: {
+                                  change: function($event) {
+                                    var $$selectedVal = Array.prototype.filter
+                                      .call($event.target.options, function(o) {
+                                        return o.selected
+                                      })
+                                      .map(function(o) {
+                                        var val =
+                                          "_value" in o ? o._value : o.value
+                                        return val
+                                      })
+                                    _vm.$set(
+                                      _vm.form,
+                                      "year_level",
+                                      $event.target.multiple
+                                        ? $$selectedVal
+                                        : $$selectedVal[0]
+                                    )
+                                  }
+                                }
+                              },
+                              [
+                                _c(
+                                  "option",
+                                  {
+                                    staticStyle: { display: "none" },
+                                    attrs: { value: "" }
+                                  },
+                                  [_vm._v("Select Year")]
+                                ),
+                                _vm._v(" "),
+                                _c("option", { attrs: { value: "1" } }, [
+                                  _vm._v("1st year")
+                                ]),
+                                _vm._v(" "),
+                                _c("option", { attrs: { value: "2" } }, [
+                                  _vm._v("2nd year")
+                                ]),
+                                _vm._v(" "),
+                                _c("option", { attrs: { value: "3" } }, [
+                                  _vm._v("3rd year")
+                                ]),
+                                _vm._v(" "),
+                                _c("option", { attrs: { value: "4" } }, [
+                                  _vm._v("4th year")
+                                ]),
+                                _vm._v(" "),
+                                _vm.maxYearLevel == 5
+                                  ? _c("option", { attrs: { value: "5" } }, [
+                                      _vm._v("5th year")
+                                    ])
+                                  : _vm._e()
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c("has-error", {
+                              attrs: { form: _vm.form, field: "year_level" }
+                            })
+                          ],
+                          1
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "form-group row" }, [
+                        _vm._m(4),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "col-md-9" },
+                          [
+                            _c(
+                              "select",
+                              {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.form.semester,
+                                    expression: "form.semester"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                class: {
+                                  "is-invalid": _vm.form.errors.has("semester")
+                                },
+                                attrs: { id: "semester", name: "semester" },
+                                on: {
+                                  change: function($event) {
+                                    var $$selectedVal = Array.prototype.filter
+                                      .call($event.target.options, function(o) {
+                                        return o.selected
+                                      })
+                                      .map(function(o) {
+                                        var val =
+                                          "_value" in o ? o._value : o.value
+                                        return val
+                                      })
+                                    _vm.$set(
+                                      _vm.form,
+                                      "semester",
+                                      $event.target.multiple
+                                        ? $$selectedVal
+                                        : $$selectedVal[0]
+                                    )
+                                  }
+                                }
+                              },
+                              [
+                                _c(
+                                  "option",
+                                  {
+                                    staticStyle: { display: "none" },
+                                    attrs: { value: "" }
+                                  },
+                                  [_vm._v("Select Semester")]
+                                ),
+                                _vm._v(" "),
+                                _c("option", { attrs: { value: "1" } }, [
+                                  _vm._v("1st semester")
+                                ]),
+                                _vm._v(" "),
+                                _c("option", { attrs: { value: "2" } }, [
+                                  _vm._v("2nd semester")
+                                ]),
+                                _vm._v(" "),
+                                _c("option", { attrs: { value: "3" } }, [
+                                  _vm._v("Summer")
+                                ])
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c("has-error", {
+                              attrs: { form: _vm.form, field: "semester" }
+                            })
+                          ],
+                          1
+                        )
+                      ]),
+                      _vm._v(" "),
+                      [
+                        _c("hr"),
+                        _vm._v(" "),
+                        _vm._m(5),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "form-group" }, [
+                          _vm.isSelectPreqMode ||
+                          _vm.form.errors.has("pre_requisites")
+                            ? _c(
+                                "div",
+                                [
+                                  _c("label", [_vm._v("Select pre requisite")]),
+                                  _vm._v(" "),
+                                  _c(
+                                    "select",
+                                    {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.selectedPreReq,
+                                          expression: "selectedPreReq"
+                                        }
+                                      ],
+                                      staticClass: "form-control",
+                                      class: {
+                                        "is-invalid": _vm.form.errors.has(
+                                          "pre_requisites"
+                                        )
+                                      },
+                                      attrs: {
+                                        name: "_select_pre_preq",
+                                        id: "_select_pre_preq"
+                                      },
+                                      on: {
+                                        change: [
+                                          function($event) {
+                                            var $$selectedVal = Array.prototype.filter
+                                              .call(
+                                                $event.target.options,
+                                                function(o) {
+                                                  return o.selected
+                                                }
+                                              )
+                                              .map(function(o) {
+                                                var val =
+                                                  "_value" in o
+                                                    ? o._value
+                                                    : o.value
+                                                return val
+                                              })
+                                            _vm.selectedPreReq = $event.target
+                                              .multiple
+                                              ? $$selectedVal
+                                              : $$selectedVal[0]
+                                          },
+                                          _vm.addPreRequisite
+                                        ]
+                                      }
+                                    },
+                                    [
+                                      _vm.selectPreRequsiteCourses().length > 0
+                                        ? [
+                                            _c(
+                                              "option",
+                                              {
+                                                staticStyle: {
+                                                  display: "none"
+                                                },
+                                                attrs: { value: "" }
+                                              },
+                                              [_vm._v("Select pre-req")]
+                                            ),
+                                            _vm._v(" "),
+                                            _vm._l(
+                                              _vm.selectPreRequsiteCourses(),
+                                              function(c) {
+                                                return _c(
+                                                  "option",
+                                                  {
+                                                    key: c.id,
+                                                    domProps: { value: c }
+                                                  },
+                                                  [
+                                                    _vm._v(
+                                                      "\n                        " +
+                                                        _vm._s(
+                                                          c.course_code +
+                                                            " - " +
+                                                            c.description
+                                                        ) +
+                                                        "\n                      "
+                                                    )
+                                                  ]
+                                                )
+                                              }
+                                            )
+                                          ]
+                                        : [
+                                            _c(
+                                              "option",
+                                              {
+                                                attrs: {
+                                                  value: "no-available",
+                                                  disabled: ""
+                                                }
+                                              },
+                                              [_vm._v("No Available")]
+                                            )
+                                          ]
+                                    ],
+                                    2
+                                  ),
+                                  _vm._v(" "),
+                                  _c("has-error", {
+                                    attrs: {
+                                      form: _vm.form,
+                                      field: "pre_requisites"
+                                    }
+                                  })
+                                ],
+                                1
+                              )
+                            : _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-primary btn-sm mb-2",
+                                  attrs: { type: "button" },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.isSelectPreqMode = true
+                                    }
+                                  }
+                                },
+                                [
+                                  _vm._v("\n                  Add pre req "),
+                                  _c("i", { staticClass: "fa fa-plus" })
+                                ]
+                              )
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "ul",
+                          { staticClass: "list-group" },
+                          [
+                            _vm.form.pre_requisites.length > 0
+                              ? _vm._l(_vm.form.pre_requisites, function(
+                                  preReq
+                                ) {
+                                  return _c(
+                                    "li",
+                                    {
+                                      staticClass:
+                                        "list-group-item d-flex justify-content-between align-items-center"
+                                    },
+                                    [
+                                      _c("div", [
+                                        _vm._v(
+                                          "\n                      " +
+                                            _vm._s(
+                                              preReq.course_code +
+                                                " - " +
+                                                preReq.description
+                                            ) +
+                                            "\n                    "
+                                        )
+                                      ]),
+                                      _vm._v(" "),
+                                      _c(
+                                        "button",
+                                        {
+                                          staticClass:
+                                            "btn btn-sm btn-secondary",
+                                          attrs: { type: "button" },
+                                          on: {
+                                            click: function($event) {
+                                              return _vm.removePreRequisite(
+                                                preReq.id
+                                              )
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _c("i", {
+                                            staticClass: "fa fa-trash-alt"
+                                          })
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                })
+                              : [
+                                  _c("li", { staticClass: "list-group-item" }, [
+                                    _vm._v("No Pre-requisite")
                                   ])
-                                : _vm._e()
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c("has-error", {
-                            attrs: { form: _vm.form, field: "year_level" }
-                          })
-                        ],
-                        1
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "form-group row" }, [
-                      _vm._m(4),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "col-md-9" },
-                        [
-                          _c(
-                            "select",
-                            {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.form.semester,
-                                  expression: "form.semester"
-                                }
-                              ],
-                              staticClass: "form-control",
-                              class: {
-                                "is-invalid": _vm.form.errors.has("semester")
-                              },
-                              attrs: { id: "semester", name: "semester" },
-                              on: {
-                                change: function($event) {
-                                  var $$selectedVal = Array.prototype.filter
-                                    .call($event.target.options, function(o) {
-                                      return o.selected
-                                    })
-                                    .map(function(o) {
-                                      var val =
-                                        "_value" in o ? o._value : o.value
-                                      return val
-                                    })
-                                  _vm.$set(
-                                    _vm.form,
-                                    "semester",
-                                    $event.target.multiple
-                                      ? $$selectedVal
-                                      : $$selectedVal[0]
-                                  )
-                                }
-                              }
-                            },
-                            [
-                              _c(
-                                "option",
-                                {
-                                  staticStyle: { display: "none" },
-                                  attrs: { value: "" }
-                                },
-                                [_vm._v("Select Semester")]
-                              ),
-                              _vm._v(" "),
-                              _c("option", { attrs: { value: "1" } }, [
-                                _vm._v("1st semester")
-                              ]),
-                              _vm._v(" "),
-                              _c("option", { attrs: { value: "2" } }, [
-                                _vm._v("2nd semester")
-                              ]),
-                              _vm._v(" "),
-                              _c("option", { attrs: { value: "3" } }, [
-                                _vm._v("Summer")
-                              ])
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c("has-error", {
-                            attrs: { form: _vm.form, field: "semester" }
-                          })
-                        ],
-                        1
-                      )
-                    ])
-                  ]),
+                                ]
+                          ],
+                          2
+                        )
+                      ]
+                    ],
+                    2
+                  ),
                   _vm._v(" "),
                   _c("div", { staticClass: "modal-footer" }, [
                     _c(
@@ -54982,6 +55325,12 @@ var staticRenderFns = [
       },
       [_c("b", [_vm._v("Semester")])]
     )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [_c("b", [_vm._v("Pre requisite(s)")])])
   }
 ]
 render._withStripped = true

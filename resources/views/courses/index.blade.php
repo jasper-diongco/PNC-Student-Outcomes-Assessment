@@ -30,12 +30,12 @@
           </div>
         </div>
         @can('isSAdmin')
-          <div class="col-md-4 d-flex row">
+          <div class="col-md-4 d-flex row align-items-center">
             <div class="col-6 text-right">
               <label class="col-form-label"><b>Filter By College: </b></label>
             </div>
             <div class="col-6">
-              <select v-on:change="getCourses" class="form-control mt-3" name="filter_by_college" id="filter_by_college" v-model="filter_by_college">
+              <select v-on:change="getCourses" class="form-control" name="filter_by_college" id="filter_by_college" v-model="filter_by_college">
                 <option value="">All</option>
                 @foreach($colleges as $college)
                   <option value="{{ $college->id }}">{{ $college->college_code }}</option>
