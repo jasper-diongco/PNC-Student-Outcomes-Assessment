@@ -9,7 +9,7 @@
       >
         Add New Curriculum <i class="fa fa-plus"></i>
       </button> -->
-    <div class="dropdown">
+    <div class="dropdown" v-if="!isRevise">
       <button
         class="btn btn-success btn-round"
         type="button"
@@ -74,7 +74,7 @@
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLabel">
-                Add new Curriculum for {{ selectedProgram.program_code }}
+                {{ modalTitle }}
               </h5>
               <button
                 type="button"
@@ -101,6 +101,7 @@
                     v-model="form.name"
                     v-uppercase
                     :class="{ 'is-invalid': form.errors.has('name') }"
+                    :readonly="isRevise"
                   />
                   <has-error :form="form" field="name"></has-error>
                 </div>
@@ -187,7 +188,7 @@
                 :disabled="form.busy"
                 type="submit"
               >
-                Add to database
+                {{ saveTitle }}
                 <div
                   v-show="form.busy"
                   class="spinner-border spinner-border-sm text-light"
@@ -209,10 +210,11 @@
 
 <script>
 export default {
-  props: ["programs"],
+  props: ["programs", "isRevise", "reviseProgram", "curriculum", "curricula"],
   data() {
     return {
       form: new Form({
+        id: "",
         program_id: "",
         name: "",
         description: "",
@@ -223,7 +225,14 @@ export default {
       yearNow: ""
     };
   },
-  computed: {},
+  computed: {
+    modalTitle() {
+      return this.isRevise ? "Revise Curriculum" : "Add new Curriculum";
+    },
+    saveTitle() {
+      return this.isRevise ? "Revise" : "Add to database";
+    }
+  },
   methods: {
     selectProgram(program) {
       this.form.program_id = program.id;
@@ -243,12 +252,38 @@ export default {
           });
         });
     },
+    reviseCurriculum() {
+      this.form
+        .post("../curricula/" + this.form.id + "/revise")
+        .then(({ data }) => {
+          window.location.replace(myRootURL + "/curricula/" + data.id);
+        })
+        .catch(err => {
+          console.log(err);
+          toast.fire({
+            type: "error",
+            title: "Please Enter valid data!"
+          });
+        });
+    },
     saveCurriculum() {
-      this.createCurriculum();
+      if (this.isRevise) {
+        this.reviseCurriculum();
+      } else {
+        this.createCurriculum();
+      }
     }
   },
   created() {
     this.yearNow = new Date().getFullYear();
+    if (this.isRevise) {
+      this.selectedProgram = this.reviseProgram;
+      this.form.id = this.curriculum.id;
+      this.form.program_id = this.curriculum.program_id;
+      this.form.name = this.curriculum.name;
+      this.form.year = this.curriculum.year;
+      this.form.year_level = this.curriculum.year_level;
+    }
   }
 };
 </script>

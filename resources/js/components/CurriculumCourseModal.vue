@@ -150,10 +150,11 @@
                     v-if="isSelectPreqMode || form.errors.has('pre_requisites')"
                   >
                     <label>Select pre requisite</label>
+                    <!--
                     <select
+                      id="combobox"
                       class="form-control"
                       name="_select_pre_preq"
-                      id="_select_pre_preq"
                       v-model="selectedPreReq"
                       @change="addPreRequisite"
                       :class="{
@@ -178,6 +179,31 @@
                         >
                       </template>
                     </select>
+                    -->
+                    <vue-select
+                      @input="addPreRequisite"
+                      v-model="selectedPreReq"
+                      :options="selectPreRequsiteCourses()"
+                      :filter="filter"
+                    >
+                      <template slot="option" slot-scope="option">
+                        <div class="d-center">
+                          {{ option.course_code + " - " + option.description }}
+                        </div>
+                      </template>
+                      <template slot="selected-option" slot-scope="option">
+                        <div class="selected d-center">
+                          {{ option.course_code + " - " + option.description }}
+                        </div>
+                      </template>
+                    </vue-select>
+                    <select
+                      style="display: none"
+                      class="form-control"
+                      :class="{
+                        'is-invalid': form.errors.has('pre_requisites')
+                      }"
+                    ></select>
                     <has-error :form="form" field="pre_requisites"></has-error>
                   </div>
                   <button
@@ -268,7 +294,7 @@ export default {
         semester: "",
         pre_requisites: []
       }),
-      isSelectPreqMode: false,
+      isSelectPreqMode: true,
       selectedPreReq: "",
       curriculumCourseAjax: ""
     };
@@ -354,8 +380,10 @@ export default {
       this.form.semester = "";
     },
     addPreRequisite() {
-      this.form.pre_requisites.push(this.selectedPreReq);
-      this.selectedPreReq = "";
+      if (this.selectedPreReq != "" && this.selectedPreReq != null) {
+        this.form.pre_requisites.push(this.selectedPreReq);
+        this.selectedPreReq = "";
+      }
     },
     removePreRequisite(id) {
       for (let i = 0; i < this.form.pre_requisites.length; i++) {
@@ -398,6 +426,15 @@ export default {
             pre_req_id: resp_pre_requisites[i].id
           });
         }
+      });
+    },
+    filter(options, search) {
+      return options.filter(option => {
+        //let label = this.getOptionLabel(option);
+        return (
+          option.description.toLowerCase().indexOf(search.toLowerCase()) >= 0 ||
+          option.course_code.toLowerCase().indexOf(search.toLowerCase()) >= 0
+        );
       });
     }
   },

@@ -2383,6 +2383,32 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["course", "maxYearLevel", "curriculumId", "isUpdate", "curriculumCourse", "curriculumCourses"],
   data: function data() {
@@ -2395,7 +2421,7 @@ __webpack_require__.r(__webpack_exports__);
         semester: "",
         pre_requisites: []
       }),
-      isSelectPreqMode: false,
+      isSelectPreqMode: true,
       selectedPreReq: "",
       curriculumCourseAjax: ""
     };
@@ -2485,8 +2511,10 @@ __webpack_require__.r(__webpack_exports__);
       this.form.semester = "";
     },
     addPreRequisite: function addPreRequisite() {
-      this.form.pre_requisites.push(this.selectedPreReq);
-      this.selectedPreReq = "";
+      if (this.selectedPreReq != "" && this.selectedPreReq != null) {
+        this.form.pre_requisites.push(this.selectedPreReq);
+        this.selectedPreReq = "";
+      }
     },
     removePreRequisite: function removePreRequisite(id) {
       for (var i = 0; i < this.form.pre_requisites.length; i++) {
@@ -2532,6 +2560,12 @@ __webpack_require__.r(__webpack_exports__);
             pre_req_id: resp_pre_requisites[i].id
           });
         }
+      });
+    },
+    filter: function filter(options, search) {
+      return options.filter(function (option) {
+        //let label = this.getOptionLabel(option);
+        return option.description.toLowerCase().indexOf(search.toLowerCase()) >= 0 || option.course_code.toLowerCase().indexOf(search.toLowerCase()) >= 0;
       });
     }
   },
@@ -2769,11 +2803,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["programs"],
+  props: ["programs", "isRevise", "reviseProgram", "curriculum", "curricula"],
   data: function data() {
     return {
       form: new Form({
+        id: "",
         program_id: "",
         name: "",
         description: "",
@@ -2784,7 +2820,14 @@ __webpack_require__.r(__webpack_exports__);
       yearNow: ""
     };
   },
-  computed: {},
+  computed: {
+    modalTitle: function modalTitle() {
+      return this.isRevise ? "Revise Curriculum" : "Add new Curriculum";
+    },
+    saveTitle: function saveTitle() {
+      return this.isRevise ? "Revise" : "Add to database";
+    }
+  },
   methods: {
     selectProgram: function selectProgram(program) {
       this.form.program_id = program.id;
@@ -2802,12 +2845,37 @@ __webpack_require__.r(__webpack_exports__);
         });
       });
     },
+    reviseCurriculum: function reviseCurriculum() {
+      this.form.post("../curricula/" + this.form.id + "/revise").then(function (_ref2) {
+        var data = _ref2.data;
+        window.location.replace(myRootURL + "/curricula/" + data.id);
+      })["catch"](function (err) {
+        console.log(err);
+        toast.fire({
+          type: "error",
+          title: "Please Enter valid data!"
+        });
+      });
+    },
     saveCurriculum: function saveCurriculum() {
-      this.createCurriculum();
+      if (this.isRevise) {
+        this.reviseCurriculum();
+      } else {
+        this.createCurriculum();
+      }
     }
   },
   created: function created() {
     this.yearNow = new Date().getFullYear();
+
+    if (this.isRevise) {
+      this.selectedProgram = this.reviseProgram;
+      this.form.id = this.curriculum.id;
+      this.form.program_id = this.curriculum.program_id;
+      this.form.name = this.curriculum.name;
+      this.form.year = this.curriculum.year;
+      this.form.year_level = this.curriculum.year_level;
+    }
   }
 });
 
@@ -55053,106 +55121,84 @@ var render = function() {
                                 [
                                   _c("label", [_vm._v("Select pre requisite")]),
                                   _vm._v(" "),
-                                  _c(
-                                    "select",
-                                    {
-                                      directives: [
+                                  _c("vue-select", {
+                                    attrs: {
+                                      options: _vm.selectPreRequsiteCourses(),
+                                      filter: _vm.filter
+                                    },
+                                    on: { input: _vm.addPreRequisite },
+                                    scopedSlots: _vm._u(
+                                      [
                                         {
-                                          name: "model",
-                                          rawName: "v-model",
-                                          value: _vm.selectedPreReq,
-                                          expression: "selectedPreReq"
+                                          key: "option",
+                                          fn: function(option) {
+                                            return [
+                                              _c(
+                                                "div",
+                                                { staticClass: "d-center" },
+                                                [
+                                                  _vm._v(
+                                                    "\n                        " +
+                                                      _vm._s(
+                                                        option.course_code +
+                                                          " - " +
+                                                          option.description
+                                                      ) +
+                                                      "\n                      "
+                                                  )
+                                                ]
+                                              )
+                                            ]
+                                          }
+                                        },
+                                        {
+                                          key: "selected-option",
+                                          fn: function(option) {
+                                            return [
+                                              _c(
+                                                "div",
+                                                {
+                                                  staticClass:
+                                                    "selected d-center"
+                                                },
+                                                [
+                                                  _vm._v(
+                                                    "\n                        " +
+                                                      _vm._s(
+                                                        option.course_code +
+                                                          " - " +
+                                                          option.description
+                                                      ) +
+                                                      "\n                      "
+                                                  )
+                                                ]
+                                              )
+                                            ]
+                                          }
                                         }
                                       ],
-                                      staticClass: "form-control",
-                                      class: {
-                                        "is-invalid": _vm.form.errors.has(
-                                          "pre_requisites"
-                                        )
+                                      null,
+                                      false,
+                                      4182422180
+                                    ),
+                                    model: {
+                                      value: _vm.selectedPreReq,
+                                      callback: function($$v) {
+                                        _vm.selectedPreReq = $$v
                                       },
-                                      attrs: {
-                                        name: "_select_pre_preq",
-                                        id: "_select_pre_preq"
-                                      },
-                                      on: {
-                                        change: [
-                                          function($event) {
-                                            var $$selectedVal = Array.prototype.filter
-                                              .call(
-                                                $event.target.options,
-                                                function(o) {
-                                                  return o.selected
-                                                }
-                                              )
-                                              .map(function(o) {
-                                                var val =
-                                                  "_value" in o
-                                                    ? o._value
-                                                    : o.value
-                                                return val
-                                              })
-                                            _vm.selectedPreReq = $event.target
-                                              .multiple
-                                              ? $$selectedVal
-                                              : $$selectedVal[0]
-                                          },
-                                          _vm.addPreRequisite
-                                        ]
-                                      }
+                                      expression: "selectedPreReq"
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("select", {
+                                    staticClass: "form-control",
+                                    class: {
+                                      "is-invalid": _vm.form.errors.has(
+                                        "pre_requisites"
+                                      )
                                     },
-                                    [
-                                      _vm.selectPreRequsiteCourses().length > 0
-                                        ? [
-                                            _c(
-                                              "option",
-                                              {
-                                                staticStyle: {
-                                                  display: "none"
-                                                },
-                                                attrs: { value: "" }
-                                              },
-                                              [_vm._v("Select pre-req")]
-                                            ),
-                                            _vm._v(" "),
-                                            _vm._l(
-                                              _vm.selectPreRequsiteCourses(),
-                                              function(c) {
-                                                return _c(
-                                                  "option",
-                                                  {
-                                                    key: c.id,
-                                                    domProps: { value: c }
-                                                  },
-                                                  [
-                                                    _vm._v(
-                                                      "\n                        " +
-                                                        _vm._s(
-                                                          c.course_code +
-                                                            " - " +
-                                                            c.description
-                                                        ) +
-                                                        "\n                      "
-                                                    )
-                                                  ]
-                                                )
-                                              }
-                                            )
-                                          ]
-                                        : [
-                                            _c(
-                                              "option",
-                                              {
-                                                attrs: {
-                                                  value: "no-available",
-                                                  disabled: ""
-                                                }
-                                              },
-                                              [_vm._v("No Available")]
-                                            )
-                                          ]
-                                    ],
-                                    2
-                                  ),
+                                    staticStyle: { display: "none" }
+                                  }),
                                   _vm._v(" "),
                                   _c("has-error", {
                                     attrs: {
@@ -55403,47 +55449,53 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("div", { staticClass: "dropdown" }, [
-      _vm._m(0),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          staticClass: "dropdown-menu",
-          attrs: { "aria-labelledby": "dropdownMenuButton" }
-        },
-        _vm._l(_vm.programs, function(program) {
-          return _c(
-            "a",
+    !_vm.isRevise
+      ? _c("div", { staticClass: "dropdown" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c(
+            "div",
             {
-              key: program.id,
-              staticClass: "dropdown-item d-flex justify-content-between",
-              attrs: {
-                "data-toggle": "modal",
-                "data-target": "#curriculumModal",
-                href: "#"
-              },
-              on: {
-                click: function($event) {
-                  return _vm.selectProgram(program)
-                }
-              }
+              staticClass: "dropdown-menu",
+              attrs: { "aria-labelledby": "dropdownMenuButton" }
             },
-            [
-              _c("div", [
-                _c("i", { staticClass: "fa fa-chevron-right text-primary" }),
-                _vm._v(
-                  "\n          " + _vm._s(program.program_code) + "\n        "
-                )
-              ]),
-              _vm._v(" "),
-              _vm._m(1, true)
-            ]
+            _vm._l(_vm.programs, function(program) {
+              return _c(
+                "a",
+                {
+                  key: program.id,
+                  staticClass: "dropdown-item d-flex justify-content-between",
+                  attrs: {
+                    "data-toggle": "modal",
+                    "data-target": "#curriculumModal",
+                    href: "#"
+                  },
+                  on: {
+                    click: function($event) {
+                      return _vm.selectProgram(program)
+                    }
+                  }
+                },
+                [
+                  _c("div", [
+                    _c("i", {
+                      staticClass: "fa fa-chevron-right text-primary"
+                    }),
+                    _vm._v(
+                      "\n          " +
+                        _vm._s(program.program_code) +
+                        "\n        "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(1, true)
+                ]
+              )
+            }),
+            0
           )
-        }),
-        0
-      )
-    ]),
+        ])
+      : _vm._e(),
     _vm._v(" "),
     _c(
       "div",
@@ -55486,8 +55538,8 @@ var render = function() {
                       },
                       [
                         _vm._v(
-                          "\n              Add new Curriculum for " +
-                            _vm._s(_vm.selectedProgram.program_code) +
+                          "\n              " +
+                            _vm._s(_vm.modalTitle) +
                             "\n            "
                         )
                       ]
@@ -55518,7 +55570,12 @@ var render = function() {
                             class: {
                               "is-invalid": _vm.form.errors.has("name")
                             },
-                            attrs: { id: "name", type: "text", name: "name" },
+                            attrs: {
+                              id: "name",
+                              type: "text",
+                              name: "name",
+                              readonly: _vm.isRevise
+                            },
                             domProps: { value: _vm.form.name },
                             on: {
                               input: function($event) {
@@ -55747,7 +55804,9 @@ var render = function() {
                       },
                       [
                         _vm._v(
-                          "\n              Add to database\n              "
+                          "\n              " +
+                            _vm._s(_vm.saveTitle) +
+                            "\n              "
                         ),
                         _c(
                           "div",

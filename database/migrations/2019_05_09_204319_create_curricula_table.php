@@ -22,6 +22,7 @@ class CreateCurriculaTable extends Migration
             $table->integer('user_id');//the one who created
             $table->boolean('is_saved')->default(false);
             $table->integer('year_level');
+            $table->integer('revision_no');
             $table->timestamps();
         });
     }

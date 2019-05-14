@@ -22,7 +22,7 @@ Route::get('/', function () {
 Route::resource('/colleges', 'CollegesController');
 Route::get('/colleges/{college}/dashboard', 'CollegesController@dashboard');
 /*
- * End Colleges Routes
+ * /End Colleges Routes
  */
 
 
@@ -34,8 +34,21 @@ Route::put('/faculties/{faculty}/update_account', 'FacultiesController@updateAcc
 Route::resource('/programs', 'ProgramsController');
 Route::post('/programs/check_code', 'ProgramsController@check_code');
 
-Route::resource('/curricula', 'CurriculaController');
+
+/*
+ * Curricula Routes
+ */
+Route::get('/curricula', 'CurriculaController@index');
+Route::post('/curricula', 'CurriculaController@store');
+Route::post('/curricula/{curriculum}/save_curriculum', 'CurriculaController@saveCurriculum');
+Route::post('/curricula/{curriculum}/revise', 'CurriculaController@revise');
+Route::get('/curricula/{curriculum}', 'CurriculaController@show');
+/*
+ * /End Curricula Routes
+ */
+
 Route::resource('/curriculum_courses', 'CurriculumCoursesController');
+
 
 
 //Route::resource('/courses', 'CoursesController');

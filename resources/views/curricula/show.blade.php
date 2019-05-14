@@ -22,67 +22,101 @@
       :course="selectedCourse"
       :curriculum-courses="curriculum.curriculum_courses"></curriculum-course-modal>
     <!-- end update modal  -->
+
+    <!-- Curriculum modal -->
+    <curriculum-modal :is-revise="true" :revise-program='@json($curriculum->program)' :curriculum='@json($curriculum)'>
+    </curriculum-modal>
+    <!-- End curriculum modal -->
     
+    <a href="{{ url('/curricula') }}" class="btn btn-success mb-3"><i class="fa fa-arrow-left"></i> Back</a>
 
     <h1 class="h4">{{ $curriculum->name }}</h1>
     <p><i class="fa fa-file-alt"></i> {{ $curriculum->description }}</p>
-    <div class="alert alert-info"><i class="fa fa-info-circle"></i> You can search existing courses to add to this curriculum or you add a new course if you want.
-    <br>
-    <b>Once this is saved. You cannot edit this, but you can revised instead.</b>
-    </div>
-    <div class="d-flex justify-content-between">
-      <div style="width: 80%">
-        <div class="form-group row">
-          <div class="col-md-2 text-md-right">
-            <label class="col-form-label "><b>Search Courses: </b></label>
-          </div>
-          <div style="width: 100%" class="d-flex flex-column col-md-9">
-            <div >
-              <input v-on:input="searchCourses" v-model="searchCourseText" class="form-control" type="search" name="search_course" placeholder="Type to search courses...">
-            </div>
+    <p><i class="fa fa-copy"></i> Revision no: <b>{{ $curriculum->revision_no }}.0</b></p>
 
-            <div v-if="searched_courses.length > 0" class="search-course">
-              <ul class="list-group mt-1" style="">
-                <li v-for="course in searched_courses" v-on:click="selectCourse(course)" :key="course.id" class="list-group-item d-flex align-items-center justify-content-between">
-                  <div class="d-flex">
-                    <div class="avatar-course mr-2" :style="{ background: course.color }"> @{{ course.course_code }}</div>
-                    @{{ course.course_code }}
-                    &mdash; 
-                    <div class="d-flex flex-column"> 
-                      <div>@{{ course.description }}</div>
-                      <small class="text-muted">@{{ course.college }}</small>
-                    </div>
-                  </div>
-                  <div>
-                    <button v-on:click="selectCourse(course)" 
-                    class="btn btn-primary btn-sm" 
-                    data-toggle="modal"
-                    data-target="#curriculumCourseModal">Add</button>
-                  </div> 
-                  </li>
-              </ul>
+    @if (!$curriculum->checkIfLatestVersion())
+      <div class="alert alert-warning">
+        <i class="fa fa-exclamation-triangle"></i>
+        This is not the latest version of <b>{{ $curriculum->program->program_code }}</b> curriculum. View the latest version <a href="{{ url('/curricula/' . $curriculum->getLatestVersion()->id) }}">here</a>
+      </div>
+    @endif
+
+    @if (!$curriculum->is_saved)
+      <div class="alert alert-info"><i class="fa fa-info-circle"></i> You can search existing courses to add to this curriculum or you add a new course if you want.
+      <br>
+      <b>Once this is saved. You cannot edit this, but you can revised instead.</b>
+      </div>
+
+      <div class="d-flex justify-content-between">
+        <div style="width: 80%">
+          <div class="form-group row">
+            <div class="col-md-2 text-md-right">
+              <label class="col-form-label "><b>Search Courses: </b></label>
             </div>
-            <div v-else-if="this.searching">
-              <table-loading></table-loading>
+            <div style="width: 100%" class="d-flex flex-column col-md-9">
+              <div >
+                <input v-on:input="searchCourses" v-model="searchCourseText" class="form-control" type="search" name="search_course" placeholder="Type to search courses...">
+              </div>
+
+              <div v-if="searched_courses.length > 0" class="search-course">
+                <ul class="list-group mt-1" style="">
+                  <li v-for="course in searched_courses" v-on:click="selectCourse(course)" :key="course.id" class="list-group-item d-flex align-items-center justify-content-between">
+                    <div class="d-flex">
+                      <div class="avatar-course mr-2" :style="{ background: course.color }"> @{{ course.course_code }}</div>
+                      @{{ course.course_code }}
+                      &mdash; 
+                      <div class="d-flex flex-column"> 
+                        <div>@{{ course.description }}</div>
+                        <small class="text-muted">@{{ course.college }}</small>
+                      </div>
+                    </div>
+                    <div>
+                      <button v-on:click="selectCourse(course)" 
+                      class="btn btn-primary btn-sm" 
+                      data-toggle="modal"
+                      data-target="#curriculumCourseModal">Add</button>
+                    </div> 
+                    </li>
+                </ul>
+              </div>
+              <div v-else-if="this.searching">
+                <table-loading></table-loading>
+              </div>
             </div>
           </div>
         </div>
+        
+        <div>
+          @if(Gate::check('isDean') || Gate::check('isSAdmin'))
+            <!-- COURSE MODAL -->
+            <course-modal 
+              :college-id="college_id" 
+              :colleges='@json($colleges)'
+              :add-directly="true"
+              v-on:open-curriculum-course="openCurriculumCourse"></course-modal>
+            <!-- END MODAL -->
+          @endif
+        </div>
       </div>
-      
-      <div>
-
-        {{-- <button class="btn btn-primary btn-round">Add new Course <i class="fa fa-plus"></i></button> --}}
-        @if(Gate::check('isDean') || Gate::check('isSAdmin'))
-          <!-- COURSE MODAL -->
-          <course-modal 
-            :college-id="college_id" 
-            :colleges='@json($colleges)'
-            :add-directly="true"
-            v-on:open-curriculum-course="openCurriculumCourse"></course-modal>
-          <!-- END MODAL -->
+    @else
+      <div class="d-flex justify-content-end align-self-center my-3">
+        <div>
+            <button class="btn btn-secondary mr-2">Print <i class="fa fa-print"></i></button>    
+        </div>
+        @if ($curriculum->checkIfLatestVersion())
+        <div>
+          <form v-on:submit.prevent="reviseCurriculum" action="{{ url('/curricula/' . $curriculum->id. '/revise') }}" method="post">
+            @csrf
+            <button class="btn btn-primary" type="submit">Revise <i class="fa fa-edit"></i></button>
+          </form>
+        </div>
         @endif
       </div>
-    </div>
+    @endif
+
+    
+
+
     <div class="accordion" id="accordionExample">
       <div v-if="isLoading">
         <div class="card">
@@ -92,7 +126,7 @@
         </div>
         
       </div>
-      <template v-else v-for="year in curriculum.year_level">
+      <div v-else v-for="year in curriculum.year_level">
         <!-- card -->
         <div :key="year + '' + sem"  v-for="sem in 2" class="card">
           <div class="card-header d-flex justify-content-between align-items-center">
@@ -101,16 +135,25 @@
                 <button v-on:click="toggleAccordion(year + '' + sem)" class="btn btn-link" type="button" data-toggle="collapse" :data-target="'#' + year + '' + sem" aria-expanded="true" aria-controls="collapseOne">
                   <b>
                     @{{ formatIndex(year) + ' year' + '/' + formatIndex(sem) + ' sem' }}
-                  </b>   
+                  </b>  
+
                 </button>
               </h2>
             </div>
-            <div class="text-success">
+            <div>
+              <button v-on:click="toggleExpand(year, sem)" class="btn btn-sm
+               mr-3" :class="{ 'btn-success': checkIfExpand(year, sem)  , 'btn-secondary': !checkIfExpand(year, sem) }">
+                <i class="fa fa-arrows-alt-v "></i>
+              </button>
+              
+              <span class="text-success">
               Total units: <b>@{{ getTotalUnit(year, sem, 'all') }}</b>
+              </span> 
             </div>
           </div>
+          
+          <div :id="year + '' + sem" class="collapse" :class="{ show: checkIfExpand(year, sem)  }" aria-labelledby="headingOne" >
 
-          <div :id="year + '' + sem" class="collapse show" aria-labelledby="headingOne">
             <div class="card-body">
               <div v-if="getSemCourses(year, sem).length > 0" class="table-responsive">
                 <table class="table">
@@ -121,7 +164,7 @@
                       <th>Lec Unit</th>
                       <th>Lab Unit</th>
                       <th>Pre requsite</th>
-                      <th class="text-center">Actions</th>
+                      <th class="text-center" v-if="is_saved == 0">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -131,7 +174,7 @@
                       <td>@{{ curriculumCourse.lec_unit }}</td>
                       <td>@{{ curriculumCourse.lab_unit }}</td>
                       <td>@{{ formatPreRequisites(curriculumCourse) }}</td>
-                      <td class="justify-content-end d-flex">
+                      <td class="justify-content-end d-flex" v-if="is_saved == 0">
                         <div class="mr-2">
                           <button v-on:click="removeCurriculumCourse(curriculumCourse.id)" class="btn btn-secondary btn-sm">Remove <i class="fa fa-minus-circle text-danger"></i></button>
                           <button
@@ -155,7 +198,7 @@
                       <th class="text-success">@{{ getTotalUnit(year,sem, 'lec') }}</th>
                       <th class="text-success">@{{ getTotalUnit(year,sem, 'lab') }}</th>
                       <td></td>
-                      <td></td>
+                      <td v-if="is_saved == 0"></td>
                     </tr>
                   </tfoot>
                 </table>
@@ -165,11 +208,136 @@
               </div>
             </div>
           </div>
-          <!-- end card -->
-        </template>
+          
+        </div>
+        <!-- end card -->
+
+
+
+        {{-- summer --}}
+        <div :key="year + '' + 3" v-if="checkIfHasSummer(year)"  class="card">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <div>
+              <h2 class="mb-0">
+                <button v-on:click="toggleAccordion(year + '' + 3)" class="btn btn-link" type="button" data-toggle="collapse" :data-target="'#' + year + '' + 3" aria-expanded="true" aria-controls="collapseOne">
+                  <b>
+                    @{{ formatIndex(year) + ' year' + '/summer' }}
+                  </b>  
+
+                </button>
+              </h2>
+            </div>
+            <div>
+              <button v-on:click="toggleExpand(year, 3)" class="btn btn-sm
+               mr-3" :class="{ 'btn-success': checkIfExpand(year, 3)  , 'btn-secondary': !checkIfExpand(year, 3) }">
+                <i class="fa fa-arrows-alt-v "></i>
+              </button>
+              
+              <span class="text-success">
+              Total units: <b>@{{ getTotalUnit(year, 3, 'all') }}</b>
+              </span> 
+            </div>
+          </div>
+          
+          <div :id="year + '' + 3" class="collapse" :class="{ show: checkIfExpand(year, 3)  }" aria-labelledby="headingOne" >
+
+            <div class="card-body">
+              <div v-if="getSemCourses(year, 3).length > 0" class="table-responsive">
+                <table class="table">
+                  <thead class="thead-light">
+                    <tr>
+                      <th>Course Code</th>
+                      <th>Description</th>
+                      <th>Lec Unit</th>
+                      <th>Lab Unit</th>
+                      <th>Pre requsite</th>
+                      <th class="text-center" v-if="is_saved == 0">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="curriculumCourse in getSemCourses(year, 3)" :key="curriculumCourse.course_id">
+                      <th>@{{ curriculumCourse.course_code }}</th>
+                      <td>@{{ curriculumCourse.description }}</td>
+                      <td>@{{ curriculumCourse.lec_unit }}</td>
+                      <td>@{{ curriculumCourse.lab_unit }}</td>
+                      <td>@{{ formatPreRequisites(curriculumCourse) }}</td>
+                      <td class="justify-content-end d-flex" v-if="is_saved == 0">
+                        <div class="mr-2">
+                          <button v-on:click="removeCurriculumCourse(curriculumCourse.id)" class="btn btn-secondary btn-sm">Remove <i class="fa fa-minus-circle text-danger"></i></button>
+                          <button
+                            data-toggle="modal"
+                            data-target="#curriculumCourseModalUpdate"
+                            class="btn btn-success btn-sm"
+                            v-on:click="selectCurriculumCourse(curriculumCourse)"
+                          >
+                            Update <i class="fa fa-edit"></i>
+                          </button>
+                        </div>
+                        
+                      </td>
+                        
+                    </tr>
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <th>Total: </th>
+                      <td></td>
+                      <th class="text-success">@{{ getTotalUnit(year,3, 'lec') }}</th>
+                      <th class="text-success">@{{ getTotalUnit(year,3, 'lab') }}</th>
+                      <td></td>
+                      <td v-if="is_saved == 0"></td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <div class="h5 text-center" v-else>
+                No courses yet.
+              </div>
+            </div>
+          </div>
+          
+        </div>
+        {{-- /end summer --}}
       </div>
     </div>
-    
+
+
+    <div v-if="!isLoading">
+      <div class="alert alert-success mt-3">
+        <div class="row">
+          <div class="col-md-2">
+            <label><b>Total units: </b></label>
+          </div>
+          <div class="col-md-10">
+            <span>@{{ getAllUnits() }}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <label><b>Total courses: </b></label>
+          </div>
+          <div class="col-md-10">
+            <span>@{{ this.curriculum.curriculum_courses.length }}</span>
+          </div>
+        </div>
+      </div>
+      
+      @if (!$curriculum->is_saved)
+        <div class="d-flex justify-content-end">
+          <form action="{{ url('/curricula/' . $curriculum->id . '/save_curriculum') }}" v-on:submit.prevent="saveCurriculum"
+           method="post">
+           @csrf
+            <button
+              type="submit" 
+              href="#" 
+              class="btn btn-success">
+                Save 
+                <i class="fa fa-save"></i>
+            </button>
+          </form>
+        </div>
+      @endif
+    </div>
   </div>
 @endsection
 
@@ -202,7 +370,17 @@
           year_level: ''
         },
         isLoading: true,
-        college_id: '{{ Session::get('college_id') }}'
+        college_id: '{{ Session::get('college_id') }}',
+        expanded_list: [],
+        is_saved: '{{ $curriculum->is_saved }}'
+      },
+      watch: {
+        expanded_list(value) {
+          //this.toggleAccordion();
+          for (let i = 0; i < value.length; i++) {
+            this.showAccordion(value[i].year_level + '' + value[i].sem);  
+          }
+        }
       },
       methods: {
         searchCourses :_.debounce(() => {
@@ -241,12 +419,18 @@
           })
           .catch(err => {
             console.log(err);
-            serverError();
+            this.getCurriculum();
             this.isLoading = false;
           })
         },
         toggleAccordion(id) {
           $('#' + id).collapse('toggle');
+        },
+        hideAccordion(id) {
+          $('#' + id).collapse('hide');
+        },
+        showAccordion(id) {
+          $('#' + id).collapse('show');
         },
         formatIndex(num) {
           if (num == 1) {
@@ -341,11 +525,84 @@
           // data-target="#curriculumCourseModal"
           this.selectCourse(course);
           $('#curriculumCourseModal').modal('show')
+        },
+        toggleExpand(year, sem) {
+          //check if exists
+          for (let i = 0; i < this.expanded_list.length; i++) {
+            if(this.expanded_list[i].year_level == year && this.expanded_list[i].sem == sem) {
+              return this.expanded_list.splice(i, 1);        
+            } 
+          }
+          //then if not exists push
+          this.expanded_list.push({
+            year_level: year,
+            sem: sem
+          });
+          
+        },
+        checkIfExpand(year, sem) {
+          for (let i = 0; i < this.expanded_list.length; i++) {
+            if(this.expanded_list[i].year_level == year && this.expanded_list[i].sem == sem) {
+              return true;       
+            } 
+          }
+
+          return false;
+        },
+        getAllUnits() {
+          let total = 0;
+          for(let i = 0; i < this.curriculum.curriculum_courses.length; i++) {
+            total += this.curriculum.curriculum_courses[i].lec_unit;
+            total += this.curriculum.curriculum_courses[i].lab_unit;
+          }
+          return total;
+        },
+        saveCurriculum(event) {
+          swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to save this curriculum now?",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+          }).then((result) => {
+            if (result.value) {
+              event.target.submit();
+            }
+          });
+        },
+        reviseCurriculum(event) {
+          // swal.fire({
+          //   title: 'Are you sure?',
+          //   text: "You want to revise this curriculum?",
+          //   type: 'question',
+          //   showCancelButton: true,
+          //   confirmButtonColor: '#3085d6',
+          //   cancelButtonColor: '#d33',
+          //   confirmButtonText: 'Yes'
+          // }).then((result) => {
+          //   if (result.value) {
+          //     //event.target.submit();
+
+          //   }
+          // });
+          $('#curriculumModal').modal('show');
+        },
+        checkIfHasSummer(year) {
+          for(let i = 0; i < this.curriculum.curriculum_courses.length; i++) {
+            if(this.curriculum.curriculum_courses[i].year_level == year && this.curriculum.curriculum_courses[i].semester == 3) {
+              return true;
+            }
+          }
+          return false;
         }
       },
       created() {
+        
         setTimeout(() => {
           this.getCurriculum();
+          this.toggleExpand(1, 1);
         }, 1000);  
       }
     });
