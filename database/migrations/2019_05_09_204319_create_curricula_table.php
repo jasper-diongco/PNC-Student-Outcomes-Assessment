@@ -23,6 +23,7 @@ class CreateCurriculaTable extends Migration
             $table->boolean('is_saved')->default(false);
             $table->integer('year_level');
             $table->integer('revision_no');
+            $table->integer('ref_id');
             $table->timestamps();
         });
     }

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Curriculum extends Model
 {
-    public $fillable = ['program_id', 'name', 'description', 'year', 'user_id', 'year_level', 'revision_no'];
+    public $fillable = ['program_id', 'name', 'description', 'year', 'user_id', 'year_level', 'revision_no', 'ref_id'];
 
     public function program() {
         return $this->belongsTo('App\Program');

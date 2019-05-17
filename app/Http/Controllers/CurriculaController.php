@@ -12,9 +12,15 @@ use App\Http\Resources\CurriculumResource;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Gate;
 
 class CurriculaController extends Controller
 {
+
+    public function __construct() {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -22,16 +28,34 @@ class CurriculaController extends Controller
      */
     public function index()
     {
+        //authenticate
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
+
+
+        if(Auth::user()->user_type_id == 's_admin') {
+            $colleges = College::all();
+            if(request('college_id') == '') {
+                return view('curricula.list')->with('colleges', $colleges);
+            }
+            
+        } else {
+            //validate
+            if(request('college_id') == '') {
+                // abort('404', 'Page not found');
+                return redirect('/curricula?college_id='. Session::get('college_id'));
+            } else if (request('college_id') != Session::get('college_id')) {
+                return abort('401', 'Unauthorized');
+            }
+        }
+
+
         $programs = Program::where('college_id', Session::get('college_id'))->get();
-        // $curricula = Curriculum::join('programs', 'programs.id', '=', 'curricula.program_id')
-        //     ->join('colleges', 'colleges.id', '=', 'programs.college_id')
-        //     ->select('curricula.*')    
-        //     ->where('college_id', Session::get('college_id'))
-        //     ->get();
 
         $curricula = [];
 
-        $list = DB::select('SELECT program_id, max(curricula.id) as id from curricula GROUP BY program_id');
+        $list = DB::select('SELECT ref_id, max(curricula.id) as id from ((curricula INNER JOIN programs ON programs.id = curricula.program_id) INNER JOIN colleges ON colleges.id = programs.college_id) WHERE programs.college_id = :college_id GROUP BY ref_id', ['college_id' => request('college_id')]);
 
         foreach ($list as $item) {
             $curricula[] = Curriculum::find($item->id);
@@ -51,10 +75,14 @@ class CurriculaController extends Controller
      */
     public function store(Request $request)
     {
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin')) {
+            return abort('401', 'Unauthorized');
+        }
+
         $request->validate([
             'program_id' => 'required',
-            'name' => 'required|max:255|regex:/^[\pL\s\-0-9]+$/u',
-            'description' => 'nullable|max:255|regex:/^[\pL\s\-0-9]+$/u',
+            'name' => 'required|max:255|regex:/^[\pL\s\-0-9_]+$/u',
+            'description' => 'nullable|max:255|regex:/^[\pL\s\-0-9_]+$/u',
             'year' => 'required|digits:4',
             'year_level' => 'required'
         ]);
@@ -69,6 +97,10 @@ class CurriculaController extends Controller
             'revision_no' => 1
         ]);
 
+        $curriculum->ref_id = $curriculum->id;
+
+        $curriculum->save();
+
         Session::flash('message', 'Curriculum successfully added to database');
 
         return $curriculum;
@@ -76,6 +108,10 @@ class CurriculaController extends Controller
     }
 
     public function saveCurriculum(Request $request, $id) {
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin')) {
+            return abort('401', 'Unauthorized');
+        }
+
         $curriculum = Curriculum::findOrFail($id);
         $curriculum->is_saved = true;
         $curriculum->update();
@@ -93,6 +129,7 @@ class CurriculaController extends Controller
      */
     public function show(Request $request, $id)
     {
+
         $curriculum = Curriculum::findOrFail($id);
         $colleges = College::all();
 
@@ -107,10 +144,14 @@ class CurriculaController extends Controller
     }
 
     public function revise(Request $request, $id) {
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin')) {
+            return abort('401', 'Unauthorized');
+        }
+
         $request->validate([
             'program_id' => 'required',
-            'name' => 'required|max:255|regex:/^[\pL\s\-0-9]+$/u',
-            'description' => 'nullable|max:255|regex:/^[\pL\s\-0-9]+$/u',
+            'name' => 'required|max:255|regex:/^[\pL\s\-0-9_]+$/u',
+            'description' => 'nullable|max:255|regex:/^[\pL\s\-0-9_]+$/u',
             'year' => 'required|digits:4',
             'year_level' => 'required'
         ]);

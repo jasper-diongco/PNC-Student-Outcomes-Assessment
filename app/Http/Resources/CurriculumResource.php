@@ -26,7 +26,8 @@ class CurriculumResource extends JsonResource
             'curriculum_courses' => CurriculumCourseResource::collection($this->curriculumCourses),
             'created_at' => $this->created_at,
             'author' => $this->user->getFullName(),
-            'revision_no' => $this->revision_no
+            'revision_no' => $this->revision_no,
+            'ref_id' => $this->ref_id
         ];
     }
 }

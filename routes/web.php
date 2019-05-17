@@ -11,6 +11,10 @@
 |
 */
 
+Route::get('/test', function() {
+  return view('layouts.sb_admin');
+});
+
 Route::get('/', function () {
     return redirect('/login');
 });
@@ -47,6 +51,20 @@ Route::get('/curricula/{curriculum}', 'CurriculaController@show');
  * /End Curricula Routes
  */
 
+
+/*
+ * StudentOutcomes Routes
+ */
+Route::get('/student_outcomes', 'StudentOutcomesController@index');
+Route::get('/student_outcomes/list_program', 'StudentOutcomesController@listProgram');
+Route::post('/student_outcomes', 'StudentOutcomesController@store');
+
+/*
+ * /StudentOutcomes Routes
+ */
+
+
+
 Route::resource('/curriculum_courses', 'CurriculumCoursesController');
 
 
@@ -65,8 +83,8 @@ Route::post('login', 'Auth\LoginController@login');
 Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/test', function() {
-  return view('layouts.test');
-});
+// Route::get('/test', function() {
+//   return view('layouts.test');
+// });
 
 Route::get('/profile/faculty/{id}', 'ProfileController@faculty');

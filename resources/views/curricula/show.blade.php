@@ -1,4 +1,4 @@
-@extends('layouts.pnc_layout')
+@extends('layouts.sb_admin')
 
 @section('title', $curriculum->name)
 
@@ -28,7 +28,7 @@
     </curriculum-modal>
     <!-- End curriculum modal -->
     
-    <a href="{{ url('/curricula') }}" class="btn btn-success mb-3"><i class="fa fa-arrow-left"></i> Back</a>
+    <a href="{{ url('/curricula?college_id='. Session::get('college_id')) }}" class="btn btn-success mb-3 btn-sm"><i class="fa fa-arrow-left"></i> Back</a>
 
     <h1 class="h4">{{ $curriculum->name }}</h1>
     <p><i class="fa fa-file-alt"></i> {{ $curriculum->description }}</p>
@@ -71,10 +71,12 @@
                       </div>
                     </div>
                     <div>
-                      <button v-on:click="selectCourse(course)" 
-                      class="btn btn-primary btn-sm" 
-                      data-toggle="modal"
-                      data-target="#curriculumCourseModal">Add</button>
+                      @if(Gate::check('isDean') || Gate::check('isSAdmin'))
+                        <button v-on:click="selectCourse(course)" 
+                        class="btn btn-primary btn-sm" 
+                        data-toggle="modal"
+                        data-target="#curriculumCourseModal">Add</button>
+                      @endif
                     </div> 
                     </li>
                 </ul>
@@ -104,12 +106,14 @@
             <button class="btn btn-secondary mr-2">Print <i class="fa fa-print"></i></button>    
         </div>
         @if ($curriculum->checkIfLatestVersion())
-        <div>
-          <form v-on:submit.prevent="reviseCurriculum" action="{{ url('/curricula/' . $curriculum->id. '/revise') }}" method="post">
-            @csrf
-            <button class="btn btn-primary" type="submit">Revise <i class="fa fa-edit"></i></button>
-          </form>
-        </div>
+        @if(Gate::check('isDean') || Gate::check('isSAdmin'))
+          <div>
+            <form v-on:submit.prevent="reviseCurriculum" action="{{ url('/curricula/' . $curriculum->id. '/revise') }}" method="post">
+              @csrf
+              <button class="btn btn-primary" type="submit">Revise <i class="fa fa-edit"></i></button>
+            </form>
+          </div>
+        @endif
         @endif
       </div>
     @endif
@@ -142,7 +146,7 @@
             </div>
             <div>
               <button v-on:click="toggleExpand(year, sem)" class="btn btn-sm
-               mr-3" :class="{ 'btn-success': checkIfExpand(year, sem)  , 'btn-secondary': !checkIfExpand(year, sem) }">
+               mr-3" :class="{ 'btn-success': !checkIfExpand(year, sem)  , 'btn-secondary': checkIfExpand(year, sem) }">
                 <i class="fa fa-arrows-alt-v "></i>
               </button>
               
@@ -152,7 +156,7 @@
             </div>
           </div>
           
-          <div :id="year + '' + sem" class="collapse" :class="{ show: checkIfExpand(year, sem)  }" aria-labelledby="headingOne" >
+          <div :id="year + '' + sem" class="collapse" :class="{ show: !checkIfExpand(year, sem)  }" aria-labelledby="headingOne" >
 
             <div class="card-body">
               <div v-if="getSemCourses(year, sem).length > 0" class="table-responsive">
@@ -174,20 +178,22 @@
                       <td>@{{ curriculumCourse.lec_unit }}</td>
                       <td>@{{ curriculumCourse.lab_unit }}</td>
                       <td>@{{ formatPreRequisites(curriculumCourse) }}</td>
-                      <td class="justify-content-end d-flex" v-if="is_saved == 0">
-                        <div class="mr-2">
-                          <button v-on:click="removeCurriculumCourse(curriculumCourse.id)" class="btn btn-secondary btn-sm">Remove <i class="fa fa-minus-circle text-danger"></i></button>
-                          <button
-                            data-toggle="modal"
-                            data-target="#curriculumCourseModalUpdate"
-                            class="btn btn-success btn-sm"
-                            v-on:click="selectCurriculumCourse(curriculumCourse)"
-                          >
-                            Update <i class="fa fa-edit"></i>
-                          </button>
-                        </div>
-                        
-                      </td>
+                      @if(Gate::check('isDean') || Gate::check('isSAdmin'))
+                        <td class="justify-content-end d-flex" v-if="is_saved == 0">
+                          <div class="mr-2">
+                            <button v-on:click="removeCurriculumCourse(curriculumCourse.id)" class="btn btn-secondary btn-sm">Remove <i class="fa fa-minus-circle text-danger"></i></button>
+                            <button
+                              data-toggle="modal"
+                              data-target="#curriculumCourseModalUpdate"
+                              class="btn btn-success btn-sm"
+                              v-on:click="selectCurriculumCourse(curriculumCourse)"
+                            >
+                              Update <i class="fa fa-edit"></i>
+                            </button>
+                          </div>
+                          
+                        </td>
+                      @endif
                         
                     </tr>
                   </tbody>
@@ -229,7 +235,7 @@
             </div>
             <div>
               <button v-on:click="toggleExpand(year, 3)" class="btn btn-sm
-               mr-3" :class="{ 'btn-success': checkIfExpand(year, 3)  , 'btn-secondary': !checkIfExpand(year, 3) }">
+               mr-3" :class="{ 'btn-success': !checkIfExpand(year, 3)  , 'btn-secondary': checkIfExpand(year, 3) }">
                 <i class="fa fa-arrows-alt-v "></i>
               </button>
               
@@ -239,7 +245,7 @@
             </div>
           </div>
           
-          <div :id="year + '' + 3" class="collapse" :class="{ show: checkIfExpand(year, 3)  }" aria-labelledby="headingOne" >
+          <div :id="year + '' + 3" class="collapse" :class="{ show: !checkIfExpand(year, 3)  }" aria-labelledby="headingOne" >
 
             <div class="card-body">
               <div v-if="getSemCourses(year, 3).length > 0" class="table-responsive">
@@ -261,20 +267,22 @@
                       <td>@{{ curriculumCourse.lec_unit }}</td>
                       <td>@{{ curriculumCourse.lab_unit }}</td>
                       <td>@{{ formatPreRequisites(curriculumCourse) }}</td>
-                      <td class="justify-content-end d-flex" v-if="is_saved == 0">
-                        <div class="mr-2">
-                          <button v-on:click="removeCurriculumCourse(curriculumCourse.id)" class="btn btn-secondary btn-sm">Remove <i class="fa fa-minus-circle text-danger"></i></button>
-                          <button
-                            data-toggle="modal"
-                            data-target="#curriculumCourseModalUpdate"
-                            class="btn btn-success btn-sm"
-                            v-on:click="selectCurriculumCourse(curriculumCourse)"
-                          >
-                            Update <i class="fa fa-edit"></i>
-                          </button>
-                        </div>
-                        
-                      </td>
+                      @if(Gate::check('isDean') || Gate::check('isSAdmin'))
+                        <td class="justify-content-end d-flex" v-if="is_saved == 0">
+                          <div class="mr-2">
+                            <button v-on:click="removeCurriculumCourse(curriculumCourse.id)" class="btn btn-secondary btn-sm">Remove <i class="fa fa-minus-circle text-danger"></i></button>
+                            <button
+                              data-toggle="modal"
+                              data-target="#curriculumCourseModalUpdate"
+                              class="btn btn-success btn-sm"
+                              v-on:click="selectCurriculumCourse(curriculumCourse)"
+                            >
+                              Update <i class="fa fa-edit"></i>
+                            </button>
+                          </div>
+                          
+                        </td>
+                      @endif
                         
                     </tr>
                   </tbody>
@@ -602,7 +610,6 @@
         
         setTimeout(() => {
           this.getCurriculum();
-          this.toggleExpand(1, 1);
         }, 1000);  
       }
     });

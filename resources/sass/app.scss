@@ -1,61 +1,36 @@
 // Fonts
-@import url("https://fonts.googleapis.com/css?family=Nunito");
+//@import url("https://fonts.googleapis.com/css?family=Nunito");
 
 // Variables
-@import "variables";
+//@import "variables";
 
 @import "vue-select/src/scss/vue-select.scss";
 
 // Bootstrap
-@import "~bootstrap/scss/bootstrap";
+//@import "~bootstrap/scss/bootstrap";
 
-/* ---------------------------------------------------
-    CONTENT STYLE
------------------------------------------------------ */
+$font-size-base: 0.9rem;
+$line-height-base: 1.6;
 
-/* ---------------------------------------------------
-    MEDIAQUERIES
------------------------------------------------------ */
+@import "~startbootstrap-sb-admin-2/scss/sb-admin-2";
 
-// @media (max-width: 768px) {
-//   #sidebar {
-//     margin-left: -250px;
-//   }
-//   #sidebar.active {
-//     margin-left: 0;
-//   }
-//   #content {
-//     width: 100%;
-//   }
-//   #content.active {
-//     width: calc(100% - 250px);
-//   }
-//   #sidebarCollapse span {
-//     display: none;
-//   }
-// }
+.my-header {
+  font-size: 32px;
+}
 
-/* ---------------------------------------------------
-    END MASTER STYLE
------------------------------------------------------*/
-
-// .my-header {
-//   font-size: 32px;
-// }
-
-// div.mdl-layout__drawer > nav.mdl-navigation > a.mdl-navigation__link {
-//   display: inline-flex;
-//   vertical-align: middle;
-// }
-// .panel-heading > i {
-//   vertical-align: middle !important;
-// }
-// .center-icon {
-//   display: flex !important;
-//   justify-content: center !important;
-//   /* align-self: center;    <---- REMOVE */
-//   align-items: center !important;
-// }
+div.mdl-layout__drawer > nav.mdl-navigation > a.mdl-navigation__link {
+  display: inline-flex;
+  vertical-align: middle;
+}
+.panel-heading > i {
+  vertical-align: middle !important;
+}
+.center-icon {
+  display: flex !important;
+  justify-content: center !important;
+  /* align-self: center;    <---- REMOVE */
+  align-items: center !important;
+}
 .valign-center {
   display: inline-flex;
   vertical-align: middle;
@@ -88,6 +63,19 @@
   font-weight: 700;
   color: #fff;
 }
+
+.avatar-student-outcome {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background: #f6c23e;
+  width: 38px;
+  height: 38px;
+  font-weight: 700;
+  color: #fff;
+}
+
 .avatar-course {
   display: flex;
   justify-content: center;
@@ -114,4 +102,11 @@
   width: 100%;
   border: 1px solid #ededed;
   z-index: 999;
+}
+
+.bg-pnc-image {
+  background: url(http://localhost/pnc_soa/public/img/login.svg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }

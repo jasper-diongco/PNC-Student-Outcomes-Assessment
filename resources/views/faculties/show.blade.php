@@ -1,4 +1,4 @@
-@extends('layouts.pnc_layout')
+@extends('layouts.sb_admin')
 
 @section('title', $faculty->user->getFullName())
 

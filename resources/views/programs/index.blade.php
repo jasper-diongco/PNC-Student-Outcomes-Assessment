@@ -1,4 +1,4 @@
-@extends('layouts.pnc_layout')
+@extends('layouts.sb_admin')
 
 @section('title', 'Program Index')
 
@@ -33,7 +33,7 @@
     @if(count($programs) > 0)
       @foreach ($programs as $program)
         <div class="col-md-4 mb-3">
-          <div class="card" style="height: 100%">
+          <div class="card shadow" style="height: 100%">
             <div class="card-body">
               <div class="d-flex align-items-center justify-content-start mb-2">
                 <div class="avatar mr-2" style="background: {{ $program->color  }}">

@@ -11,6 +11,8 @@ import swal from "sweetalert2";
 
 require("./bootstrap");
 
+require("startbootstrap-sb-admin-2/js/sb-admin-2.min.js");
+
 window.swal = swal;
 window.Vue = require("vue");
 window.axios = require("axios");
@@ -60,6 +62,11 @@ Vue.component("my-table", require("./components/Table.vue").default);
 Vue.component(
   "table-loading",
   require("./components/TableLoading.vue").default
+);
+
+Vue.component(
+  "student-outcome-modal",
+  require("./components/StudentOutcomeModal.vue").default
 );
 
 Vue.component("datepicker", Datepicker);
