@@ -1,5 +1,5 @@
 // Fonts
-//@import url("https://fonts.googleapis.com/css?family=Nunito");
+//@import url("https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i");
 
 // Variables
 //@import "variables";
@@ -12,7 +12,13 @@
 $font-size-base: 0.9rem;
 $line-height-base: 1.6;
 
+$fa-font-path: "../webfonts";
+
 @import "~startbootstrap-sb-admin-2/scss/sb-admin-2";
+
+// @import "~@fortawesome/fontawesome-free/scss/fontawesome.scss";
+// @import "~@fortawesome/fontawesome-free/scss/solid.scss";
+// @import "~@fortawesome/fontawesome-free/scss/brands.scss";
 
 .my-header {
   font-size: 32px;

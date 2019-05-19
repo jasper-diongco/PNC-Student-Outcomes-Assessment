@@ -4,6 +4,8 @@
 
 @section('content')
 
+<a href="{{ url('/student_outcomes/list_program?college_id='. Session::get('college_id')) }}" class="btn btn-success btn-sm mb-3"><i class="fa fa-arrow-left"></i> Back</a>
+
 <div id="app">
 
   <div class="d-flex justify-content-between mb-3">
@@ -12,7 +14,7 @@
     </div>
     <div>
       @if(Gate::check('isDean') || Gate::check('isSAdmin'))
-        <student-outcome-modal :programs='@json($programs)'></student-outcome-modal>
+        <student-outcome-modal :programs='@json($programs)' :program-id="{{ $program->id }}"></student-outcome-modal>
       @endif
     </div>
   </div>
@@ -22,7 +24,7 @@
     <div class="list-group">
       
       @foreach($program->studentOutcomes as $student_outcome)
-        <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+        <a href="{{ url('/student_outcomes/' . $student_outcome->id . '?program_id=' . request('program_id')) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
           <div class="d-flex justify-content-between align-items-center mr-3">
             <div>
               <span class="avatar-student-outcome mr-3">{{ $student_outcome->so_code }}</span>

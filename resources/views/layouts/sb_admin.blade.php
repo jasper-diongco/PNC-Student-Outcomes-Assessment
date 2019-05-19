@@ -17,7 +17,7 @@
   <!-- Custom fonts for this template-->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 
-  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+  <link rel="stylesheet" href="{{ asset('fonts/nunito.css') }}">
 
   <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
@@ -67,7 +67,46 @@
 
   <script src="{{ asset('js/app.js') }}"></script>
 
+  
+
+  <script>
+            
+  </script>
+
   @stack('scripts')
+
+  <script>
+    window.onload = function() {
+      let toggleStatus = localStorage.getItem('toggleStatus');
+      let accordionSidebar = document.getElementById('accordionSidebar');
+
+      if(toggleStatus == '1') {
+        accordionSidebar.classList.remove('toggled');
+      } else if (toggleStatus == '0') {
+        accordionSidebar.classList.add('toggled');
+      }
+
+      toggleAccordion();
+
+
+      document.getElementById('sidebarToggle').onclick = function() {
+        toggleAccordion();
+      }
+
+
+      function toggleAccordion() {
+        if(toggleStatus == null) {
+          localStorage.setItem('toggleStatus', '1');
+        } else if(accordionSidebar.classList.contains('toggled')) {
+          localStorage.setItem('toggleStatus', '0');
+        } else if(!accordionSidebar.classList.contains('toggled')) {
+          localStorage.setItem('toggleStatus', '1');
+        }
+
+        ApiClient.get('/toggle_sb/' + localStorage.getItem('toggleStatus'));
+      } 
+    }
+  </script>
 
 </body>
 

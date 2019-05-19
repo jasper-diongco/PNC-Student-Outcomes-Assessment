@@ -19,6 +19,7 @@ class CreateCurriculumCoursesTable extends Migration
             $table->integer('course_id');
             $table->integer('year_level');
             $table->integer('semester');
+            $table->boolean('is_active')->nullable()->default(1);
             $table->timestamps();
         });
     }

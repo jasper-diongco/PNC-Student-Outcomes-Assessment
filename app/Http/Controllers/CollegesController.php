@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\College;
 use App\Faculty;
+use App\Program;
+use App\Course;
+use App\Curriculum;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -29,6 +32,27 @@ class CollegesController extends Controller
 
         $colleges = College::all();
         return view('colleges.index')->with('colleges', $colleges);
+    }
+
+    public function dashboard($id) {
+        if(Auth::user()->getFaculty()->college_id != $id) {
+            return abort('401', 'Unauthorized');
+        }
+
+        $college = College::findOrFail($id);
+
+        $program_count = Program::where('college_id', $college->id)->count();
+        $courses_count = Course::where('college_id', $college->id)->count();
+        $curriculum_count = Curriculum::join('programs', 'programs.id', '=', 'curricula.program_id')
+            ->join('colleges', 'colleges.id', '=', 'programs.college_id')
+            ->where('college_id', $college->id)
+            ->count();
+
+        return view('colleges.dashboard')
+            ->with('college', $college)
+            ->with('program_count', $program_count)
+            ->with('courses_count', $courses_count)
+            ->with('curriculum_count', $curriculum_count);
     }
 
     /**
@@ -190,13 +214,5 @@ class CollegesController extends Controller
         //
     }
 
-    public function dashboard($id) {
-        if(Auth::user()->getFaculty()->college_id != $id) {
-            return abort('401', 'Unauthorized');
-        }
-
-        $college = College::findOrFail($id);
-
-        return view('colleges.dashboard')->with('college', $college);
-    }
+    
 }

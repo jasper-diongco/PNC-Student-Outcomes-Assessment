@@ -41,6 +41,9 @@ class LoginController extends Controller
     }
 
     public function redirectTo() {
+
+        Session::put('toggle_sb', 1);
+
         if(Auth::user()->user_type_id == 'dean') {
             Session::put('college_id', Auth::user()->getFaculty()->college_id);
             return url('/colleges/' . Auth::user()->getFaculty()->college_id . '/dashboard');

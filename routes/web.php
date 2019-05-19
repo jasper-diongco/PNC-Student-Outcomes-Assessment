@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Session;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,6 +19,10 @@ Route::get('/test', function() {
 
 Route::get('/', function () {
     return redirect('/login');
+});
+
+Route::get('/toggle_sb/{value}', function($value) {
+    Session::put('toggle_sb', $value);
 });
 
 
@@ -46,6 +52,8 @@ Route::get('/curricula', 'CurriculaController@index');
 Route::post('/curricula', 'CurriculaController@store');
 Route::post('/curricula/{curriculum}/save_curriculum', 'CurriculaController@saveCurriculum');
 Route::post('/curricula/{curriculum}/revise', 'CurriculaController@revise');
+Route::post('/curricula/{curriculum}/edit', 'CurriculaController@edit');
+Route::get('/curricula/{curriculum}/deactivated_courses', 'CurriculaController@deactivatedCourses');
 Route::get('/curricula/{curriculum}', 'CurriculaController@show');
 /*
  * /End Curricula Routes
@@ -56,7 +64,10 @@ Route::get('/curricula/{curriculum}', 'CurriculaController@show');
  * StudentOutcomes Routes
  */
 Route::get('/student_outcomes', 'StudentOutcomesController@index');
+
 Route::get('/student_outcomes/list_program', 'StudentOutcomesController@listProgram');
+Route::get('/student_outcomes/{student_outcome}', 'StudentOutcomesController@show');
+Route::put('/student_outcomes/{student_outcome}', 'StudentOutcomesController@update');
 Route::post('/student_outcomes', 'StudentOutcomesController@store');
 
 /*
@@ -65,9 +76,21 @@ Route::post('/student_outcomes', 'StudentOutcomesController@store');
 
 
 
-Route::resource('/curriculum_courses', 'CurriculumCoursesController');
 
+/*
+ * CurriculumCourses Routes
+ */
 
+//Route::resource('/curriculum_courses', 'CurriculumCoursesController');
+Route::post('/curriculum_courses', 'CurriculumCoursesController@store');
+Route::put('/curriculum_courses/{curriculum_course}', 'CurriculumCoursesController@update');
+Route::delete('/curriculum_courses/{curriculum_course}', 'CurriculumCoursesController@destroy');
+Route::get('/curriculum_courses/{curriculum_course}', 'CurriculumCoursesController@show');
+Route::post('/curriculum_courses/{curriculum_course}/activate', 'CurriculumCoursesController@activate');
+Route::post('/curriculum_courses/activate_selected', 'CurriculumCoursesController@activateSelected');
+/*
+ * End CurriculumCourses Routes
+ */
 
 //Route::resource('/courses', 'CoursesController');
 //Route::get('/courses', 'CoursesController@index');

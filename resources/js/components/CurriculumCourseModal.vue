@@ -241,30 +241,44 @@
               </template>
               <!-- /END Pre requisite section -->
             </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-dismiss="modal"
-                :disabled="form.busy"
-                @click="closeModal"
-              >
-                Close
-              </button>
-              <button
-                class="btn btn-primary"
-                :disabled="form.busy"
-                type="submit"
-              >
-                {{ saveTitle }}
-                <div
-                  v-show="form.busy"
-                  class="spinner-border spinner-border-sm text-light"
-                  role="status"
+            <div
+              class="modal-footer d-flex justify-content-between align-items-center"
+            >
+              <div>
+                <button
+                  type="button"
+                  class="btn btn-dark btn-sm"
+                  :disabled="form.busy"
+                  @click="removeCurriculumCourse(form.curriculum_course_id)"
                 >
-                  <span class="sr-only">Loading...</span>
-                </div>
-              </button>
+                  Remove <i class="fa fa-trash"></i>
+                </button>
+              </div>
+              <div>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-dismiss="modal"
+                  :disabled="form.busy"
+                  @click="closeModal"
+                >
+                  Close
+                </button>
+                <button
+                  class="btn btn-primary"
+                  :disabled="form.busy"
+                  type="submit"
+                >
+                  {{ saveTitle }}
+                  <div
+                    v-show="form.busy"
+                    class="spinner-border spinner-border-sm text-light"
+                    role="status"
+                  >
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                </button>
+              </div>
             </div>
           </div>
         </form>
@@ -436,6 +450,40 @@ export default {
           option.course_code.toLowerCase().indexOf(search.toLowerCase()) >= 0
         );
       });
+    },
+    removeCurriculumCourse(id) {
+      swal
+        .fire({
+          title: "Are you sure?",
+          text:
+            "The course will not permanently deleted in database, instead it is only deactivated and you can revert it back again.",
+          type: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, remove it!",
+          width: "400px"
+        })
+        .then(result => {
+          if (result.value) {
+            ApiClient.delete("curriculum_courses/" + id)
+              .then(response => {
+                window.location.href =
+                  myRootURL +
+                  "/curricula/" +
+                  response.data.curriculum_id +
+                  "/deactivated_courses?curriculum_id=" +
+                  response.data.curriculum_id;
+              })
+              .catch(err => {
+                swal.fire(
+                  "Ooops.. The operation is canceled",
+                  "The course maybe is a pre requisite of other courses",
+                  "error"
+                );
+              });
+          }
+        });
     }
   },
   created() {

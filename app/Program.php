@@ -13,6 +13,6 @@ class Program extends Model
     }
 
     public function studentOutcomes() {
-      return $this->hasMany('App\StudentOutcome');
+      return $this->hasMany('App\StudentOutcome')->orderBy('so_code', 'ASC');
     }
 }

@@ -192,7 +192,7 @@
       setTimeout(() => {
         this.getCourses();
       }, 
-      300);
+      1000);
       
     }
   });

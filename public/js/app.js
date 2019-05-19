@@ -2409,6 +2409,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["course", "maxYearLevel", "curriculumId", "isUpdate", "curriculumCourse", "curriculumCourses"],
   data: function data() {
@@ -2566,6 +2580,26 @@ __webpack_require__.r(__webpack_exports__);
       return options.filter(function (option) {
         //let label = this.getOptionLabel(option);
         return option.description.toLowerCase().indexOf(search.toLowerCase()) >= 0 || option.course_code.toLowerCase().indexOf(search.toLowerCase()) >= 0;
+      });
+    },
+    removeCurriculumCourse: function removeCurriculumCourse(id) {
+      swal.fire({
+        title: "Are you sure?",
+        text: "The course will not permanently deleted in database, instead it is only deactivated and you can revert it back again.",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, remove it!",
+        width: "400px"
+      }).then(function (result) {
+        if (result.value) {
+          ApiClient["delete"]("curriculum_courses/" + id).then(function (response) {
+            window.location.href = myRootURL + "/curricula/" + response.data.curriculum_id + "/deactivated_courses?curriculum_id=" + response.data.curriculum_id;
+          })["catch"](function (err) {
+            swal.fire("Ooops.. The operation is canceled", "The course maybe is a pre requisite of other courses", "error");
+          });
+        }
       });
     }
   },
@@ -3421,46 +3455,101 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["programs"],
+  props: ["programs", "isUpdate", "studentOutcome", "performanceCriteria", "performanceIndicators", "programId"],
   data: function data() {
     return {
       form: new Form({
+        id: "",
         description: "",
         so_code: "",
         program: "",
         performance_criteria: "",
-        unsatisfactory_desc: "unsatisfactory",
+        unsatisfactory_desc: "",
         unsatisfactory_grade: "25.00",
-        developing_desc: "developing",
+        developing_desc: "",
         developing_grade: "50.00",
-        satisfactory_desc: "satisfactory",
+        satisfactory_desc: "",
         satisfactory_grade: "75.00",
-        exemplary_desc: "exemplary",
+        exemplary_desc: "",
         exemplary_grade: "95.00"
       })
     };
   },
   computed: {
     modalTitle: function modalTitle() {
-      return "Add new Student Outcome";
+      return this.isUpdate ? "Update Student Outcome" : "Add new Student Outcome";
     },
     saveTitle: function saveTitle() {
-      return "Add to database";
+      return this.isUpdate ? "Update from database" : "Add to database";
     }
   },
   methods: {
     saveStudentOutcome: function saveStudentOutcome() {
-      this.addStudentOutcome();
+      if (this.isUpdate) {
+        this.updateStudentOutcome();
+      } else {
+        this.addStudentOutcome();
+      }
     },
     addStudentOutcome: function addStudentOutcome() {
       this.form.post("student_outcomes").then(function (_ref) {
         var data = _ref.data;
         console.log(data);
-        window.location.href = myRootURL + "/student_outcomes/";
+        window.location.href = myRootURL + "/student_outcomes/" + data.id + "?program_id=" + data.program_id;
       })["catch"](function (err) {
         console.log(err);
       });
+    },
+    updateStudentOutcome: function updateStudentOutcome() {
+      this.form.put("../student_outcomes/" + this.form.id).then(function (_ref2) {
+        var data = _ref2.data;
+        window.location.href = myRootURL + "/student_outcomes/" + data.id + "?program_id=" + data.program_id;
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    }
+  },
+  created: function created() {
+    this.form.program = this.programId;
+
+    if (this.isUpdate) {
+      this.form.id = this.studentOutcome.id;
+      this.form.so_code = this.studentOutcome.so_code;
+      this.form.description = this.studentOutcome.description;
+      this.form.program = this.studentOutcome.program_id;
+      this.form.performance_criteria = this.performanceCriteria.description;
+
+      for (var i = 0; i < this.performanceIndicators.length; i++) {
+        if (this.performanceIndicators[i].performance_indicator_id == 1) {
+          //unsatisfactory
+          this.form.unsatisfactory_desc = this.performanceIndicators[i].description;
+          this.form.unsatisfactory_grade = this.performanceIndicators[i].score_percentage;
+        } else if (this.performanceIndicators[i].performance_indicator_id == 2) {
+          //developing
+          this.form.developing_desc = this.performanceIndicators[i].description;
+          this.form.developing_grade = this.performanceIndicators[i].score_percentage;
+        } else if (this.performanceIndicators[i].performance_indicator_id == 3) {
+          //satisfactory
+          this.form.satisfactory_desc = this.performanceIndicators[i].description;
+          this.form.satisfactory_grade = this.performanceIndicators[i].score_percentage;
+        } else if (this.performanceIndicators[i].performance_indicator_id == 4) {
+          //exemplary
+          this.form.exemplary_desc = this.performanceIndicators[i].description;
+          this.form.exemplary_grade = this.performanceIndicators[i].score_percentage;
+        }
+      }
     }
   }
 });
@@ -55887,57 +55976,87 @@ var render = function() {
                     2
                   ),
                   _vm._v(" "),
-                  _c("div", { staticClass: "modal-footer" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-secondary",
-                        attrs: {
-                          type: "button",
-                          "data-dismiss": "modal",
-                          disabled: _vm.form.busy
-                        },
-                        on: { click: _vm.closeModal }
-                      },
-                      [_vm._v("\n              Close\n            ")]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-primary",
-                        attrs: { disabled: _vm.form.busy, type: "submit" }
-                      },
-                      [
-                        _vm._v(
-                          "\n              " +
-                            _vm._s(_vm.saveTitle) +
-                            "\n              "
-                        ),
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "modal-footer d-flex justify-content-between align-items-center"
+                    },
+                    [
+                      _c("div", [
                         _c(
-                          "div",
+                          "button",
                           {
-                            directives: [
-                              {
-                                name: "show",
-                                rawName: "v-show",
-                                value: _vm.form.busy,
-                                expression: "form.busy"
+                            staticClass: "btn btn-dark btn-sm",
+                            attrs: { type: "button", disabled: _vm.form.busy },
+                            on: {
+                              click: function($event) {
+                                return _vm.removeCurriculumCourse(
+                                  _vm.form.curriculum_course_id
+                                )
                               }
-                            ],
-                            staticClass:
-                              "spinner-border spinner-border-sm text-light",
-                            attrs: { role: "status" }
+                            }
                           },
                           [
-                            _c("span", { staticClass: "sr-only" }, [
-                              _vm._v("Loading...")
-                            ])
+                            _vm._v("\n                Remove "),
+                            _c("i", { staticClass: "fa fa-trash" })
                           ]
                         )
-                      ]
-                    )
-                  ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-secondary",
+                            attrs: {
+                              type: "button",
+                              "data-dismiss": "modal",
+                              disabled: _vm.form.busy
+                            },
+                            on: { click: _vm.closeModal }
+                          },
+                          [_vm._v("\n                Close\n              ")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-primary",
+                            attrs: { disabled: _vm.form.busy, type: "submit" }
+                          },
+                          [
+                            _vm._v(
+                              "\n                " +
+                                _vm._s(_vm.saveTitle) +
+                                "\n                "
+                            ),
+                            _c(
+                              "div",
+                              {
+                                directives: [
+                                  {
+                                    name: "show",
+                                    rawName: "v-show",
+                                    value: _vm.form.busy,
+                                    expression: "form.busy"
+                                  }
+                                ],
+                                staticClass:
+                                  "spinner-border spinner-border-sm text-light",
+                                attrs: { role: "status" }
+                              },
+                              [
+                                _c("span", { staticClass: "sr-only" }, [
+                                  _vm._v("Loading...")
+                                ])
+                              ]
+                            )
+                          ]
+                        )
+                      ])
+                    ]
+                  )
                 ])
               ]
             )
@@ -56606,7 +56725,34 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _vm._m(0),
+    _vm.isUpdate
+      ? _c(
+          "button",
+          {
+            staticClass: "btn btn-primary btn-sm",
+            attrs: {
+              type: "button",
+              "data-toggle": "modal",
+              "data-target": "#courseModal"
+            }
+          },
+          [_vm._v("\n    Update "), _c("i", { staticClass: "fa fa-edit" })]
+        )
+      : _c(
+          "button",
+          {
+            staticClass: "btn btn-success btn-round",
+            attrs: {
+              type: "button",
+              "data-toggle": "modal",
+              "data-target": "#courseModal"
+            }
+          },
+          [
+            _vm._v("\n    Add new Student Outcome "),
+            _c("i", { staticClass: "fa fa-plus" })
+          ]
+        ),
     _vm._v(" "),
     _c(
       "div",
@@ -56656,12 +56802,12 @@ var render = function() {
                       ]
                     ),
                     _vm._v(" "),
-                    _vm._m(1)
+                    _vm._m(0)
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "modal-body" }, [
                     _c("div", { staticClass: "form-group row" }, [
-                      _vm._m(2),
+                      _vm._m(1),
                       _vm._v(" "),
                       _c(
                         "div",
@@ -56710,7 +56856,7 @@ var render = function() {
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "form-group row" }, [
-                      _vm._m(3),
+                      _vm._m(2),
                       _vm._v(" "),
                       _c(
                         "div",
@@ -56758,7 +56904,7 @@ var render = function() {
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "form-group row" }, [
-                      _vm._m(4),
+                      _vm._m(3),
                       _vm._v(" "),
                       _c(
                         "div",
@@ -56780,7 +56926,11 @@ var render = function() {
                               class: {
                                 "is-invalid": _vm.form.errors.has("program")
                               },
-                              attrs: { id: "program", name: "program" },
+                              attrs: {
+                                id: "program",
+                                name: "program",
+                                disabled: ""
+                              },
                               on: {
                                 change: function($event) {
                                   var $$selectedVal = Array.prototype.filter
@@ -56833,10 +56983,10 @@ var render = function() {
                     _vm._v(" "),
                     _c("hr"),
                     _vm._v(" "),
-                    _vm._m(5),
+                    _vm._m(4),
                     _vm._v(" "),
                     _c("div", { staticClass: "form-group row" }, [
-                      _vm._m(6),
+                      _vm._m(5),
                       _vm._v(" "),
                       _c(
                         "div",
@@ -57008,7 +57158,7 @@ var render = function() {
                           },
                           [
                             _c("div", { staticClass: "form-group row mt-3" }, [
-                              _vm._m(7),
+                              _vm._m(6),
                               _vm._v(" "),
                               _c(
                                 "div",
@@ -57063,7 +57213,7 @@ var render = function() {
                             ]),
                             _vm._v(" "),
                             _c("div", { staticClass: "form-group row mt-3" }, [
-                              _vm._m(8),
+                              _vm._m(7),
                               _vm._v(" "),
                               _c(
                                 "div",
@@ -57131,7 +57281,7 @@ var render = function() {
                           },
                           [
                             _c("div", { staticClass: "form-group row mt-3" }, [
-                              _vm._m(9),
+                              _vm._m(8),
                               _vm._v(" "),
                               _c(
                                 "div",
@@ -57186,7 +57336,7 @@ var render = function() {
                             ]),
                             _vm._v(" "),
                             _c("div", { staticClass: "form-group row mt-3" }, [
-                              _vm._m(10),
+                              _vm._m(9),
                               _vm._v(" "),
                               _c(
                                 "div",
@@ -57254,7 +57404,7 @@ var render = function() {
                           },
                           [
                             _c("div", { staticClass: "form-group row mt-3" }, [
-                              _vm._m(11),
+                              _vm._m(10),
                               _vm._v(" "),
                               _c(
                                 "div",
@@ -57309,7 +57459,7 @@ var render = function() {
                             ]),
                             _vm._v(" "),
                             _c("div", { staticClass: "form-group row mt-3" }, [
-                              _vm._m(12),
+                              _vm._m(11),
                               _vm._v(" "),
                               _c(
                                 "div",
@@ -57377,7 +57527,7 @@ var render = function() {
                           },
                           [
                             _c("div", { staticClass: "form-group row mt-3" }, [
-                              _vm._m(13),
+                              _vm._m(12),
                               _vm._v(" "),
                               _c(
                                 "div",
@@ -57432,7 +57582,7 @@ var render = function() {
                             ]),
                             _vm._v(" "),
                             _c("div", { staticClass: "form-group row mt-3" }, [
-                              _vm._m(14),
+                              _vm._m(13),
                               _vm._v(" "),
                               _c(
                                 "div",
@@ -57551,26 +57701,6 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      {
-        staticClass: "btn btn-success btn-round",
-        attrs: {
-          type: "button",
-          "data-toggle": "modal",
-          "data-target": "#courseModal"
-        }
-      },
-      [
-        _vm._v("\n    Add new Student Outcome "),
-        _c("i", { staticClass: "fa fa-plus" })
-      ]
-    )
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement

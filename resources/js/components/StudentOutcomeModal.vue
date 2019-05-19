@@ -2,6 +2,16 @@
   <div>
     <!-- Activator -->
     <button
+      v-if="isUpdate"
+      type="button"
+      class="btn btn-primary btn-sm"
+      data-toggle="modal"
+      data-target="#courseModal"
+    >
+      Update <i class="fa fa-edit"></i>
+    </button>
+    <button
+      v-else
       type="button"
       class="btn btn-success btn-round"
       data-toggle="modal"
@@ -101,6 +111,7 @@
                     v-model="form.program"
                     v-uppercase
                     :class="{ 'is-invalid': form.errors.has('program') }"
+                    disabled
                   >
                     <option value="" style="display: none"
                       >Select Program</option
@@ -498,47 +509,129 @@
 
 <script>
 export default {
-  props: ["programs"],
+  props: [
+    "programs",
+    "isUpdate",
+    "studentOutcome",
+    "performanceCriteria",
+    "performanceIndicators",
+    "programId"
+  ],
   data() {
     return {
       form: new Form({
+        id: "",
         description: "",
         so_code: "",
         program: "",
         performance_criteria: "",
-        unsatisfactory_desc: "unsatisfactory",
+        unsatisfactory_desc: "",
         unsatisfactory_grade: "25.00",
-        developing_desc: "developing",
+        developing_desc: "",
         developing_grade: "50.00",
-        satisfactory_desc: "satisfactory",
+        satisfactory_desc: "",
         satisfactory_grade: "75.00",
-        exemplary_desc: "exemplary",
+        exemplary_desc: "",
         exemplary_grade: "95.00"
       })
     };
   },
   computed: {
     modalTitle() {
-      return "Add new Student Outcome";
+      return this.isUpdate
+        ? "Update Student Outcome"
+        : "Add new Student Outcome";
     },
     saveTitle() {
-      return "Add to database";
+      return this.isUpdate ? "Update from database" : "Add to database";
     }
   },
   methods: {
     saveStudentOutcome() {
-      this.addStudentOutcome();
+      if (this.isUpdate) {
+        this.updateStudentOutcome();
+      } else {
+        this.addStudentOutcome();
+      }
     },
     addStudentOutcome() {
       this.form
         .post("student_outcomes")
         .then(({ data }) => {
           console.log(data);
-          window.location.href = myRootURL + "/student_outcomes/";
+          window.location.href =
+            myRootURL +
+            "/student_outcomes/" +
+            data.id +
+            "?program_id=" +
+            data.program_id;
         })
         .catch(err => {
           console.log(err);
         });
+    },
+    updateStudentOutcome() {
+      this.form
+        .put("../student_outcomes/" + this.form.id)
+        .then(({ data }) => {
+          window.location.href =
+            myRootURL +
+            "/student_outcomes/" +
+            data.id +
+            "?program_id=" +
+            data.program_id;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  },
+  created() {
+    this.form.program = this.programId;
+    if (this.isUpdate) {
+      this.form.id = this.studentOutcome.id;
+      this.form.so_code = this.studentOutcome.so_code;
+      this.form.description = this.studentOutcome.description;
+      this.form.program = this.studentOutcome.program_id;
+      this.form.performance_criteria = this.performanceCriteria.description;
+
+      for (let i = 0; i < this.performanceIndicators.length; i++) {
+        if (this.performanceIndicators[i].performance_indicator_id == 1) {
+          //unsatisfactory
+          this.form.unsatisfactory_desc = this.performanceIndicators[
+            i
+          ].description;
+          this.form.unsatisfactory_grade = this.performanceIndicators[
+            i
+          ].score_percentage;
+        } else if (
+          this.performanceIndicators[i].performance_indicator_id == 2
+        ) {
+          //developing
+          this.form.developing_desc = this.performanceIndicators[i].description;
+          this.form.developing_grade = this.performanceIndicators[
+            i
+          ].score_percentage;
+        } else if (
+          this.performanceIndicators[i].performance_indicator_id == 3
+        ) {
+          //satisfactory
+          this.form.satisfactory_desc = this.performanceIndicators[
+            i
+          ].description;
+          this.form.satisfactory_grade = this.performanceIndicators[
+            i
+          ].score_percentage;
+        } else if (
+          this.performanceIndicators[i].performance_indicator_id == 4
+        ) {
+          //exemplary
+          this.form.exemplary_desc = this.performanceIndicators[i].description;
+          this.form.exemplary_grade = this.performanceIndicators[
+            i
+          ].score_percentage;
+        }
+      }
     }
   }
 };

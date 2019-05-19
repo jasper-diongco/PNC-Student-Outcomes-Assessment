@@ -31,8 +31,13 @@
     <a href="{{ url('/curricula?college_id='. Session::get('college_id')) }}" class="btn btn-success mb-3 btn-sm"><i class="fa fa-arrow-left"></i> Back</a>
 
     <h1 class="h4">{{ $curriculum->name }}</h1>
-    <p><i class="fa fa-file-alt"></i> {{ $curriculum->description }}</p>
-    <p><i class="fa fa-copy"></i> Revision no: <b>{{ $curriculum->revision_no }}.0</b></p>
+    <p class="mr-5"><i class="fa fa-file-alt text-primary"></i> {{ $curriculum->description }}</p>
+    <div class="d-flex">  
+      <p class="mr-5">
+      <i class="fa fa-calendar-alt text-secondary"></i> {{ $curriculum->year }}
+      </p>
+      <p class="mr-5"><i class="fa fa-book text-success"></i> {{ count($curriculum->curriculumCourses) }} courses</p>
+    </div>
 
     @if (!$curriculum->checkIfLatestVersion())
       <div class="alert alert-warning">
@@ -42,13 +47,9 @@
     @endif
 
     @if (!$curriculum->is_saved)
-      <div class="alert alert-info"><i class="fa fa-info-circle"></i> You can search existing courses to add to this curriculum or you add a new course if you want.
-      <br>
-      <b>Once this is saved. You cannot edit this, but you can revised instead.</b>
-      </div>
 
-      <div class="d-flex justify-content-between">
-        <div style="width: 80%">
+      <div class="row">
+        <div class="col-md-8">
           <div class="form-group row">
             <div class="col-md-2 text-md-right">
               <label class="col-form-label "><b>Search Courses: </b></label>
@@ -88,35 +89,67 @@
           </div>
         </div>
         
-        <div>
+        <div class="col-md-4 text-md-right">
           @if(Gate::check('isDean') || Gate::check('isSAdmin'))
             <!-- COURSE MODAL -->
-            <course-modal 
-              :college-id="college_id" 
-              :colleges='@json($colleges)'
-              :add-directly="true"
-              v-on:open-curriculum-course="openCurriculumCourse"></course-modal>
+              <course-modal 
+                :college-id="college_id" 
+                :colleges='@json($colleges)'
+                :add-directly="true"
+                v-on:open-curriculum-course="openCurriculumCourse"></course-modal>
             <!-- END MODAL -->
+
+
           @endif
         </div>
       </div>
     @else
       <div class="d-flex justify-content-end align-self-center my-3">
         <div>
-            <button class="btn btn-secondary mr-2">Print <i class="fa fa-print"></i></button>    
+            <button class="btn btn-secondary mr-2 btn-sm">Print <i class="fa fa-print"></i></button>    
         </div>
         @if ($curriculum->checkIfLatestVersion())
         @if(Gate::check('isDean') || Gate::check('isSAdmin'))
           <div>
-            <form v-on:submit.prevent="reviseCurriculum" action="{{ url('/curricula/' . $curriculum->id. '/revise') }}" method="post">
+            <form v-on:submit.prevent="updateCurriculum" action="{{ url('/curricula/' . $curriculum->id. '/edit') }}" method="post">
               @csrf
-              <button class="btn btn-primary" type="submit">Revise <i class="fa fa-edit"></i></button>
+              <button class="btn btn-success btn-sm" type="submit">Edit <i class="fa fa-edit"></i></button>
             </form>
           </div>
         @endif
         @endif
       </div>
     @endif
+
+    
+    <div v-show="!isLoading">
+      <div class="alert alert-success mt-3">
+          <div class="row">
+            <div class="col-md-2">
+              <label><b>Total units: </b></label>
+            </div>
+            <div class="col-md-10">
+              <span>@{{ getAllUnits() }}</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+              <label><b>Total courses: </b></label>
+            </div>
+            <div class="col-md-10">
+              <span>@{{ this.curriculum.curriculum_courses.length }}</span>
+            </div>
+          </div>
+
+          
+        </div>
+        
+        @if (count($curriculum->getDeactivatedCourses()))
+          <div class="my-3 d-flex justify-content-end">
+            <a href="{{ url('/curricula/' . $curriculum->id . '/deactivated_courses?curriculum_id=' . $curriculum->id) }}" class="btn btn-secondary btn-sm">View Deactivated Courses ({{ count($curriculum->getDeactivatedCourses()) }}) <i class="fa fa-archive"></i></a>
+          </div>
+        @endif
+    </div>
 
     
 
@@ -168,7 +201,7 @@
                       <th>Lec Unit</th>
                       <th>Lab Unit</th>
                       <th>Pre requsite</th>
-                      <th class="text-center" v-if="is_saved == 0">Actions</th>
+                      <th class="text-center" v-if="is_saved == 0">Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -181,14 +214,13 @@
                       @if(Gate::check('isDean') || Gate::check('isSAdmin'))
                         <td class="justify-content-end d-flex" v-if="is_saved == 0">
                           <div class="mr-2">
-                            <button v-on:click="removeCurriculumCourse(curriculumCourse.id)" class="btn btn-secondary btn-sm">Remove <i class="fa fa-minus-circle text-danger"></i></button>
                             <button
                               data-toggle="modal"
                               data-target="#curriculumCourseModalUpdate"
                               class="btn btn-success btn-sm"
                               v-on:click="selectCurriculumCourse(curriculumCourse)"
                             >
-                              Update <i class="fa fa-edit"></i>
+                              <i class="fa fa-edit"></i>
                             </button>
                           </div>
                           
@@ -257,7 +289,7 @@
                       <th>Lec Unit</th>
                       <th>Lab Unit</th>
                       <th>Pre requsite</th>
-                      <th class="text-center" v-if="is_saved == 0">Actions</th>
+                      <th class="text-center" v-if="is_saved == 0">Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -270,14 +302,13 @@
                       @if(Gate::check('isDean') || Gate::check('isSAdmin'))
                         <td class="justify-content-end d-flex" v-if="is_saved == 0">
                           <div class="mr-2">
-                            <button v-on:click="removeCurriculumCourse(curriculumCourse.id)" class="btn btn-secondary btn-sm">Remove <i class="fa fa-minus-circle text-danger"></i></button>
                             <button
                               data-toggle="modal"
                               data-target="#curriculumCourseModalUpdate"
                               class="btn btn-success btn-sm"
                               v-on:click="selectCurriculumCourse(curriculumCourse)"
                             >
-                              Update <i class="fa fa-edit"></i>
+                              <i class="fa fa-edit"></i>
                             </button>
                           </div>
                           
@@ -310,26 +341,7 @@
     </div>
 
 
-    <div v-if="!isLoading">
-      <div class="alert alert-success mt-3">
-        <div class="row">
-          <div class="col-md-2">
-            <label><b>Total units: </b></label>
-          </div>
-          <div class="col-md-10">
-            <span>@{{ getAllUnits() }}</span>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-2">
-            <label><b>Total courses: </b></label>
-          </div>
-          <div class="col-md-10">
-            <span>@{{ this.curriculum.curriculum_courses.length }}</span>
-          </div>
-        </div>
-      </div>
-      
+    <div v-if="!isLoading">   
       @if (!$curriculum->is_saved)
         <div class="d-flex justify-content-end">
           <form action="{{ url('/curricula/' . $curriculum->id . '/save_curriculum') }}" v-on:submit.prevent="saveCurriculum"
@@ -338,7 +350,7 @@
             <button
               type="submit" 
               href="#" 
-              class="btn btn-success">
+              class="btn btn-success mb-5 mt-3">
                 Save 
                 <i class="fa fa-save"></i>
             </button>
@@ -596,6 +608,21 @@
           //   }
           // });
           $('#curriculumModal').modal('show');
+        },
+        updateCurriculum(event) {
+          swal.fire({
+            title: 'Do you want to update this curriculum?',
+            text: "Please confirm",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#1cc88a',
+            cancelButtonColor: '#e74a3b',
+            confirmButtonText: 'Yes'
+          }).then((result) => {
+            if (result.value) {
+              event.target.submit();
+            }
+          });
         },
         checkIfHasSummer(year) {
           for(let i = 0; i < this.curriculum.curriculum_courses.length; i++) {

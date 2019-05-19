@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\CurriculumCourse;
 
 class Curriculum extends Model
 {
@@ -13,7 +14,21 @@ class Curriculum extends Model
     }
 
     public function curriculumCourses() {
-        return $this->hasMany('App\CurriculumCourse');
+        return $this->hasMany('App\CurriculumCourse')->where('is_active', 1);
+    }
+
+    public function getDeactivatedCourses() {
+        return CurriculumCourse::where('curriculum_id', $this->id)->where('is_active', 0)->get();
+    }
+
+    public function totalUnits() {
+        return CurriculumCourse::where('curriculum_id', $this->id)
+        ->where('is_active', 1)
+        ->join('courses', 'courses.id', '=', 'curriculum_courses.course_id')
+        ->sum('lec_unit') + CurriculumCourse::where('curriculum_id', $this->id)
+        ->where('is_active', 1)
+        ->join('courses', 'courses.id', '=', 'curriculum_courses.course_id')
+        ->sum('lab_unit') ;
     }
 
     public function user() {
@@ -21,20 +36,20 @@ class Curriculum extends Model
     }
 
     public function getPastVersion() {
-        return Curriculum::where('program_id', $this->program_id)
+        return Curriculum::where('ref_id', $this->ref_id)
             ->where('id','<>', $this->id)
             ->latest()
             ->get();
     }
 
     public function checkIfLatestVersion() {
-        return !Curriculum::where('program_id', $this->program_id)
+        return !Curriculum::where('ref_id', $this->ref_id)
             ->where('revision_no', '>', $this->revision_no)
             ->exists();
     }
 
     public function getLatestVersion() {
-        return Curriculum::where('program_id', $this->program_id)
+        return Curriculum::where('ref_id', $this->ref_id)
             ->latest()
             ->first();
     }

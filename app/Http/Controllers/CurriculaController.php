@@ -143,6 +143,17 @@ class CurriculaController extends Controller
             ->with('colleges', $colleges);
     }
 
+
+    public function edit($id) {
+        $curriculum = Curriculum::findOrFail($id);
+        $curriculum->is_saved = false;
+        $curriculum->update();
+
+        Session::flash('message', 'You can edit this curriculum now.');
+
+        return redirect('/curricula/' . $curriculum->id);
+    }
+
     public function revise(Request $request, $id) {
         if(!Gate::allows('isDean') && !Gate::allows('isSAdmin')) {
             return abort('401', 'Unauthorized');
@@ -200,5 +211,13 @@ class CurriculaController extends Controller
         Session::flash('message', 'Curriculum successfully cloned!');
 
         return $newCurriculum;
+    }
+
+    public function deactivatedCourses($id) {
+        $curriculum_courses =  CurriculumCourse::where('curriculum_id', $id)
+            ->where('is_active', 0)
+            ->paginate(10);
+
+        return view('curricula.deactivated_courses')->with('curriculum_courses', $curriculum_courses);
     }
 }

@@ -7,27 +7,13 @@ use App\CurriculumCourse;
 use Illuminate\Support\Facades\DB;
 use App\CourseRequisite;
 use App\Http\Resources\CurriculumCourseResource;
+use Illuminate\Support\Facades\Session;
 
 class CurriculumCoursesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+    public function __construct() {
+        $this->middleware('auth');
     }
 
     /**
@@ -108,16 +94,6 @@ class CurriculumCoursesController extends Controller
         return new CurriculumCourseResource($curriculum_resource);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -216,18 +192,25 @@ class CurriculumCoursesController extends Controller
 
 
             //delete previous pre requisite(s)
-            foreach ($curriculumCourse->courseRequisites as $pre_req) {
-                $pre_req->delete();
-            }
+            // foreach ($curriculumCourse->courseRequisites as $pre_req) {
+            //     $pre_req->delete();
+            // }
 
-            $curriculumCourse->delete();
+            // $curriculumCourse->delete();
+
+            //deactivate course
+            $curriculumCourse->is_active = false;
+            $curriculumCourse->update();
 
             
 
             DB::commit();
             // all good
+            Session::flash('message', 'Course successfully deactivated');
 
             return $curriculumCourse;
+
+
         } catch (\Exception $e) {
             DB::rollback();
             // something went wrong
@@ -237,5 +220,43 @@ class CurriculumCoursesController extends Controller
 
 
         
+    }
+
+    public function activate($id) {
+
+        $curriculum_course = CurriculumCourse::findOrFail($id);
+        $curriculum_course->is_active = true;
+
+        $curriculum_course->update();
+
+        Session::flash('message', 'Course successfully activated');
+
+        return redirect('/curricula/' . $curriculum_course->curriculum_id);
+    }
+
+    public function activateSelected(Request $request) {
+        DB::beginTransaction();
+
+        try {
+            $curriculum_id = '';
+            foreach (json_decode(request('checked_courses')) as $curriculum_course_id) {
+                $curriculum_course = CurriculumCourse::findOrFail($curriculum_course_id);
+                $curriculum_id = $curriculum_course->curriculum_id;
+                $curriculum_course->is_active = true;
+                $curriculum_course->update();
+            }
+
+            DB::commit();
+            // all good
+            Session::flash('message', 'Course(s) successfully activated');
+
+            return redirect('/curricula/' . $curriculum_id);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            // something went wrong
+
+            return abort(500, 'Internal Server Error');
+        }
     }
 }
