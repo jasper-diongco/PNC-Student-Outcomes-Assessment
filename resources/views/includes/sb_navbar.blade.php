@@ -1,5 +1,5 @@
 <!-- Topbar -->
-<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow" id="app-nav">
 
   <!-- Sidebar Toggle (Topbar) -->
   <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
@@ -59,10 +59,21 @@
                  <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i> My Profile 
               </a>
           @endif
-          <a class="dropdown-item" href="#">
-            <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-            Settings
-          </a>
+          {{-- <a class="dropdown-item" href="#">
+            <i class="fas fa-lock fa-sm fa-fw mr-2 text-gray-400"></i>
+            Change Password
+          </a> --}}
+          {{-- <account-modal></account-modal> --}}
+          {{-- <a
+            class="dropdown-item"
+            data-toggle="modal"
+            data-target="#accountModal"
+            href="#"
+          >
+            <i class="fas fa-lock fa-sm fa-fw mr-2 text-gray-400"></i>
+            Change Password
+          </a> --}}
+
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
             <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>

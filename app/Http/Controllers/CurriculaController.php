@@ -12,6 +12,7 @@ use App\Http\Resources\CurriculumResource;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\CurriculumMappingStatus;
 use Gate;
 
 class CurriculaController extends Controller
@@ -97,9 +98,16 @@ class CurriculaController extends Controller
             'revision_no' => 1
         ]);
 
+
+
         $curriculum->ref_id = $curriculum->id;
 
         $curriculum->save();
+
+        CurriculumMappingStatus::create([
+            'curriculum_id' => $curriculum->id,
+            'status' => false
+        ]);
 
         Session::flash('message', 'Curriculum successfully added to database');
 

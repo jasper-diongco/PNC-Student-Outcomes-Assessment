@@ -47,7 +47,13 @@ Vue.component(
   "example-component",
   require("./components/ExampleComponent.vue").default
 );
+Vue.component("checked-icon", require("./components/CheckedIcon.vue").default);
 Vue.component("course-modal", require("./components/CourseModal.vue").default);
+Vue.component(
+  "account-modal",
+  require("./components/AccountModal.vue").default
+);
+
 Vue.component(
   "curriculum-course-modal",
   require("./components/CurriculumCourseModal.vue").default

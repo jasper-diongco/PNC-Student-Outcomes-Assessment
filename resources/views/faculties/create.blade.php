@@ -5,10 +5,10 @@
 
 @section('content')
 
-<a href="{{  url('faculties') }}" class="valign-center btn btn-success btn-sm"><i class="material-icons">arrow_back</i> Back</a>
+<a href="{{  url('faculties') }}" class="btn btn-success btn-sm"><i class="fa fa-arrow-left"></i> Back</a>
 
 <div class="row" id="app">
-  <div class="col-xs-12 col-md-8 mx-auto">
+  <div class="col-xs-12 col-md-8 mx-auto mb-5">
     <div class="card mt-3">
       <div class="card-header">
         <h3>Add Faculty</h3>
@@ -104,7 +104,7 @@
 
           <div class="form-group">
             <label for="college_id">Select College *</label>
-            <select name="college_id" id="college_id" class="form-control">
+            <select name="college_id" id="college_id" class="form-control" v-model="college_id" {{ Gate::check('isSAdmin') ? '' : 'disabled' }}>
               <option value="" style="display: none">Select College</option>
               @foreach($colleges as $college)
                 <option 
@@ -116,6 +116,8 @@
               @endforeach
             </select>
           </div>
+          <input type="hidden" name="college_id" :value="college_id">
+
           <hr>
           <h4>Account Information</h4>
           <div class="form-group">
@@ -159,7 +161,8 @@
           first_name: '{{ old('first_name') }}',
           middle_name: '{{ old('middle_name') }}',
           last_name: '{{ old('last_name') }}',
-          showPass: false
+          showPass: false,
+          college_id: '{{ Session::get('college_id') }}'
         }
       }
   });

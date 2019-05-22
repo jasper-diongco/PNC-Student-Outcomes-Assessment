@@ -44,6 +44,11 @@ class LoginController extends Controller
 
         Session::put('toggle_sb', 1);
 
+        if(Auth::user()->is_active == false) {
+            
+            return url('/user_is_deactivated');
+        }
+
         if(Auth::user()->user_type_id == 'dean') {
             Session::put('college_id', Auth::user()->getFaculty()->college_id);
             return url('/colleges/' . Auth::user()->getFaculty()->college_id . '/dashboard');

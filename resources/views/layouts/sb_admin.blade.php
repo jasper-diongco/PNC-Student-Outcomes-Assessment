@@ -21,6 +21,18 @@
 
   <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
+  <style type="text/css">
+    .fade-enter-active,
+    .fade-leave-active {
+      transition: opacity .5s;
+    }
+
+    .fade-enter,
+    .fade-leave-to {
+      opacity: 0;
+    }
+  </style> 
+
 </head>
 
 <body id="page-top">
@@ -86,7 +98,10 @@
         accordionSidebar.classList.add('toggled');
       }
 
-      toggleAccordion();
+      setTimeout(() => {
+        toggleAccordion();
+      },2000);
+      
 
 
       document.getElementById('sidebarToggle').onclick = function() {
@@ -104,8 +119,18 @@
         }
 
         ApiClient.get('/toggle_sb/' + localStorage.getItem('toggleStatus'));
-      } 
+      }
+
+
     }
+
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+
+    $(function () {
+      $('[data-toggle="popover"]').popover();
+    });
   </script>
 
 </body>

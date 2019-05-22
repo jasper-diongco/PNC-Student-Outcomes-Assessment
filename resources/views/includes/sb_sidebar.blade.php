@@ -66,11 +66,17 @@
     </li>
 
     <!-- Nav Item - Student Outcomes -->
-     <!-- Nav Item - Courses -->
     <li class="nav-item">
       <a class="nav-link" href="{{ url('/student_outcomes/list_program?college_id='. Session::get('college_id')) }}">
         <i class="fas fa-fw fa-flag"></i>
         <span>Student Outcomes</span></a>
+    </li>
+
+    <!-- Nav Item - Student Outcomes -->
+    <li class="nav-item">
+      <a class="nav-link" href="{{ url('/curriculum_mapping?college_id='. Session::get('college_id')) }}">
+        <i class="fas fa-fw fa-map"></i>
+        <span>Curriculum Mapping</span></a>
     </li>
 
     <!-- Nav Item - Users Collapse Menu -->

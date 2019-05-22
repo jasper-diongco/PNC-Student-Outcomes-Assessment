@@ -10,6 +10,8 @@ use App\User;
 use App\Faculty;
 use App\Http\Resources\Faculty as FacultyResource;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
+use Gate;
 
 class FacultiesController extends Controller
 {
@@ -23,28 +25,85 @@ class FacultiesController extends Controller
      */
     public function index(Request $request)
     {
+        //authenticate
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
+
         if($request->ajax()) {
             if(request('q') != '') {
-                return Faculty::join('users', 'faculties.user_id', '=', 'users.id')
-                    ->join('colleges', 'faculties.college_id', '=', 'colleges.id')
-                    ->join('user_types', 'users.user_type_id', '=', 'user_types.id')
-                    // ->selectRaw('faculties.id as id,users.id as user_id, first_name, middle_name, last_name , colleges.college_code as college_code, email, user_types.description as user_type')
-                    ->select('faculties.id as id','users.id as user_id', 'first_name', 'middle_name', 'last_name' , 'colleges.college_code as college_code', 'email', 'user_types.description as user_type')
-                    ->where('first_name', 'LIKE', '%' . request('q') . '%')
-                    ->orWhere('middle_name', 'LIKE', '%' . request('q') . '%')
-                    ->orWhere('last_name', 'LIKE', '%' . request('q') . '%')
-                    ->orWhere('email', 'LIKE', '%' . request('q') . '%')
-                    ->orWhere(DB::raw("CONCAT(last_name, ' ', first_name, ', ', middle_name)"), 'LIKE', '%' . request('q') . '%')
-                    ->orWhere(DB::raw("CONCAT(first_name, ' ', last_name)"), 'LIKE', '%' . request('q') . '%')
+
+                if(Gate::check('isSAdmin')) {
+                    $searched_faculties = Faculty::join('users', 'users.id', '=', 'faculties.user_id')
+                    ->where('users.is_active', true)
+                    ->where(function($q) {
+                        $q->where('first_name', 'LIKE', '%' . request('q') . '%')
+                        ->orWhere('middle_name', 'LIKE', '%' . request('q') . '%')
+                        ->orWhere('last_name', 'LIKE', '%' . request('q') . '%')
+                        ->orWhere('email', 'LIKE', '%' . request('q') . '%')
+                        ->orWhere(DB::raw("CONCAT(last_name, ' ', first_name, ', ', middle_name)"), 'LIKE', '%' . request('q') . '%')
+                        ->orWhere(DB::raw("CONCAT(first_name, ' ', last_name)"), 'LIKE', '%' . request('q') . '%');
+                    })   
+                    ->select('faculties.*')
                     ->get();
 
-                    // ->select('faculties.id as id','users.id as user_id', 'first_name', 'middle_name', 'last_name' , 'colleges.college_code as college_code', 'email', 'user_types.description as user_type', DB::raw('CONCAT(first_name, " ", last_name) AS full_name'))
+                } else {
+                    $searched_faculties = Faculty::join('users', 'users.id', '=', 'faculties.user_id')
+                    ->where('college_id', '=', Session::get('college_id'))
+                    ->where('users.is_active', true)
+                    ->where(function($q) {
+                        $q->where('first_name', 'LIKE', '%' . request('q') . '%')
+                        ->orWhere('middle_name', 'LIKE', '%' . request('q') . '%')
+                        ->orWhere('last_name', 'LIKE', '%' . request('q') . '%')
+                        ->orWhere('email', 'LIKE', '%' . request('q') . '%')
+                        ->orWhere(DB::raw("CONCAT(last_name, ' ', first_name, ', ', middle_name)"), 'LIKE', '%' . request('q') . '%')
+                        ->orWhere(DB::raw("CONCAT(first_name, ' ', last_name)"), 'LIKE', '%' . request('q') . '%');
+                    })
+                    
+                    ->select('faculties.*')
+                    ->get();
+                }
+                
+                return FacultyResource::collection($searched_faculties);
+
             } else {
-                return FacultyResource::collection(Faculty::paginate(10));
+                if(Gate::check('isSAdmin')) {
+                    return FacultyResource::collection(
+                        Faculty::select('faculties.*')
+                        ->join('users','users.id', '=', 'faculties.user_id')
+                        ->where('users.is_active', true)
+                        ->latest()
+                        ->paginate(10)
+                    );
+                } else {
+                    return FacultyResource::collection(
+                        Faculty::select('faculties.*')
+                        ->join('users','users.id', '=', 'faculties.user_id')
+                        ->where('college_id', Session::get('college_id'))   
+                        ->where('users.is_active', true)
+                        ->latest()
+                        ->paginate(10)
+                    );
+                }
+                
             }
         }
 
-        return view('faculties.index');
+
+        //deactivated users count
+        if(Gate::check('isSAdmin')) {
+            $deactivated_faculties_count = Faculty::join('users','users.id', '=', 'faculties.user_id')
+            ->where('users.is_active', false)
+            ->count(); 
+        } else {
+           $deactivated_faculties_count = Faculty::join('users','users.id', '=', 'faculties.user_id')
+            ->where('college_id', Session::get('college_id'))   
+            ->where('users.is_active', false)
+            ->count(); 
+        }
+        
+
+        return view('faculties.index', compact('deactivated_faculties_count'));
     }
 
     /**
@@ -54,6 +113,11 @@ class FacultiesController extends Controller
      */
     public function create()
     {
+        //authenticate
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin')) {
+            return abort('401', 'Unauthorized');
+        }
+
         $colleges = College::all();
         return view('faculties.create')->with('colleges', $colleges);
     }
@@ -66,6 +130,11 @@ class FacultiesController extends Controller
      */
     public function store(Request $request)
     {
+        //authenticate
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin')) {
+            return abort('401', 'Unauthorized');
+        }
+
         $request->validate([
             'first_name' => 'required|max:45|regex:/^[\pL\s\-]+$/u',
             'last_name' => 'required|max:45|regex:/^[\pL\s\-]+$/u',
@@ -125,6 +194,11 @@ class FacultiesController extends Controller
      */
     public function show($id, Request $request)
     {
+        //authenticate
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
+
         $faculty = Faculty::findOrFail($id);
         if($request->ajax()) {
             return new FacultyResource($faculty);
@@ -140,11 +214,31 @@ class FacultiesController extends Controller
      */
     public function edit($id)
     {
+        //authenticate
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
+
+        $name_readonly = false;
+
+        if(Gate::check('isProf')) {
+            if(Auth::user()->getFaculty()->id != $id) {
+                return abort('401', 'Unauthorized');
+            }
+            $name_readonly = true;
+        }
+
         $faculty = Faculty::findOrFail($id);
+
         $colleges = College::all();
 
 
-        return view('faculties.edit')->with('faculty', $faculty)->with('colleges', $colleges);
+
+
+        return view('faculties.edit')
+            ->with('faculty', $faculty)
+            ->with('colleges', $colleges)
+            ->with('name_readonly', $name_readonly);
     }
 
     /**
@@ -156,6 +250,11 @@ class FacultiesController extends Controller
      */
     public function update(Request $request, $id)
     {
+        //authenticate
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
+
         $faculty = Faculty::findOrFail($id);
         $user = $faculty->user;
 
@@ -167,9 +266,7 @@ class FacultiesController extends Controller
             'date_of_birth' => 'required|date',
             'contact_no' => 'nullable|regex:/^[0-9\s-]*$/',
             'address' => 'nullable|string|max:255',
-            'college_id' => 'required',
-            'email' => 'required|email|max:255|unique:users,email,' . $faculty->user_id,
-            'password' => 'required|min:8|max:20'
+            'college_id' => 'required'
         ]);
 
         try {
@@ -196,8 +293,8 @@ class FacultiesController extends Controller
             $user->date_of_birth = request('date_of_birth');
             $user->contact_no = request('contact_no');
             $user->address = request('address');
-            $user->email = request('email');
-            $user->password = Hash::make(request('password'));
+            // $user->email = request('email');
+            // $user->password = Hash::make(request('password'));
 
             $user->update();
 
@@ -212,7 +309,15 @@ class FacultiesController extends Controller
 
             DB::commit();
 
-            Session::flash('message', 'Faculty Successfully updated from database'); 
+            
+
+            if(request('faculty_type') == 'prof') {
+                Session::flash('message', 'Account Successfully updated from database');
+                return redirect('profile/faculty/'. $faculty->id);
+            }
+
+            Session::flash('message', 'Faculty Successfully updated from database');
+
             return redirect('faculties/'. $faculty->id);
 
         } catch (\PDOException $e) {
@@ -221,16 +326,6 @@ class FacultiesController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 
     public function updateAccount(Request $request, $id) {
 
@@ -251,5 +346,24 @@ class FacultiesController extends Controller
 
         return $user;
 
+    }
+
+    public function deactivated() {
+
+        if(Gate::check('isSAdmin')) {
+            $faculties = Faculty::select('faculties.*')
+                    ->join('users','users.id', '=', 'faculties.user_id')
+                    ->where('users.is_active', false)
+                    ->paginate(10);
+        } else {
+            $faculties = Faculty::select('faculties.*')
+                    ->join('users','users.id', '=', 'faculties.user_id')
+                    ->where('users.is_active', false)
+                    ->where('college_id', Session::get('college_id'))
+                    ->paginate(10);
+        }
+        
+
+        return view('faculties.deactivated', compact('faculties'));
     }
 }

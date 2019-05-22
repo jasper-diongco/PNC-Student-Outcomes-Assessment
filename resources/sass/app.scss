@@ -116,3 +116,30 @@ div.mdl-layout__drawer > nav.mdl-navigation > a.mdl-navigation__link {
   background-repeat: no-repeat;
   background-position: center;
 }
+
+.learning-legend {
+  width: 100px;
+  height: 30px;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.introduced {
+  background: #d8faee;
+}
+
+.reinforced {
+  background: #fcebc0;
+}
+
+.demonstrated {
+  background: #fad6d2;
+}
+// .custom-control-label:before {
+//   background-color: white;
+// }
+// .custom-checkbox .custom-control-input:checked ~ .custom-control-label::before {
+//   background-color: #1cc88a;
+// }

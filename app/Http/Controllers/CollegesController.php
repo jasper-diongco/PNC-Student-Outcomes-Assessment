@@ -11,6 +11,7 @@ use App\Curriculum;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Gate;
 
 class CollegesController extends Controller
@@ -39,10 +40,19 @@ class CollegesController extends Controller
             return abort('401', 'Unauthorized');
         }
 
+        //check if password is already changed
+        if(Hash::check('DefaultPass123', Auth::user()->password)) {
+            $password_changed = false;
+        } else {
+            $password_changed = true;
+        }
+
         $college = College::findOrFail($id);
 
         $program_count = Program::where('college_id', $college->id)->count();
+
         $courses_count = Course::where('college_id', $college->id)->count();
+
         $curriculum_count = Curriculum::join('programs', 'programs.id', '=', 'curricula.program_id')
             ->join('colleges', 'colleges.id', '=', 'programs.college_id')
             ->where('college_id', $college->id)
@@ -52,7 +62,8 @@ class CollegesController extends Controller
             ->with('college', $college)
             ->with('program_count', $program_count)
             ->with('courses_count', $courses_count)
-            ->with('curriculum_count', $curriculum_count);
+            ->with('curriculum_count', $curriculum_count)
+            ->with('password_changed', $password_changed);
     }
 
     /**

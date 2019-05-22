@@ -25,6 +25,7 @@ class CreateUsersTable extends Migration
             $table->string('sex');
             $table->string('address')->nullable();
             $table->string('user_type_id');
+            $table->integer('is_active')->default(true);
             $table->rememberToken();
             $table->timestamps();
         });
