@@ -45,7 +45,7 @@
         @foreach ($student_outcome->performanceCriterias[0]->performanceCriteriaIndicators as $pci)
           <div class="col-md-3">
             <div class="card mb-3" style="height: 100%">
-              @if ($pci->performance_indicator_id == 1)
+              {{-- @if ($pci->performance_indicator_id == 1)
                 <div class="card-header text-white" style="background:#f8cc5e;">
               @elseif ($pci->performance_indicator_id == 2)
                 <div class="card-header text-white" style="background:#51c2d3;">
@@ -53,7 +53,8 @@
                 <div class="card-header text-white" style="background:#6b8ae4;">
               @elseif ($pci->performance_indicator_id == 4)
                 <div class="card-header text-white" style="background:#25e19d;">
-              @endif
+              @endif --}}
+              <div class="card-header text-success bg-gray-100">
 
                 <strong>{{ $pci->performanceIndicator->description }} &mdash; {{ $pci->score_percentage }}%</strong>
               </div>

@@ -18,7 +18,7 @@
       @endif
     </div>
   </div>
-  <div class="card">
+  <div class="card shadow">
     <div class="card-body">
       <div class="row d-flex justify-content-between mb-3">
         <div class="col-md-4">
@@ -60,7 +60,7 @@
       </div>
       <div class="table-responsive">
         <table class="table">
-          <thead class="bg-light">
+          <thead class="bg-dark text-white">
             <tr>
               <th scope="col">#</th>
               <th scope="col">Course ID</th>

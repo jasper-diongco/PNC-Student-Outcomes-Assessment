@@ -5,7 +5,7 @@
 
 @section('content')
 
-<a href="{{  url('faculties/' . $faculty->id) }}" class="btn btn-success btn-sm"><i class="fa fa-arrow-left"></i> Back</a>
+<a href="{{  url('faculties/' . $faculty->id) }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
 
 <div class="row" id="app">
   <div class="col-xs-12 col-md-8 mx-auto mb-5">

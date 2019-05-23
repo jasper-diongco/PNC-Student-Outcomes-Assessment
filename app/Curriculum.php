@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\CurriculumCourse;
+use App\CurriculumMap;
 
 class Curriculum extends Model
 {
@@ -29,6 +30,20 @@ class Curriculum extends Model
         ->where('is_active', 1)
         ->join('courses', 'courses.id', '=', 'curriculum_courses.course_id')
         ->sum('lab_unit') ;
+    }
+
+    public function getSemCourses($year, $sem) {
+        return CurriculumCourse::where('curriculum_id', $this->id)
+            ->where('is_active', 1)
+            ->where('year_level', $year)
+            ->where('semester', $sem)
+            ->get();
+    }
+
+    public function checkMap($curriculum_course_id, $student_outcome_id) {
+        return CurriculumMap::where('curriculum_course_id', $curriculum_course_id)
+            ->where('student_outcome_id', $student_outcome_id)
+            ->first();
     }
 
     public function user() {

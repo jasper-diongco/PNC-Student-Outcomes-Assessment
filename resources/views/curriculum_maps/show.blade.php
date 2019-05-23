@@ -4,7 +4,7 @@
 
 
 @section('content')
-  <div id="app">
+  <div id="app" v-cloak>
     <a href="{{ url('/curriculum_mapping') }}" class="btn btn-success btn-sm mb-2"><i class="fa fa-arrow-left"></i> Back</a>
     <div class="d-flex justify-content-between mb-2">
       <div>
@@ -102,8 +102,8 @@
 
 
           
-            
-          <transition name="fade">
+          @if ($curriculum_mapping_status->status == 0)
+            <transition name="fade">
 
             <div class="table-responsive" v-if="!isLoading" id="my-table">
               <div v-for="year in curriculum.year_level">
@@ -167,7 +167,98 @@
             <div v-else>
               <table-loading></table-loading>
             </div>
-          </transition>   
+            </transition>  
+          @else
+            @for($year = 1; $year <= $curriculum->year_level; $year++)
+              @for($sem = 1; $sem <= 3; $sem++)
+                @if($curriculum->getSemCourses($year, $sem)->count() > 0)
+                  <div  class="mb-1" style="text-decoration: underline;"><b>{{ $year . ' year/ ' . $sem . ' sem' }}</b></div>
+                      <div class="table-responsive table-db" >
+                        <table class="table table-bordered">
+                          <thead>
+                            <th></th>
+                            @foreach ($curriculum->program->studentOutcomes as $student_outcome)
+                              
+                              <th 
+                                class="cursor-pointer text-warning" 
+                                data-toggle="popover" 
+                                title="{{ $student_outcome->so_code }}" 
+                                data-content="{{ $student_outcome->description }}"data-placement="bottom" 
+                                style="min-width: 50px;">{{ $student_outcome->so_code }}</th>
+                            @endforeach   
+                          </thead>
+                          <tbody>                    
+                            @foreach($curriculum->getSemCourses($year, $sem) as $curriculum_course)
+
+                                  <tr>
+                                    <th width="100px" data-toggle="popover" 
+                                    title="{{ $curriculum_course->course->course_code}}" data-content="{{$curriculum_course->course->description}}" data-placement="right">
+                                      <div class="text-primary"><b>{{ $curriculum_course->course->course_code }}</b></div>
+                                      <div>{{ $curriculum_course->course->lec_unit + $curriculum_course->course->lab_unit  }} units</div>
+                                      {{-- <small class="text-muted" style="font-size: 10px">@{{ curriculum_course.course.description}}</small> --}}
+                                    </th>
+                                    @for($so = 0; $so < $curriculum->program->studentOutcomes->count(); $so++)
+                                        @if($map = $curriculum->checkMap($curriculum_course->id, $curriculum->program->studentOutcomes[$so]->id))
+                                          @if($map->learning_level_id == 1)
+                                            <td class="introduced">
+                                          @elseif ($map->learning_level_id == 2)
+                                            <td class="reinforced">
+                                          @elseif ($map->learning_level_id == 3)
+                                            <td class="demonstrated">
+                                          @endif
+                                            <div class="d-flex justify-content-end align-items-start">
+                                            <checked-icon></checked-icon>
+                                          </div>
+                                          </td>
+                                        @else
+                                          <td style="cursor: pointer;"></td>
+                                        @endif
+                                      <!--
+                                      <td v-for="student_outcome in student_outcomes" :class="{'' : !checkMap(curriculum_course.id, student_outcome.id), 'introduced': checkMap(curriculum_course.id, student_outcome.id).learning_level_id == 1, 'reinforced': checkMap(curriculum_course.id, student_outcome.id).learning_level_id == 2, 'demonstrated': checkMap(curriculum_course.id, student_outcome.id).learning_level_id == 3 }" style="cursor: pointer;">
+                                  <div>
+                                    <div v-if="curriculum_mapping_status.status == 0"  class="d-flex justify-content-end align-items-start">
+                                      <div v-if="checkMap(curriculum_course.id, student_outcome.id)" v-on:click="mapCourse({target: { checked: true }}, curriculum_course, student_outcome )" class="mr-2">
+                                        <i class="fa fa-edit" style="font-size: 10px;"></i>
+                                      </div>
+                                      <div class="custom-control custom-checkbox">
+                                        <input v-on:change="mapCourse($event, curriculum_course, student_outcome)" type="checkbox" class="custom-control-input" :id="curriculum_course.id + '' + student_outcome.id" :checked="checkMap(curriculum_course.id, student_outcome.id)" style="cursor: pointer;">
+                                        <label class="custom-control-label" :for="curriculum_course.id + '' + student_outcome.id"></label>
+                                      </div>
+                                    </div>
+                                    <div v-else>
+                                      <div class="d-flex justify-content-end align-items-start">
+                                        <checked-icon v-if="checkMap(curriculum_course.id, student_outcome.id)"></checked-icon>
+                                      </div>
+                                    </div>                                                    
+                                  </div>
+                                </td>
+                              -->
+                                    @endfor
+
+                                  </tr>
+                                  
+                            @endforeach
+                          </tbody>
+                          <tfoot>
+                            <tr>
+                              <th></th>
+                              @foreach ($curriculum->program->studentOutcomes as $student_outcome)
+                                <th 
+                                  class="cursor-pointer text-warning" 
+                                  data-toggle="popover" 
+                                  title="{{ $student_outcome->so_code }}" 
+                                  data-content="{{ $student_outcome->description }}"data-placement="bottom" 
+                                  style="min-width: 50px;">{{ $student_outcome->so_code }}</th>
+                              @endforeach 
+                            </tr>
+                          </tfoot>
+                      </table>
+                    </div>
+                  @endif
+              @endfor
+            @endfor
+          @endif
+
       </div>
     </div>
     {{-- end card --}}
@@ -496,7 +587,7 @@
   <script>
     $(document).ready(function() {
       $('.double-scroll').doubleScroll();
-      $('#sample2').doubleScroll({
+      $('.tables-db').doubleScroll({
         resetOnWindowResize: true
       });
       $('#my-table').doubleScroll({

@@ -8,11 +8,13 @@ import Datepicker from "vuejs-datepicker";
 import VueSelect from "vue-select";
 import VeeValidate from "vee-validate";
 import swal from "sweetalert2";
+import moment from "moment";
 
 require("./bootstrap");
 
 require("startbootstrap-sb-admin-2/js/sb-admin-2.min.js");
 
+window.moment = moment;
 window.swal = swal;
 window.Vue = require("vue");
 window.axios = require("axios");

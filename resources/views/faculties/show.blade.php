@@ -3,7 +3,7 @@
 @section('title', $faculty->user->getFullName())
 
 @section('content')
-  <a href="{{ url('faculties') }}" class=" btn btn-success btn-sm"><i class="fa fa-arrow-left"></i> Back</a>
+  <a href="{{ url('faculties') }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
   
   @if(Session::has('message'))
     @component('components.alert')
@@ -35,7 +35,10 @@
         @endif
 
       </div>
+
       <div class="card-body">
+        <div><h5 class="text-success ml-2"><b>User Profile: </b></h5></div>
+        <img src="{{ asset('img/user.svg') }}" alt="user-icon" style="width: 50px" class="mb-2 ml-2">
         <ul class="list-group list-group-flush">
           <li class="list-group-item"><b>Full Name:</b> {{ $faculty->user->getFullName()}} </li>
           <li class="list-group-item"><b>Sex:</b> {{ $faculty->user->sex == 'M' ? 'Male' : 'Female' }}</li>

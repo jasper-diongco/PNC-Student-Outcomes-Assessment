@@ -160,7 +160,21 @@ Route::post('/users/{user}/deactivate', 'UsersController@deactivate');
 
 Route::post('/users/{user}/activate', 'UsersController@activate');
 
+Route::post('/users/{user}/reset_password', 'UsersController@resetPassword');
+
 // End Users routes
+
+// Student Routes
+
+Route::get('/students', 'StudentsController@index');
+
+Route::get('/students/create', 'StudentsController@create');
+
+Route::post('/students', 'StudentsController@store');
+
+Route::get('/students/{student}', 'StudentsController@show');
+
+// End Student Routes
 
 
 

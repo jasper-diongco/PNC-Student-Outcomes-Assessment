@@ -89,7 +89,7 @@
         <div class="bg-white py-2 collapse-inner rounded">
           <h6 class="collapse-header">Users :</h6>
           <a class="collapse-item" href="{{ url('/faculties') }}">Faculties</a>
-          <a class="collapse-item" href="#">Students</a>
+          <a class="collapse-item" href="{{ url('/students') }}">Students</a>
         </div>
       </div>
     </li>

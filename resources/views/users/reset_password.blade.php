@@ -7,18 +7,35 @@
 
 <div id="app">
   
-  <div class="d-flex justify-content-between mb-5">
+  <div class="d-flex justify-content-between mb-2">
     <div>
-      <h1 class="h3 text-gray-800  mb-5">Reset Password</h1>
+      <h1 class="h3 text-gray-800">Reset Password</h1>
     </div>
   </div>
   
-  <div class="row mt-5">
+  <div class="row">
     <div class="col-md-8 offset-2">
+
+      @if (Session::has('message'))
+        <div class="alert alert-success" role="alert">
+          <h4 class="alert-heading">Password successfully reset!</h4>
+          <p>{!! Session::get('message') !!}</p>
+          <hr>
+          <p class="mb-0">Please make sure to change your password immediately after you logged in.</p>
+        </div>
+      @endif
+      
       <form action="{{ url('users/reset_password') }}" method="get">
         <div class="form-group row">
           <div class="col-md-10">
-            <input type="email" name="email" class="form-control form-control-lg" placeholder="Enter your email..." autocomplete="off" required>
+            <input 
+              type="email" 
+              name="email" 
+              class="form-control form-control-lg" 
+              placeholder="Enter your email..."
+              value="{{ request('email') }}" 
+              autocomplete="off" 
+              required>
           </div>
           <div class="Col-md-2">
             <button class="btn btn-primary btn-lg">Search <i class="fa fa-search"></i></button>
@@ -49,8 +66,14 @@
                 <label><b>User Type:</b></label>
                 <span class="ml-2">{{ $user->userType->description }}</span>
               </div>
-
-              <button class="btn btn-primary">Reset Password</button>
+              
+              @if (request('reset') != 'successful')
+                <form action="{{ url('/users/' . $user->id . '/reset_password') }}" method="POST">
+                  @csrf
+                  <button class="btn btn-primary">Reset Password</button>
+                </form>
+              @endif
+              
             @endif
 
 

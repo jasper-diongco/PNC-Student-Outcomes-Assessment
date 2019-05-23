@@ -7,6 +7,7 @@ use App\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
+use Gate;
 
 class UsersController extends Controller
 {
@@ -32,6 +33,10 @@ class UsersController extends Controller
     }
 
     public function deactivate(User $user) {
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin')) {
+            return abort('401', 'Unauthorized');
+        }
+
         $user->is_active = false;
         $user->update();
 
@@ -48,6 +53,10 @@ class UsersController extends Controller
     }
 
     public function activate(User $user) {
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin')) {
+            return abort('401', 'Unauthorized');
+        }
+
         $user->is_active = true;
         $user->update();
 
@@ -60,20 +69,11 @@ class UsersController extends Controller
         return redirect('/users/deactivated');
     }
 
-    // public function activateSelected(User $user) {
-    //     $user->is_active = true;
-    //     $user->update();
-
-    //     Session::flash('message', 'Faculty successfully deactivated');
-
-    //     if(request('user_type') == 'faculty') {
-    //        return redirect('/faculties'); 
-    //     }
-        
-    //     return redirect('/users/deactivated');
-    // }
-
     public function activateSelected(Request $request) {
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin')) {
+            return abort('401', 'Unauthorized');
+        }
+
         DB::beginTransaction();
 
         try {
@@ -102,16 +102,45 @@ class UsersController extends Controller
     }
 
     public function resetPasswordView() {
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
+
         $user = null;
 
         if(request('email') != '') {
             $user = User::where('email', request('email'))->first();
         }
 
+        if($user != null) {
+            if(auth()->user()->user_type_id == 'prof') {
+                if($user->user_type_id != 'stud') {
+                    $user = null;
+                }
+            } else if (auth()->user()->user_type_id == 'dean') {
+                if($user->user_type_id == 's_admin' || $user->user_type_id == 'dean') {
+                    $user = null;
+                }
+            }
+        }
+        
+
         return view('users.reset_password', compact('user'));
     }
 
-    public function resetPassword() {
+    public function resetPassword(User $user) {
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
 
+
+
+
+        $user->password = Hash::make('DefaultPass123');
+        $user->save();
+
+        Session::flash('message', '<b>' . $user->email . '</b> your password is successfully reset. You can now login to your account.');
+
+        return redirect('/users/reset_password?email='. $user->email . '&reset=successful');
     }
 }

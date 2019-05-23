@@ -6,10 +6,13 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Faculty;
+use Carbon\Carbon;
 
 class User extends Authenticatable
 {
     use Notifiable;
+
+
 
     /**
      * The attributes that are mass assignable.
@@ -20,6 +23,8 @@ class User extends Authenticatable
         'first_name', 'last_name', 'middle_name','sex','date_of_birth', 'contact_no','address','email','password','user_type_id',
     ];
 
+
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -28,6 +33,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
 
     public function userType() {
         return $this->belongsTo('App\UserType');

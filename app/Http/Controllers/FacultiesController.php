@@ -155,7 +155,7 @@ class FacultiesController extends Controller
             $user = User::create([
                 'first_name' => strtoupper(request('first_name')),
                 'middle_name' => strtoupper(request('middle_name')),
-                'last_name' => request('last_name'),
+                'last_name' => strtoupper(request('last_name')),
                 'sex' => request('sex'),
                 'date_of_birth' => request('date_of_birth'),
                 'contact_no' => request('contact_no'),
