@@ -3,7 +3,7 @@
 @section('title', $course->course_code)
 
 @section('content')
-  <a href="{{ url('/courses') }}" class="valign-center btn btn-success btn-sm"><i class="material-icons">arrow_back</i> Back</a>
+  <a href="{{ url('/courses') }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
 
   <div id="app">
 

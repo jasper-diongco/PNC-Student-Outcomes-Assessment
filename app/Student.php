@@ -16,4 +16,8 @@ class Student extends Model
     public function program() {
         return $this->belongsTo('App\Program');
     }
+
+    public function curriculum() {
+        return $this->belongsTo('App\Curriculum');
+    }
 }

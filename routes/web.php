@@ -172,7 +172,16 @@ Route::get('/students/create', 'StudentsController@create');
 
 Route::post('/students', 'StudentsController@store');
 
+Route::get('/students/{student}/edit', 'StudentsController@edit');
+
+Route::get('/students/{student}/edit_academic', 'StudentsController@editAcademic');
+
+Route::put('/students/{student}/update_academic', 'StudentsController@updateAcademic');
+
 Route::get('/students/{student}', 'StudentsController@show');
+
+Route::put('/students/{student}', 'StudentsController@update');
+
 
 // End Student Routes
 

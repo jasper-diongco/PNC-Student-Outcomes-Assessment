@@ -1,20 +1,30 @@
 <!-- Sidebar -->
-<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion {{ Session::get('toggle_sb') == '1' ? '' : 'toggled' }}" id="accordionSidebar">
+<ul class="navbar-nav bg-dark sidebar sidebar-dark accordion {{ Session::get('toggle_sb') == '1' ? '' : 'toggled' }}" id="accordionSidebar">
 
   <!-- Sidebar - Brand -->
-  <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html"> 
+  {{-- <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html"> 
     <div class="sidebar-brand-icon rotate-n-15">
       <i class="fas fa-bell text-white"></i>
     </div>
     <div class="sidebar-brand-text mx-3"><span>PNC | SOA</div>
-  </a>
+  </a> --}}
+
+  <div style="height: 4.375rem;" class="d-flex align-items-center justify-content-center">
+    <div style="font-size: 18px; font-weight: 600;" class="d-flex justify-content-center">
+      <div>
+        <span class="text-success">PNC</span> | <span class="text-white">SOA</span>
+      </div>
+    </div>
+  </div>
+  
+  
 
   <!-- Divider -->
-  <hr class="sidebar-divider my-0">
+  {{-- <hr class="sidebar-divider my-0"> --}}
 
   <!-- Nav Item - Dashboard -->
   @if(Gate::check('isDean') || Gate::check('isProf'))
-    <li class="nav-item">
+    <li class="nav-item mt-1">
       <a class="nav-link" href="{{ url('/colleges/' . Auth::user()->getFaculty()->college_id . '/dashboard') }}">
         <i class="fas fa-fw fa-tachometer-alt"></i>
         <span>Dashboard</span></a>

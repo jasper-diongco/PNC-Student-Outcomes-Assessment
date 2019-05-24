@@ -69,7 +69,7 @@
               <th scope="col">Units</th>
               <th scope="col">College</th>
               <th scope="col">Privacy</th>
-              <th scope="col">Action</th>
+              <th scope="col">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -85,7 +85,7 @@
             </template>
             <template v-else>
               <tr v-for="course in courses" :key="course.id">
-                <th><div class="avatar-course" :style="{ 'background': course.color }">@{{ course.course_code }}</div></th>
+                <th><div class="avatar-course" :style="{ 'background': course.color }"><i class="fa fa-book"></i></div></th>
                 <td>@{{ course.id }}</td>
                 <td>@{{ course.course_code }}</td>
                 <td>@{{ course.description }}</td>

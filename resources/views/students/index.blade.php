@@ -27,6 +27,28 @@
             </div>
           </div>
         </div>
+        <div class="col-md-8">
+          <div class="d-flex justify-content-end">
+            <div class="d-flex mr-4">
+              <div class="mr-2"><label class="col-form-label">Filter By College: </label></div>
+              <div>
+                <select class="form-control" v-on:change="filterByCollege" v-model="college_id">
+                  <option value="">All</option>
+                  <option v-for="college in colleges" :key="college.id" :value="college.id">@{{ college.college_code }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="d-flex">
+              <div class="mr-2"><label class="col-form-label">Filter By Program: </label></div>
+              <div>
+                <select class="form-control" v-model="program_id" v-on:change="filterByProgram">
+                  <option value="">All</option>
+                  <option v-for="program in selectedPrograms" :key="program.id" :value="program.id">@{{ program.program_code }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
        {{--  @if ($deactivated_faculties_count > 0)
           <div class="col-md-4 offset-4">
             <div class="d-flex justify-content-end">
@@ -46,7 +68,7 @@
               <th scope="col">Email</th>
               <th scope="col">College</th>
               <th scope="col">Program</th>
-              <th scope="col">Action</th>
+              <th scope="col">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -70,6 +92,9 @@
                   <td>
                     <a title="View Details" class="btn btn-primary btn-sm" :href=" 'students/' + student.id">
                       <i class="fa fa-eye"></i>
+                    </a>
+                    <a title="Edit" class="btn btn-success btn-sm" :href=" 'students/' + student.id + '/edit'">
+                      <i class="fa fa-edit"></i>
                     </a>
                   </td>
               </tr>
@@ -119,12 +144,17 @@
         },
         links: {},
         totalPagination: 0,
-        tableLoading: true
+        tableLoading: true,
+        colleges: @json($colleges),
+        programs: @json($programs),
+        college_id: '',
+        program_id: '',
+        selectedPrograms: []
       },
       methods: {
         getStudents(page=1) {
           this.tableLoading = true;
-          ApiClient.get('/students?page=' + page + '&json=true')
+          ApiClient.get('/students?page=' + page + '&json=true' + '&filter_by_college=' + this.college_id + '&filter_by_program=' + this.program_id)
           .then(response => {
             this.students = response.data.data;
             this.meta = response.data.meta;
@@ -146,12 +176,36 @@
           }, 500),
         paginate(page) {
           this.getStudents(page);
+        },
+        filterByCollege() {
+          
+          this.selectedPrograms = this.programs.filter(program => {
+            return program.college_id == this.college_id
+          });
+
+          if(this.college_id == '') {
+            this.program_id = '';
+          }
+
+          this.getStudents();
+        },
+        filterByProgram() {
+          for(let i = 0; i < this.programs.length; i++) {
+            if(this.programs[i].id == this.program_id) {
+              this.college_id = this.programs[i].college_id;
+              break;
+            }
+          }
+
+          this.getStudents();
         }
       },
       created() {
         setTimeout(() => {
           this.getStudents(this.meta.current_page);
         }, 1000);
+
+        this.selectedPrograms = this.programs;
         
       }
     });

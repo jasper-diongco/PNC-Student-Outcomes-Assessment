@@ -9,7 +9,7 @@
 
 @section('content')
 
-  <a href="{{ isset($college) ? url('colleges/' . $college->id)  : url('colleges') }}" class="valign-center btn btn-success btn-sm"><i class="material-icons">arrow_back</i> Back</a>
+  <a href="{{ isset($college) ? url('colleges/' . $college->id)  : url('colleges') }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
 
 <div class="row" id="app">
   <div class="col-sm-8 mx-auto mt-4">

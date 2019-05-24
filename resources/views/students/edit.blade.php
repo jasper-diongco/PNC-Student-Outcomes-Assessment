@@ -1,6 +1,6 @@
 @extends('layouts.sb_admin')
 
-@section('title', 'Add new Student')
+@section('title', 'Update Student Information')
 
 
 @section('content')
@@ -12,12 +12,12 @@
             <div class="col-md-8 mx-auto mt-3">
                 <div class="card shadow">
                     <div class="card-header">
-                        <h3>Add new Student </h3>
+                        <h3>Update Student Information</h3>
                     </div>
 
                     <div class="card-body">
                         <img src="{{ asset('img/user.svg') }}" alt="user-icon" style="width: 40px" class="mb-2">
-                        <form autocomplete="off" v-on:submit.prevent="addStudent" v-on:keydown="form.onKeydown($event)">
+                        <form autocomplete="off" v-on:submit.prevent="updateStudent" v-on:keydown="form.onKeydown($event)">
                             <!-- Field for year student_id  -->
                             <div class="form-group row">
                                 <label
@@ -158,8 +158,36 @@
                                 </div>
                             </div>
                             <!-- /end Field for date_of_birth --> 
+
+                            <!-- Field for year email  -->
+                            <div class="form-group row">
+                                <label
+                                  for="email"
+                                  class="col-md-2 col-form-label text-md-right"
+                                  ><b>Email</b></label
+                                >
+
+                                <div class="col-md-10">
+                                    <div class="input-group">
+                                      <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1"><i class='fa fa-envelope'></i></span>
+                                      </div>
+                                      <input
+                                        id="email"
+                                        type="text"
+                                        class="form-control"
+                                        :class="{ 'is-invalid': form.errors.has('email') }"
+                                        v-model="form.email"
+                                        placeholder="Enter Email"
+                                      />
+                                      <has-error :form="form" field="email"></has-error>
+                                    </div>
+                                  
+                                </div>
+                            </div>
+                            <!-- /end Field for email -->
                             
-                            <!-- Field for college  -->
+                            {{-- <!-- Field for college  -->
                             <div class="form-group row">
                                 <label
                                   for="college"
@@ -198,6 +226,7 @@
                                     class="form-control"
                                     :class="{ 'is-invalid': form.errors.has('program') }"
                                     v-model="form.program"
+
                                   />
                                     <option value="" class="d-none">Select Program</option>
                                     <option v-if="form.college == ''" value="" disabled>Select college first</option>
@@ -232,15 +261,15 @@
                                     <option v-if="form.program == ''" value="" disabled>Select program first</option>
                                     <option v-else-if="selectCurriculumsByProgram(form.program).length <= 0" value="" disabled>No Available curriculum</option>
                                     <template v-else>
-                                        <option v-for="curriculum in selectCurriculumsByProgram(form.program)" :value="curriculum.id">@{{ curriculum.name + ' - ' + curriculum.year }}</option>
+                                        <option v-for="curriculum in selectCurriculumsByProgram(form.program)" :value="curriculum.id">@{{ curriculum.name }}</option>
                                     </template>
                                   </select>
                                   <has-error :form="form" field="curriculum"></has-error>
                                 </div>
                             </div>
-                            <!-- /end Field for curriculum --> 
+                            <!-- /end Field for curriculum -->  --}}
 
-                            <hr>
+                            {{-- <hr>
                             <h5 class="text-primary mb-3"><b>Account Information</b></h5>
 
                             <!-- Field for year email  -->
@@ -269,7 +298,7 @@
                                   
                                 </div>
                             </div>
-                            <!-- /end Field for email -->
+                            /end Field for email
 
                             <!-- Field for year password  -->
                             <div class="form-group row">
@@ -298,10 +327,10 @@
                                   
                                 </div>
                             </div>
-                            <!-- /end Field for password -->
+                            <!-- /end Field for password --> --}}
                             <div class="d-flex justify-content-end">
                                 <a href="{{ url('/students') }}" class="btn btn-dark mr-2" :disabled="form.busy">Cancel</a>
-                                <button class="btn btn-primary" :disabled="form.busy">Add Student <div v-show="form.busy" class="spinner-border text-light spinner-border-sm" role="status">
+                                <button class="btn btn-primary" :disabled="form.busy">Update Information <div v-show="form.busy" class="spinner-border text-light spinner-border-sm" role="status">
                                   <span class="sr-only">Loading...</span>
                                 </div></button>
                             </div>
@@ -322,35 +351,19 @@
             el: '#app',
             data: {
                 form: new Form({
-                    student_id: '',
-                    last_name: '',
-                    first_name: '',
-                    middle_name: '',
-                    sex: '',
-                    date_of_birth: '',
-                    college: '',
-                    program: '',
-                    curriculum: '',
-                    email: '',
-                    password: 'DefaultPass123'
-                }),
-                colleges: @json($colleges),
-                programs: @json($programs),
-                curriculums: @json($curriculums)
+                    id: '{{ $student->id }}',
+                    student_id: '{{ $student->student_id }}',
+                    last_name: '{{ $student->user->last_name }}',
+                    first_name: '{{ $student->user->first_name }}',
+                    middle_name: '{{ $student->user->middle_name }}',
+                    sex: '{{ $student->user->sex }}',
+                    date_of_birth: '{{ $student->user->date_of_birth }}',
+                    email: '{{ $student->user->email }}'
+                })
             },
             methods: {
-                selectProgramsByCollege(college_id) {
-                    return this.programs.filter(program => {
-                        return program.college_id == college_id;
-                    });
-                },
-                selectCurriculumsByProgram(program_id) {
-                    return this.curriculums.filter(curriculum => {
-                        return curriculum.program_id == program_id;
-                    });
-                },
-                addStudent() {
-                    this.form.post('../students')
+                updateStudent() {
+                    this.form.put('../../students/' + this.form.id)
                         .then(response => {
                             window.location.replace(myRootURL + '/students/' + response.data.id);
                         })

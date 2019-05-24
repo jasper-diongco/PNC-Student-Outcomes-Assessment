@@ -5,8 +5,8 @@
 
 @section('content')
   <div id="app" v-cloak>
-    <a href="{{ url('/curriculum_mapping') }}" class="btn btn-success btn-sm mb-2"><i class="fa fa-arrow-left"></i> Back</a>
-    <div class="d-flex justify-content-between mb-2">
+    <a href="{{ url('/curriculum_mapping') }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
+    <div class="d-flex justify-content-between mb-2 mt-3">
       <div>
         <h1 class="h3 mb-1 text-gray-800">Curriculum Mapping</h1>
       </div>

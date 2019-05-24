@@ -3,7 +3,7 @@
 @section('title', $curriculum->name)
 
 @section('content')
-  <div id="app">
+  <div id="app" v-cloak>
     <!-- Add Modal -->
     <curriculum-course-modal 
       v-on:refresh-curriculum="courseAddedSuccessfully" 
@@ -28,9 +28,9 @@
     </curriculum-modal>
     <!-- End curriculum modal -->
     
-    <a href="{{ url('/curricula?college_id='. Session::get('college_id')) }}" class="btn btn-success mb-3 btn-sm"><i class="fa fa-arrow-left"></i> Back</a>
+    <a href="{{ url('/curricula?college_id='. Session::get('college_id')) }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
 
-    <h1 class="h4">{{ $curriculum->name }}</h1>
+    <h1 class="h4 mt-3">{{ $curriculum->name }}</h1>
     <p class="mr-5"><i class="fa fa-file-alt text-primary"></i> {{ $curriculum->description }}</p>
     <div class="d-flex">  
       <p class="mr-5">

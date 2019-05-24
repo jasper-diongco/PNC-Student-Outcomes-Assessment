@@ -14,4 +14,8 @@ class College extends Model
     public function faculty() {
       return $this->belongsTo('App\Faculty');
     }
+
+    public function programs() {
+        return $this->hasMany('App\Program');
+    }
 }

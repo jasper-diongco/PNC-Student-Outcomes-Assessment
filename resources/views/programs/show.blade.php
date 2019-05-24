@@ -3,11 +3,11 @@
 @section('title', $program->program_code)
 
 @section('content')
-  <a href="{{ url('/programs') }}" class="valign-center btn btn-success btn-sm"><i class="material-icons">arrow_back</i> Back</a>
+  <a href="{{ url('/programs') }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
 
   <div id="app">
     <h1 class="h3 mt-4 mb-3">{{ $program->description }}</h1>
-    <div class="card">
+    <div class="card shadow">
       <div class="card-body">
         <div class="d-flex justify-content-between align-items-center">
           <div class="d-flex align-items-center justify-content-start mb-2">
@@ -29,6 +29,55 @@
         
       </div>
     </div>
+
+    {{-- <div class="card shadow mt-3">
+      <div class="card-header">
+        <h5 class="text-primary">Curriculum List</h5>
+      </div>
+      <div class="card-body">
+        
+      </div>
+    </div> --}}
+
+    <h4 class="mb-3 mt-5">Curriculum List <i class="text-success fa fa-book-open"></i></h4>
+    @if(count($program->curricula) > 0)
+      <div class="list-group">
+        
+        @foreach($program->curricula as $curriculum)
+          <a href="{{ url('/curricula/' . $curriculum->id) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+          <div>
+            {{ $curriculum->name }} &mdash; {{ $curriculum->year }} 
+          </div>
+            <i class="fa fa-chevron-right"></i>
+          </a>
+        @endforeach  
+      </div>
+    @else
+      <div class="text-center bg-white p-3">No Curriculum Found in Database.</div>
+    @endif
+
+
+    <h4 class="mb-3 mt-5">Student Outcomes <i class="fa fa-flag text-primary"></i></h4>
+
+    @if(count($program->studentOutcomes) > 0) 
+    <div class="list-group">
+      
+      @foreach($program->studentOutcomes as $student_outcome)
+        <a href="{{ url('/student_outcomes/' . $student_outcome->id . '?program_id=' . request('program_id')) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+          <div class="d-flex justify-content-between align-items-center mr-3">
+            <div>
+              <span class="avatar-student-outcome mr-3 bg-success">{{ $student_outcome->so_code }}</span>
+            </div>
+            <span>{{ $student_outcome->description }}</span></div>
+          <div>
+            <i class="fa fa-chevron-right"></i>
+          </div>
+        </a>
+      @endforeach  
+    </div>
+  @else
+    <div class="text-center bg-white p-3">No Student Outcome Found in Database.</div>
+  @endif
 
 
     <!-- Modal -->

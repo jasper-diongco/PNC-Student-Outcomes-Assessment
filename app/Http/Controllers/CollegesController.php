@@ -8,6 +8,7 @@ use App\Faculty;
 use App\Program;
 use App\Course;
 use App\Curriculum;
+use App\Student;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -58,12 +59,21 @@ class CollegesController extends Controller
             ->where('college_id', $college->id)
             ->count();
 
-        return view('colleges.dashboard')
-            ->with('college', $college)
-            ->with('program_count', $program_count)
-            ->with('courses_count', $courses_count)
-            ->with('curriculum_count', $curriculum_count)
-            ->with('password_changed', $password_changed);
+        $student_count = Student::select('students.*')
+            ->join('programs', 'programs.id', '=', 'students.program_id')
+            ->join('colleges', 'colleges.id', '=', 'programs.college_id')
+            ->where('colleges.id', Session::get('college_id'))
+            ->count();
+
+        // return view('colleges.dashboard')
+        //     ->with('college', $college)
+        //     ->with('program_count', $program_count)
+        //     ->with('courses_count', $courses_count)
+        //     ->with('curriculum_count', $curriculum_count)
+        //     ->with('password_changed', $password_changed)
+        //     ->with('student_count', $student_count);
+
+        return view('colleges.dashboard', compact('college', 'program_count', 'courses_count', 'curriculum_count', 'password_changed', 'student_count'));
     }
 
     /**

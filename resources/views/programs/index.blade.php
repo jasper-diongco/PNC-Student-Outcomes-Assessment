@@ -29,8 +29,7 @@
     </div>
   @endif
   
-  <div class="row">
-    @if(count($programs) > 0)
+    {{-- @if(count($programs) > 0)
       @foreach ($programs as $program)
         <div class="col-md-4 mb-3">
           <div class="card shadow" style="height: 100%">
@@ -61,8 +60,82 @@
           </div>
         </div>
       </div>
-    @endif
-  </div>
+    @endif --}}
+    <div class="card shadow">
+      <div class="card-body">
+
+        @can('isSAdmin')
+          <div class="row">
+            <div class="col-md-12">
+              <div class="d-flex justify-content-end">
+                <div class="d-flex mr-4 mb-2">
+                  <div class="mr-2"><label class="col-form-label">Filter By College: </label></div>
+                  <div>
+                    <form v-on:change="filterByCollege" ref="filterForm" :action="myRootURL + '/programs/?college_id=' + filter_by_college_id">
+                      <select class="form-control" name="college_id" :value=" filter_by_college_id"  v-model="filter_by_college_id">
+                        <option value="">All</option>
+                        @foreach ($colleges as $college)
+                          <option value="{{ $college->id }}">{{ $college->college_code }}</option>
+                        @endforeach
+                      </select>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        @endcan
+        
+        <div class="table-responsive">
+          <table id="students-table" class="table table-hover">
+            <thead class="bg-dark text-white">
+              <tr>
+                <th scope="col">
+                  <div class="avatar bg-success"><i class="fa fa-graduation-cap"></i></div>
+                </th>
+                <th scope="col">#</th>
+                <th scope="col">Program Code</th>
+                <th scope="col">Description</th>
+                <th scope="col">College</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              @if ($programs->count() <= 0)
+                <tr>
+                  <td class="text-center" colspan="6">No Record Found in Database.</td>
+                </tr>
+              @else
+                @foreach ($programs as $program)
+                <tr>
+                    <td>
+                      <div class="avatar mr-2" style="background: {{ $program->color  }}">
+                        {{ substr($program->program_code, 0 , 2) == 'BS' ? substr($program->program_code, 2) :  $program->program_code }}
+                      </div>
+                    </td>
+                    <td>{{ $program->id }}</td>
+                    <td>{{ $program->program_code }}</td>
+                    <td>{{ $program->description }}</td>
+                    <td>{{ $program->college->college_code }}</td>
+                    <td>
+                      <a title="View Details" class="btn btn-primary btn-sm" href="{{ url('/programs/' . $program->id) }}">
+                        <i class="fa fa-eye"></i>
+                      </a>
+                    </td>
+                </tr>
+                @endforeach
+              @endif
+                                       
+            </tbody>
+          </table>
+
+          <div class="my-3 d-flex justify-content-end">
+            {{ $programs->appends(request()->input())->links() }}
+          </div>
+        </div>
+      </div>
+    </div>
 
   <!-- Modal -->
   <div class="modal fade" id="programModal" tabindex="-1" role="dialog"  aria-hidden="true">
@@ -220,7 +293,9 @@
       college_id: '{{ Auth::user()->user_type_id == 'dean' ? Auth::user()->getFaculty()->college_id : '' }}',
       color: '',
       isUniqueCode: true,
-      btnLoading: false
+      btnLoading: false,
+      filter_by_college_id: '{{ request('college_id') }}',
+      myRootURL: myRootURL
     },
     methods: {
       getRandColor() {
@@ -271,6 +346,14 @@
             });
           });
         
+      },
+      filterByCollege(event) {
+        //event.target.submit();
+        //alert("test");
+        //console.log(event);
+        //console.log();
+        this.$refs.filterForm.submit();
+
       }
     },
     created() {

@@ -12,10 +12,20 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\StudentResource;
+use Gate;
 
 class StudentsController extends Controller
 {
+
+    public function __construct() {
+        $this->middleware('auth');
+    }
+
     public function index() {
+
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
 
         if(request()->ajax() && request('json') == true) {
             if (request('q') != '') {
@@ -30,15 +40,51 @@ class StudentsController extends Controller
                     ->get();
                 return StudentResource::collection($searched_students); 
             } else {
-                return StudentResource::collection(Student::paginate(10)); 
+                if(Gate::check('isSAdmin')) {
+                    return StudentResource::collection(Student::paginate(10)); 
+                } else {
+
+                    $retrieved_students = Student::select('students.*')
+                        ->join('programs', 'programs.id', '=', 'students.program_id')
+                        ->join('colleges', 'colleges.id', '=', 'programs.college_id')
+                        ->where('colleges.id', Session::get('college_id'))
+                        ->paginate(10);
+
+                    if(request('filter_by_college') != '') {
+                        $retrieved_students = Student::select('students.*')
+                        ->join('programs', 'programs.id', '=', 'students.program_id')
+                        ->join('colleges', 'colleges.id', '=', 'programs.college_id')
+                        ->where('colleges.id', request('filter_by_college'))
+                        ->paginate(10);
+                    }
+
+                    if(request('filter_by_program') != '') {
+                        $retrieved_students = Student::select('students.*')
+                        ->join('programs', 'programs.id', '=', 'students.program_id')
+                        ->join('colleges', 'colleges.id', '=', 'programs.college_id')
+                        ->where('programs.id', request('filter_by_program'))
+                        ->paginate(10);
+                    }
+
+                    return StudentResource::collection($retrieved_students);
+                }
+                
             }
             
         }
+
+        $colleges = College::all();
+        $programs = Program::all();
         
-        return view('students.index');
+        return view('students.index', compact('colleges', 'programs'));
     }
 
     public function create() {
+
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
+
 
         $colleges = College::all();
         $programs = Program::all();
@@ -47,7 +93,50 @@ class StudentsController extends Controller
         return view('students.create', compact('colleges', 'programs', 'curriculums'));
     }
 
+    public function edit(Student $student) {
+
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
+
+        if(!Gate::check('isSAdmin')) {
+            if(Session::get('college_id') != $student->program->college_id) {
+                return abort('401', 'Unauthorized');
+            }
+        }
+        
+
+        
+        return view('students.edit', compact('student'));
+
+    } 
+
+    public function editAcademic(Student $student) {
+
+
+
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
+
+        if(!Gate::check('isSAdmin')) {
+            if(Session::get('college_id') != $student->program->college_id) {
+                return abort('401', 'Unauthorized');
+            }
+        }
+
+
+        $colleges = College::all();
+        $programs = Program::all();
+        $curriculums = Curriculum::all();
+
+        return view('students.edit_academic',compact('student', 'colleges', 'programs', 'curriculums'));
+    }
+
     public function validateData($id='') {
+
+
+
         return request()->validate([
             'student_id' => 'required|digits:7|unique:students,student_id,' . $id,
             'last_name' => 'required|regex:/^[\pL\s]+$/u',
@@ -61,9 +150,97 @@ class StudentsController extends Controller
             'email' => 'required|email|max:255|unique:users,email,'. $id,
             'password' => 'required|min:8|max:20'
         ]);
+
+    }
+
+
+
+    public function update(Student $student) {
+
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
+
+        if(!Gate::check('isSAdmin')) {
+            if(Session::get('college_id') != $student->program->college_id) {
+                return abort('401', 'Unauthorized');
+            }
+        }
+        
+        $data = request()->validate([
+            'student_id' => 'required|digits:7|unique:students,student_id,' . $student->id,
+            'last_name' => 'required|regex:/^[\pL\s]+$/u',
+            'first_name' => 'required|regex:/^[\pL\s]+$/u',
+            'middle_name' => 'required|regex:/^[\pL\s]+$/u',
+            'sex' => 'required',
+            'date_of_birth' => 'required|date',
+            'email' => 'required|email|max:255|unique:users,email,'. $student->user->id
+        ]);
+
+        try {
+            DB::beginTransaction();
+            
+
+            $student->user->first_name = strtoupper($data['first_name']);
+            $student->user->middle_name = strtoupper($data['middle_name']);
+            $student->user->last_name = strtoupper($data['last_name']);
+            $student->user->sex = $data['sex'];
+            $student->user->date_of_birth = $data['date_of_birth'];
+            $student->user->email = $data['email'];
+
+            $student->student_id = $data['student_id'];
+
+            $student->push();
+
+            DB::commit();
+
+            Session::flash('message', 'Student Information Successfully updated from database'); 
+            //return redirect('/students/'. $student->id);
+
+            return $student;
+
+        } catch (\PDOException $e) {
+            DB::rollBack();
+            return abort(500, 'Internal Server Error');
+        }
+    }
+
+    public function updateAcademic(Student $student) {
+
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
+
+        if(!Gate::check('isSAdmin')) {
+            if(Session::get('college_id') != $student->program->college_id) {
+                return abort('401', 'Unauthorized');
+            }
+        }
+
+
+        $data = request()->validate([
+            'college' => 'required',
+            'program' => 'required',
+            'curriculum' => 'required'
+        ]);
+
+        $student->program_id = $data['program'];
+        $student->curriculum_id = $data['curriculum'];
+
+        $student->update();
+
+        Session::flash('message', 'Student Academic Information Successfully updated from database'); 
+
+        return $student;
+
     }
 
     public function store() {
+
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
+
         $data = $this->validateData();
 
         try {
@@ -105,6 +282,12 @@ class StudentsController extends Controller
 
     public function show(Student $student) {
 
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
+
         return view('students.show', compact('student'));
     }
+
+
 }

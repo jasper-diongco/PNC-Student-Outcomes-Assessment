@@ -27,9 +27,16 @@ class ProgramsController extends Controller
 
         if(Gate::allows('isSAdmin')) {
             //return abort('401', 'Unauthorized');
-            $programs = Program::all();
+
+            if(request('college_id') != '') {
+                $programs = Program::where('college_id', request('college_id'))->paginate(10);
+            } else {
+                $programs = Program::paginate(10);
+            }
+            
+
         } else if(Gate::allows('isDean') || Gate::allows('isProf')) {
-            $programs = Program::where('college_id', Auth::user()->getFaculty()->college_id)->get();
+            $programs = Program::where('college_id', Auth::user()->getFaculty()->college_id)->paginate(10);
         }
 
         $colleges = College::all();
