@@ -9,12 +9,16 @@ import VueSelect from "vue-select";
 import VeeValidate from "vee-validate";
 import swal from "sweetalert2";
 import moment from "moment";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import CKEditor from "@ckeditor/ckeditor5-vue";
+//import Essentials from "@ckeditor/ckeditor5-essentials/src/essentials";
 
 require("./bootstrap");
 
 require("startbootstrap-sb-admin-2/js/sb-admin-2.min.js");
 
 window.moment = moment;
+window.ClassicEditor = ClassicEditor;
 window.swal = swal;
 window.Vue = require("vue");
 window.axios = require("axios");
@@ -25,7 +29,10 @@ window.ApiClient = ApiClient;
 window.myRootURL = "/pnc_soa/public";
 
 Vue.use(VeeValidate);
+Vue.use(CKEditor);
 window.VeeValidate = VeeValidate;
+
+//ClassicEditor.builtinPlugins = [Essentials];
 
 // vform
 import { Form, HasError, AlertError } from "vform";

@@ -10,6 +10,7 @@ use App\PerformanceCriteriaIndicator;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Gate;
+use App\Rules\TextOnly;
 
 class StudentOutcomesController extends Controller
 {
@@ -85,7 +86,7 @@ class StudentOutcomesController extends Controller
 
         $request->validate([
             'so_code' => 'required|max:10|alpha_num|unique:student_outcomes',
-            'description' => 'required|regex:/^[\pL\s\-0-9_]+$/u',
+            'description' => ['required', new TextOnly],
             'program' => 'required',
             'performance_criteria' => 'required|regex:/^[\pL\s\-0-9_.,()\']+$/u',
             'unsatisfactory_desc' => 'required|regex:/^[\pL\s\-0-9_.,()\']+$/u',
@@ -179,7 +180,7 @@ class StudentOutcomesController extends Controller
 
         $request->validate([
             'so_code' => 'required|max:10|alpha_num|unique:student_outcomes,so_code,'.$id,
-            'description' => 'required|regex:/^[\pL\s\-0-9_]+$/u',
+            'description' => ['required', new TextOnly],
             'program' => 'required',
             'performance_criteria' => 'required|regex:/^[\pL\s\-0-9_.,()\']+$/u',
             'unsatisfactory_desc' => 'required|regex:/^[\pL\s\-0-9_.,()\']+$/u',

@@ -106,11 +106,8 @@
             <transition name="fade">
 
             <div class="table-responsive" v-if="!isLoading" id="my-table">
-              <div v-for="year in curriculum.year_level">
-                <div v-for="sem in 3">
-                  <div v-if="curriculum_mapping_status.status == true || year == selectedYear && sem == selectedSem">
-                    <div v-if="selectCurriculumCourses(year, sem).length > 0" class="mb-1" style="text-decoration: underline;"><b>@{{ formatIndex(year)  + ' year/' + formatIndex(sem) + ' sem' }}</b></div>
-                    <table class="table table-bordered" v-if="selectCurriculumCourses(year, sem).length > 0">
+                  <div v-if="selectedCurriculumCourses.length > 0">
+                    <table class="table table-bordered" v-if="selectedCurriculumCourses.length > 0">
                       <thead>
                         <tr>
                           <th></th>
@@ -120,7 +117,7 @@
                         </tr>
                       </thead>
                         <tbody >
-                            <tr :id="curriculum_courses.id" v-for="curriculum_course in selectCurriculumCourses(year, sem)" :key="curriculum_courses.id">
+                            <tr :id="curriculum_courses.id" v-for="curriculum_course in selectedCurriculumCourses" :key="curriculum_courses.id">
                               
                                 <th width="100px" data-toggle="popover" :title="curriculum_course.course.course_code" :data-content="curriculum_course.course.description" data-placement="right">
                                   <div class="text-primary"><b>@{{ curriculum_course.course.course_code }}</b></div>
@@ -129,7 +126,7 @@
                                 </th>
                                 <td v-for="student_outcome in student_outcomes" :class="{'' : !checkMap(curriculum_course.id, student_outcome.id), 'introduced': checkMap(curriculum_course.id, student_outcome.id).learning_level_id == 1, 'reinforced': checkMap(curriculum_course.id, student_outcome.id).learning_level_id == 2, 'demonstrated': checkMap(curriculum_course.id, student_outcome.id).learning_level_id == 3 }" style="cursor: pointer;">
                                   <div>
-                                    <div v-if="curriculum_mapping_status.status == 0"  class="d-flex justify-content-end align-items-start">
+                                    <div  class="d-flex justify-content-end align-items-start">
                                       <div v-if="checkMap(curriculum_course.id, student_outcome.id)" v-on:click="mapCourse({target: { checked: true }}, curriculum_course, student_outcome )" class="mr-2">
                                         <i class="fa fa-edit" style="font-size: 10px;"></i>
                                       </div>
@@ -138,11 +135,11 @@
                                         <label class="custom-control-label" :for="curriculum_course.id + '' + student_outcome.id"></label>
                                       </div>
                                     </div>
-                                    <div v-else>
+                                    {{-- <div v-else>
                                       <div class="d-flex justify-content-end align-items-start">
                                         <checked-icon v-if="checkMap(curriculum_course.id, student_outcome.id)"></checked-icon>
                                       </div>
-                                    </div>                                                    
+                                    </div>   --}}                                                  
                                   </div>
                                 </td>
                             </tr>
@@ -157,13 +154,12 @@
                         </tfoot>
                     </table>
                   </div>
-                  {{-- <div class="text-center bg-dark text-white p-3" v-else-if="selectedCurriculumCourses.length > 0">
-                    No Courses Or Student Outcome Found.
-                  </div> --}}
-                </div>
-              </div>
+                  <div v-else class="p-2 bg-dark text-center text-white">
+                    No Courses or Student Outcome
+                  </div>
               
             </div>
+
             <div v-else>
               <table-loading></table-loading>
             </div>
@@ -368,6 +364,7 @@
         selectedYear: 1,
         selectedSem: 1,
         selectedCurriculumCourses: [],
+        selectedMaps: [],
         isLoading: false,
         is_checked: true,
         curriculum_maps: @json($curriculum_maps),
@@ -379,11 +376,43 @@
         so_code: '',
         so_desc: '',
         curriculum_mapping_status: @json($curriculum_mapping_status),
-        show_all: false
+        show_all: false,
+        processing: false
+      },
+      watch: {
+        selectedYear() {
+          // this.selectedMaps = [];
+          // for(let i = 0; i < this.selectedCurriculumCourses.length; i++) {
+          //   for(let j = 0; j < this.curriculum_maps.length; j++) {
+          //     if(this.curriculum_maps[j].curriculum_course_id == this.selectedCurriculumCourses[i].id) {
+          //       this.selectedMaps.push(this.curriculum_maps[j]);
+          //     }
+          //   }
+          // }
+          this.selectMaps();
+        },
+        selectedSem() {
+          // this.selectedMaps = [];
+          // for(let i = 0; i < this.selectedCurriculumCourses.length; i++) {
+          //   for(let j = 0; j < this.curriculum_maps.length; j++) {
+          //     if(this.curriculum_maps[j].curriculum_course_id == this.selectedCurriculumCourses[i].id) {
+          //       this.selectedMaps.push(this.curriculum_maps[j]);
+          //     }
+          //   }
+          // }
+          this.selectMaps();
+        }
       },
       methods: {
-        getCurriculum() {
-
+        selectMaps() {
+          this.selectedMaps = [];
+          for(let i = 0; i < this.selectedCurriculumCourses.length; i++) {
+            for(let j = 0; j < this.curriculum_maps.length; j++) {
+              if(this.curriculum_maps[j].curriculum_course_id == this.selectedCurriculumCourses[i].id) {
+                this.selectedMaps.push(this.curriculum_maps[j]);
+              }
+            }
+          }
         },
         formatIndex(num) {
           if (num == 1) {
@@ -397,15 +426,19 @@
           }
         },
         getSemCourses() {
-          if(this.show_all) {
-            this.selectedCurriculumCourses = this.curriculum_courses.filter(curriculumCourse => {
-              return true;
-            });
-          } else {
-            this.selectedCurriculumCourses = this.curriculum_courses.filter(curriculumCourse => {
+          // if(this.show_all) {
+          //   this.selectedCurriculumCourses = this.curriculum_courses.filter(curriculumCourse => {
+          //     return true;
+          //   });
+          // } else {
+          //   this.selectedCurriculumCourses = this.curriculum_courses.filter(curriculumCourse => {
+          //     return curriculumCourse.year_level == this.selectedYear && curriculumCourse.semester == this.selectedSem;
+          //   });
+          // }
+
+          this.selectedCurriculumCourses = this.curriculum_courses.filter(curriculumCourse => {
               return curriculumCourse.year_level == this.selectedYear && curriculumCourse.semester == this.selectedSem;
             });
-          }
           
 
           this.isLoading = true;
@@ -426,6 +459,7 @@
           }, 300);
         },
         selectCurriculumCourses(year, sem) {
+
           return this.curriculum_courses.filter(curriculumCourse => {
               return curriculumCourse.year_level == year && curriculumCourse.semester == sem;
             });
@@ -451,9 +485,13 @@
           return total;
         },
         mapCourse(event, curriculum_course, student_outcome) {
-          if(this.getMap(curriculum_course.id, student_outcome.id)) {
-            this.learning_level = this.getMap(curriculum_course.id, student_outcome.id).learning_level_id;
+          let map = this.getMap(curriculum_course.id, student_outcome.id)
+
+          if(map) {
+            this.learning_level = map.learning_level_id;
           }
+
+
           if(event.target.checked) {
             this.course_id = curriculum_course.id;
             this.course_code = curriculum_course.course.course_code;
@@ -480,38 +518,54 @@
               width: '350px'
             }).then((result) => {
               if (result.value) {
-                let map = this.getMap(curriculum_course.id, student_outcome.id);
+                //let map = this.getMap(curriculum_course.id, student_outcome.id);
                 map.is_checked = false;
               }
             });
           }
         },
         checkMap(curriculum_course_id, student_outcome_id) {
-          for (let i = 0; i < this.curriculum_maps.length; i++) {
-            if(this.curriculum_maps[i].student_outcome_id == student_outcome_id && this.curriculum_maps[i].curriculum_course_id == curriculum_course_id && this.curriculum_maps[i].is_checked) {
-              return this.curriculum_maps[i];
+          // for (let i = 0; i < this.curriculum_maps.length; i++) {
+          //   if(this.curriculum_maps[i].is_checked && this.curriculum_maps[i].student_outcome_id == student_outcome_id && this.curriculum_maps[i].curriculum_course_id == curriculum_course_id) {
+          //     return this.curriculum_maps[i];
+          //   }
+          // }
+
+          for (let i = 0; i < this.selectedMaps.length; i++) {
+            if(this.selectedMaps[i].is_checked && this.selectedMaps[i].student_outcome_id == student_outcome_id && this.selectedMaps[i].curriculum_course_id == curriculum_course_id) {
+              return this.selectedMaps[i];
             }
           }
 
           return false;
         },
         getMap(curriculum_course_id, student_outcome_id) {
-          for (let i = 0; i < this.curriculum_maps.length; i++) {
-            if(this.curriculum_maps[i].student_outcome_id == student_outcome_id && this.curriculum_maps[i].curriculum_course_id == curriculum_course_id) {
-              return this.curriculum_maps[i];
+          // for (let i = 0; i < this.curriculum_maps.length; i++) {
+          //   if(this.curriculum_maps[i].student_outcome_id == student_outcome_id && this.curriculum_maps[i].curriculum_course_id == curriculum_course_id) {
+          //     return this.curriculum_maps[i];
+          //   }
+          // }
+          for (let i = 0; i < this.selectedMaps.length; i++) {
+            if(this.selectedMaps[i].student_outcome_id == student_outcome_id && this.selectedMaps[i].curriculum_course_id == curriculum_course_id) {
+              return this.selectedMaps[i];
             }
           }
 
           return false;
         },
         confirmMap() {
+          let map = this.getMap(this.course_id, this.so_id);
           //check if exists
           let exists = false;
-          for(let i = 0; i < this.curriculum_maps.length; i++) {
-            if(this.getMap(this.course_id, this.so_id)) {
-              exists = true;
-              break;
-            }
+          // for(let i = 0; i < this.curriculum_maps.length; i++) {
+          //   if(this.getMap(this.course_id, this.so_id)) {
+          //     exists = true;
+          //     break;
+          //   }
+          // }
+          if(map) {
+            exists = true;
+            //break;
           }
 
           if(!exists) {
@@ -523,7 +577,7 @@
                 learning_level_id: this.learning_level
               });
             } else {
-              let map = this.getMap(this.course_id, this.so_id);
+              
               map.is_checked = true;
               map.learning_level_id = this.learning_level;
             }
@@ -580,6 +634,7 @@
       },
       created() {
         this.getSemCourses();
+        this.selectMaps();
       }
     });
   </script>

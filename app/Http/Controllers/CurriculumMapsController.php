@@ -108,7 +108,9 @@ class CurriculumMapsController extends Controller
               'is_checked' => $curriculum_map['is_checked'],
               'learning_level_id' => $curriculum_map['learning_level_id']
             ]);
+
           } else {
+            
             //update
             $curriculum_map_retrieved = CurriculumMap::findOrFail($curriculum_map['id']);
             $curriculum_map_retrieved->curriculum_course_id = $curriculum_map['curriculum_course_id'];

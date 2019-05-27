@@ -43,6 +43,7 @@ class Curriculum extends Model
     public function checkMap($curriculum_course_id, $student_outcome_id) {
         return CurriculumMap::where('curriculum_course_id', $curriculum_course_id)
             ->where('student_outcome_id', $student_outcome_id)
+            ->where('is_checked', true)
             ->first();
     }
 

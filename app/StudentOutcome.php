@@ -11,4 +11,8 @@ class StudentOutcome extends Model
     public function performanceCriterias() {
       return $this->hasMany('App\PerformanceCriteria');
     }
+
+    public function curriculumMaps() {
+        
+    }
 }

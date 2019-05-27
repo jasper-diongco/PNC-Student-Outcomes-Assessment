@@ -26,7 +26,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text"><i class="fa fa-search"></i></span>
             </div>
-            <input v-on:input="searchCourses" v-model="search" type="search" class="form-control" placeholder="Search faculty...">
+            <input v-on:input="searchCourses" v-model="search" type="search" class="form-control" placeholder="Search course...">
           </div>
         </div>
         @can('isSAdmin')
@@ -85,7 +85,7 @@
             </template>
             <template v-else>
               <tr v-for="course in courses" :key="course.id">
-                <th><div class="avatar-course" :style="{ 'background': course.color }"><i class="fa fa-book"></i></div></th>
+                <th><div class="avatar" :style="{ 'background': course.color }"><i class="fa fa-book"></i></div></th>
                 <td>@{{ course.id }}</td>
                 <td>@{{ course.course_code }}</td>
                 <td>@{{ course.description }}</td>

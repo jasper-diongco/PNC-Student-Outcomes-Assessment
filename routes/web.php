@@ -103,10 +103,15 @@ Route::post('/student_outcomes', 'StudentOutcomesController@store');
 // CurriculumCourses Routes
 
 Route::post('/curriculum_courses', 'CurriculumCoursesController@store');
+
 Route::put('/curriculum_courses/{curriculum_course}', 'CurriculumCoursesController@update');
+
 Route::delete('/curriculum_courses/{curriculum_course}', 'CurriculumCoursesController@destroy');
+
 Route::get('/curriculum_courses/{curriculum_course}', 'CurriculumCoursesController@show');
+
 Route::post('/curriculum_courses/{curriculum_course}/activate', 'CurriculumCoursesController@activate');
+
 Route::post('/curriculum_courses/activate_selected', 'CurriculumCoursesController@activateSelected');
 
 // End CurriculumCourses Routes
@@ -116,9 +121,13 @@ Route::post('/curriculum_courses/activate_selected', 'CurriculumCoursesControlle
 // CurriculumMaps Routes
 
 Route::get('/curriculum_mapping', 'CurriculumMapsController@index');
+
 Route::post('/curriculum_mapping/save_maps', 'CurriculumMapsController@saveMaps');
+
 Route::post('/curriculum_mapping/{curriculum}/edit', 'CurriculumMapsController@edit');
+
 Route::get('/curriculum_mapping/{curriculum}', 'CurriculumMapsController@show');
+
 Route::get('/curriculum_mapping', 'CurriculumMapsController@index');
 
 // END CurriculumMaps Routes
@@ -184,6 +193,17 @@ Route::put('/students/{student}', 'StudentsController@update');
 
 
 // End Student Routes
+
+
+// TestQuestions Routes
+
+Route::get('/test_questions/create', 'TestQuestionsController@create');
+
+Route::get('/test_questions/list_program', 'TestQuestionsController@listProgram');
+
+Route::get('/test_questions/{program}/list_student_outcomes', 'TestQuestionsController@listStudentOutcome');
+
+// End TestQuestions Routes
 
 
 
