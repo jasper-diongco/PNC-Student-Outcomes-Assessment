@@ -10,7 +10,7 @@
 
   <div class="d-flex justify-content-between mb-3">
     <div>
-      <h1 class="h3 mb-4 text-gray-800">Student Outcomes &mdash; {{ $program->program_code }}</h1>
+      <h1 class="h4 mb-4 text-gray-800">Student Outcomes &mdash; {{ $program->program_code }}</h1>
     </div>
     <div>
       @if(Gate::check('isDean') || Gate::check('isSAdmin'))

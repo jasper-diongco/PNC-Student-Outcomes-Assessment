@@ -62,6 +62,7 @@ Vue.component(
   "account-modal",
   require("./components/AccountModal.vue").default
 );
+Vue.component("image-modal", require("./components/ImageModal.vue").default);
 
 Vue.component(
   "curriculum-course-modal",

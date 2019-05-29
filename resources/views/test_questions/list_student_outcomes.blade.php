@@ -4,7 +4,7 @@
 
 @section('content')
 
-<a href="{{ url('/curriculum_mapping') }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
+<a href="{{ url('/test_questions/list_program') }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
 
 <div class="d-flex justify-content-between mb-3">
   <div>
@@ -28,19 +28,32 @@
       <div class="card mb-2">
         <!-- Card Header - Accordion -->
         <a href="#so_{{$student_outcome->id}}" class="d-block card-header py-3" data-toggle="collapse" role="button">
-          <h6 class="m-0 font-weight-bold text-success">{{ $student_outcome->description }}</h6>
+          <h6 class="m-0 font-weight-bold text-success">{{ $student_outcome->so_code }} &mdash; {{ $student_outcome->description }}</h6>
         </a>
         <!-- Card Content - Collapse -->
         <div class="collapse show" id="so_{{$student_outcome->id}}">
           <div class="">
             <div class="list-group">
-              <a href="#" class="list-group-item list-group-item-action">
-                Cras justo odio
-              </a>
-              <a href="#" class="list-group-item list-group-item-action">Dapibus ac facilisis in</a>
-              <a href="#" class="list-group-item list-group-item-action">Morbi leo risus</a>
-              <a href="#" class="list-group-item list-group-item-action">Porta ac consectetur ac</a>
-              <a href="#" class="list-group-item list-group-item-action disabled" tabindex="-1" aria-disabled="true">Vestibulum at eros</a>
+              @foreach ($student_outcome->curriculumMaps as $curriculum_map)
+                <a href="{{ url('/test_questions?student_outcome_id=' . $student_outcome->id . '&course_id=' . $curriculum_map->curriculumCourse->course->id . '&program_id=' . $student_outcome->program_id) }}" class="list-group-item list-group-item-action">
+                  <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                      <div class="avatar mr-2" style="background: {{ $curriculum_map->curriculumCourse->course->color  }};">
+                        <i class="fa fa-book"></i>
+                      </div>
+                      <div class="mr-3">
+                        {{ $curriculum_map->curriculumCourse->course->course_code }} - {{ $curriculum_map->curriculumCourse->course->description }}
+                      </div>
+                      <div>
+                        <span class="badge badge-danger">{{ mt_rand(10, 100) }} questions</span>
+                      </div>
+                    </div>
+
+                    <div><i class="fa fa-chevron-right"></i></div>
+                  </div>
+                  
+                </a>
+              @endforeach
             </div>
           </div>
         </div>

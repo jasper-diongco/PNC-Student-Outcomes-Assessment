@@ -197,11 +197,21 @@ Route::put('/students/{student}', 'StudentsController@update');
 
 // TestQuestions Routes
 
+Route::get('/test_questions', 'TestQuestionsController@index');
+
 Route::get('/test_questions/create', 'TestQuestionsController@create');
+
+Route::post('/test_questions', 'TestQuestionsController@store');
 
 Route::get('/test_questions/list_program', 'TestQuestionsController@listProgram');
 
+Route::get('/test_questions/get_creators', 'TestQuestionsController@getCreators');
+
 Route::get('/test_questions/{program}/list_student_outcomes', 'TestQuestionsController@listStudentOutcome');
+
+Route::get('/test_questions/{test_question}/edit', 'TestQuestionsController@edit');
+
+Route::get('/test_questions/{test_question}', 'TestQuestionsController@show');
 
 // End TestQuestions Routes
 

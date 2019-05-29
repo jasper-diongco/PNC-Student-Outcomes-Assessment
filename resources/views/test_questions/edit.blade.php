@@ -9,11 +9,15 @@
 
 <div class="d-flex justify-content-between mb-2 mt-3">
   <div>
-    <h1 class="h3 mb-1 text-gray-800">Add new Test Question <i class="fa fa-question-circle text-primary"></i></h1>
+    <h1 class="h3 mb-1 text-gray-800">Edit Test Question #{{ $test_question->id }} <i class="fa fa-question-circle text-primary"></i></h1>
   </div>
 </div>
 
+
+
+
 <div id="app" v-cloak>
+    <image-modal></image-modal>
     <div class="row">
         <div class="col-md-8">
             <div class="form-group">
@@ -120,8 +124,29 @@
         </div>
         <div class="col-md-4">
             <div class="d-flex justify-content-between align-items-baseline">
-                <h5 class="text-dark"><b>Objects</b> 
-                <button class="btn btn-sm btn-success">add <i class="fa fa-plus" style="font-size: 10px"></i> </button></h5>
+                <h5 class="text-dark d-flex align-items-center">
+
+                    <div class="mr-2">
+                        <b>Objects</b> 
+                    </div>
+
+                    <div class="dropdown dropright">
+                      <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                       <i class="fa fa-plus-circle" style="font-size: 10px"></i> add  
+                      </button>
+                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a
+                            class="dropdown-item"
+                            href="#"
+                            data-toggle="modal"
+                            data-target="#imageModal"
+                            ><i class="fa fa-image"></i> Image</a
+                        >
+                        <a class="dropdown-item" href="#"><i class="fa fa-code"></i> Code</a>
+                        <a class="dropdown-item" href="#"><i class="fa fa-superscript"></i> Equation</a>
+                      </div>
+                    </div>
+                </h5>
             </div>
             
             <ul class="list-group">
@@ -147,38 +172,24 @@
             data: {
                 question: '',
                 choices: [
+                @foreach ($test_question->choices as $index => $choice)
                     {
-                        is_correct: false,
+                        is_correct: {{ $choice->is_correct }},
                         editor: ClassicEditor,
-                        editorData: '',
+                        editorData: '{!! $choice->body !!}',
                         editorConfig: {
                         }
                     },
-                    {
-                        is_correct: false,
-                        editor: ClassicEditor,
-                        editorData: '',
-                        editorConfig: {
-                            // The configuration of the editor.
-                        }
-                    },
-                    {
-                        is_correct: false,
-                        editor: ClassicEditor,
-                        editorData: '',
-                        editorConfig: {
-                            // The configuration of the editor.
-                        }
-                    }
+                @endforeach
                 ],
                 editor: ClassicEditor,
-                editorData: '',
+                editorData: '{!! $test_question->body !!}',
                 editorConfig: {
                     // The configuration of the editor.
                 },
-                title: '',
+                title: '{{ $test_question->title }}',
                 correct_answer: '',
-                level_of_difficulty: '',
+                level_of_difficulty: '{{ $test_question->difficulty_level_id  }}',
                 course_id: '{{ request('course_id') }}',
                 student_outcome_id: '{{ request('student_outcome_id') }}',
                 btnLoading: false
@@ -209,9 +220,10 @@
                             this.errors.clear();
                             this.choices.splice(index, 1);
                             this.correct_answer = '';
-                            for(let i = 0; i < this.choices.length; i++) {
-                                this.choices[i].is_correct = false;
-                            }
+                            // for(let i = 0; i < this.choices.length; i++) {
+                            //     this.choices[i].is_correct = false;
+                            // }
+                            this.getCorrectAnswer();
                         }
                       });
                 },
@@ -222,6 +234,15 @@
 
                     this.choices[this.correct_answer].is_correct = true;
 
+                },
+                getCorrectAnswer() {
+                    for(let i = 0; i < this.choices.length; i++) {
+                        if(this.choices[i].is_correct) {
+                            this.correct_answer = i;
+                            break; 
+                        }
+                        
+                    }
                 },
                 saveTestQuestion() {
                     this.btnLoading = true;
@@ -257,7 +278,7 @@
                 }
             },
             created() {  
-                
+                this.getCorrectAnswer();
             }
         });
     </script>

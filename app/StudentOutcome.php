@@ -13,6 +13,6 @@ class StudentOutcome extends Model
     }
 
     public function curriculumMaps() {
-        
+        return $this->hasMany('App\CurriculumMap')->where('is_checked', true);
     }
 }

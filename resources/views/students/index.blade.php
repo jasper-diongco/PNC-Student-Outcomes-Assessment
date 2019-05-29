@@ -48,15 +48,7 @@
               </div>
             </div>
           </div>
-        </div>
-       {{--  @if ($deactivated_faculties_count > 0)
-          <div class="col-md-4 offset-4">
-            <div class="d-flex justify-content-end">
-              <a href="{{ url('/faculties/deactivated') }}" class="btn btn-dark btn-sm">View Deactivated Faculties ({{ $deactivated_faculties_count }}) <i class="fa fa-users"></i></a>
-            </div>
-          </div>
-        @endif --}}
-        
+        </div>      
       </div>
       
       <div class="table-responsive">

@@ -155,6 +155,44 @@ div.mdl-layout__drawer > nav.mdl-navigation > a.mdl-navigation__link {
   border: 1px solid #ededed;
   padding: 15px 20px;
 }
+
+.question {
+  font-size: 1.2em;
+}
+
+.choice {
+  padding: 20px;
+
+  border: 1px solid #ededed;
+  border-radius: 3px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  transition: all 0.4s;
+}
+
+.correct {
+  border: 1px solid #1cc88a;
+  color: #1cc88a;
+}
+.correct-choice {
+  border: 1px solid #1cc88a;
+}
+
+.choice-num {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background: #ededed;
+  width: 32px;
+  height: 32px;
+  font-weight: 700;
+  color: #5a5c69;
+}
+
+.choice:hover {
+  box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.13);
+}
 // .custom-control-label:before {
 //   background-color: white;
 // }
