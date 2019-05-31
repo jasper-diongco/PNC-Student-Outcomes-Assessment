@@ -181,7 +181,8 @@
                 level_of_difficulty: '',
                 course_id: '{{ request('course_id') }}',
                 student_outcome_id: '{{ request('student_outcome_id') }}',
-                btnLoading: false
+                btnLoading: false,
+                program_id: '{{ request('program_id') }}'
             },
             methods: {
                 addChoice() {
@@ -239,7 +240,8 @@
                             })
                             .then(response => {
                                 this.btnLoading = false;
-                                window.location.replace(myRootURL + '/test_questions?student_outcome_id=' + this.student_outcome_id + '&course_id=' + this.course_id);
+                                window.location.replace(myRootURL + '/test_questions/'+ response.data.id +'?student_outcome_id=' + this.student_outcome_id + '&course_id=' + this.course_id + '&program_id=' + this.program_id);
+                                
 
                             })
                         } else {

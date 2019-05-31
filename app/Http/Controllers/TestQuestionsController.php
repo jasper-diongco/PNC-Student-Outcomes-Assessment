@@ -122,13 +122,7 @@ class TestQuestionsController extends Controller
 
     public function store() {
 
-        $data = request()->validate([
-            'title' => ['required', "regex: /^[A-Za-z\s\-0-9_.,()\'?!]+$/", 'max:255'],
-            'question_body' => ['required', 'max:1000'],
-            'level_of_difficulty' => 'required',
-            'course_id' => 'required',
-            'student_outcome_id' => 'required'
-        ]);
+       $data = $this->validateData();
 
 
 
@@ -175,5 +169,70 @@ class TestQuestionsController extends Controller
 
         */
 
+    }
+
+    public function update(TestQuestion $test_question) {
+        $data = $this->validateData();
+
+        //$so = StudentOutcome::findOrFail($data['student_outcome_id']);
+
+        $test_question->update([
+            'title' => $data['title'],
+            'body' => $data['question_body'],
+            'student_outcome_id' => $data['student_outcome_id'],
+            'course_id' => $data['course_id'],
+            'difficulty_level_id' => $data['level_of_difficulty']
+        ]);
+
+        foreach (request('choices') as $choice) {
+
+            if($choice['id'] != null) {
+                $choice_retrieved = Choice::findOrFail($choice['id']);
+
+                $choice_retrieved->update([
+                    'body' => $choice['editorData'],
+                    'is_correct' => $choice['is_correct'],
+                    'is_active' => true,
+                    'is_correct' => $choice['is_correct']
+                ]);
+
+            } else {    
+                Choice::create([
+                    'test_question_id' => $test_question->id,
+                    'body' => $choice['editorData'],
+                    'is_correct' => $choice['is_correct'],
+                    'is_active' => true,
+                    'user_id' => auth()->user()->id
+                ]);
+            }
+        }
+
+        foreach (request('choices_deactivated') as $choice_deactivated) {
+
+            if($choice_deactivated['id'] != null) {
+                $choice_retrieved_ = Choice::findOrFail($choice_deactivated['id']);
+
+                $choice_retrieved_->update([
+                    'body' => $choice_deactivated['editorData'],
+                    'is_correct' => false,
+                    'is_active' => false
+                ]);
+
+            }
+        }
+
+        Session::flash('message', 'Test question successfully updated from database');
+
+        return $test_question;
+    }
+
+    public function validateData() {
+         return request()->validate([
+            'title' => ['required', "regex: /^[A-Za-z\s\-0-9_.,()\'?!]+$/", 'max:255'],
+            'question_body' => ['required', 'max:1000'],
+            'level_of_difficulty' => 'required',
+            'course_id' => 'required',
+            'student_outcome_id' => 'required'
+        ]);
     }
 }

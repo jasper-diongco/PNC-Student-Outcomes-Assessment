@@ -3208,14 +3208,53 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ["testQuestionId"],
   data: function data() {
     return {
       imgPlaceholder: myRootURL + "/images/placeholder.png",
       url: "",
       width: 200,
       height: 200,
-      size: 2
+      size: 2,
+      file: "",
+      description: "",
+      uploadPercentage: 0,
+      showProgress: false
     };
   },
   methods: {
@@ -3243,6 +3282,41 @@ __webpack_require__.r(__webpack_exports__);
         this.width = 450;
         this.height = 270;
       }
+    },
+    uploadImage: function uploadImage() {
+      var _this = this;
+
+      this.file = this.$refs.file.files[0];
+      var formData = new FormData();
+      formData.append("image", this.file);
+      formData.append("description", this.description);
+      formData.append("size", this.size);
+      formData.append("width", this.width);
+      formData.append("height", this.height);
+      formData.append("test_question_id", this.testQuestionId);
+      this.showProgress = true;
+      ApiClient.post("/image_objects", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        },
+        onUploadProgress: function onUploadProgress(progressEvent) {
+          _this.uploadPercentage = parseInt(Math.round(progressEvent.loaded * 100 / progressEvent.total));
+        }
+      }).then(function (response) {
+        toast.fire({
+          title: "Image successfully uploaded!",
+          type: "success"
+        });
+
+        _this.closeModal();
+
+        _this.$emit("objects-added");
+      })["catch"](function (response) {
+        alert("Failed to upload the image!");
+      });
+    },
+    closeModal: function closeModal() {
+      $("#imageModal").modal("hide");
     }
   }
 });
@@ -75049,13 +75123,65 @@ var render = function() {
                   _vm._m(1),
                   _vm._v(" "),
                   _c("input", {
+                    ref: "file",
                     attrs: { type: "file", accept: "image/*" },
                     on: { change: _vm.onFileChange }
                   })
                 ]),
                 _vm._v(" "),
-                _c("div", [
+                _vm.showProgress
+                  ? _c("div", { staticClass: "progress" }, [
+                      _c(
+                        "div",
+                        {
+                          staticClass: "progress-bar",
+                          style: { width: _vm.uploadPercentage + "%" },
+                          attrs: {
+                            role: "progressbar",
+                            "aria-valuenow": "25",
+                            "aria-valuemin": "0",
+                            "aria-valuemax": "100"
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n\t\t\t\t\t\t\t" +
+                              _vm._s(_vm.uploadPercentage) +
+                              "%\n\t\t\t\t\t\t"
+                          )
+                        ]
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
                   _vm._m(2),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.description,
+                        expression: "description"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { type: "text", placeholder: "Enter Description" },
+                    domProps: { value: _vm.description },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.description = $event.target.value
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", [
+                  _vm._m(3),
                   _vm._v(" "),
                   _c(
                     "select",
@@ -75117,7 +75243,26 @@ var render = function() {
                 ])
               ]),
               _vm._v(" "),
-              _vm._m(3)
+              _c("div", { staticClass: "modal-footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-secondary",
+                    attrs: { type: "button", "data-dismiss": "modal" }
+                  },
+                  [_vm._v("\n\t\t\t\t\t\tClose\n\t\t\t\t\t")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary",
+                    attrs: { type: "button" },
+                    on: { click: _vm.uploadImage }
+                  },
+                  [_vm._v("\n\t\t\t\t\t\tUpload\n\t\t\t\t\t")]
+                )
+              ])
             ])
           ]
         )
@@ -75164,28 +75309,13 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("label", [_c("b", [_vm._v("Size:")])])
+    return _c("label", [_c("b", [_vm._v("Description:")])])
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-footer" }, [
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-secondary",
-          attrs: { type: "button", "data-dismiss": "modal" }
-        },
-        [_vm._v("\n\t\t\t\t\t\tClose\n\t\t\t\t\t")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "btn btn-primary", attrs: { type: "button" } },
-        [_vm._v("\n\t\t\t\t\t\tUpload\n\t\t\t\t\t")]
-      )
-    ])
+    return _c("label", [_c("b", [_vm._v("Size:")])])
   }
 ]
 render._withStripped = true

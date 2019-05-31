@@ -17,7 +17,7 @@
 
 
 <div id="app" v-cloak>
-    <image-modal></image-modal>
+    <image-modal test-question-id="{{ $test_question->id }}" v-on:objects-added="refreshObjects"></image-modal>
     <div class="row">
         <div class="col-md-8">
             <div class="form-group">
@@ -57,25 +57,31 @@
             </h5>
 
             <ul class="nav nav-tabs" id="myTab" role="tablist">
-              <li v-for="(choice, index) in choices" :key="index" class="nav-item ">
-                <a class="nav-link text-dark" :class="{ 'active': index == 0, 'border-bottom-danger': errors.has('choice ' + (index + 1))  }" id="home-tab" data-toggle="tab" :href="'#c' +(index + 1) ">Choice @{{ index + 1 }} 
-                    <checked-icon v-if="choice.is_correct"></checked-icon>
-                    <i v-else class="fa fa-check"></i>
-                    <button v-if="choices.length > 3" v-on:click="removeChoice(index)" data-toggle="tooltip" data-placement="top" title="Remove" class="btn btn-sm btn-light"><i class="fa fa-minus text-danger"></i></button></a>
-              </li>
+              <template v-for="(choice, index) in choices" >
+                  <li v-if="choice.is_active" :key="index" class="nav-item ">
+                    <a class="nav-link text-dark" :class="{ 'active': index == 0, 'border-bottom-danger': errors.has('choice ' + (index + 1))  }" id="home-tab" data-toggle="tab" :href="'#c' +(index + 1) ">Choice @{{ index + 1 }} 
+                         
+                        <small v-if="choice.id != null">- #@{{ choice.id }}</small>
+                        <checked-icon v-if="choice.is_correct"></checked-icon>
+                        <i v-else class="fa fa-check"></i>
+                        <button v-if="choices.length > 3" v-on:click="removeChoice(index)" data-toggle="tooltip" data-placement="top" title="Remove" class="btn btn-sm btn-light"><i class="fa fa-minus text-danger"></i></button></a>
+                  </li>
+              </template>
             </ul>
             <div class="tab-content" id="myTabContent">
-                <div v-for="(choice, index) in choices" :key="index" class="tab-pane fade show" :class="{ 'active': index == 0 }" :id="'c' + (index + 1)" role="tabpanel">
-                    <div class="text-danger">@{{ errors.first('choice ' + (index + 1)) }}</div>
-                    <ckeditor 
-                        :editor="choice.editor" 
-                        v-model="choice.editorData" 
-                        :config="choice.editorConfig"
-                        :data-vv-name="'choice ' + (index+1)"
-                        v-validate="'required|max:500'"
-                        :class="{ 'is-invalid': errors.has('choice ' + (index+1)) }">    
-                    </ckeditor>
-                </div>
+                <template v-for="(choice, index) in choices">
+                    <div v-if="choice.is_active"  :key="index" class="tab-pane fade show" :class="{ 'active': index == 0 }" :id="'c' + (index + 1)" role="tabpanel">
+                        <div class="text-danger">@{{ errors.first('choice ' + (index + 1)) }}</div>
+                        <ckeditor 
+                            :editor="choice.editor" 
+                            v-model="choice.editorData" 
+                            :config="choice.editorConfig"
+                            :data-vv-name="'choice ' + (index+1)"
+                            v-validate="'required|max:500'"
+                            :class="{ 'is-invalid': errors.has('choice ' + (index+1)) }">    
+                        </ckeditor>
+                    </div>
+                </template>
             </div>
 
             <div class="form-group mt-3">
@@ -114,7 +120,7 @@
                     class="btn btn-primary" 
                     v-on:click="saveTestQuestion"
                     :disabled="btnLoading">
-                    Add to database 
+                    Update from database 
                     <i class="fa fa-check"></i> 
                 <div v-if="btnLoading" class="spinner-border spinner-border-sm text-light" role="status">
                   <span class="sr-only">Loading...</span>
@@ -150,11 +156,30 @@
             </div>
             
             <ul class="list-group">
-                <li class="list-group-item">Cras justo odio</li>
-                <li class="list-group-item">Dapibus ac facilisis in</li>
-                <li class="list-group-item">Morbi leo risus</li>
-                <li class="list-group-item">Porta ac consectetur ac</li>
-                <li class="list-group-item">Vestibulum at eros</li>
+                <template v-if="objectsLoading">
+                    <li class="list-group-item">
+                        <table-loading></table-loading>
+                    </li>
+                </template>
+                <template v-else-if="objectsEmpty">
+                    <li class="list-group-item">
+                        No object found.
+                    </li>
+                </template>
+                <template v-else>
+                    <li v-for="image in image_objects" :key="image.path" class="list-group-item d-flex justify-content-between">
+                        <div>
+                            <i class="fa fa-image text-success"></i> 
+                            <span class="text-primary">[[#img@{{ image.id }}]]</span> 
+                            &mdash; 
+                            @{{ image.description }} 
+                        </div>
+                        
+                        <div>
+                            <button class="btn btn-sm btn-primary"><i class="fa fa-search"></i></button>
+                        </div>
+                    </li>
+                </template>
             </ul>
         </div>
     </div>
@@ -174,14 +199,17 @@
                 choices: [
                 @foreach ($test_question->choices as $index => $choice)
                     {
+                        id: {{ $choice->id }},
                         is_correct: {{ $choice->is_correct }},
                         editor: ClassicEditor,
                         editorData: '{!! $choice->body !!}',
+                        is_active: {{ $choice->is_active }},
                         editorConfig: {
                         }
                     },
                 @endforeach
                 ],
+                choices_deactivated: [],
                 editor: ClassicEditor,
                 editorData: '{!! $test_question->body !!}',
                 editorConfig: {
@@ -192,14 +220,36 @@
                 level_of_difficulty: '{{ $test_question->difficulty_level_id  }}',
                 course_id: '{{ request('course_id') }}',
                 student_outcome_id: '{{ request('student_outcome_id') }}',
-                btnLoading: false
+                btnLoading: false,
+                test_question_id: '{{ $test_question->id }}',
+                image_objects: [],
+                objectsLoading: true,
+                program_id: '{{ request('program_id') }}'
+            },
+            computed: {
+                objectsEmpty() {
+                    return this.image_objects.length == 0;
+                },
+                choicesCount() {
+                    let count = 0;
+
+                    for(let i = 0; i < this.choices.length; i++) {
+                        if(this.choices[i].is_active) {
+                            count++;
+                        }
+                    }
+
+                    return count;
+                }
             },
             methods: {
                 addChoice() {
                     this.choices.push({
+                        id: null,
                         is_correct: false,
                         editor: ClassicEditor,
                         editorData: '',
+                        is_active: true,
                         editorConfig: {
                             // The configuration of the editor.
                         }
@@ -218,11 +268,20 @@
                       }).then((result) => {
                         if (result.value) {
                             this.errors.clear();
-                            this.choices.splice(index, 1);
-                            this.correct_answer = '';
                             // for(let i = 0; i < this.choices.length; i++) {
                             //     this.choices[i].is_correct = false;
                             // }
+                            if(this.choices[index].id == null) {
+                                this.choices.splice(index, 1);
+                            } else {
+                                this.choices[index].is_active = false;
+                                this.choices[index].is_correct = false;
+                                let deac_choice = this.choices.splice(index, 1);
+
+                                this.choices_deactivated.push(deac_choice[0]);
+                            }
+
+                            this.correct_answer = '';
                             this.getCorrectAnswer();
                         }
                       });
@@ -250,22 +309,27 @@
                     .then(isValid => {
                         
                         if(isValid) {
-                            ApiClient.post('/test_questions', {
+                            ApiClient.put('/test_questions/' + this.test_question_id, {
                                 title: this.title,
                                 question_body: this.editorData,
                                 level_of_difficulty: this.level_of_difficulty,
                                 course_id: this.course_id,
                                 student_outcome_id: this.student_outcome_id,
-                                choices: this.choices
+                                choices: this.choices,
+                                choices_deactivated: this.choices_deactivated
                             })
                             .then(response => {
                                 this.btnLoading = false;
-                                window.location.replace(myRootURL + '/test_questions?student_outcome_id=' + this.student_outcome_id + '&course_id=' + this.course_id);
+                                window.location.replace(myRootURL + '/test_questions/'+ this.test_question_id +'?student_outcome_id=' + this.student_outcome_id + '&course_id=' + this.course_id + '&program_id=' + this.program_id);
 
-                            })
+                            }).
+                            catch(err => {
+                                console.log(err);
+                                this.btnLoading = false;
+                            });
                         } else {
                             toast.fire({
-                                title: 'Please enter valid data!',
+                            title: 'Please enter valid data!',
                                 type: 'error'
                               });
                             this.btnLoading = false;
@@ -275,10 +339,25 @@
                         console.log(err);
                         this.btnLoading = false;
                     })
+                },
+                getImageObjects() {
+                    this.objectsLoading = true;
+                    ApiClient.get('/image_objects?test_question_id=' + this.test_question_id)
+                    .then(response => {
+                        this.objectsLoading = false;
+                        this.image_objects = response.data;
+                    });
+                },
+                refreshObjects() {
+                    this.getImageObjects();
                 }
             },
             created() {  
                 this.getCorrectAnswer();
+
+                setTimeout(() => {
+                    this.getImageObjects();
+                }, 1000);
             }
         });
     </script>

@@ -29,7 +29,7 @@
         </div>
         <div class="mr-3">
             <i class="fa fa-calendar-day text-dark"></i>
-            <b>Last Updated:</b> {{ $test_question->updated_at->format('M d, Y') .', ' . $test_question->created_at->diffForHumans() }}
+            <b>Last Updated:</b> {{ $test_question->updated_at->format('M d, Y') .', ' . $test_question->updated_at->diffForHumans() }}
         </div>
     </div>
 
@@ -46,27 +46,27 @@
                     <h4 class="py-0 my-0">{{ $test_question->title }}</h4>
                 </div>
                 <div>
-                    <a href="#" class="btn btn-sm btn-dark"><i class="fa fa-edit"></i> Edit</a>
+                    <a href="{{ url('/test_questions/' . $test_question->id . '/edit?student_outcome_id='. request('student_outcome_id') . '&course_id=' . request('course_id') . '&program_id=' . request('program_id')) }}" class="btn btn-sm btn-dark"><i class="fa fa-edit"></i> Edit</a>
                 </div>
             </div>
             
         </div>
         <div class="card-body">
-            <div>{!! $test_question->body !!}</div>
+            <div>{!! $test_question->getHtml() !!}</div>
             <hr>
             <div class="choices">
                 <div class="row">
                     @foreach ($test_question->choices as $index => $choice)
-                    <div class="col-6">
-                        <div class="choice {{ $choice->is_correct ? 'correct-choice' : '' }}">
-                            <div class="d-flex align-items-center">
+                    <div class="col-6 mb-3">
+                        <div class="choice {{ $choice->is_correct ? 'correct-choice' : '' }}" style="height: 100%;">
+                            <div class="d-flex">
                                 <div class="mr-2">
                                     <div class="choice-num {{ $choice->is_correct ? 'correct' : '' }}">
                                         {{ $index + 1 }}
                                     </div>
                                 </div>
                                 <div>
-                                    {!! $choice->body !!}  
+                                    {!! $choice->getHtml() !!}  
                                 </div>
                             </div>
                         </div>
@@ -121,3 +121,18 @@
 </div>
 
 @endsection
+
+@push('scripts')
+    <script>
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                
+            },
+            methods: {
+            },
+            created() {
+            }
+        });
+    </script>
+@endpush

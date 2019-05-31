@@ -44,8 +44,38 @@
 								type="file"
 								@change="onFileChange"
 								accept="image/*"
+								ref="file"
 							/>
 						</div>
+
+						<!-- <progress
+							max="100"
+							:value.prop="uploadPercentage"
+						></progress> -->
+
+						<div class="progress" v-if="showProgress">
+							<div
+								class="progress-bar"
+								role="progressbar"
+								:style="{ width: uploadPercentage + '%' }"
+								aria-valuenow="25"
+								aria-valuemin="0"
+								aria-valuemax="100"
+							>
+								{{ uploadPercentage }}%
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label><b>Description:</b></label>
+							<input
+								type="text"
+								v-model="description"
+								class="form-control"
+								placeholder="Enter Description"
+							/>
+						</div>
+
 						<div>
 							<label><b>Size:</b></label>
 							<select
@@ -70,7 +100,11 @@
 						>
 							Close
 						</button>
-						<button type="button" class="btn btn-primary">
+						<button
+							@click="uploadImage"
+							type="button"
+							class="btn btn-primary"
+						>
 							Upload
 						</button>
 					</div>
@@ -82,15 +116,21 @@
 
 <script>
 export default {
+	props: ["testQuestionId"],
 	data() {
 		return {
 			imgPlaceholder: myRootURL + "/images/placeholder.png",
 			url: "",
 			width: 200,
 			height: 200,
-			size: 2
+			size: 2,
+			file: "",
+			description: "",
+			uploadPercentage: 0,
+			showProgress: false
 		};
 	},
+
 	methods: {
 		onFileChange(e) {
 			const file = e.target.files[0];
@@ -116,6 +156,44 @@ export default {
 				this.width = 450;
 				this.height = 270;
 			}
+		},
+		uploadImage() {
+			this.file = this.$refs.file.files[0];
+
+			let formData = new FormData();
+			formData.append("image", this.file);
+			formData.append("description", this.description);
+			formData.append("size", this.size);
+			formData.append("width", this.width);
+			formData.append("height", this.height);
+			formData.append("test_question_id", this.testQuestionId);
+			this.showProgress = true;
+			ApiClient.post("/image_objects", formData, {
+				headers: {
+					"Content-Type": "multipart/form-data"
+				},
+				onUploadProgress: progressEvent => {
+					this.uploadPercentage = parseInt(
+						Math.round(
+							(progressEvent.loaded * 100) / progressEvent.total
+						)
+					);
+				}
+			})
+				.then(response => {
+					toast.fire({
+						title: "Image successfully uploaded!",
+						type: "success"
+					});
+					this.closeModal();
+					this.$emit("objects-added");
+				})
+				.catch(response => {
+					alert("Failed to upload the image!");
+				});
+		},
+		closeModal() {
+			$("#imageModal").modal("hide");
 		}
 	}
 };

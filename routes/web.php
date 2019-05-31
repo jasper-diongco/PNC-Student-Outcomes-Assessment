@@ -211,9 +211,19 @@ Route::get('/test_questions/{program}/list_student_outcomes', 'TestQuestionsCont
 
 Route::get('/test_questions/{test_question}/edit', 'TestQuestionsController@edit');
 
+Route::put('/test_questions/{test_question}', 'TestQuestionsController@update');
+
 Route::get('/test_questions/{test_question}', 'TestQuestionsController@show');
 
 // End TestQuestions Routes
+
+// ImageObject Routes
+
+Route::get('/image_objects', 'ImageObjectsController@index');
+
+Route::post('/image_objects', 'ImageObjectsController@store');
+
+// End ImageObject Routes
 
 
 
