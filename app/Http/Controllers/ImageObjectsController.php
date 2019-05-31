@@ -4,26 +4,32 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\ImageObject;
+use App\Rules\TextOnly;
 
 class ImageObjectsController extends Controller
 {
 
     public function index() {
-        if(request('test_question_id') != '') {
-            return ImageObject::where('test_question_id', request('test_question_id'))
+        if(request('ref_id') != '') {
+            return ImageObject::where('ref_id', request('ref_id'))
                 ->latest()
                 ->get();
         }
     }
 
+    public function show(ImageObject $image_object) {
+
+        return $image_object;
+    }
+
     public function store() {
         $data = request()->validate([
-            'description' => 'required|max:191',
+            'description' => ['required', 'max:191', new TextOnly],
             'width' => 'required',
             'height' => 'required',
             'size' => 'required',
             'image' => 'required',
-            'test_question_id' => 'required'
+            'ref_id' => 'required'
         ]);
 
         $imagePath = request('image')->store('uploads', 'public');
@@ -34,11 +40,25 @@ class ImageObjectsController extends Controller
             'height' => $data['height'],
             'size' => $data['size'],
             'path' => $imagePath,
-            'test_question_id' => $data['test_question_id']
+            'ref_id' => $data['ref_id']
         ]);
 
 
         return $image;
 
+    }
+
+    public function update(ImageObject $image_object) {
+
+        $data = request()->validate([
+            'description' => ['required', 'max:191', new TextOnly],
+            'width' => 'required',
+            'height' => 'required',
+            'size' => 'required'
+        ]);
+
+        $image_object->update($data);
+
+        return $image_object;
     }
 }

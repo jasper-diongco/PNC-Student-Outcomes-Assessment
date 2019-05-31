@@ -14,6 +14,7 @@
 </div>
 
 <div id="app" v-cloak>
+    <image-modal :ref-id="ref_id" v-on:objects-added="refreshObjects"></image-modal>
     <div class="row">
         <div class="col-md-8">
             <div class="form-group">
@@ -120,16 +121,56 @@
         </div>
         <div class="col-md-4">
             <div class="d-flex justify-content-between align-items-baseline">
-                <h5 class="text-dark"><b>Objects</b> 
-                <button class="btn btn-sm btn-success">add <i class="fa fa-plus" style="font-size: 10px"></i> </button></h5>
+                <h5 class="text-dark d-flex align-items-center">
+
+                    <div class="mr-2">
+                        <b>Objects</b> 
+                    </div>
+
+                    <div class="dropdown dropright">
+                      <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                       <i class="fa fa-plus-circle" style="font-size: 10px"></i> add  
+                      </button>
+                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a
+                            class="dropdown-item"
+                            href="#"
+                            data-toggle="modal"
+                            data-target="#imageModal"
+                            ><i class="fa fa-image"></i> Image</a
+                        >
+                        <a class="dropdown-item" href="#"><i class="fa fa-code"></i> Code</a>
+                        <a class="dropdown-item" href="#"><i class="fa fa-superscript"></i> Equation</a>
+                      </div>
+                    </div>
+                </h5>
             </div>
             
             <ul class="list-group">
-                <li class="list-group-item">Cras justo odio</li>
-                <li class="list-group-item">Dapibus ac facilisis in</li>
-                <li class="list-group-item">Morbi leo risus</li>
-                <li class="list-group-item">Porta ac consectetur ac</li>
-                <li class="list-group-item">Vestibulum at eros</li>
+                <template v-if="objectsLoading">
+                    <li class="list-group-item">
+                        <table-loading></table-loading>
+                    </li>
+                </template>
+                <template v-else-if="objectsEmpty">
+                    <li class="list-group-item">
+                        No object found.
+                    </li>
+                </template>
+                <template v-else>
+                    <li v-for="image in image_objects" :key="image.path" class="list-group-item d-flex justify-content-between">
+                        <div>
+                            <i class="fa fa-image text-success"></i> 
+                            <span class="text-primary">[[#img@{{ image.id }}]]</span> 
+                            &mdash; 
+                            @{{ image.description }} 
+                        </div>
+                        
+                        <div>
+                            <button class="btn btn-sm btn-primary"><i class="fa fa-search"></i></button>
+                        </div>
+                    </li>
+                </template>
             </ul>
         </div>
     </div>
@@ -182,7 +223,15 @@
                 course_id: '{{ request('course_id') }}',
                 student_outcome_id: '{{ request('student_outcome_id') }}',
                 btnLoading: false,
-                program_id: '{{ request('program_id') }}'
+                program_id: '{{ request('program_id') }}',
+                ref_id: '',
+                image_objects: [],
+                objectsLoading: true
+            },
+            computed: {
+                objectsEmpty() {
+                    return this.image_objects.length == 0;
+                }
             },
             methods: {
                 addChoice() {
@@ -236,7 +285,8 @@
                                 level_of_difficulty: this.level_of_difficulty,
                                 course_id: this.course_id,
                                 student_outcome_id: this.student_outcome_id,
-                                choices: this.choices
+                                choices: this.choices,
+                                ref_id: this.ref_id
                             })
                             .then(response => {
                                 this.btnLoading = false;
@@ -256,10 +306,31 @@
                         console.log(err);
                         this.btnLoading = false;
                     })
+                },
+                generateRef() {
+                  // Math.random should be unique because of its seeding algorithm.
+                  // Convert it to base 36 (numbers + letters), and grab the first 9 characters
+                  // after the decimal.
+                  return '_' + Math.random().toString(36).substr(2, 9);
+                },
+                getImageObjects() {
+                    this.objectsLoading = true;
+                    ApiClient.get('/image_objects?ref_id=' + this.ref_id)
+                    .then(response => {
+                        this.objectsLoading = false;
+                        this.image_objects = response.data;
+                    });
+                },
+                refreshObjects() {
+                    this.getImageObjects();
                 }
             },
             created() {  
-                
+                this.ref_id = this.generateRef();
+
+                setTimeout(() => {
+                    this.getImageObjects();
+                }, 1000);
             }
         });
     </script>

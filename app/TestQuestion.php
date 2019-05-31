@@ -7,7 +7,7 @@ use App\ImageObject;
 
 class TestQuestion extends Model
 {
-    public $fillable = ['title', 'body', 'student_outcome_id', 'course_id', 'difficulty_level_id', 'user_id', 'is_active', 'performance_criteria_id'];
+    public $fillable = ['title', 'body', 'student_outcome_id', 'course_id', 'difficulty_level_id', 'user_id', 'is_active', 'performance_criteria_id', 'ref_id'];
 
 
     public function choices() {

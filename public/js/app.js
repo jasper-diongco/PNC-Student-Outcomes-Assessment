@@ -3243,7 +3243,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["testQuestionId"],
+  props: ["testQuestionId", "refId", "isUpdate", "id"],
   data: function data() {
     return {
       imgPlaceholder: myRootURL + "/images/placeholder.png",
@@ -3256,6 +3256,19 @@ __webpack_require__.r(__webpack_exports__);
       uploadPercentage: 0,
       showProgress: false
     };
+  },
+  computed: {
+    modalTitle: function modalTitle() {
+      return this.isUpdate ? "View Image" : "Add new Image";
+    },
+    btnName: function btnName() {
+      return this.isUpdate ? "Save" : "Upload";
+    }
+  },
+  watch: {
+    id: function id() {
+      this.getImageObject();
+    }
   },
   methods: {
     onFileChange: function onFileChange(e) {
@@ -3293,7 +3306,7 @@ __webpack_require__.r(__webpack_exports__);
       formData.append("size", this.size);
       formData.append("width", this.width);
       formData.append("height", this.height);
-      formData.append("test_question_id", this.testQuestionId);
+      formData.append("ref_id", this.refId);
       this.showProgress = true;
       ApiClient.post("/image_objects", formData, {
         headers: {
@@ -3315,8 +3328,54 @@ __webpack_require__.r(__webpack_exports__);
         alert("Failed to upload the image!");
       });
     },
+    updateImage: function updateImage() {
+      var _this2 = this;
+
+      ApiClient.put("/image_objects/" + this.id, {
+        description: this.description,
+        width: this.width,
+        height: this.height,
+        size: this.size
+      }).then(function (response) {
+        toast.fire({
+          title: "Image successfully updated!",
+          type: "success"
+        });
+
+        _this2.closeModal();
+
+        _this2.$emit("objects-added");
+
+        _this2.file = "";
+        _this2.url = "";
+      })["catch"](function (response) {
+        alert("Failed to upload the image!");
+      });
+    },
+    saveImage: function saveImage() {
+      if (this.isUpdate) {
+        this.updateImage();
+      } else {
+        this.uploadImage();
+      }
+    },
+    getImageObject: function getImageObject() {
+      var _this3 = this;
+
+      ApiClient.get("/image_objects/" + this.id).then(function (response) {
+        _this3.url = myRootURL + "/storage/" + response.data.path;
+        _this3.description = response.data.description;
+        _this3.width = response.data.width;
+        _this3.height = response.data.height;
+        _this3.size = response.data.size;
+      });
+    },
     closeModal: function closeModal() {
-      $("#imageModal").modal("hide");
+      if (this.isUpdate) {
+        $("#imageModalUpdate").modal("hide");
+      } else {
+        $("#imageModal").modal("hide");
+      }
     }
   }
 });
@@ -75087,7 +75146,7 @@ var render = function() {
       {
         staticClass: "modal fade",
         attrs: {
-          id: "imageModal",
+          id: _vm.isUpdate ? "imageModalUpdate" : "imageModal",
           tabindex: "-1",
           role: "dialog",
           "aria-labelledby": "exampleModalLabel",
@@ -75100,7 +75159,25 @@ var render = function() {
           { staticClass: "modal-dialog", attrs: { role: "document" } },
           [
             _c("div", { staticClass: "modal-content" }, [
-              _vm._m(0),
+              _c("div", { staticClass: "modal-header" }, [
+                _c(
+                  "h5",
+                  {
+                    staticClass: "modal-title",
+                    attrs: { id: "exampleModalLabel" }
+                  },
+                  [
+                    _vm._v(
+                      "\n\t\t\t\t\t\t" +
+                        _vm._s(_vm.modalTitle) +
+                        "\n\t\t\t\t\t\t"
+                    ),
+                    _c("i", { staticClass: "fa fa-image text-primary" })
+                  ]
+                ),
+                _vm._v(" "),
+                _vm._m(0)
+              ]),
               _vm._v(" "),
               _c("div", { staticClass: "modal-body" }, [
                 _c(
@@ -75119,15 +75196,17 @@ var render = function() {
                   ]
                 ),
                 _vm._v(" "),
-                _c("div", { staticClass: "form-group" }, [
-                  _vm._m(1),
-                  _vm._v(" "),
-                  _c("input", {
-                    ref: "file",
-                    attrs: { type: "file", accept: "image/*" },
-                    on: { change: _vm.onFileChange }
-                  })
-                ]),
+                !_vm.isUpdate
+                  ? _c("div", { staticClass: "form-group" }, [
+                      _vm._m(1),
+                      _vm._v(" "),
+                      _c("input", {
+                        ref: "file",
+                        attrs: { type: "file", accept: "image/*" },
+                        on: { change: _vm.onFileChange }
+                      })
+                    ])
+                  : _vm._e(),
                 _vm._v(" "),
                 _vm.showProgress
                   ? _c("div", { staticClass: "progress" }, [
@@ -75258,9 +75337,13 @@ var render = function() {
                   {
                     staticClass: "btn btn-primary",
                     attrs: { type: "button" },
-                    on: { click: _vm.uploadImage }
+                    on: { click: _vm.saveImage }
                   },
-                  [_vm._v("\n\t\t\t\t\t\tUpload\n\t\t\t\t\t")]
+                  [
+                    _vm._v(
+                      "\n\t\t\t\t\t\t" + _vm._s(_vm.btnName) + "\n\t\t\t\t\t"
+                    )
+                  ]
                 )
               ])
             ])
@@ -75275,29 +75358,18 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-header" }, [
-      _c(
-        "h5",
-        { staticClass: "modal-title", attrs: { id: "exampleModalLabel" } },
-        [
-          _vm._v("\n\t\t\t\t\t\tAdd new Image\n\t\t\t\t\t\t"),
-          _c("i", { staticClass: "fa fa-image text-primary" })
-        ]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "close",
-          attrs: {
-            type: "button",
-            "data-dismiss": "modal",
-            "aria-label": "Close"
-          }
-        },
-        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
-      )
-    ])
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "modal",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
   },
   function() {
     var _vm = this

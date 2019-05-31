@@ -221,7 +221,13 @@ Route::get('/test_questions/{test_question}', 'TestQuestionsController@show');
 
 Route::get('/image_objects', 'ImageObjectsController@index');
 
+
+
 Route::post('/image_objects', 'ImageObjectsController@store');
+
+Route::put('/image_objects/{image_object}', 'ImageObjectsController@update');
+
+Route::get('/image_objects/{image_object}', 'ImageObjectsController@show');
 
 // End ImageObject Routes
 

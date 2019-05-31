@@ -5,7 +5,7 @@
 		<!-- Modal -->
 		<div
 			class="modal fade"
-			id="imageModal"
+			:id="isUpdate ? 'imageModalUpdate' : 'imageModal'"
 			tabindex="-1"
 			role="dialog"
 			aria-labelledby="exampleModalLabel"
@@ -15,7 +15,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<h5 class="modal-title" id="exampleModalLabel">
-							Add new Image
+							{{ modalTitle }}
 							<i class="fa fa-image text-primary"></i>
 						</h5>
 						<button
@@ -38,7 +38,7 @@
 							/>
 						</div>
 
-						<div class="form-group">
+						<div v-if="!isUpdate" class="form-group">
 							<label><b>Select File: </b></label>
 							<input
 								type="file"
@@ -101,11 +101,11 @@
 							Close
 						</button>
 						<button
-							@click="uploadImage"
+							@click="saveImage"
 							type="button"
 							class="btn btn-primary"
 						>
-							Upload
+							{{ btnName }}
 						</button>
 					</div>
 				</div>
@@ -116,7 +116,7 @@
 
 <script>
 export default {
-	props: ["testQuestionId"],
+	props: ["testQuestionId", "refId", "isUpdate", "id"],
 	data() {
 		return {
 			imgPlaceholder: myRootURL + "/images/placeholder.png",
@@ -130,7 +130,19 @@ export default {
 			showProgress: false
 		};
 	},
-
+	computed: {
+		modalTitle() {
+			return this.isUpdate ? "View Image" : "Add new Image";
+		},
+		btnName() {
+			return this.isUpdate ? "Save" : "Upload";
+		}
+	},
+	watch: {
+		id() {
+			this.getImageObject();
+		}
+	},
 	methods: {
 		onFileChange(e) {
 			const file = e.target.files[0];
@@ -166,7 +178,8 @@ export default {
 			formData.append("size", this.size);
 			formData.append("width", this.width);
 			formData.append("height", this.height);
-			formData.append("test_question_id", this.testQuestionId);
+			formData.append("ref_id", this.refId);
+
 			this.showProgress = true;
 			ApiClient.post("/image_objects", formData, {
 				headers: {
@@ -192,8 +205,49 @@ export default {
 					alert("Failed to upload the image!");
 				});
 		},
+		updateImage() {
+			ApiClient.put("/image_objects/" + this.id, {
+				description: this.description,
+				width: this.width,
+				height: this.height,
+				size: this.size
+			})
+				.then(response => {
+					toast.fire({
+						title: "Image successfully updated!",
+						type: "success"
+					});
+					this.closeModal();
+					this.$emit("objects-added");
+					this.file = "";
+					this.url = "";
+				})
+				.catch(response => {
+					alert("Failed to upload the image!");
+				});
+		},
+		saveImage() {
+			if (this.isUpdate) {
+				this.updateImage();
+			} else {
+				this.uploadImage();
+			}
+		},
+		getImageObject() {
+			ApiClient.get("/image_objects/" + this.id).then(response => {
+				this.url = myRootURL + "/storage/" + response.data.path;
+				this.description = response.data.description;
+				this.width = response.data.width;
+				this.height = response.data.height;
+				this.size = response.data.size;
+			});
+		},
 		closeModal() {
-			$("#imageModal").modal("hide");
+			if (this.isUpdate) {
+				$("#imageModalUpdate").modal("hide");
+			} else {
+				$("#imageModal").modal("hide");
+			}
 		}
 	}
 };

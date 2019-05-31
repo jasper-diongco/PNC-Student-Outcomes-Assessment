@@ -23,6 +23,7 @@ class CreateTestQuestionsTable extends Migration
             $table->integer('user_id');
             $table->boolean('is_active')->default(true);
             $table->integer('performance_criteria_id');
+            $table->string('ref_id');
             $table->timestamps();
         });
     }

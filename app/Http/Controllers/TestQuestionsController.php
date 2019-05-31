@@ -141,7 +141,8 @@ class TestQuestionsController extends Controller
                 'difficulty_level_id' => $data['level_of_difficulty'],
                 'user_id' => auth()->user()->id,
                 'is_active' => true,
-                'performance_criteria_id' => $so->performanceCriterias[0]->id
+                'performance_criteria_id' => $so->performanceCriterias[0]->id,
+                'ref_id' => $data['ref_id']
             ]);
 
             foreach (request('choices') as $choice) {
@@ -151,6 +152,7 @@ class TestQuestionsController extends Controller
                     'is_correct' => $choice['is_correct'],
                     'is_active' => true,
                     'user_id' => auth()->user()->id
+
                 ]);
             }
 
@@ -232,7 +234,8 @@ class TestQuestionsController extends Controller
             'question_body' => ['required', 'max:1000'],
             'level_of_difficulty' => 'required',
             'course_id' => 'required',
-            'student_outcome_id' => 'required'
+            'student_outcome_id' => 'required',
+            'ref_id' => 'required'
         ]);
     }
 }

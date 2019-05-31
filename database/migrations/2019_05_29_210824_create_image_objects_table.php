@@ -20,7 +20,7 @@ class CreateImageObjectsTable extends Migration
             $table->integer('width');
             $table->integer('height');
             $table->integer('size');
-            $table->integer('test_question_id');
+            $table->string('ref_id');
             $table->timestamps();
         });
     }

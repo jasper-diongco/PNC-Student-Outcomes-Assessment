@@ -17,7 +17,12 @@
 
 
 <div id="app" v-cloak>
-    <image-modal test-question-id="{{ $test_question->id }}" v-on:objects-added="refreshObjects"></image-modal>
+    {{-- create --}}
+    <image-modal :ref-id="ref_id" v-on:objects-added="refreshObjects"></image-modal>
+    
+    {{-- update --}}
+    <image-modal :id="img_obj_id" :is-update="true" :ref-id="ref_id" v-on:objects-added="refreshObjects"></image-modal>
+
     <div class="row">
         <div class="col-md-8">
             <div class="form-group">
@@ -176,7 +181,7 @@
                         </div>
                         
                         <div>
-                            <button class="btn btn-sm btn-primary"><i class="fa fa-search"></i></button>
+                            <button v-on:click="openImageModalUpdate(image.id)" class="btn btn-sm btn-primary"><i class="fa fa-search"></i></button>
                         </div>
                     </li>
                 </template>
@@ -224,7 +229,9 @@
                 test_question_id: '{{ $test_question->id }}',
                 image_objects: [],
                 objectsLoading: true,
-                program_id: '{{ request('program_id') }}'
+                program_id: '{{ request('program_id') }}',
+                ref_id: '{{ $test_question->ref_id }}',
+                img_obj_id: ''
             },
             computed: {
                 objectsEmpty() {
@@ -316,7 +323,8 @@
                                 course_id: this.course_id,
                                 student_outcome_id: this.student_outcome_id,
                                 choices: this.choices,
-                                choices_deactivated: this.choices_deactivated
+                                choices_deactivated: this.choices_deactivated,
+                                ref_id: this.ref_id
                             })
                             .then(response => {
                                 this.btnLoading = false;
@@ -342,7 +350,7 @@
                 },
                 getImageObjects() {
                     this.objectsLoading = true;
-                    ApiClient.get('/image_objects?test_question_id=' + this.test_question_id)
+                    ApiClient.get('/image_objects?ref_id=' + this.ref_id)
                     .then(response => {
                         this.objectsLoading = false;
                         this.image_objects = response.data;
@@ -350,11 +358,20 @@
                 },
                 refreshObjects() {
                     this.getImageObjects();
+                },
+                generateRef() {
+                  // Math.random should be unique because of its seeding algorithm.
+                  // Convert it to base 36 (numbers + letters), and grab the first 9 characters
+                  // after the decimal.
+                  return '_' + Math.random().toString(36).substr(2, 9);
+                },
+                openImageModalUpdate(image_id) {
+                    this.img_obj_id = image_id;
+                    $('#imageModalUpdate').modal('show');
                 }
             },
             created() {  
                 this.getCorrectAnswer();
-
                 setTimeout(() => {
                     this.getImageObjects();
                 }, 1000);
