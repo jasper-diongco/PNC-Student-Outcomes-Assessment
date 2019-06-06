@@ -132,6 +132,7 @@
             methods: {
             },
             created() {
+                MathLive.renderMathInDocument();
             }
         });
     </script>

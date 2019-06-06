@@ -28,6 +28,10 @@
 						</button>
 					</div>
 					<div class="modal-body">
+
+						<div v-if="isUpdate" class="d-flex justify-content-end">
+							<button @click="getImageObject" class="btn btn-sm"><i class="fa fa-redo-alt"></i></button>
+						</div>
 						<div class="d-flex justify-content-center mb-3">
 							<img
 								:src="url ? url : imgPlaceholder"
@@ -38,6 +42,7 @@
 							/>
 						</div>
 
+
 						<div v-if="!isUpdate" class="form-group">
 							<label><b>Select File: </b></label>
 							<input
@@ -45,8 +50,14 @@
 								@change="onFileChange"
 								accept="image/*"
 								ref="file"
+								name="file"
+								data-vv-name="file"
+								v-validate="'required'"
+								:class="{ 'is-invalid': errors.has('file') }"
 							/>
+							<div class="text-warning">{{ errors.first('file') }}</div>
 						</div>
+
 
 						<!-- <progress
 							max="100"
@@ -73,7 +84,12 @@
 								v-model="description"
 								class="form-control"
 								placeholder="Enter Description"
+								name="description"
+								data-vv-name="description"
+								v-validate="'required'"
+								:class="{ 'is-invalid': errors.has('description') }"
 							/>
+							<div class="invalid-feedback">{{ errors.first('description') }}</div>
 						</div>
 
 						<div>
@@ -227,11 +243,22 @@ export default {
 				});
 		},
 		saveImage() {
-			if (this.isUpdate) {
-				this.updateImage();
-			} else {
-				this.uploadImage();
-			}
+			this.$validator.validateAll()
+			.then(isValid => {
+				if(isValid) {
+					if (this.isUpdate) {
+						this.updateImage();
+					} else {
+						this.uploadImage();
+					}
+				} else {
+					toast.fire({
+						type: 'error',
+						title: 'Please enter a valid data!'
+					});
+				}
+			})
+			
 		},
 		getImageObject() {
 			ApiClient.get("/image_objects/" + this.id).then(response => {

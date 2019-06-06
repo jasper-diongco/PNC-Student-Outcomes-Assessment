@@ -413,6 +413,7 @@
               }
             }
           }
+          //this.selectedMaps = this.curriculum_maps;
         },
         formatIndex(num) {
           if (num == 1) {
@@ -501,12 +502,14 @@
             this.so_desc = student_outcome.description;
             this.openModal();
             event.target.checked = false;
+            this.selectMaps();
           } else {
             // swal.fire({
             //   type: 'error',
             //   title: 'unchecked'
             // });
             event.target.checked = true;
+            this.selectMaps();
             swal.fire({
               title: 'Do you want to remove?',
               text: "Please confirm",
@@ -520,6 +523,7 @@
               if (result.value) {
                 //let map = this.getMap(curriculum_course.id, student_outcome.id);
                 map.is_checked = false;
+                this.selectMaps();
               }
             });
           }
@@ -576,13 +580,14 @@
                 is_checked: true,
                 learning_level_id: this.learning_level
               });
+
             } else {
               
               map.is_checked = true;
               map.learning_level_id = this.learning_level;
             }
 
-          
+          this.selectMaps();
           this.closeModal();
         },
         openModal() {

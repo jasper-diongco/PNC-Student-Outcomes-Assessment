@@ -222,7 +222,6 @@ Route::get('/test_questions/{test_question}', 'TestQuestionsController@show');
 Route::get('/image_objects', 'ImageObjectsController@index');
 
 
-
 Route::post('/image_objects', 'ImageObjectsController@store');
 
 Route::put('/image_objects/{image_object}', 'ImageObjectsController@update');
@@ -230,6 +229,31 @@ Route::put('/image_objects/{image_object}', 'ImageObjectsController@update');
 Route::get('/image_objects/{image_object}', 'ImageObjectsController@show');
 
 // End ImageObject Routes
+
+
+// CodeObject Routes
+
+Route::get('/code_objects', 'CodeObjectsController@index');
+
+Route::post('/code_objects', 'CodeObjectsController@store');
+
+Route::get('/code_objects/{code_object}', 'CodeObjectsController@show');
+
+Route::put('/code_objects/{code_object}', 'CodeObjectsController@update');
+
+// End CodeObject Routes
+
+// MathObject Routes
+
+Route::get('/math_objects', 'MathObjectsController@index');
+
+Route::post('/math_objects', 'MathObjectsController@store');
+
+Route::get('/math_objects/{math_object}', 'MathObjectsController@show');
+
+Route::put('/math_objects/{math_object}', 'MathObjectsController@update');
+
+// End MathObject Routes
 
 
 

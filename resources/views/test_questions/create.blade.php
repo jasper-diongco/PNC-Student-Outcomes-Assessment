@@ -13,8 +13,28 @@
   </div>
 </div>
 
+
+
 <div id="app" v-cloak>
+    {{-- create --}}
     <image-modal :ref-id="ref_id" v-on:objects-added="refreshObjects"></image-modal>
+    
+    {{-- update --}}
+    <image-modal :id="img_obj_id" :is-update="true" :ref-id="ref_id" v-on:objects-added="refreshObjects"></image-modal>
+    
+    {{-- create --}}
+    <code-modal :ref-id="ref_id" v-on:objects-added="refreshObjects"></code-modal>
+
+    {{-- update --}}
+    <code-modal :id="code_obj_id" :is-update="true" :ref-id="ref_id" v-on:objects-added="refreshObjects"></code-modal>
+
+    {{-- create --}}
+    <math-modal :ref-id="ref_id" v-on:objects-added="refreshObjects"></math-modal>
+
+    {{-- update --}}
+    <math-modal :id="math_obj_id" :ref-id="ref_id" v-on:objects-added="refreshObjects" :is-update="true"></math-modal>
+
+
     <div class="row">
         <div class="col-md-8">
             <div class="form-group">
@@ -139,8 +159,13 @@
                             data-target="#imageModal"
                             ><i class="fa fa-image"></i> Image</a
                         >
-                        <a class="dropdown-item" href="#"><i class="fa fa-code"></i> Code</a>
-                        <a class="dropdown-item" href="#"><i class="fa fa-superscript"></i> Equation</a>
+                        <a 
+                            class="dropdown-item" 
+                            href="#"
+                            data-toggle="modal"
+                            data-target="#codeModal"><i class="fa fa-code"></i> Code</a>
+                        <a class="dropdown-item" href="#" data-toggle="modal"
+                            data-target="#mathModal"><i class="fa fa-superscript"></i> Math</a>
                       </div>
                     </div>
                 </h5>
@@ -158,6 +183,7 @@
                     </li>
                 </template>
                 <template v-else>
+                    {{-- image --}}
                     <li v-for="image in image_objects" :key="image.path" class="list-group-item d-flex justify-content-between">
                         <div>
                             <i class="fa fa-image text-success"></i> 
@@ -167,7 +193,35 @@
                         </div>
                         
                         <div>
-                            <button class="btn btn-sm btn-primary"><i class="fa fa-search"></i></button>
+                            <button v-on:click="openImageModalUpdate(image.id)" class="btn btn-sm btn-primary"><i class="fa fa-search"></i></button>
+                        </div>
+                    </li>
+
+                    {{-- code --}}
+                    <li v-for="code in code_objects" :key="code.id" class="list-group-item d-flex justify-content-between">
+                        <div>
+                            <i class="fa fa-code text-success"></i> 
+                            <span class="text-primary">[[#code@{{ code.id }}]]</span> 
+                            &mdash; 
+                            @{{ code.description }} 
+                        </div>
+                        
+                        <div>
+                            <button v-on:click="openCodeModalUpdate(code.id)" class="btn btn-sm btn-primary"><i class="fa fa-search"></i></button>
+                        </div>
+                    </li>
+
+                    {{-- math --}}
+                    <li v-for="math in math_objects" :key="math.id + '' + math.formula" class="list-group-item d-flex justify-content-between">
+                        <div>
+                            <i class="fa fa-code text-success"></i> 
+                            <span class="text-primary">[[#math@{{ math.id }}]]</span> 
+                            &mdash; 
+                            $$@{{ math.formula }}$$ 
+                        </div>
+                        
+                        <div>
+                            <button v-on:click="openMathModalUpdate(math.id)"  class="btn btn-sm btn-primary"><i class="fa fa-search"></i></button>
                         </div>
                     </li>
                 </template>
@@ -226,11 +280,16 @@
                 program_id: '{{ request('program_id') }}',
                 ref_id: '',
                 image_objects: [],
-                objectsLoading: true
+                code_objects: [],
+                math_objects: [],
+                objectsLoading: true,
+                img_obj_id: '',
+                code_obj_id: '',
+                math_obj_id: ''
             },
             computed: {
                 objectsEmpty() {
-                    return this.image_objects.length == 0;
+                    return this.image_objects.length == 0 && this.code_objects.length == 0 && this.math_objects.length == 0;
                 }
             },
             methods: {
@@ -321,15 +380,57 @@
                         this.image_objects = response.data;
                     });
                 },
+                getCodeObjects() {
+                    this.objectsLoading = true;
+                    ApiClient.get('/code_objects?ref_id=' + this.ref_id)
+                    .then(response => {
+                        this.objectsLoading = false;
+                        this.code_objects = response.data;
+                    });
+                },
+                getMathObjects() {
+                    this.objectsLoading = true;
+                    ApiClient.get('/math_objects?ref_id=' + this.ref_id)
+                    .then(response => {
+                        this.objectsLoading = false;
+                        this.math_objects = response.data;
+                        //MathLive.renderMathInDocument();
+                        setInterval(() => {
+                            this.renderMath();
+                        }, 100);
+                    });
+                },
                 refreshObjects() {
                     this.getImageObjects();
+                    this.getCodeObjects();
+                    this.getMathObjects();
+                    this.math_obj_id = '';
+                    this.img_obj_id = '';
+                    this.code_obj_id = '';
+                },
+                openImageModalUpdate(image_id) {
+                    this.img_obj_id = image_id;
+                    $('#imageModalUpdate').modal('show');
+                },
+                openCodeModalUpdate(code_id) {
+                    this.code_obj_id = code_id;
+                    $('#codeModalUpdate').modal('show');
+                },
+                openMathModalUpdate(math_id) {
+                    this.math_obj_id = math_id;
+                    $('#mathModalUpdate').modal('show');
+                },
+                renderMath() {
+                    MathLive.renderMathInDocument();
                 }
             },
             created() {  
                 this.ref_id = this.generateRef();
-
+                
                 setTimeout(() => {
                     this.getImageObjects();
+                    this.getCodeObjects();
+                    this.getMathObjects();
                 }, 1000);
             }
         });

@@ -50,6 +50,13 @@
   
   @if(Gate::check('isDean') || Gate::check('isSAdmin') || Gate::check('isProf'))
 
+    <!-- Nav Item - Test Question -->
+    <li class="nav-item">
+      <a class="nav-link" href="{{ url('/test_questions/list_program?college_id='. Session::get('college_id')) }}">
+        <i class="fas fa-fw fa-question-circle"></i>
+        <span>Test Questions</span></a>
+    </li>
+
     <!-- Nav Item - Programs -->
     <li class="nav-item">
       <a class="nav-link" href="{{ url('/programs') }}">

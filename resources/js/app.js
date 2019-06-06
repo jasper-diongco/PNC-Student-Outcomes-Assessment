@@ -12,6 +12,13 @@ import moment from "moment";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import CKEditor from "@ckeditor/ckeditor5-vue";
 //import Essentials from "@ckeditor/ckeditor5-essentials/src/essentials";
+import VuePrismEditor from "vue-prism-editor";
+import "vue-prism-editor/dist/VuePrismEditor.css"; // import the styles
+
+import MathLive from "mathlive/dist/mathlive.js";
+import Mathfield from "mathlive/dist/vue-mathlive.mjs";
+import "mathlive/dist/mathlive.core.css";
+import "mathlive/dist/mathlive.css";
 
 require("./bootstrap");
 
@@ -27,9 +34,11 @@ window.Services = Services;
 import ApiClient from "./services/ApiClient.js";
 window.ApiClient = ApiClient;
 window.myRootURL = "/pnc_soa/public";
+window.MathLive = MathLive;
 
 Vue.use(VeeValidate);
 Vue.use(CKEditor);
+Vue.use(Mathfield, MathLive);
 window.VeeValidate = VeeValidate;
 
 //ClassicEditor.builtinPlugins = [Essentials];
@@ -56,6 +65,7 @@ Vue.component(
   "example-component",
   require("./components/ExampleComponent.vue").default
 );
+Vue.component("prism-editor", VuePrismEditor);
 Vue.component("checked-icon", require("./components/CheckedIcon.vue").default);
 Vue.component("course-modal", require("./components/CourseModal.vue").default);
 Vue.component(
@@ -63,6 +73,8 @@ Vue.component(
   require("./components/AccountModal.vue").default
 );
 Vue.component("image-modal", require("./components/ImageModal.vue").default);
+Vue.component("code-modal", require("./components/CodeModal.vue").default);
+Vue.component("math-modal", require("./components/MathModal.vue").default);
 
 Vue.component(
   "curriculum-course-modal",
