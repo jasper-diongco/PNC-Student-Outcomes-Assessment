@@ -34,6 +34,17 @@
                 </div>
                 <div class="col-md-8">
                   <div class="d-flex justify-content-end">
+                    <div class="d-flex mr-2">
+                      <div class="mr-2"><label class="col-form-label">Filter By Difficulty: </label></div>
+                      <div>
+                        <select class="form-control" v-model="difficulty_id" v-on:change="filterByDifficulty">
+                          <option value="">All</option>
+                          <option value="1">Easy</option>
+                          <option value="2">Average</option>
+                          <option value="3">Difficult</option>
+                        </select>
+                      </div>
+                    </div>
                     <div class="d-flex">
                       <div class="mr-2"><label class="col-form-label">Filter By Creator: </label></div>
                       <div>
@@ -51,7 +62,7 @@
             
             <div class="table-responsive">
               <table id="students-table" class="table table-hover">
-                <thead class="bg-dark text-white">
+                <thead class="bg-light">
                   <tr>
                     <th scope="col">#</th>
                     <th scope="col">Title</th>
@@ -157,13 +168,14 @@
                 links: {},
                 totalPagination: 0,
                 user_id: '',
+                difficulty_id: '',
                 program_id: '{{ request('program_id') }}',
                 creators: []
             },
             methods: {
                 getTestQuestions(page=1) {
                     this.tableLoading = true;
-                    ApiClient.get('/test_questions?student_outcome_id=' + this.student_outcome_id + '&course_id=' + this.course_id + '&json=true' + '&page=' + page + '&user_id=' + vm.user_id)
+                    ApiClient.get('/test_questions?student_outcome_id=' + this.student_outcome_id + '&course_id=' + this.course_id + '&json=true' + '&page=' + page + '&user_id=' + vm.user_id + '&difficulty_id=' + vm.difficulty_id)
                         .then(response => {
                             this.test_questions = response.data.data;
                             this.meta = response.data.meta;
@@ -200,6 +212,9 @@
                   this.getTestQuestions(page);
                 },
                 filterByCreator() {
+                    this.getTestQuestions();
+                },
+                filterByDifficulty() {
                     this.getTestQuestions();
                 }
             },

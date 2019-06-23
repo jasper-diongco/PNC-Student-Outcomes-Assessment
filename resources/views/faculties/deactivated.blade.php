@@ -15,7 +15,7 @@
 
   @if(count($faculties) > 0) 
       <table class="table">
-        <thead class="thead-dark">
+        <thead class="bg-light">
           <tr>
             <tr>
               <th><input type="checkbox" v-model="is_checked_all" v-on:change="toggleCheckAll"></th>

@@ -53,7 +53,7 @@
       
       <div class="table-responsive">
         <table id="students-table" class="table table-hover">
-          <thead class="bg-dark text-white">
+          <thead class="bg-light">
             <tr>
               <th scope="col">Student ID</th>
               <th scope="col">Full Name</th>

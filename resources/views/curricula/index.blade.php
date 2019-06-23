@@ -40,7 +40,7 @@
     </div> --}}
 
     @if(count($curricula) > 0)
-      <div class="row">
+      {{-- <div class="row">
         @foreach($curricula as $curriculum)
           <div class="col-md-4 mb-3">
             <div class="card shadow" style="height: 100%;">
@@ -73,7 +73,29 @@
             </div>
           </div>
         @endforeach
-      </div>
+      </div> --}}
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Program</th>
+            <th scope="col">Year</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach($curricula as $curriculum)
+          <tr>
+            <th>{{ $curriculum->id }}</th>
+            <td>{{ $curriculum->name }}</td>
+            <td>{{ $curriculum->program->description }}</td>
+            <td>{{ $curriculum->year }}</td>
+            <td><a href="{{ url('/curricula/' . $curriculum->id) }}" class="btn btn-success btn-sm"><i class="fa fa-search "></i></a></td>
+          </tr>
+          @endforeach
+        </tbody>
+      </table>
     @else
       <div class="col-12">
         <div class="card">

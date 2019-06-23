@@ -51,19 +51,36 @@
             </div>
             <div class="form-group">
                 <label class="text-dark"><b>Test question body</b></label>
-                <div class="text-danger">@{{ errors.first('body') }}</div>
+                
                 {{-- <textarea name="content" id="editor">
                     &lt;p&gt;Here goes the initial content of the editor.&lt;/p&gt;
                 </textarea> --}}
-                <ckeditor 
+                {{-- <ckeditor 
                     placeholder="Enter content..." 
                     :editor="editor" 
                     v-model="editorData" 
                     :config="editorConfig"
                     data-vv-name="body"
                     v-validate="'required|max:1000'"
-                    :class="{ 'is-invalid': errors.has('body') }"></ckeditor>
-                
+                    :class="{ 'is-invalid': errors.has('body') }"></ckeditor> --}}
+                    {{-- <div class="mb-1">
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                          <button type="button" class="btn btn-sm btn-success"><i class="fa fa-image"></i></button>
+                          <button type="button" class="btn btn-sm btn-success"><i class="fa fa-code"></i></button>
+                          <button type="button" class="btn btn-sm btn-success"><i class="fa fa-superscript"></i></button>
+                        </div>
+                    </div> --}}
+                    <textarea 
+                        name="body" 
+                        class="form-control"
+                        id="q-body" 
+                        cols="30" 
+                        rows="10" 
+                        v-model="editorData" 
+                        data-vv-name="body"
+                        v-validate="'required|max:1000'"
+                        :class="{ 'is-invalid': errors.has('body') }"></textarea>
+                    <div class="invalid-feedback">@{{ errors.first('body') }}</div>
             </div>
 
             
@@ -83,7 +100,7 @@
             </ul>
             <div class="tab-content" id="myTabContent">
                 <div v-for="(choice, index) in choices" :key="index" class="tab-pane fade show" :class="{ 'active': index == 0 }" :id="'c' + (index + 1)" role="tabpanel">
-                    <div class="text-danger">@{{ errors.first('choice ' + (index + 1)) }}</div>
+                    {{-- <div class="text-danger">@{{ errors.first('choice ' + (index + 1)) }}</div>
                     <ckeditor 
                         :editor="choice.editor" 
                         v-model="choice.editorData" 
@@ -91,7 +108,25 @@
                         :data-vv-name="'choice ' + (index+1)"
                         v-validate="'required|max:500'"
                         :class="{ 'is-invalid': errors.has('choice ' + (index+1)) }">    
-                    </ckeditor>
+                    </ckeditor> --}}
+                    {{-- <div class="mb-1">
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                          <button type="button" class="btn btn-sm btn-success"><i class="fa fa-image"></i></button>
+                          <button type="button" class="btn btn-sm btn-success"><i class="fa fa-code"></i></button>
+                          <button type="button" class="btn btn-sm btn-success"><i class="fa fa-superscript"></i></button>
+                        </div>
+                    </div> --}}
+                    <textarea 
+                        name="body" 
+                        class="form-control"
+                        id="q-body" 
+                        cols="30" 
+                        rows="5" 
+                        v-model="choice.editorData" 
+                        :data-vv-name="'choice ' + (index+1)"
+                        v-validate="'required|max:500'"
+                        :class="{ 'is-invalid': errors.has('choice ' + (index+1)) }"></textarea>
+                    <div class="invalid-feedback">@{{ errors.first('choice ' + (index + 1)) }}</div>
                 </div>
             </div>
 
@@ -126,7 +161,6 @@
             </div>
             
             <div class="d-flex justify-content-end mt-3">
-                <button class="btn btn-dark mr-2" :disabled="btnLoading">View Preview <i class="fa fa-eye"></i></button>
                 <button 
                     class="btn btn-primary" 
                     v-on:click="saveTestQuestion"
@@ -269,7 +303,12 @@
                 editor: ClassicEditor,
                 editorData: '',
                 editorConfig: {
-                    // The configuration of the editor.
+                    toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote' ],
+                    heading: {
+                        options: [
+                            { view: 'div', title: 'Paragraph', class: 'ck-heading_paragraph' }
+                        ]
+                    }
                 },
                 title: '',
                 correct_answer: '',

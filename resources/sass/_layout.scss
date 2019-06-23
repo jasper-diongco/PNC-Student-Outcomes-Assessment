@@ -1,0 +1,111 @@
+body {
+    background: rgb(237, 241, 245);
+}
+
+.navbar-brand {
+    border-right: 1px solid rgb(207, 207, 207);
+    padding-right: 5px;
+}
+.soa {
+    font-size: 18px;
+}
+
+.main-nav {
+    background: #4c5667;
+}
+
+.main-nav .nav-item {
+    background: #4c5667;
+    padding: 2px;
+    border-right: 1px solid rgb(87, 86, 86);
+}
+.main-nav .nav-item.active {
+    background: #2cd07e;
+}
+
+.main-nav .nav-item.active .nav-link {
+    color: #f7fafc !important;
+}
+
+.main-nav .nav-item .nav-link {
+    color: rgb(150, 152, 160);
+}
+
+.main-nav .nav-item .nav-link:hover {
+    color: #f7fafc;
+}
+
+.main-header {
+    border-bottom: 1px solid rgb(224, 224, 224);
+    padding-left: 20px;
+}
+.main-header h1 {
+    font-size: 18px;
+    padding: 0;
+    margin: 0;
+    font-weight: 600;
+}
+
+html,
+body,
+#main {
+    height: 100%;
+}
+
+#page-content {
+    flex: 1 0 auto;
+}
+
+#sticky-footer {
+    flex-shrink: none;
+    border-top: 1px solid rgb(226, 226, 226);
+}
+
+.mcard {
+    background: white;
+}
+.mcard-header,
+.mcard-body {
+    padding: 15px 20px;
+}
+
+.mcard-title {
+    padding: 0;
+    margin: 0;
+    font-size: 18px;
+}
+
+.btn {
+    border-radius: 0;
+}
+
+.breadcrumb {
+    background: rgb(237, 241, 245);
+}
+
+label {
+    font-weight: 600;
+}
+
+.btn-icon {
+    border-radius: 50%;
+}
+.btn-icon-icon {
+    font-weight: 300;
+}
+
+.modal-content {
+    border-radius: 0px;
+}
+
+[v-cloak] > * {
+    display: none;
+}
+[v-cloak]::before {
+    content: "loading…";
+}
+
+.card {
+    border-radius: 0;
+    border: 0;
+}

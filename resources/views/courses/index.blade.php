@@ -60,7 +60,7 @@
       </div>
       <div class="table-responsive">
         <table class="table">
-          <thead class="bg-dark text-white">
+          <thead class="bg-light">
             <tr>
               <th scope="col">#</th>
               <th scope="col">Course ID</th>

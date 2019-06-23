@@ -63,6 +63,6 @@ class Choice extends Model
             }       
         }
 
-        return $input;
+        return nl2br($input);
     }
 }

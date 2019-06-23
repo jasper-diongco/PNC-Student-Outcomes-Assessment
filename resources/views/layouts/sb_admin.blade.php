@@ -14,22 +14,11 @@
 
   <title>PNC | SOA - @yield('title')</title>
 
-  <!-- Custom fonts for this template-->
-  {{-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous"> --}}
-
   <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
 
   <link rel="stylesheet" href="{{ asset('fonts/nunito.css') }}">
 
   <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-
-  {{-- <link rel="stylesheet" href="{{ asset('css/prism.css') }}" /> --}}
-
-  {{-- <link rel="stylesheet" href="https://unpkg.com/prismjs/themes/prism.css" /> --}}
-  {{-- <script src="https://unpkg.com/prismjs"></script> --}}
-
-
-  {{-- <script src="https://unpkg.com/prismjs@1.15.0/prism.js"></script> --}}
 
   <link rel="stylesheet" href="{{ asset('css/prism.css') }}">
   <script src="{{ asset('js/prism.js') }}"></script>

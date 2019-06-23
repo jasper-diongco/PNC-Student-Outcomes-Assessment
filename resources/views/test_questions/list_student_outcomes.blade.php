@@ -34,26 +34,33 @@
         <div class="collapse show" id="so_{{$student_outcome->id}}">
           <div class="">
             <div class="list-group">
-              @foreach ($student_outcome->curriculumMaps as $curriculum_map)
-                <a href="{{ url('/test_questions?student_outcome_id=' . $student_outcome->id . '&course_id=' . $curriculum_map->curriculumCourse->course->id . '&program_id=' . $student_outcome->program_id) }}" class="list-group-item list-group-item-action">
-                  <div class="d-flex align-items-center justify-content-between">
-                    <div class="d-flex align-items-center">
-                      <div class="avatar mr-2" style="background: {{ $curriculum_map->curriculumCourse->course->color  }};">
-                        <i class="fa fa-book"></i>
+              @if($student_outcome->curriculumMaps->count() > 0)
+                @foreach ($student_outcome->curriculumMaps as $curriculum_map)
+                  <a href="{{ url('/test_questions?student_outcome_id=' . $student_outcome->id . '&course_id=' . $curriculum_map->curriculumCourse->course->id . '&program_id=' . $student_outcome->program_id) }}" class="list-group-item list-group-item-action">
+                    <div class="d-flex align-items-center justify-content-between">
+                      <div class="d-flex align-items-center">
+                        <div class="avatar mr-2" style="background: {{ $curriculum_map->curriculumCourse->course->color  }};">
+                          <i class="fa fa-book"></i>
+                        </div>
+                        <div class="mr-3">
+                          {{ $curriculum_map->curriculumCourse->course->course_code }} - {{ $curriculum_map->curriculumCourse->course->description }}
+                        </div>
+                        <div>
+                          <span class="badge {{ $curriculum_map->testQuestionCount() > 0? 'badge-success' : 'badge-warning'  }}">{{ $curriculum_map->testQuestionCount() }} questions</span>
+                        </div>
                       </div>
-                      <div class="mr-3">
-                        {{ $curriculum_map->curriculumCourse->course->course_code }} - {{ $curriculum_map->curriculumCourse->course->description }}
-                      </div>
-                      <div>
-                        <span class="badge badge-danger">{{ mt_rand(10, 100) }} questions</span>
-                      </div>
-                    </div>
 
-                    <div><i class="fa fa-chevron-right"></i></div>
-                  </div>
-                  
-                </a>
-              @endforeach
+                      <div><i class="fa fa-chevron-right"></i></div>
+                    </div>
+                    
+                  </a>
+                @endforeach
+              @else
+                <div class="list-group-item list-group-item-action">
+                  No course mapped.
+                </div>
+              @endif
+
             </div>
           </div>
         </div>

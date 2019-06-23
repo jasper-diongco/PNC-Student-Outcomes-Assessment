@@ -89,7 +89,7 @@
         
         <div class="table-responsive">
           <table id="students-table" class="table table-hover">
-            <thead class="bg-dark text-white">
+            <thead class="bg-light">
               <tr>
                 <th scope="col">
                   <div class="avatar bg-success"><i class="fa fa-graduation-cap"></i></div>

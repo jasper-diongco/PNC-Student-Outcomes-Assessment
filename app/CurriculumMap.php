@@ -12,4 +12,11 @@ class CurriculumMap extends Model
     public function curriculumCourse() {
         return $this->belongsTo('App\CurriculumCourse');
     }
+
+    public function testQuestionCount() {
+        return TestQuestion::where('student_outcome_id', $this->student_outcome_id)
+            ->where('course_id', $this->curriculumCourse->course->id)
+            ->where('is_active', true)
+            ->count();
+    }
 }

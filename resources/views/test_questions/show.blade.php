@@ -9,12 +9,16 @@
 
 <div class="d-flex justify-content-between mb-2 mt-3">
   <div>
-    <h1 class="h3 mb-1 text-gray-800">Test Question #{{ $test_question->id }} <i class="fa fa-question-circle text-primary"></i></h1>
+    <h1 class="h3 mb-1 text-gray-800">Test Question <i class="fa fa-question-circle text-primary"></i></h1>
   </div>
 </div>
 
 <div id="app">
     <div class="d-flex mb-3">
+        <div class="mr-3">
+            <i class="fa fa-user text-dark"></i>
+            <b>ID:</b> {{ $test_question->id }}
+        </div>
         <div class="mr-3">
             <i class="fa fa-user text-dark"></i>
             <b>Created By:</b> <a href="#">{{ $test_question->user->first_name . ' ' . $test_question->user->last_name }}</a>

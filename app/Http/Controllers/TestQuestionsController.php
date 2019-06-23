@@ -13,6 +13,7 @@ use App\Course;
 use App\TestQuestion;
 use App\Choice;
 use App\User;
+use App\College;
 use App\Rules\TextOnly;
 use App\Http\Resources\TestQuestionResource;
 
@@ -38,10 +39,24 @@ class TestQuestionsController extends Controller
                 return TestQuestionResource::collection($searched_test_questions);
             }
 
-            if(request('user_id') != '') {
+            if(request('user_id') != '' && request('difficulty_id') != '') {
                 $test_questions = TestQuestion::where('student_outcome_id', $student_outcome->id)
                 ->where('course_id', $course->id)
                 ->where('user_id', request('user_id'))
+                ->where('difficulty_level_id', request('difficulty_id'))
+                ->latest()
+                ->paginate(10);
+            }
+            else if(request('user_id') != '') {
+                $test_questions = TestQuestion::where('student_outcome_id', $student_outcome->id)
+                ->where('course_id', $course->id)
+                ->where('user_id', request('user_id'))
+                ->latest()
+                ->paginate(10);
+            } else if(request('difficulty_id') != '') {
+                $test_questions = TestQuestion::where('student_outcome_id', $student_outcome->id)
+                ->where('course_id', $course->id)
+                ->where('difficulty_level_id', request('difficulty_id'))
                 ->latest()
                 ->paginate(10);
             } else {
@@ -89,26 +104,29 @@ class TestQuestionsController extends Controller
             return abort('401', 'Unauthorized');
         }
 
-        if (request('college_id') == '') {
-            return redirect('/test_questions/list_program?college_id='. Session::get('college_id'));
-        } else if (request('college_id') == 'all') {
-            if(Gate::check('isSAdmin')) {
-                $programs = Program::orderBy('college_id')->paginate(10);
-            } else {
-                return redirect('/test_questions/list_program?college_id='. Session::get('college_id'));
-            }
+        // if (request('college_id') == '') {
+        //     return redirect('/test_questions/list_program?college_id='. Session::get('college_id'));
+        // } else if (request('college_id') == 'all') {
+        //     if(Gate::check('isSAdmin')) {
+        //         $programs = Program::orderBy('college_id')->paginate(10);
+        //     } else {
+        //         return redirect('/test_questions/list_program?college_id='. Session::get('college_id'));
+        //     }
             
-        } else {
-            if(!Gate::check('isSAdmin') && Session::get('college_id') != request('college_id')) {
-                return abort('401', 'Unauthorized');
-            }
+        // } else {
+        //     if(!Gate::check('isSAdmin') && Session::get('college_id') != request('college_id')) {
+        //         return abort('401', 'Unauthorized');
+        //     }
 
-            $programs = Program::where('college_id', request('college_id'))->paginate(10);
-        }
+        //     $programs = Program::where('college_id', request('college_id'))->paginate(10);
+        // }
+
+        $colleges = College::all();
+        $programs = Program::paginate(20);
 
         
 
-        return view('test_questions.list_programs')->with('programs', $programs);
+        return view('test_questions.list_programs', compact('colleges', 'programs'));
     }
 
     public function listStudentOutcome(Program $program) {

@@ -28,9 +28,10 @@
 						</button>
 					</div>
 					<div class="modal-body">
-
 						<div v-if="isUpdate" class="d-flex justify-content-end">
-							<button @click="getImageObject" class="btn btn-sm"><i class="fa fa-redo-alt"></i></button>
+							<button @click="getImageObject" class="btn btn-sm">
+								<i class="fa fa-redo-alt"></i>
+							</button>
 						</div>
 						<div class="d-flex justify-content-center mb-3">
 							<img
@@ -41,7 +42,6 @@
 								style="border:1px solid #ededed;"
 							/>
 						</div>
-
 
 						<div v-if="!isUpdate" class="form-group">
 							<label><b>Select File: </b></label>
@@ -55,9 +55,10 @@
 								v-validate="'required'"
 								:class="{ 'is-invalid': errors.has('file') }"
 							/>
-							<div class="text-warning">{{ errors.first('file') }}</div>
+							<div class="text-warning">
+								{{ errors.first("file") }}
+							</div>
 						</div>
-
 
 						<!-- <progress
 							max="100"
@@ -87,9 +88,13 @@
 								name="description"
 								data-vv-name="description"
 								v-validate="'required'"
-								:class="{ 'is-invalid': errors.has('description') }"
+								:class="{
+									'is-invalid': errors.has('description')
+								}"
 							/>
-							<div class="invalid-feedback">{{ errors.first('description') }}</div>
+							<div class="invalid-feedback">
+								{{ errors.first("description") }}
+							</div>
 						</div>
 
 						<div>
@@ -132,7 +137,7 @@
 
 <script>
 export default {
-	props: ["testQuestionId", "refId", "isUpdate", "id"],
+	props: ["testQuestionId", "refId", "isUpdate", "isDirect", "id"],
 	data() {
 		return {
 			imgPlaceholder: myRootURL + "/images/placeholder.png",
@@ -243,9 +248,8 @@ export default {
 				});
 		},
 		saveImage() {
-			this.$validator.validateAll()
-			.then(isValid => {
-				if(isValid) {
+			this.$validator.validateAll().then(isValid => {
+				if (isValid) {
 					if (this.isUpdate) {
 						this.updateImage();
 					} else {
@@ -253,12 +257,11 @@ export default {
 					}
 				} else {
 					toast.fire({
-						type: 'error',
-						title: 'Please enter a valid data!'
+						type: "error",
+						title: "Please enter a valid data!"
 					});
 				}
-			})
-			
+			});
 		},
 		getImageObject() {
 			ApiClient.get("/image_objects/" + this.id).then(response => {

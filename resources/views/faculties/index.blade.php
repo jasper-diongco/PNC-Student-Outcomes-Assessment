@@ -38,7 +38,7 @@
       
       <div class="table-responsive">
         <table id="faculty-table" class="table table-hover">
-          <thead class="bg-dark text-white">
+          <thead class="bg-light">
             <tr>
               <th scope="col">User ID</th>
               <th scope="col">Full Name</th>

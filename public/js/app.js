@@ -3423,8 +3423,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["testQuestionId", "refId", "isUpdate", "id"],
+  props: ["testQuestionId", "refId", "isUpdate", "isDirect", "id"],
   data: function data() {
     return {
       imgPlaceholder: myRootURL + "/images/placeholder.png",
@@ -3545,8 +3550,8 @@ __webpack_require__.r(__webpack_exports__);
           }
         } else {
           toast.fire({
-            type: 'error',
-            title: 'Please enter a valid data!'
+            type: "error",
+            title: "Please enter a valid data!"
           });
         }
       });
@@ -76473,7 +76478,11 @@ var render = function() {
                       }),
                       _vm._v(" "),
                       _c("div", { staticClass: "text-warning" }, [
-                        _vm._v(_vm._s(_vm.errors.first("file")))
+                        _vm._v(
+                          "\n\t\t\t\t\t\t\t" +
+                            _vm._s(_vm.errors.first("file")) +
+                            "\n\t\t\t\t\t\t"
+                        )
                       ])
                     ])
                   : _vm._e(),
@@ -76522,7 +76531,9 @@ var render = function() {
                       }
                     ],
                     staticClass: "form-control",
-                    class: { "is-invalid": _vm.errors.has("description") },
+                    class: {
+                      "is-invalid": _vm.errors.has("description")
+                    },
                     attrs: {
                       type: "text",
                       placeholder: "Enter Description",
@@ -76541,7 +76552,11 @@ var render = function() {
                   }),
                   _vm._v(" "),
                   _c("div", { staticClass: "invalid-feedback" }, [
-                    _vm._v(_vm._s(_vm.errors.first("description")))
+                    _vm._v(
+                      "\n\t\t\t\t\t\t\t" +
+                        _vm._s(_vm.errors.first("description")) +
+                        "\n\t\t\t\t\t\t"
+                    )
                   ])
                 ]),
                 _vm._v(" "),
