@@ -1,15 +1,15 @@
-@extends('layouts.sb_admin')
+@extends('layout.app', ['active' => 'users'])
 
 @section('title', 'Faculties Index')
 
 @section('content')
   <div class="d-flex justify-content-between mb-3">
     <div>
-      <h1 class="h2">List of Faculties</h1>
+      <h1 class="page-header">List of Faculties</h1>
     </div>
     <div>
       @if(Gate::check('isDean') || Gate::check('isSAdmin'))
-        <a href="{{ url('faculties/create') }}" class="btn btn-success btn-round valign-center">Add New Faculty &nbsp;<i class="fa fa-plus"></i></a>
+        <a href="{{ url('faculties/create') }}" class="btn btn-success-b">Add New Faculty</a>
       @endif
     </div>
   </div>
@@ -29,7 +29,7 @@
         @if ($deactivated_faculties_count > 0)
           <div class="col-md-4 offset-4">
             <div class="d-flex justify-content-end">
-              <a href="{{ url('/faculties/deactivated') }}" class="btn btn-dark btn-sm">View Deactivated Faculties ({{ $deactivated_faculties_count }}) <i class="fa fa-users"></i></a>
+              <a href="{{ url('/faculties/deactivated') }}" class="btn btn-light btn-sm">View Deactivated Faculties ({{ $deactivated_faculties_count }}) <i class="fa fa-users"></i></a>
             </div>
           </div>
         @endif
@@ -38,7 +38,7 @@
       
       <div class="table-responsive">
         <table id="faculty-table" class="table table-hover">
-          <thead class="bg-light">
+          <thead>
             <tr>
               <th scope="col">User ID</th>
               <th scope="col">Full Name</th>

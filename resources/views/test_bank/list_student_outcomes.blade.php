@@ -4,11 +4,11 @@
 
 @section('content')
 
-<a href="{{ url('/test_questions/list_program') }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
+<a href="{{ url('/test_bank/list_programs') }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
 
 <div class="d-flex justify-content-between mb-3">
   <div>
-    <h1 class="page-header mt-3">Test Questions &mdash; List of Student Outcomes</h1>
+    <h1 class="page-header mt-3">Test Bank &mdash; List of Student Outcomes</h1>
   </div>
 </div>
 
@@ -28,11 +28,25 @@
       <div class="card mb-2">
         <!-- Card Header - Accordion -->
         <a href="#so_{{$student_outcome->id}}" class="d-block card-header py-3 so_collapse" data-toggle="collapse" role="button">
-          <h6 class="m-0 font-weight-bold so_collapse">{{ $student_outcome->so_code }} &mdash; {{ $student_outcome->description }}</h6>
+          <div class="d-flex justify-content-between">
+            <h6 class="m-0 font-weight-bold so_collapse mr-5">{{ $student_outcome->so_code }} &mdash; {{ $student_outcome->description }}</h6>
+
+
+            
+          </div>
+          
         </a>
-        <div class="pl-2 p-1"><label>Test Questions:</label></div> 
+        
         <!-- Card Content - Collapse -->
         <div class="collapse show" id="so_{{$student_outcome->id}}">
+          <div class="d-flex justify-content-between pt-2">
+            <div class="pl-2"><label>Test Questions:</label></div> 
+            <div>
+              <a href="{{ url('/exams/?student_outcome=' . $student_outcome->id) }}" class="btn btn-sm btn-info mr-3 mb-2"><i class="fa fa-file-alt"></i> Exams <i class="fa fa-caret-right"></i> </a>
+            </div>
+          </div>
+          
+          
           <div class="">
             <div class="list-group">
               @if($student_outcome->curriculumMaps->count() > 0)

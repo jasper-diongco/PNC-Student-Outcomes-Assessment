@@ -7,7 +7,7 @@
 
 <div class="d-flex justify-content-between mb-3">
   <div>
-    <h1 class="page-header">Test Questions &mdash; Select Program</h1>
+    <h1 class="page-header">Test Bank &mdash; Select Program</h1>
   </div>
   <div>
     {{-- <select class="form-control">
@@ -25,7 +25,7 @@
   <div class="list-group">
     
     @foreach($programs as $program)
-      <a href="{{ url('/test_questions/' . $program->id . '/list_student_outcomes') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+      <a href="{{ url('/test_bank/' . $program->id . '/list_student_outcomes') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
       <div>
         {{ $program->program_code . ' - ' . $program->description }} 
         <br>

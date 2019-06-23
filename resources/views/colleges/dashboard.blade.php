@@ -1,4 +1,4 @@
-@extends('layouts.sb_admin')
+@extends('layout.app', ['active' => 'dashboard'])
 
 @section('title', $college->college_code)
 
@@ -15,7 +15,7 @@
       <account-modal email="{{ Auth::user()->email }}" user_id="{{ Auth::user()->id }}"></account-modal>
     @endif
 
-    <h1 class="h3 mb-4 text-gray-800">{{ $college->name }}</h1>
+    <h1 class="page-header">{{ $college->name }}</h1>
 
     {{-- <div class="card">
       <div class="card-header d-flex justify-content-between align-items-center">
@@ -38,7 +38,7 @@
 
       <!-- Programs -->
       <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card border-left-primary h-100 py-2">
           <div class="card-body">
             <div class="row no-gutters align-items-center">
               <div class="col mr-2">
@@ -55,7 +55,7 @@
 
       <!-- Courses -->
       <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-success shadow h-100 py-2">
+        <div class="card border-left-success h-100 py-2">
           <div class="card-body">
             <div class="row no-gutters align-items-center">
               <div class="col mr-2">
@@ -72,7 +72,7 @@
 
       <!-- Curricula -->
       <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-info shadow h-100 py-2">
+        <div class="card border-left-info h-100 py-2">
           <div class="card-body">
             <div class="row no-gutters align-items-center">
               <div class="col mr-2">
@@ -93,15 +93,15 @@
 
       <!-- Students -->
       <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card border-left-warning h-100 py-2">
           <div class="card-body">
             <div class="row no-gutters align-items-center">
               <div class="col mr-2">
                 <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Students</div>
-                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $student_count }}</div>
+                <div class="h5 mb-0 font-weight-bold">{{ $student_count }}</div>
               </div>
               <div class="col-auto">
-                <i class="fas fa-users fa-2x text-gray-300"></i>
+                <i class="fas fa-users fa-2x"></i>
               </div>
             </div>
           </div>

@@ -11,7 +11,7 @@
       </button> -->
     <div class="dropdown" v-if="!isRevise">
       <button
-        class="btn btn-success btn-round"
+        class="btn btn-success-b"
         type="button"
         id="dropdownMenuButton"
         data-toggle="dropdown"

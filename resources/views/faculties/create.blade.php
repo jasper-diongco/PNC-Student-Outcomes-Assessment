@@ -1,4 +1,4 @@
-@extends('layouts.sb_admin')
+@extends('layout.app', ['active' => 'users'])
 
 @section('title', 'Add Faculty')
 
@@ -11,7 +11,7 @@
   <div class="col-xs-12 col-md-8 mx-auto mb-5">
     <div class="card mt-3">
       <div class="card-header">
-        <h3>Add Faculty</h3>
+        <h3 class="page-header">Add Faculty</h3>
       </div>
       <div class="card-body">
         <p class="text-warning">All Fields with * are required</p>

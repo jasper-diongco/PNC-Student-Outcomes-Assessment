@@ -1,4 +1,4 @@
-@extends('layouts.sb_admin')
+@extends('layout.app', ['active' => 'courses'])
 
 @section('title', 'Courses Index')
 
@@ -7,7 +7,7 @@
 <div id="app">
   <div class="d-flex justify-content-between mb-3">
     <div>
-      <h1 class="h2">List of Courses</h1>
+      <h1 class="page-header">List of Courses</h1>
     </div>
 
     <div>
@@ -18,7 +18,7 @@
       @endif
     </div>
   </div>
-  <div class="card shadow">
+  <div class="card">
     <div class="card-body">
       <div class="row d-flex justify-content-between mb-3">
         <div class="col-md-4">
@@ -32,7 +32,7 @@
         @can('isSAdmin')
           <div class="col-md-4 d-flex row align-items-center">
             <div class="col-6 text-right">
-              <label class="col-form-label"><b>Filter By College: </b></label>
+              <label class="col-form-label">Filter By College:</label>
             </div>
             <div class="col-6">
               <select v-on:change="getCourses" class="form-control" name="filter_by_college" id="filter_by_college" v-model="filter_by_college">
@@ -46,7 +46,7 @@
         @endcan
         <div class="col-md-4 d-flex row">
           <div class="col-6 text-right">
-            <label class="col-form-label"><b>Filter By Privacy: </b></label>
+            <label class="col-form-label">Filter By Privacy:</label>
           </div>
           <div class="col-6">
             <select v-on:change="getCourses" class="form-control" name="filter_by_privacy" id="filter_by_college" v-model="filter_by_privacy">
@@ -60,9 +60,8 @@
       </div>
       <div class="table-responsive">
         <table class="table">
-          <thead class="bg-light">
+          <thead>
             <tr>
-              <th scope="col">#</th>
               <th scope="col">Course ID</th>
               <th scope="col">Course Code</th>
               <th scope="col">Description</th>
@@ -85,21 +84,20 @@
             </template>
             <template v-else>
               <tr v-for="course in courses" :key="course.id">
-                <th><div class="avatar" :style="{ 'background': course.color }"><i class="fa fa-book"></i></div></th>
                 <td>@{{ course.id }}</td>
                 <td>@{{ course.course_code }}</td>
                 <td>@{{ course.description }}</td>
                 <td>@{{ course.lec_unit + course.lab_unit }}</td>
                 <td>@{{ course.college_code}}</td>
                 <td>
-                  <span v-if="course.is_public" class="badge badge-success">public <i class="fa fa-globe-americas"></i></span>
-                  <span v-else class="badge badge-secondary">private <i class="fa fa-lock"></i></span></td>
+                  <span v-if="course.is_public">public <i class="fa fa-globe-americas"></i></span>
+                  <span v-else>private <i class="fa fa-lock"></i></span></td>
 
 
 
                 <td>
-                  <a title="View Details" class="btn btn-primary btn-sm" :href=" 'courses/' + course.id">
-                    <i class="fa fa-eye"></i>
+                  <a title="View Details" class="btn btn-success btn-sm" :href=" 'courses/' + course.id">
+                    <i class="fa fa-search"></i>
                   </a>
                 </td>
               </tr>

@@ -1,55 +1,19 @@
-body {
-    background: rgb(237, 241, 245);
-}
-
-.navbar-brand {
-    border-right: 1px solid rgb(207, 207, 207);
-    padding-right: 5px;
-}
-.soa {
-    font-size: 18px;
-}
-
-.main-nav {
-    background: #4c5667;
-}
-
-.main-nav .nav-item {
-    background: #4c5667;
-    padding: 2px;
-    border-right: 1px solid rgb(87, 86, 86);
-}
-.main-nav .nav-item.active {
-    background: #2cd07e;
-}
-
-.main-nav .nav-item.active .nav-link {
-    color: #f7fafc !important;
-}
-
-.main-nav .nav-item .nav-link {
-    color: rgb(150, 152, 160);
-}
-
-.main-nav .nav-item .nav-link:hover {
-    color: #f7fafc;
-}
-
-.main-header {
-    border-bottom: 1px solid rgb(224, 224, 224);
-    padding-left: 20px;
-}
-.main-header h1 {
-    font-size: 18px;
+#main-nav {
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
     padding: 0;
-    margin: 0;
-    font-weight: 600;
+    margin-bottom: 10px;
+}
+#main-nav .nav-link {
+    color: #637078;
+    font-weight: 300;
 }
 
 html,
-body,
-#main {
+body {
     height: 100%;
+    color: #37474f;
+    font-family: "Open Sans", sans-serif;
 }
 
 #page-content {
@@ -58,54 +22,32 @@ body,
 
 #sticky-footer {
     flex-shrink: none;
-    border-top: 1px solid rgb(226, 226, 226);
-}
-
-.mcard {
-    background: white;
-}
-.mcard-header,
-.mcard-body {
-    padding: 15px 20px;
-}
-
-.mcard-title {
-    padding: 0;
-    margin: 0;
-    font-size: 18px;
-}
-
-.btn {
-    border-radius: 0;
-}
-
-.breadcrumb {
-    background: rgb(237, 241, 245);
-}
-
-label {
-    font-weight: 600;
-}
-
-.btn-icon {
-    border-radius: 50%;
-}
-.btn-icon-icon {
-    font-weight: 300;
-}
-
-.modal-content {
-    border-radius: 0px;
-}
-
-[v-cloak] > * {
-    display: none;
-}
-[v-cloak]::before {
-    content: "loading…";
+    background: #fff;
+    font-size: 90%;
+    color: #637078;
+    border-top: 1px solid #ededed;
 }
 
 .card {
-    border-radius: 0;
     border: 0;
+    border-radius: 2px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+.icon-nav {
+    font-size: 20px;
+}
+
+.nav-item.active {
+    background: #f6fefa;
+    color: #05a85c;
+}
+.nav-item.active .nav-link i {
+    color: #05a85c;
+}
+.nav-item.active .nav-link span {
+    color: #05a85c;
+}
+.nav-item:hover {
+    background: #f6fefa;
 }

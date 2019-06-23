@@ -24,12 +24,12 @@
     <button
       v-else
       type="button"
-      class="btn btn-success btn-round"
+      class="btn btn-success-b"
       data-toggle="modal"
       data-target="#courseModal"
       @click="getRandColor"
     >
-      Add New Course <i class="fa fa-plus"></i>
+      Add New Course</i>
     </button>
     <!-- End Activator -->
 

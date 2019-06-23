@@ -1,4 +1,4 @@
-@extends('layouts.sb_admin')
+@extends('layout.app', ['active' => 'programs'])
 
 @section('title', 'Program Index')
 
@@ -6,13 +6,13 @@
 <div id="app">
   <div class="d-flex justify-content-between mb-3">
     <div>
-      <h1 class="h2">List of Programs</h1>
+      <h1 class="page-header">List of Programs</h1>
     </div>
 
     <div>
       @if(Gate::check('isDean') || Gate::check('isSAdmin'))
-        <button v-on:click="getRandColor" type="button" class="btn btn-success btn-success btn-round" data-toggle="modal" data-target="#programModal">
-          Add New Program <i class="fa fa-plus"></i>
+        <button v-on:click="getRandColor" type="button" class="btn btn-success-b" data-toggle="modal" data-target="#programModal">
+          Add New Program
         </button>
       @endif
     </div>
@@ -61,7 +61,7 @@
         </div>
       </div>
     @endif --}}
-    <div class="card shadow">
+    <div class="card">
       <div class="card-body">
 
         @can('isSAdmin')
@@ -88,12 +88,9 @@
         @endcan
         
         <div class="table-responsive">
-          <table id="students-table" class="table table-hover">
-            <thead class="bg-light">
+          <table id="students-table" class="table">
+            <thead>
               <tr>
-                <th scope="col">
-                  <div class="avatar bg-success"><i class="fa fa-graduation-cap"></i></div>
-                </th>
                 <th scope="col">#</th>
                 <th scope="col">Program Code</th>
                 <th scope="col">Description</th>
@@ -109,18 +106,13 @@
               @else
                 @foreach ($programs as $program)
                 <tr>
-                    <td>
-                      <div class="avatar mr-2" style="background: {{ $program->color  }}">
-                        {{ substr($program->program_code, 0 , 2) == 'BS' ? substr($program->program_code, 2) :  $program->program_code }}
-                      </div>
-                    </td>
                     <td>{{ $program->id }}</td>
                     <td>{{ $program->program_code }}</td>
                     <td>{{ $program->description }}</td>
                     <td>{{ $program->college->college_code }}</td>
                     <td>
-                      <a title="View Details" class="btn btn-primary btn-sm" href="{{ url('/programs/' . $program->id) }}">
-                        <i class="fa fa-eye"></i>
+                      <a title="View Details" class="btn btn-success btn-sm" href="{{ url('/programs/' . $program->id) }}">
+                        <i class="fa fa-search"></i>
                       </a>
                     </td>
                 </tr>

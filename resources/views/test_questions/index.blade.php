@@ -1,24 +1,24 @@
-@extends('layouts.sb_admin')
+@extends('layout.app', ['active' => 'test_questions'])
 
 @section('title', 'Test Questions Index')
 
 @section('content')
     
-    <a href="{{ url('/test_questions/' . request('program_id') . '/list_student_outcomes') }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
+    <a href="{{ url('/test_bank/' . request('program_id') . '/list_student_outcomes') }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
     
     <div class="d-flex justify-content-between mb-3 mt-3">
         <div>
-          <h1 class="h4 mb-4 text-gray-800">Test Questions &mdash; {{ $student_outcome->so_code }} & {{ $course->course_code . ' - ' . $course->description }}</h1>
+          <h1 class="page-header">Test Questions &mdash; {{ $student_outcome->so_code }} & {{ $course->course_code . ' - ' . $course->description }}</h1>
         </div>
         <div>
           @if(Gate::check('isDean') || Gate::check('isSAdmin'))
             {{-- <student-outcome-modal :programs='@json($programs)' :program-id="{{ $program->id }}"></student-outcome-modal> --}}
-            <a href="{{ url('/test_questions/create?student_outcome_id='. request('student_outcome_id') . '&course_id=' . request('course_id') . '&program_id=' . request('program_id')) }}" class="btn btn-success btn-round">Add new Test Question <i class="fa fa-plus"></i></a>
+            <a href="{{ url('/test_questions/create?student_outcome_id='. request('student_outcome_id') . '&course_id=' . request('course_id') . '&program_id=' . request('program_id')) }}" class="btn btn-success-b">Add new Test Question</a>
           @endif
         </div>
     </div>
 
-    <div id="app" class="card shadow">
+    <div id="app" class="card">
 
         <div class="card-body">
             <div class="row">
@@ -61,8 +61,8 @@
 
             
             <div class="table-responsive">
-              <table id="students-table" class="table table-hover">
-                <thead class="bg-light">
+              <table id="students-table" class="table">
+                <thead>
                   <tr>
                     <th scope="col">#</th>
                     <th scope="col">Title</th>
@@ -88,12 +88,12 @@
                         <tr v-for="test_question in test_questions">
                             <td>@{{ test_question.id }}</td>
                             <td>@{{ test_question.title }}</td>
-                            <td><span class="badge" :class="{'badge-success': test_question.difficulty_level_id == 1, 'badge-warning': test_question.difficulty_level_id == 2, 'badge-danger': test_question.difficulty_level_id == 3}">@{{ test_question.difficulty_level_desc }}</span></td>
+                            <td>@{{ test_question.difficulty_level_desc }}</td>
                             <td>@{{ test_question.choices_count }}</td>
                             <td>@{{ test_question.user.first_name + ' ' + test_question.user.last_name }}</td>
                             <td>@{{ parseDate(test_question.created_at) }}</td>
                             <td>
-                                <a :href="'test_questions/' + test_question.id + '?student_outcome_id=' + student_outcome_id + '&course_id=' + course_id + '&program_id=' + program_id" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></a>
+                                <a :href="'test_questions/' + test_question.id + '?student_outcome_id=' + student_outcome_id + '&course_id=' + course_id + '&program_id=' + program_id" class="btn btn-light btn-sm"><i class="fa fa-search"></i></a>
                                 <a :href="'test_questions/' + test_question.id + '/edit?student_outcome_id=' + student_outcome_id + '&course_id=' + course_id + '&program_id=' + program_id" class="btn btn-success btn-sm"><i class="fa fa-edit"></i></a>
                             </td>
                         </tr>

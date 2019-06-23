@@ -256,6 +256,21 @@ Route::put('/math_objects/{math_object}', 'MathObjectsController@update');
 // End MathObject Routes
 
 
+// Test bank Routes
+
+Route::get('/test_bank/list_programs', 'TestBankController@listProgram');
+Route::get('/test_bank/{program}/list_student_outcomes', 'TestBankController@listStudentOutcome');
+
+// End Test bank routes
+
+// Exam routes
+
+Route::get('/exams', 'ExamsController@index');
+
+// End Exam routes
+
+
+
 
 //route for deactivated user
 Route::get('/user_is_deactivated', function() {

@@ -1,4 +1,4 @@
-@extends('layouts.sb_admin')
+@extends('layout.app', ['active' => 'users'])
 
 @section('title', 'Add new Student')
 

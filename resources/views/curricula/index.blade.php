@@ -1,4 +1,4 @@
-@extends('layouts.sb_admin')
+@extends('layout.app', ['active' => 'curricula'])
 
 @section('title', 'Curricula Index')
 
@@ -11,7 +11,7 @@
 
     <div class="d-flex justify-content-between mb-3">
       <div>
-        <h1 class="h3 mb-4 text-gray-800">Curricula</h1>
+        <h1 class="page-header">Curricula</h1>
       </div>
 
       <div>
@@ -74,28 +74,32 @@
           </div>
         @endforeach
       </div> --}}
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">Program</th>
-            <th scope="col">Year</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          @foreach($curricula as $curriculum)
-          <tr>
-            <th>{{ $curriculum->id }}</th>
-            <td>{{ $curriculum->name }}</td>
-            <td>{{ $curriculum->program->description }}</td>
-            <td>{{ $curriculum->year }}</td>
-            <td><a href="{{ url('/curricula/' . $curriculum->id) }}" class="btn btn-success btn-sm"><i class="fa fa-search "></i></a></td>
-          </tr>
-          @endforeach
-        </tbody>
-      </table>
+      <div class="card">
+        <div class="card-body">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Program</th>
+                <th scope="col">Year</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach($curricula as $curriculum)
+              <tr>
+                <th>{{ $curriculum->id }}</th>
+                <td>{{ $curriculum->name }}</td>
+                <td>{{ $curriculum->program->description }}</td>
+                <td>{{ $curriculum->year }}</td>
+                <td><a href="{{ url('/curricula/' . $curriculum->id) }}" class="btn btn-success btn-sm"><i class="fa fa-search "></i></a></td>
+              </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
+      </div>
     @else
       <div class="col-12">
         <div class="card">

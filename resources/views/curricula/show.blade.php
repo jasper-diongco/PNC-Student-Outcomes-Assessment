@@ -1,4 +1,4 @@
-@extends('layouts.sb_admin')
+@extends('layout.app', ['active' => 'curricula'])
 
 @section('title', $curriculum->name)
 
@@ -29,13 +29,10 @@
     <!-- End curriculum modal -->
     
     <a href="{{ url('/curricula?college_id='. Session::get('college_id')) }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
-
-    <h1 class="h4 mt-3">{{ $curriculum->name }}</h1>
+    
+    <h1 class="page-header mt-3">{{ $curriculum->name }}</h1>
     <p class="mr-5"><i class="fa fa-file-alt text-primary"></i> {{ $curriculum->description }}</p>
     <div class="d-flex">  
-      <p class="mr-5">
-      <i class="fa fa-calendar-alt text-secondary"></i> {{ $curriculum->year }}
-      </p>
       <p class="mr-5"><i class="fa fa-book text-success"></i> {{ count($curriculum->curriculumCourses) }} courses</p>
     </div>
 
@@ -194,7 +191,7 @@
             <div class="card-body">
               <div v-if="getSemCourses(year, sem).length > 0" class="table-responsive">
                 <table class="table">
-                  <thead class="thead-light">
+                  <thead>
                     <tr>
                       <th>Course Code</th>
                       <th>Description</th>

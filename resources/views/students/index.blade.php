@@ -1,21 +1,21 @@
-@extends('layouts.sb_admin')
+@extends('layout.app', ['active' => 'users'])
 
 @section('title', 'Students Index')
 
 @section('content')
   <div class="d-flex justify-content-between mb-3">
     <div>
-      <h1 class="h2">List of Students</h1>
+      <h1 class="page-header">List of Students</h1>
     </div>
     <div>
       @if(Gate::check('isProf') || Gate::check('isDean') || Gate::check('isSAdmin'))
-        <a href="{{ url('/students/create') }}" class="btn btn-success btn-round">Add New Student &nbsp;<i class="fa fa-plus"></i></a>
+        <a href="{{ url('/students/create') }}" class="btn btn-success-b">Add New Student</a>
       @endif
     </div>
   </div>
   
 
-  <div class="card shadow" id="app">
+  <div class="card" id="app">
     <div class="card-body">
       <div class="row">
         <div class="col-md-4">
@@ -52,8 +52,8 @@
       </div>
       
       <div class="table-responsive">
-        <table id="students-table" class="table table-hover">
-          <thead class="bg-light">
+        <table id="students-table" class="table">
+          <thead>
             <tr>
               <th scope="col">Student ID</th>
               <th scope="col">Full Name</th>

@@ -74594,7 +74594,7 @@ var render = function() {
       : _c(
           "button",
           {
-            staticClass: "btn btn-success btn-round",
+            staticClass: "btn btn-success-b",
             attrs: {
               type: "button",
               "data-toggle": "modal",
@@ -74602,10 +74602,7 @@ var render = function() {
             },
             on: { click: _vm.getRandColor }
           },
-          [
-            _vm._v("\n    Add New Course "),
-            _c("i", { staticClass: "fa fa-plus" })
-          ]
+          [_vm._v("\n    Add New Course")]
         ),
     _vm._v(" "),
     _c(
@@ -76225,7 +76222,7 @@ var staticRenderFns = [
     return _c(
       "button",
       {
-        staticClass: "btn btn-success btn-round",
+        staticClass: "btn btn-success-b",
         attrs: {
           type: "button",
           id: "dropdownMenuButton",
@@ -76877,17 +76874,14 @@ var render = function() {
       : _c(
           "button",
           {
-            staticClass: "btn btn-success btn-round",
+            staticClass: "btn btn-success-b",
             attrs: {
               type: "button",
               "data-toggle": "modal",
               "data-target": "#courseModal"
             }
           },
-          [
-            _vm._v("\n    Add new Student Outcome "),
-            _c("i", { staticClass: "fa fa-plus" })
-          ]
+          [_vm._v("\n    Add new Student Outcome\n  ")]
         ),
     _vm._v(" "),
     _c(

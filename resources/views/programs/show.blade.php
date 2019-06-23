@@ -1,4 +1,4 @@
-@extends('layouts.sb_admin')
+@extends('layout.app', ['active' => 'programs'])
 
 @section('title', $program->program_code)
 
@@ -7,7 +7,7 @@
 
   <div id="app">
     <h1 class="h3 mt-4 mb-3">{{ $program->description }}</h1>
-    <div class="card shadow">
+    <div class="card">
       <div class="card-body">
         <div class="d-flex justify-content-between align-items-center">
           <div class="d-flex align-items-center justify-content-start mb-2">

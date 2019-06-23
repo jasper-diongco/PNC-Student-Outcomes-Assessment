@@ -1,4 +1,4 @@
-@extends('layouts.sb_admin')
+@extends('layout.app')
 
 @section('title', $faculty->user->getFullName())
 
@@ -14,10 +14,10 @@
     <div class="card mt-4">
       <div class="card-header d-flex justify-content-between align-items-center">
         <h4>My Information</h4>
-        <a href="{{ url('faculties/' . $faculty->id . '/edit') }}" class="btn btn-primary">Update Information <i class="fa fa-edit"></i></a>
+        <a href="{{ url('faculties/' . $faculty->id . '/edit') }}" class="btn btn-success-b btn-sm">Update Information <i class="fa fa-edit"></i></a>
       </div>
       <div class="card-body">
-        <div><h5 class="text-success ml-2"><b>User Profile: </b></h5></div>
+        <div><h5 class="text-success ml-2">User Profile:</h5></div>
         <img src="{{ asset('img/user.svg') }}" alt="user-icon" style="width: 50px" class="mb-2 ml-2">
         <ul class="list-group list-group-flush">
           <li class="list-group-item"><b>Full Name:</b> {{ $faculty->user->getFullName()}} </li>
@@ -34,7 +34,7 @@
         <h4>Account Information</h4>
         {{-- <a href="{{ url('faculties/' . $faculty->id . '/edit') }}" class="btn btn-primary">Update Account <i class="fa fa-edit"></i></a> --}}
         <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#accountModal">
+        <button type="button" class="btn btn-success-b btn-sm" data-toggle="modal" data-target="#accountModal">
           Update Account <i class="fa fa-edit"></i>
         </button>
       </div>

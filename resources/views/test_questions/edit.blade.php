@@ -1,4 +1,4 @@
-@extends('layouts.sb_admin')
+@extends('layout.app', ['active' => 'test_questions'])
 
 @section('title', 'Add new Test Question')
 

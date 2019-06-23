@@ -13,11 +13,11 @@
     <button
       v-else
       type="button"
-      class="btn btn-success btn-round"
+      class="btn btn-success-b"
       data-toggle="modal"
       data-target="#courseModal"
     >
-      Add new Student Outcome <i class="fa fa-plus"></i>
+      Add new Student Outcome
     </button>
     <!-- End Activator -->
 

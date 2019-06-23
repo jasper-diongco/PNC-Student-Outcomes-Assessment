@@ -1,4 +1,4 @@
-@extends('layouts.sb_admin')
+@extends('layout.app', ['active' => 'student_outcomes'])
 
 @section('title', 'Student Outcomes - ' . $student_outcome->so_code)
 
@@ -10,7 +10,7 @@
 
   <div class="d-flex justify-content-between mb-3">
     <div>
-      <h1 class="h3 mb-4 text-gray-800">Student Outcome &mdash; {{ $student_outcome->so_code }}</h1>
+      <h1 class="page-header">Student Outcome &mdash; {{ $student_outcome->so_code }}</h1>
 
     </div>
     <div>
@@ -25,15 +25,15 @@
     </div>
   </div>
 
-  <div class="card shadow">
+  <div class="card">
     <div class="card-header">
       <div class="d-flex align-items-center">
         <div class="mr-3">
-          <div class="avatar-student-outcome">
+          <div class="avatar-student-outcome bg-success">
           {{ $student_outcome->so_code }}
           </div>
         </div>
-        <div><strong>{{ $student_outcome->description }}</strong></div>
+        <div>{{ $student_outcome->description }}</div>
       </div>
     </div>
     <div class="card-body">

@@ -1,4 +1,4 @@
-@extends('layouts.sb_admin')
+@extends('layout.app', ['active' => 'courses'])
 
 @section('title', $course->course_code)
 
@@ -28,7 +28,7 @@
         </div>
         <small>created at {{ $course->created_at }}</small>
         {{-- <p class="card-text mt-3">{{ $course->description }}</p>  --}} 
-        <h4 class="mt-3"><b>Details</b></h4>    
+        <h4 class="mt-3">Details</h4>    
         <ul class="list-group list-group-flush">
           <li class="list-group-item">
             <div class="row">

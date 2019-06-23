@@ -1,4 +1,4 @@
-@extends('layouts.sb_admin')
+@extends('layout.app', ['active' => 'curriculum_mapping'])
 
 @section('title', 'Curriculum Mapping Index')
 
@@ -7,7 +7,7 @@
     <div id="app">
         <div>
             <div>
-                <h1 class="h3 mb-1 text-gray-800 mb-4">Curriculum Mapping Index</h1>
+                <h1 class="page-header">Curriculum Mapping Index</h1>
 
                 @if(count($curricula) > 0)
                   <div class="list-group">

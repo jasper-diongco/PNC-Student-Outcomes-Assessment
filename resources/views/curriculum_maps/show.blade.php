@@ -1,4 +1,4 @@
-@extends('layouts.sb_admin')
+@extends('layout.app',['active' => 'curriculum_mapping'])
 
 @section('title', 'Curriculum Mapping')
 
@@ -8,7 +8,7 @@
     <a href="{{ url('/curriculum_mapping') }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
     <div class="d-flex justify-content-between mb-2 mt-3">
       <div>
-        <h1 class="h3 mb-1 text-gray-800">Curriculum Mapping</h1>
+        <h1 class="page-header">Curriculum Mapping</h1>
       </div>
     </div>
 
@@ -35,7 +35,7 @@
       </div>
     </div>
     
-      <div class="card shadow">
+      <div class="card">
         <div class="card-header d-flex justify-content-between">
           <h2 class="h5 text-primary">Curriculum Map &mdash; @{{ curriculum.name }}</h2>
           
@@ -261,7 +261,7 @@
     @if(Gate::check('isDean') || Gate::check('isSAdmin'))
 
       <div v-if="curriculum_mapping_status.status == 0" class="d-flex justify-content-end">
-        <button class="btn btn-success btn-lg my-4" v-on:click="saveCurriculumMap">Save <i class="fa fa-save"></i></button>
+        <button class="btn btn-success my-4" v-on:click="saveCurriculumMap">Save <i class="fa fa-save"></i></button>
       </div>
 
     @endif
