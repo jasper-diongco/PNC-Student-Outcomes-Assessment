@@ -37,7 +37,7 @@
       </div>
       
       <div class="table-responsive">
-        <table id="faculty-table" class="table table-hover">
+        <table id="faculty-table" class="table table-borderless">
           <thead>
             <tr>
               <th scope="col">User ID</th>
@@ -67,8 +67,8 @@
                   <td>@{{ faculty.college_code }}</td>
                   <td>@{{ faculty.user_type }}</td>
                   <td>
-                    <a title="View Details" class="btn btn-primary btn-sm" :href=" 'faculties/' + faculty.id">
-                      <i class="fa fa-eye"></i>
+                    <a title="View Details" class="btn btn-light btn-sm" :href=" 'faculties/' + faculty.id">
+                      <i class="fa fa-search"></i>
                     </a>
                     <a title="Edit Information" class="btn btn-success btn-sm" :href=" 'faculties/' + faculty.id + '/edit'">
                       <i class="fa fa-edit"></i>
@@ -145,7 +145,7 @@
               vm.faculties = response.data.data;
               vm.tableLoading = false;
             })
-          }, 500),
+          }, 300),
         paginate(page) {
           this.getFaculties(page);
         }
@@ -153,7 +153,7 @@
       created() {
         setTimeout(() => {
           this.getFaculties(this.meta.current_page);
-        }, 1000);
+        }, 300);
         
       }
     });

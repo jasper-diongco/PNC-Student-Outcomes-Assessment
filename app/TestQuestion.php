@@ -83,4 +83,34 @@ class TestQuestion extends Model
 
         return nl2br($input);
     }
+
+    public static function countEasy($student_outcome_id='', $course_id='') {
+        return TestQuestion::where('student_outcome_id', $student_outcome_id)
+                ->where('course_id', $course_id)
+                ->where('is_active', true)
+                ->where('difficulty_level_id', 1)
+                ->count();
+    }
+    public static function countAverage($student_outcome_id='', $course_id='') {
+        return TestQuestion::where('student_outcome_id', $student_outcome_id)
+                ->where('course_id', $course_id)
+                ->where('is_active', true)
+                ->where('difficulty_level_id', 2)
+                ->count();
+    }
+    public static function countDifficult($student_outcome_id='', $course_id='') {
+        return TestQuestion::where('student_outcome_id', $student_outcome_id)
+                ->where('course_id', $course_id)
+                ->where('is_active', true)
+                ->where('difficulty_level_id', 3)
+                ->count();
+    }
+
+
+    public static function countTestQuestion($student_outcome_id='', $difficulty_level_id='') {
+        return TestQuestion::where('student_outcome_id', $student_outcome_id)
+                ->where('is_active', true)
+                ->where('difficulty_level_id', $difficulty_level_id)
+                ->count();
+    }
 }

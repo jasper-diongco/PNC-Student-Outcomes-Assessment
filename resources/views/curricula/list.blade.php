@@ -1,4 +1,4 @@
-@extends('layouts.sb_admin')
+@extends('layout.app', ['active' => 'curricula'])
 
 @section('title', 'Curricula - College listing')
 
@@ -7,7 +7,7 @@
 
 <div class="d-flex justify-content-between mb-3">
   <div>
-    <h1 class="h3 mb-4 text-gray-800">Curricula &mdash; Select college</h1>
+    <h1 class="page-header">Curricula &mdash; Select college</h1>
   </div>
 </div>
 

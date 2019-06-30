@@ -4,7 +4,7 @@
       Loading...
     </span>
 
-    <svg
+    <!-- <svg
       class="lds-spin d-inline-block"
       width="200px"
       height="200px"
@@ -326,7 +326,14 @@
           </circle>
         </g>
       </g>
-    </svg>
+    </svg> -->
+    <div
+      class="spinner-border"
+      style="width: 25px; height: 25px;color:#cfcfcf"
+      role="status"
+    >
+      <span class="sr-only">Loading...</span>
+    </div>
   </div>
 </template>
 

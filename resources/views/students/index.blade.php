@@ -52,7 +52,7 @@
       </div>
       
       <div class="table-responsive">
-        <table id="students-table" class="table">
+        <table id="students-table" class="table table-borderless">
           <thead>
             <tr>
               <th scope="col">Student ID</th>
@@ -82,8 +82,8 @@
                   <td>@{{ student.college_code }}</td>
                   <td>@{{ student.program_code }}</td>
                   <td>
-                    <a title="View Details" class="btn btn-primary btn-sm" :href=" 'students/' + student.id">
-                      <i class="fa fa-eye"></i>
+                    <a title="View Details" class="btn btn-light btn-sm" :href=" 'students/' + student.id">
+                      <i class="fa fa-search"></i>
                     </a>
                     <a title="Edit" class="btn btn-success btn-sm" :href=" 'students/' + student.id + '/edit'">
                       <i class="fa fa-edit"></i>

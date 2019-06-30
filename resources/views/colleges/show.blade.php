@@ -1,4 +1,4 @@
-@extends('layouts.sb_admin')
+@extends('layout.app', ['active' => 'colleges'])
 
 @section('title', $college->college_code)
 
@@ -11,7 +11,7 @@
     @endcomponent
   @endif
 
-  <h1 class="h3 mt-4 mb-3">{{ $college->name }}</h1>
+  <h1 class="page-header mt-3">{{ $college->name }}</h1>
 
   <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">

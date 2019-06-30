@@ -87,12 +87,10 @@
             </div>
             <div class="modal-body">
               <!-- Field for name  -->
-              <div class="form-group row">
-                <label for="name" class="col-md-3 col-form-label text-md-right"
-                  ><b>Name</b></label
-                >
+              <div class="form-group">
+                <label for="name">Name</label>
 
-                <div class="col-md-9">
+                <div>
                   <input
                     id="name"
                     type="text"
@@ -109,14 +107,10 @@
               <!-- /end Field for name -->
 
               <!-- Field for description  -->
-              <div class="form-group row">
-                <label
-                  for="description"
-                  class="col-md-3 col-form-label text-md-right"
-                  ><b>Description (optional)</b></label
-                >
+              <div class="form-group">
+                <label for="description">Description (optional)</label>
 
-                <div class="col-md-9">
+                <div>
                   <textarea
                     id="description"
                     type="text"
@@ -131,12 +125,10 @@
               <!-- /end Field for description -->
 
               <!-- Field for year  -->
-              <div class="form-group row">
-                <label for="year" class="col-md-3 col-form-label text-md-right"
-                  ><b>Year</b></label
-                >
+              <div class="form-group">
+                <label for="year">Year</label>
 
-                <div class="col-md-9">
+                <div>
                   <select
                     id="year"
                     class="form-control"
@@ -153,12 +145,10 @@
               <!-- /end Field for year -->
 
               <!-- Field for year level  -->
-              <div class="form-group row">
-                <label for="year" class="col-md-3 col-form-label text-md-right"
-                  ><b>Year Level</b></label
-                >
+              <div class="form-group">
+                <label for="year">Year Level</label>
 
-                <div class="col-md-9">
+                <div>
                   <select
                     id="year_level"
                     class="form-control"
@@ -184,7 +174,7 @@
                 Close
               </button>
               <button
-                class="btn btn-primary"
+                class="btn btn-success"
                 :disabled="form.busy"
                 type="submit"
               >

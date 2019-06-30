@@ -23,13 +23,13 @@
 
     <!-- Modal -->
     <div
-      class="modal fade"
+      class="modal fade bd-example-modal-lg"
       id="courseModal"
       tabindex="-1"
       role="dialog"
       aria-hidden="true"
     >
-      <div class="modal-dialog" role="document">
+      <div class="modal-dialog modal-lg" role="document">
         <form
           @submit.prevent="saveStudentOutcome"
           @keydown="form.onKeydown($event)"
@@ -51,14 +51,10 @@
             </div>
             <div class="modal-body">
               <!-- Field for so code  -->
-              <div class="form-group row">
-                <label
-                  for="so_code"
-                  class="col-md-3 col-form-label text-md-right"
-                  ><b>SO Code</b></label
-                >
+              <div class="form-group">
+                <label for="so_code">SO Code</label>
 
-                <div class="col-md-9">
+                <div>
                   <input
                     id="so_code"
                     type="text"
@@ -74,14 +70,10 @@
               <!-- /end Field for so code -->
 
               <!-- Field for description  -->
-              <div class="form-group row">
-                <label
-                  for="course_code"
-                  class="col-md-3 col-form-label text-md-right"
-                  ><b>Description</b></label
-                >
+              <div class="form-group">
+                <label for="course_code">Description</label>
 
-                <div class="col-md-9">
+                <div>
                   <input
                     id="course_code"
                     type="text"
@@ -96,14 +88,10 @@
               <!-- /end Field for course code -->
 
               <!-- Field for program  -->
-              <div class="form-group row">
-                <label
-                  for="program"
-                  class="col-md-3 col-form-label text-md-right"
-                  ><b>Program</b></label
-                >
+              <div class="form-group">
+                <label for="program">Program</label>
 
-                <div class="col-md-9">
+                <div>
                   <select
                     id="program"
                     class="form-control"
@@ -128,14 +116,10 @@
               <p><b>Performance Indicators</b></p>
 
               <!-- Field for performance criteria  -->
-              <div class="form-group row">
-                <label
-                  for="performance_criteria"
-                  class="col-md-3 col-form-label text-md-right"
-                  ><b>Performance Criteria</b></label
-                >
+              <div class="form-group">
+                <label for="performance_criteria">Performance Criteria</label>
 
-                <div class="col-md-9">
+                <div>
                   <textarea
                     id="performance_criteria"
                     type="text"
@@ -234,14 +218,12 @@
                   aria-labelledby="unsatisfactory-tab"
                 >
                   <!-- Field for unsatisfactory_desc  -->
-                  <div class="form-group row mt-3">
-                    <label
-                      for="unsatisfactory_desc"
-                      class="col-md-3 col-form-label text-md-right"
-                      ><b>Unsatisfactory Description</b></label
+                  <div class="form-group mt-3">
+                    <label for="unsatisfactory_desc"
+                      >Unsatisfactory Description</label
                     >
 
-                    <div class="col-md-9">
+                    <div>
                       <textarea
                         id="unsatisfactory_desc"
                         type="text"
@@ -262,14 +244,10 @@
                   <!-- /end Field for unsatisfactory_desc -->
 
                   <!-- Field for unsatisfactory_grade  -->
-                  <div class="form-group row mt-3">
-                    <label
-                      for="unsatisfactory_grade"
-                      class="col-md-3 col-form-label text-md-right"
-                      ><b>Grade</b></label
-                    >
+                  <div class="form-group mt-3">
+                    <label for="unsatisfactory_grade">Grade</label>
 
-                    <div class="col-md-9">
+                    <div>
                       <input
                         id="unsatisfactory_grade"
                         type="number"
@@ -295,14 +273,10 @@
                   aria-labelledby="developing-tab"
                 >
                   <!-- Field for developing_desc  -->
-                  <div class="form-group row mt-3">
-                    <label
-                      for="developing_desc"
-                      class="col-md-3 col-form-label text-md-right"
-                      ><b>Developing Description</b></label
-                    >
+                  <div class="form-group mt-3">
+                    <label for="developing_desc">Developing Description</label>
 
-                    <div class="col-md-9">
+                    <div>
                       <textarea
                         id="developing_desc"
                         type="text"
@@ -323,14 +297,10 @@
                   <!-- /end Field for developing_desc -->
 
                   <!-- Field for developing_grade  -->
-                  <div class="form-group row mt-3">
-                    <label
-                      for="developing_grade"
-                      class="col-md-3 col-form-label text-md-right"
-                      ><b>Grade</b></label
-                    >
+                  <div class="form-group mt-3">
+                    <label for="developing_grade">Grade</label>
 
-                    <div class="col-md-9">
+                    <div>
                       <input
                         id="developing_grade"
                         type="number"
@@ -356,14 +326,12 @@
                   aria-labelledby="contact-tab"
                 >
                   <!-- Field for satisfactory_desc  -->
-                  <div class="form-group row mt-3">
-                    <label
-                      for="satisfactory_desc"
-                      class="col-md-3 col-form-label text-md-right"
-                      ><b>Satisfactory Description</b></label
+                  <div class="form-group mt-3">
+                    <label for="satisfactory_desc"
+                      >Satisfactory Description</label
                     >
 
-                    <div class="col-md-9">
+                    <div>
                       <textarea
                         id="satisfactory_desc"
                         type="text"
@@ -384,14 +352,10 @@
                   <!-- /end Field for satisfactory_desc -->
 
                   <!-- Field for satisfactory_grade  -->
-                  <div class="form-group row mt-3">
-                    <label
-                      for="satisfactory_grade"
-                      class="col-md-3 col-form-label text-md-right"
-                      ><b>Grade</b></label
-                    >
+                  <div class="form-group mt-3">
+                    <label for="satisfactory_grade">Grade</label>
 
-                    <div class="col-md-9">
+                    <div>
                       <input
                         id="satisfactory_grade"
                         type="number"
@@ -418,14 +382,10 @@
                   aria-labelledby="exemplary-tab"
                 >
                   <!-- Field for exemplary_desc  -->
-                  <div class="form-group row mt-3">
-                    <label
-                      for="exemplary_desc"
-                      class="col-md-3 col-form-label text-md-right"
-                      ><b>Exemplary Description</b></label
-                    >
+                  <div class="form-group mt-3">
+                    <label for="exemplary_desc">Exemplary Description</label>
 
-                    <div class="col-md-9">
+                    <div>
                       <textarea
                         id="exemplary_desc"
                         type="text"
@@ -446,14 +406,10 @@
                   <!-- /end Field for satisfactory_desc -->
 
                   <!-- Field for exemplary_grade  -->
-                  <div class="form-group row mt-3">
-                    <label
-                      for="exemplary_grade"
-                      class="col-md-3 col-form-label text-md-right"
-                      ><b>Grade</b></label
-                    >
+                  <div class="form-group mt-3">
+                    <label for="exemplary_grade">Grade</label>
 
-                    <div class="col-md-9">
+                    <div>
                       <input
                         id="exemplary_grade"
                         type="number"
@@ -485,7 +441,7 @@
                 Close
               </button>
               <button
-                class="btn btn-primary"
+                class="btn btn-success"
                 :disabled="form.busy"
                 type="submit"
               >

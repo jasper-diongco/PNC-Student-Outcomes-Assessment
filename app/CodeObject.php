@@ -10,6 +10,6 @@ class CodeObject extends Model
 
 
     public function getHtml() {
-        return '<pre><code class="language-' . $this->language . '">' . $this->code . '</code></pre>';
+        return '<div class="d-flex justify-content-end"><span class="badge badge-light">'. $this->language .'</span></div><pre><code class="language-' . $this->language . '">' . $this->code . '</code></pre>';
     }
 }

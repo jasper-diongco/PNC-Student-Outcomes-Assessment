@@ -58,14 +58,18 @@
                 </div>      
             </div>
 
-
+            <div>
+              <label>Easy: </label> <span class="text-success">{{ $easy_count }}</span> |
+              <label>Average: </label> <span class="text-success">{{ $average_count }}</span> |
+              <label>Difficult: </label> <span class="text-success">{{ $difficult_count }}</span> 
+            </div>
             
             <div class="table-responsive">
-              <table id="students-table" class="table">
+              <table id="students-table" class="table table-borderless">
                 <thead>
                   <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Title</th>
+                    <th scope="col" width="35%">Title</th>
                     <th scope="col">Level</th>
                     <th scope="col">Choices</th>
                     <th scope="col">Created By</th>

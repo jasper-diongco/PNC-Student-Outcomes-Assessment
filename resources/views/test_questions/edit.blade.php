@@ -9,7 +9,7 @@
 
 <div class="d-flex justify-content-between mb-2 mt-3">
   <div>
-    <h1 class="h3 mb-1 text-gray-800">Edit Test Question #{{ $test_question->id }} <i class="fa fa-question-circle text-primary"></i></h1>
+    <h1 class="page-header">Edit Test Question #{{ $test_question->id }}</h1>
   </div>
 </div>
 
@@ -38,7 +38,7 @@
     <div class="row">
         <div class="col-md-8">
             <div class="form-group">
-                <label class="text-dark"><b>Title</b></label>
+                <label class="text-dark">Title</label>
                 <input 
                     type="text" 
                     class="form-control" 
@@ -50,7 +50,7 @@
                 <div class="invalid-feedback">@{{ errors.first('title') }}</div>
             </div>
             <div class="form-group">
-                <label class="text-dark"><b>Test question body</b></label>
+                <label class="text-dark">Test question body</label>
                 <div class="text-danger">@{{ errors.first('body') }}</div>
                 {{-- <textarea name="content" id="editor">
                     &lt;p&gt;Here goes the initial content of the editor.&lt;/p&gt;
@@ -87,7 +87,7 @@
             
             <hr class="mt-5">
 
-            <h5 class="text-dark"><b>Choices</b> 
+            <h5 class="text-dark">Choices
                 <button v-on:click="addChoice" :disabled="this.choices.length >= 5" class="btn btn-sm btn-success">add <i class="fa fa-plus" style="font-size: 10px"></i> </button>
             </h5>
 
@@ -138,7 +138,7 @@
             </div>
 
             <div class="form-group mt-3">
-                <label class="text-dark"><b>Select Correct Answer</b></label>
+                <label class="text-dark">Select Correct Answer</label>
                 <select 
                     class="form-control" 
                     v-model="correct_answer" 
@@ -152,7 +152,7 @@
                 <div class="invalid-feedback">@{{ errors.first('correct answer') }}</div>
             </div>
             <div class="form-group mt-1">
-                <label class="text-dark"><b>Select Level of Difficulty <i class="fa fa-circle" :class="{ 'text-success': level_of_difficulty == 1, 'text-warning': level_of_difficulty == 2, 'text-danger': level_of_difficulty == 3   }"></i></b></label>
+                <label class="text-dark">Select Level of Difficulty <i class="fa fa-circle" :class="{ 'text-success': level_of_difficulty == 1, 'text-warning': level_of_difficulty == 2, 'text-danger': level_of_difficulty == 3   }"></i></label>
                 <select 
                     class="form-control" 
                     v-model="level_of_difficulty"
@@ -185,7 +185,7 @@
                 <h5 class="text-dark d-flex align-items-center">
 
                     <div class="mr-2">
-                        <b>Objects</b> 
+                        Objects 
                     </div>
 
                     <div class="dropdown dropright">

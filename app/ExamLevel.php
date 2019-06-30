@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DifficultyLevel extends Model
+class ExamLevel extends Model
 {
     public $guarded = [];
 }

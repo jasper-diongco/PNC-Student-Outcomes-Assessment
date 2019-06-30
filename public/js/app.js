@@ -2346,6 +2346,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["colleges", "isUpdate", "courseProp", "collegeId", "addDirectly"],
   data: function data() {
@@ -3162,16 +3168,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["programs", "isRevise", "reviseProgram", "curriculum", "curricula"],
   data: function data() {
@@ -3243,6 +3239,164 @@ __webpack_require__.r(__webpack_exports__);
       this.form.name = this.curriculum.name;
       this.form.year = this.curriculum.year;
       this.form.year_level = this.curriculum.year_level;
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ExamModal.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ExamModal.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      form: new Form({
+        description: "",
+        time_limit: 60,
+        passing_grade: 60
+      })
+    };
+  },
+  computed: {
+    modalTitle: function modalTitle() {
+      return "Add New Exam";
+    },
+    btnTitle: function btnTitle() {
+      return "Add to database";
+    }
+  },
+  methods: {
+    addExam: function addExam() {
+      alert("Test");
+    },
+    saveExam: function saveExam() {
+      this.addExam();
     }
   }
 });
@@ -4193,50 +4347,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["programs", "isUpdate", "studentOutcome", "performanceCriteria", "performanceIndicators", "programId"],
   data: function data() {
@@ -4560,6 +4670,13 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -74561,7 +74678,7 @@ var render = function() {
       ? _c(
           "button",
           {
-            staticClass: "btn btn-primary btn-sm",
+            staticClass: "btn btn-secondary btn-sm",
             attrs: {
               type: "button",
               "data-toggle": "modal",
@@ -74578,7 +74695,7 @@ var render = function() {
       ? _c(
           "button",
           {
-            staticClass: "btn btn-primary btn-round",
+            staticClass: "btn btn-success-b",
             attrs: {
               type: "button",
               "data-toggle": "modal",
@@ -74586,10 +74703,7 @@ var render = function() {
             },
             on: { click: _vm.getRandColor }
           },
-          [
-            _vm._v("\n    Add new Course "),
-            _c("i", { staticClass: "fa fa-plus" })
-          ]
+          [_vm._v("\n    Add new Course\n  ")]
         )
       : _c(
           "button",
@@ -74657,61 +74771,62 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "modal-body" }, [
-                    _c("div", { staticClass: "form-group row" }, [
-                      _vm._m(1),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "col-md-9" },
-                        [
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.form.course_code,
-                                expression: "form.course_code"
-                              },
-                              { name: "uppercase", rawName: "v-uppercase" }
-                            ],
-                            staticClass: "form-control",
-                            class: {
-                              "is-invalid": _vm.form.errors.has("course_code")
+                    _c(
+                      "div",
+                      { staticClass: "form-group" },
+                      [
+                        _c("label", { attrs: { for: "course_code" } }, [
+                          _vm._v("Course Code")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.course_code,
+                              expression: "form.course_code"
                             },
-                            attrs: {
-                              id: "course_code",
-                              type: "text",
-                              name: "course_code"
-                            },
-                            domProps: { value: _vm.form.course_code },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.$set(
-                                  _vm.form,
-                                  "course_code",
-                                  $event.target.value
-                                )
+                            { name: "uppercase", rawName: "v-uppercase" }
+                          ],
+                          staticClass: "form-control",
+                          class: {
+                            "is-invalid": _vm.form.errors.has("course_code")
+                          },
+                          attrs: {
+                            id: "course_code",
+                            type: "text",
+                            name: "course_code"
+                          },
+                          domProps: { value: _vm.form.course_code },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
                               }
+                              _vm.$set(
+                                _vm.form,
+                                "course_code",
+                                $event.target.value
+                              )
                             }
-                          }),
-                          _vm._v(" "),
-                          _c("has-error", {
-                            attrs: { form: _vm.form, field: "course_code" }
-                          })
-                        ],
-                        1
-                      )
-                    ]),
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("has-error", {
+                          attrs: { form: _vm.form, field: "course_code" }
+                        })
+                      ],
+                      1
+                    ),
                     _vm._v(" "),
-                    _c("div", { staticClass: "form-group row" }, [
-                      _vm._m(2),
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", { attrs: { for: "description" } }, [
+                        _vm._v("Description")
+                      ]),
                       _vm._v(" "),
                       _c(
                         "div",
-                        { staticClass: "col-md-9" },
                         [
                           _c("input", {
                             directives: [
@@ -74755,12 +74870,13 @@ var render = function() {
                       )
                     ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "form-group row" }, [
-                      _vm._m(3),
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", { attrs: { for: "college_id" } }, [
+                        _vm._v("Select College")
+                      ]),
                       _vm._v(" "),
                       _c(
                         "div",
-                        { staticClass: "col-md-9" },
                         [
                           _c(
                             "select",
@@ -74836,110 +74952,119 @@ var render = function() {
                       )
                     ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "form-group row" }, [
-                      _vm._m(4),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "col-md-9" },
-                        [
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.form.lec_unit,
-                                expression: "form.lec_unit"
-                              },
-                              { name: "uppercase", rawName: "v-uppercase" }
-                            ],
-                            staticClass: "form-control",
-                            class: {
-                              "is-invalid": _vm.form.errors.has("lec_unit")
-                            },
-                            attrs: {
-                              id: "lec_unit",
-                              type: "number",
-                              name: "lec_unit"
-                            },
-                            domProps: { value: _vm.form.lec_unit },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.$set(
-                                  _vm.form,
-                                  "lec_unit",
-                                  $event.target.value
-                                )
-                              }
-                            }
-                          }),
+                    _c("div", { staticClass: "row" }, [
+                      _c("div", { staticClass: "col-6" }, [
+                        _c("div", { staticClass: "form-group" }, [
+                          _c("label", { attrs: { for: "lec_unit" } }, [
+                            _vm._v("Lec Unit")
+                          ]),
                           _vm._v(" "),
-                          _c("has-error", {
-                            attrs: { form: _vm.form, field: "lec_unit" }
-                          })
-                        ],
-                        1
-                      )
+                          _c(
+                            "div",
+                            [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.form.lec_unit,
+                                    expression: "form.lec_unit"
+                                  },
+                                  { name: "uppercase", rawName: "v-uppercase" }
+                                ],
+                                staticClass: "form-control",
+                                class: {
+                                  "is-invalid": _vm.form.errors.has("lec_unit")
+                                },
+                                attrs: {
+                                  id: "lec_unit",
+                                  type: "number",
+                                  name: "lec_unit"
+                                },
+                                domProps: { value: _vm.form.lec_unit },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.form,
+                                      "lec_unit",
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("has-error", {
+                                attrs: { form: _vm.form, field: "lec_unit" }
+                              })
+                            ],
+                            1
+                          )
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-6" }, [
+                        _c("div", { staticClass: "form-group" }, [
+                          _c("label", { attrs: { for: "lab_unit" } }, [
+                            _vm._v("Lab Unit")
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.form.lab_unit,
+                                    expression: "form.lab_unit"
+                                  },
+                                  { name: "uppercase", rawName: "v-uppercase" }
+                                ],
+                                staticClass: "form-control",
+                                class: {
+                                  "is-invalid": _vm.form.errors.has("lab_unit")
+                                },
+                                attrs: {
+                                  id: "lab_unit",
+                                  type: "number",
+                                  name: "lab_unit"
+                                },
+                                domProps: { value: _vm.form.lab_unit },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.form,
+                                      "lab_unit",
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("has-error", {
+                                attrs: { form: _vm.form, field: "lab_unit" }
+                              })
+                            ],
+                            1
+                          )
+                        ])
+                      ])
                     ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "form-group row" }, [
-                      _vm._m(5),
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", { attrs: { for: "privacy" } }, [
+                        _vm._v("Privacy")
+                      ]),
                       _vm._v(" "),
                       _c(
                         "div",
-                        { staticClass: "col-md-9" },
-                        [
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.form.lab_unit,
-                                expression: "form.lab_unit"
-                              },
-                              { name: "uppercase", rawName: "v-uppercase" }
-                            ],
-                            staticClass: "form-control",
-                            class: {
-                              "is-invalid": _vm.form.errors.has("lab_unit")
-                            },
-                            attrs: {
-                              id: "lab_unit",
-                              type: "number",
-                              name: "lab_unit"
-                            },
-                            domProps: { value: _vm.form.lab_unit },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.$set(
-                                  _vm.form,
-                                  "lab_unit",
-                                  $event.target.value
-                                )
-                              }
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c("has-error", {
-                            attrs: { form: _vm.form, field: "lab_unit" }
-                          })
-                        ],
-                        1
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "form-group row" }, [
-                      _vm._m(6),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "col-md-9" },
                         [
                           _c(
                             "select",
@@ -75025,7 +75150,7 @@ var render = function() {
                     _c(
                       "button",
                       {
-                        staticClass: "btn btn-primary",
+                        staticClass: "btn btn-success",
                         attrs: { disabled: _vm.form.busy, type: "submit" }
                       },
                       [
@@ -75083,84 +75208,6 @@ var staticRenderFns = [
         }
       },
       [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "label",
-      {
-        staticClass: "col-md-3 col-form-label text-md-right",
-        attrs: { for: "course_code" }
-      },
-      [_c("b", [_vm._v("Course Code")])]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "label",
-      {
-        staticClass: "col-md-3 col-form-label text-md-right",
-        attrs: { for: "description" }
-      },
-      [_c("b", [_vm._v("Description")])]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "label",
-      {
-        staticClass: "col-md-3 col-form-label text-md-right",
-        attrs: { for: "college_id" }
-      },
-      [_c("b", [_vm._v("Select College")])]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "label",
-      {
-        staticClass: "col-md-3 col-form-label text-md-right",
-        attrs: { for: "lec_unit" }
-      },
-      [_c("b", [_vm._v("Lec Unit")])]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "label",
-      {
-        staticClass: "col-md-3 col-form-label text-md-right",
-        attrs: { for: "lab_unit" }
-      },
-      [_c("b", [_vm._v("Lab Unit")])]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "label",
-      {
-        staticClass: "col-md-3 col-form-label text-md-right",
-        attrs: { for: "privacy" }
-      },
-      [_c("b", [_vm._v("Privacy")])]
     )
   }
 ]
@@ -75244,7 +75291,15 @@ var render = function() {
                     { staticClass: "modal-body" },
                     [
                       _c("div", { staticClass: "form-group row" }, [
-                        _vm._m(1),
+                        _c(
+                          "label",
+                          {
+                            staticClass:
+                              "col-md-3 col-form-label text-md-right",
+                            attrs: { for: "course_code" }
+                          },
+                          [_vm._v("Course Code")]
+                        ),
                         _vm._v(" "),
                         _c(
                           "div",
@@ -75272,7 +75327,15 @@ var render = function() {
                       ]),
                       _vm._v(" "),
                       _c("div", { staticClass: "form-group row" }, [
-                        _vm._m(2),
+                        _c(
+                          "label",
+                          {
+                            staticClass:
+                              "col-md-3 col-form-label text-md-right",
+                            attrs: { for: "description" }
+                          },
+                          [_vm._v("Description")]
+                        ),
                         _vm._v(" "),
                         _c("div", { staticClass: "col-md-9" }, [
                           _c("input", {
@@ -75288,7 +75351,15 @@ var render = function() {
                       ]),
                       _vm._v(" "),
                       _c("div", { staticClass: "form-group row" }, [
-                        _vm._m(3),
+                        _c(
+                          "label",
+                          {
+                            staticClass:
+                              "col-md-3 col-form-label text-md-right",
+                            attrs: { for: "year" }
+                          },
+                          [_vm._v("Year Level")]
+                        ),
                         _vm._v(" "),
                         _c(
                           "div",
@@ -75376,7 +75447,15 @@ var render = function() {
                       ]),
                       _vm._v(" "),
                       _c("div", { staticClass: "form-group row" }, [
-                        _vm._m(4),
+                        _c(
+                          "label",
+                          {
+                            staticClass:
+                              "col-md-3 col-form-label text-md-right",
+                            attrs: { for: "year" }
+                          },
+                          [_vm._v("Semester")]
+                        ),
                         _vm._v(" "),
                         _c(
                           "div",
@@ -75454,7 +75533,7 @@ var render = function() {
                       [
                         _c("hr"),
                         _vm._v(" "),
-                        _vm._m(5),
+                        _vm._m(1),
                         _vm._v(" "),
                         _c("div", { staticClass: "form-group" }, [
                           _vm.isSelectPreqMode ||
@@ -75679,7 +75758,7 @@ var render = function() {
                         _c(
                           "button",
                           {
-                            staticClass: "btn btn-primary",
+                            staticClass: "btn btn-success",
                             attrs: { disabled: _vm.form.busy, type: "submit" }
                           },
                           [
@@ -75739,58 +75818,6 @@ var staticRenderFns = [
         }
       },
       [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "label",
-      {
-        staticClass: "col-md-3 col-form-label text-md-right",
-        attrs: { for: "course_code" }
-      },
-      [_c("b", [_vm._v("Course Code")])]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "label",
-      {
-        staticClass: "col-md-3 col-form-label text-md-right",
-        attrs: { for: "description" }
-      },
-      [_c("b", [_vm._v("Description")])]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "label",
-      {
-        staticClass: "col-md-3 col-form-label text-md-right",
-        attrs: { for: "year" }
-      },
-      [_c("b", [_vm._v("Year Level")])]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "label",
-      {
-        staticClass: "col-md-3 col-form-label text-md-right",
-        attrs: { for: "year" }
-      },
-      [_c("b", [_vm._v("Semester")])]
     )
   },
   function() {
@@ -75922,12 +75949,11 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "modal-body" }, [
-                    _c("div", { staticClass: "form-group row" }, [
-                      _vm._m(3),
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", { attrs: { for: "name" } }, [_vm._v("Name")]),
                       _vm._v(" "),
                       _c(
                         "div",
-                        { staticClass: "col-md-9" },
                         [
                           _c("input", {
                             directives: [
@@ -75968,12 +75994,13 @@ var render = function() {
                       )
                     ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "form-group row" }, [
-                      _vm._m(4),
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", { attrs: { for: "description" } }, [
+                        _vm._v("Description (optional)")
+                      ]),
                       _vm._v(" "),
                       _c(
                         "div",
-                        { staticClass: "col-md-9" },
                         [
                           _c("textarea", {
                             directives: [
@@ -76016,12 +76043,11 @@ var render = function() {
                       )
                     ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "form-group row" }, [
-                      _vm._m(5),
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", { attrs: { for: "year" } }, [_vm._v("Year")]),
                       _vm._v(" "),
                       _c(
                         "div",
-                        { staticClass: "col-md-9" },
                         [
                           _c(
                             "select",
@@ -76086,12 +76112,13 @@ var render = function() {
                       )
                     ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "form-group row" }, [
-                      _vm._m(6),
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", { attrs: { for: "year" } }, [
+                        _vm._v("Year Level")
+                      ]),
                       _vm._v(" "),
                       _c(
                         "div",
-                        { staticClass: "col-md-9" },
                         [
                           _c(
                             "select",
@@ -76172,7 +76199,7 @@ var render = function() {
                     _c(
                       "button",
                       {
-                        staticClass: "btn btn-primary",
+                        staticClass: "btn btn-success",
                         attrs: { disabled: _vm.form.busy, type: "submit" }
                       },
                       [
@@ -76259,57 +76286,275 @@ var staticRenderFns = [
       },
       [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
     )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "label",
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ExamModal.vue?vue&type=template&id=4965a0f3&":
+/*!************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ExamModal.vue?vue&type=template&id=4965a0f3& ***!
+  \************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c(
+      "button",
       {
-        staticClass: "col-md-3 col-form-label text-md-right",
-        attrs: { for: "name" }
+        staticClass: "btn btn-success-b",
+        attrs: {
+          type: "button",
+          "data-toggle": "modal",
+          "data-target": "#examModal"
+        }
       },
-      [_c("b", [_vm._v("Name")])]
+      [_vm._v("\n        Add New Exam\n    ")]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "examModal",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog", attrs: { role: "document" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _c("div", { staticClass: "modal-header" }, [
+                _c(
+                  "h5",
+                  {
+                    staticClass: "modal-title",
+                    attrs: { id: "exampleModalLabel" }
+                  },
+                  [
+                    _vm._v(
+                      "\n                        " +
+                        _vm._s(_vm.modalTitle) +
+                        "\n                    "
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _vm._m(0)
+              ]),
+              _vm._v(" "),
+              _c(
+                "form",
+                {
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      return _vm.saveExam($event)
+                    },
+                    keydown: function($event) {
+                      return _vm.form.onKeydown($event)
+                    }
+                  }
+                },
+                [
+                  _c("div", { staticClass: "modal-body" }, [
+                    _c(
+                      "div",
+                      { staticClass: "form-group" },
+                      [
+                        _c("label", [_vm._v("Description")]),
+                        _vm._v(" "),
+                        _c("textarea", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.description,
+                              expression: "form.description"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          class: {
+                            "is-invalid": _vm.form.errors.has("description")
+                          },
+                          attrs: { name: "description" },
+                          domProps: { value: _vm.form.description },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.form,
+                                "description",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("has-error", {
+                          attrs: { form: _vm.form, field: "description" }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "form-group" },
+                      [
+                        _c("label", [_vm._v("Time Limit (in minutes)")]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.time_limit,
+                              expression: "form.time_limit"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          class: {
+                            "is-invalid": _vm.form.errors.has("time_limit")
+                          },
+                          attrs: { type: "number", name: "time_limit" },
+                          domProps: { value: _vm.form.time_limit },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.form,
+                                "time_limit",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("has-error", {
+                          attrs: { form: _vm.form, field: "time_limit" }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "form-group" },
+                      [
+                        _c("label", [_vm._v("Passing Grade (in percentage)")]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.passing_grade,
+                              expression: "form.passing_grade"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          class: {
+                            "is-invalid": _vm.form.errors.has("passing_grade")
+                          },
+                          attrs: { type: "number", name: "passing_grade" },
+                          domProps: { value: _vm.form.passing_grade },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.form,
+                                "passing_grade",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("has-error", {
+                          attrs: { form: _vm.form, field: "passing_grade" }
+                        })
+                      ],
+                      1
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "modal-footer" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-secondary",
+                        attrs: { type: "button", "data-dismiss": "modal" }
+                      },
+                      [
+                        _vm._v(
+                          "\n                            Close\n                        "
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-success",
+                        attrs: { disabled: _vm.form.busy, type: "submit" }
+                      },
+                      [
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(_vm.btnTitle) +
+                            "\n                        "
+                        )
+                      ]
+                    )
+                  ])
+                ]
+              )
+            ])
+          ]
+        )
+      ]
     )
-  },
+  ])
+}
+var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c(
-      "label",
+      "button",
       {
-        staticClass: "col-md-3 col-form-label text-md-right",
-        attrs: { for: "description" }
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "modal",
+          "aria-label": "Close"
+        }
       },
-      [_c("b", [_vm._v("Description (optional)")])]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "label",
-      {
-        staticClass: "col-md-3 col-form-label text-md-right",
-        attrs: { for: "year" }
-      },
-      [_c("b", [_vm._v("Year")])]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "label",
-      {
-        staticClass: "col-md-3 col-form-label text-md-right",
-        attrs: { for: "year" }
-      },
-      [_c("b", [_vm._v("Year Level")])]
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
     )
   }
 ]
@@ -76887,7 +77132,7 @@ var render = function() {
     _c(
       "div",
       {
-        staticClass: "modal fade",
+        staticClass: "modal fade bd-example-modal-lg",
         attrs: {
           id: "courseModal",
           tabindex: "-1",
@@ -76898,7 +77143,7 @@ var render = function() {
       [
         _c(
           "div",
-          { staticClass: "modal-dialog", attrs: { role: "document" } },
+          { staticClass: "modal-dialog modal-lg", attrs: { role: "document" } },
           [
             _c(
               "form",
@@ -76936,12 +77181,13 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "modal-body" }, [
-                    _c("div", { staticClass: "form-group row" }, [
-                      _vm._m(1),
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", { attrs: { for: "so_code" } }, [
+                        _vm._v("SO Code")
+                      ]),
                       _vm._v(" "),
                       _c(
                         "div",
-                        { staticClass: "col-md-9" },
                         [
                           _c("input", {
                             directives: [
@@ -76985,12 +77231,13 @@ var render = function() {
                       )
                     ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "form-group row" }, [
-                      _vm._m(2),
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", { attrs: { for: "course_code" } }, [
+                        _vm._v("Description")
+                      ]),
                       _vm._v(" "),
                       _c(
                         "div",
-                        { staticClass: "col-md-9" },
                         [
                           _c("input", {
                             directives: [
@@ -77033,12 +77280,13 @@ var render = function() {
                       )
                     ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "form-group row" }, [
-                      _vm._m(3),
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", { attrs: { for: "program" } }, [
+                        _vm._v("Program")
+                      ]),
                       _vm._v(" "),
                       _c(
                         "div",
-                        { staticClass: "col-md-9" },
                         [
                           _c(
                             "select",
@@ -77113,14 +77361,15 @@ var render = function() {
                     _vm._v(" "),
                     _c("hr"),
                     _vm._v(" "),
-                    _vm._m(4),
+                    _vm._m(1),
                     _vm._v(" "),
-                    _c("div", { staticClass: "form-group row" }, [
-                      _vm._m(5),
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", { attrs: { for: "performance_criteria" } }, [
+                        _vm._v("Performance Criteria")
+                      ]),
                       _vm._v(" "),
                       _c(
                         "div",
-                        { staticClass: "col-md-9" },
                         [
                           _c("textarea", {
                             directives: [
@@ -77287,12 +77536,15 @@ var render = function() {
                             }
                           },
                           [
-                            _c("div", { staticClass: "form-group row mt-3" }, [
-                              _vm._m(6),
+                            _c("div", { staticClass: "form-group mt-3" }, [
+                              _c(
+                                "label",
+                                { attrs: { for: "unsatisfactory_desc" } },
+                                [_vm._v("Unsatisfactory Description")]
+                              ),
                               _vm._v(" "),
                               _c(
                                 "div",
-                                { staticClass: "col-md-9" },
                                 [
                                   _c("textarea", {
                                     directives: [
@@ -77342,12 +77594,15 @@ var render = function() {
                               )
                             ]),
                             _vm._v(" "),
-                            _c("div", { staticClass: "form-group row mt-3" }, [
-                              _vm._m(7),
+                            _c("div", { staticClass: "form-group mt-3" }, [
+                              _c(
+                                "label",
+                                { attrs: { for: "unsatisfactory_grade" } },
+                                [_vm._v("Grade")]
+                              ),
                               _vm._v(" "),
                               _c(
                                 "div",
-                                { staticClass: "col-md-9" },
                                 [
                                   _c("input", {
                                     directives: [
@@ -77410,12 +77665,15 @@ var render = function() {
                             }
                           },
                           [
-                            _c("div", { staticClass: "form-group row mt-3" }, [
-                              _vm._m(8),
+                            _c("div", { staticClass: "form-group mt-3" }, [
+                              _c(
+                                "label",
+                                { attrs: { for: "developing_desc" } },
+                                [_vm._v("Developing Description")]
+                              ),
                               _vm._v(" "),
                               _c(
                                 "div",
-                                { staticClass: "col-md-9" },
                                 [
                                   _c("textarea", {
                                     directives: [
@@ -77465,12 +77723,15 @@ var render = function() {
                               )
                             ]),
                             _vm._v(" "),
-                            _c("div", { staticClass: "form-group row mt-3" }, [
-                              _vm._m(9),
+                            _c("div", { staticClass: "form-group mt-3" }, [
+                              _c(
+                                "label",
+                                { attrs: { for: "developing_grade" } },
+                                [_vm._v("Grade")]
+                              ),
                               _vm._v(" "),
                               _c(
                                 "div",
-                                { staticClass: "col-md-9" },
                                 [
                                   _c("input", {
                                     directives: [
@@ -77533,12 +77794,15 @@ var render = function() {
                             }
                           },
                           [
-                            _c("div", { staticClass: "form-group row mt-3" }, [
-                              _vm._m(10),
+                            _c("div", { staticClass: "form-group mt-3" }, [
+                              _c(
+                                "label",
+                                { attrs: { for: "satisfactory_desc" } },
+                                [_vm._v("Satisfactory Description")]
+                              ),
                               _vm._v(" "),
                               _c(
                                 "div",
-                                { staticClass: "col-md-9" },
                                 [
                                   _c("textarea", {
                                     directives: [
@@ -77588,12 +77852,15 @@ var render = function() {
                               )
                             ]),
                             _vm._v(" "),
-                            _c("div", { staticClass: "form-group row mt-3" }, [
-                              _vm._m(11),
+                            _c("div", { staticClass: "form-group mt-3" }, [
+                              _c(
+                                "label",
+                                { attrs: { for: "satisfactory_grade" } },
+                                [_vm._v("Grade")]
+                              ),
                               _vm._v(" "),
                               _c(
                                 "div",
-                                { staticClass: "col-md-9" },
                                 [
                                   _c("input", {
                                     directives: [
@@ -77656,12 +77923,15 @@ var render = function() {
                             }
                           },
                           [
-                            _c("div", { staticClass: "form-group row mt-3" }, [
-                              _vm._m(12),
+                            _c("div", { staticClass: "form-group mt-3" }, [
+                              _c(
+                                "label",
+                                { attrs: { for: "exemplary_desc" } },
+                                [_vm._v("Exemplary Description")]
+                              ),
                               _vm._v(" "),
                               _c(
                                 "div",
-                                { staticClass: "col-md-9" },
                                 [
                                   _c("textarea", {
                                     directives: [
@@ -77711,12 +77981,15 @@ var render = function() {
                               )
                             ]),
                             _vm._v(" "),
-                            _c("div", { staticClass: "form-group row mt-3" }, [
-                              _vm._m(13),
+                            _c("div", { staticClass: "form-group mt-3" }, [
+                              _c(
+                                "label",
+                                { attrs: { for: "exemplary_grade" } },
+                                [_vm._v("Grade")]
+                              ),
                               _vm._v(" "),
                               _c(
                                 "div",
-                                { staticClass: "col-md-9" },
                                 [
                                   _c("input", {
                                     directives: [
@@ -77788,7 +78061,7 @@ var render = function() {
                     _c(
                       "button",
                       {
-                        staticClass: "btn btn-primary",
+                        staticClass: "btn btn-success",
                         attrs: { disabled: _vm.form.busy, type: "submit" }
                       },
                       [
@@ -77852,163 +78125,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "label",
-      {
-        staticClass: "col-md-3 col-form-label text-md-right",
-        attrs: { for: "so_code" }
-      },
-      [_c("b", [_vm._v("SO Code")])]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "label",
-      {
-        staticClass: "col-md-3 col-form-label text-md-right",
-        attrs: { for: "course_code" }
-      },
-      [_c("b", [_vm._v("Description")])]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "label",
-      {
-        staticClass: "col-md-3 col-form-label text-md-right",
-        attrs: { for: "program" }
-      },
-      [_c("b", [_vm._v("Program")])]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
     return _c("p", [_c("b", [_vm._v("Performance Indicators")])])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "label",
-      {
-        staticClass: "col-md-3 col-form-label text-md-right",
-        attrs: { for: "performance_criteria" }
-      },
-      [_c("b", [_vm._v("Performance Criteria")])]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "label",
-      {
-        staticClass: "col-md-3 col-form-label text-md-right",
-        attrs: { for: "unsatisfactory_desc" }
-      },
-      [_c("b", [_vm._v("Unsatisfactory Description")])]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "label",
-      {
-        staticClass: "col-md-3 col-form-label text-md-right",
-        attrs: { for: "unsatisfactory_grade" }
-      },
-      [_c("b", [_vm._v("Grade")])]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "label",
-      {
-        staticClass: "col-md-3 col-form-label text-md-right",
-        attrs: { for: "developing_desc" }
-      },
-      [_c("b", [_vm._v("Developing Description")])]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "label",
-      {
-        staticClass: "col-md-3 col-form-label text-md-right",
-        attrs: { for: "developing_grade" }
-      },
-      [_c("b", [_vm._v("Grade")])]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "label",
-      {
-        staticClass: "col-md-3 col-form-label text-md-right",
-        attrs: { for: "satisfactory_desc" }
-      },
-      [_c("b", [_vm._v("Satisfactory Description")])]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "label",
-      {
-        staticClass: "col-md-3 col-form-label text-md-right",
-        attrs: { for: "satisfactory_grade" }
-      },
-      [_c("b", [_vm._v("Grade")])]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "label",
-      {
-        staticClass: "col-md-3 col-form-label text-md-right",
-        attrs: { for: "exemplary_desc" }
-      },
-      [_c("b", [_vm._v("Exemplary Description")])]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "label",
-      {
-        staticClass: "col-md-3 col-form-label text-md-right",
-        attrs: { for: "exemplary_grade" }
-      },
-      [_c("b", [_vm._v("Grade")])]
-    )
   }
 ]
 render._withStripped = true
@@ -78231,643 +78348,30 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "d-flex justify-content-center p-2" }, [
-    _c("span", { staticClass: "d-inline-block" }, [
-      _vm._v("\n    Loading...\n  ")
-    ]),
-    _vm._v(" "),
-    _c(
-      "svg",
-      {
-        staticClass: "lds-spin d-inline-block",
-        staticStyle: {
-          "shape-rendering": "auto",
-          "animation-play-state": "running",
-          "animation-delay": "0s",
-          background: "none"
-        },
-        attrs: {
-          width: "200px",
-          height: "200px",
-          xmlns: "http://www.w3.org/2000/svg",
-          "xmlns:xlink": "http://www.w3.org/1999/xlink",
-          viewBox: "0 0 100 100",
-          preserveAspectRatio: "xMidYMid"
-        }
-      },
-      [
-        _c(
-          "g",
-          {
-            staticStyle: {
-              "animation-play-state": "running",
-              "animation-delay": "0s"
-            },
-            attrs: { transform: "translate(80,50)" }
-          },
-          [
-            _c(
-              "g",
-              {
-                staticStyle: {
-                  "animation-play-state": "running",
-                  "animation-delay": "0s"
-                },
-                attrs: { transform: "rotate(0)" }
-              },
-              [
-                _c(
-                  "circle",
-                  {
-                    staticStyle: {
-                      "animation-play-state": "running",
-                      "animation-delay": "0s"
-                    },
-                    attrs: {
-                      cx: "0",
-                      cy: "0",
-                      r: "10",
-                      fill: "#b2c5f3",
-                      "fill-opacity": "1",
-                      transform: "scale(1.05712 1.05712)"
-                    }
-                  },
-                  [
-                    _c("animateTransform", {
-                      staticStyle: {
-                        "animation-play-state": "running",
-                        "animation-delay": "0s"
-                      },
-                      attrs: {
-                        attributeName: "transform",
-                        type: "scale",
-                        begin: "-0.875s",
-                        values: "1.1 1.1;1 1",
-                        keyTimes: "0;1",
-                        dur: "1s",
-                        repeatCount: "indefinite"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("animate", {
-                      staticStyle: {
-                        "animation-play-state": "running",
-                        "animation-delay": "0s"
-                      },
-                      attrs: {
-                        attributeName: "fill-opacity",
-                        keyTimes: "0;1",
-                        dur: "1s",
-                        repeatCount: "indefinite",
-                        values: "1;0",
-                        begin: "-0.875s"
-                      }
-                    })
-                  ],
-                  1
-                )
-              ]
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "g",
-          {
-            staticStyle: {
-              "animation-play-state": "running",
-              "animation-delay": "0s"
-            },
-            attrs: {
-              transform: "translate(71.21320343559643,71.21320343559643)"
-            }
-          },
-          [
-            _c(
-              "g",
-              {
-                staticStyle: {
-                  "animation-play-state": "running",
-                  "animation-delay": "0s"
-                },
-                attrs: { transform: "rotate(45)" }
-              },
-              [
-                _c(
-                  "circle",
-                  {
-                    staticStyle: {
-                      "animation-play-state": "running",
-                      "animation-delay": "0s"
-                    },
-                    attrs: {
-                      cx: "0",
-                      cy: "0",
-                      r: "10",
-                      fill: "#b2c5f3",
-                      "fill-opacity": "0.875",
-                      transform: "scale(1.06962 1.06962)"
-                    }
-                  },
-                  [
-                    _c("animateTransform", {
-                      staticStyle: {
-                        "animation-play-state": "running",
-                        "animation-delay": "0s"
-                      },
-                      attrs: {
-                        attributeName: "transform",
-                        type: "scale",
-                        begin: "-0.75s",
-                        values: "1.1 1.1;1 1",
-                        keyTimes: "0;1",
-                        dur: "1s",
-                        repeatCount: "indefinite"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("animate", {
-                      staticStyle: {
-                        "animation-play-state": "running",
-                        "animation-delay": "0s"
-                      },
-                      attrs: {
-                        attributeName: "fill-opacity",
-                        keyTimes: "0;1",
-                        dur: "1s",
-                        repeatCount: "indefinite",
-                        values: "1;0",
-                        begin: "-0.75s"
-                      }
-                    })
-                  ],
-                  1
-                )
-              ]
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "g",
-          {
-            staticStyle: {
-              "animation-play-state": "running",
-              "animation-delay": "0s"
-            },
-            attrs: { transform: "translate(50,80)" }
-          },
-          [
-            _c(
-              "g",
-              {
-                staticStyle: {
-                  "animation-play-state": "running",
-                  "animation-delay": "0s"
-                },
-                attrs: { transform: "rotate(90)" }
-              },
-              [
-                _c(
-                  "circle",
-                  {
-                    staticStyle: {
-                      "animation-play-state": "running",
-                      "animation-delay": "0s"
-                    },
-                    attrs: {
-                      cx: "0",
-                      cy: "0",
-                      r: "10",
-                      fill: "#b2c5f3",
-                      "fill-opacity": "0.75",
-                      transform: "scale(1.08212 1.08212)"
-                    }
-                  },
-                  [
-                    _c("animateTransform", {
-                      staticStyle: {
-                        "animation-play-state": "running",
-                        "animation-delay": "0s"
-                      },
-                      attrs: {
-                        attributeName: "transform",
-                        type: "scale",
-                        begin: "-0.625s",
-                        values: "1.1 1.1;1 1",
-                        keyTimes: "0;1",
-                        dur: "1s",
-                        repeatCount: "indefinite"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("animate", {
-                      staticStyle: {
-                        "animation-play-state": "running",
-                        "animation-delay": "0s"
-                      },
-                      attrs: {
-                        attributeName: "fill-opacity",
-                        keyTimes: "0;1",
-                        dur: "1s",
-                        repeatCount: "indefinite",
-                        values: "1;0",
-                        begin: "-0.625s"
-                      }
-                    })
-                  ],
-                  1
-                )
-              ]
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "g",
-          {
-            staticStyle: {
-              "animation-play-state": "running",
-              "animation-delay": "0s"
-            },
-            attrs: {
-              transform: "translate(28.786796564403577,71.21320343559643)"
-            }
-          },
-          [
-            _c(
-              "g",
-              {
-                staticStyle: {
-                  "animation-play-state": "running",
-                  "animation-delay": "0s"
-                },
-                attrs: { transform: "rotate(135)" }
-              },
-              [
-                _c(
-                  "circle",
-                  {
-                    staticStyle: {
-                      "animation-play-state": "running",
-                      "animation-delay": "0s"
-                    },
-                    attrs: {
-                      cx: "0",
-                      cy: "0",
-                      r: "10",
-                      fill: "#b2c5f3",
-                      "fill-opacity": "0.625",
-                      transform: "scale(1.09462 1.09462)"
-                    }
-                  },
-                  [
-                    _c("animateTransform", {
-                      staticStyle: {
-                        "animation-play-state": "running",
-                        "animation-delay": "0s"
-                      },
-                      attrs: {
-                        attributeName: "transform",
-                        type: "scale",
-                        begin: "-0.5s",
-                        values: "1.1 1.1;1 1",
-                        keyTimes: "0;1",
-                        dur: "1s",
-                        repeatCount: "indefinite"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("animate", {
-                      staticStyle: {
-                        "animation-play-state": "running",
-                        "animation-delay": "0s"
-                      },
-                      attrs: {
-                        attributeName: "fill-opacity",
-                        keyTimes: "0;1",
-                        dur: "1s",
-                        repeatCount: "indefinite",
-                        values: "1;0",
-                        begin: "-0.5s"
-                      }
-                    })
-                  ],
-                  1
-                )
-              ]
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "g",
-          {
-            staticStyle: {
-              "animation-play-state": "running",
-              "animation-delay": "0s"
-            },
-            attrs: { transform: "translate(20,50.00000000000001)" }
-          },
-          [
-            _c(
-              "g",
-              {
-                staticStyle: {
-                  "animation-play-state": "running",
-                  "animation-delay": "0s"
-                },
-                attrs: { transform: "rotate(180)" }
-              },
-              [
-                _c(
-                  "circle",
-                  {
-                    staticStyle: {
-                      "animation-play-state": "running",
-                      "animation-delay": "0s"
-                    },
-                    attrs: {
-                      cx: "0",
-                      cy: "0",
-                      r: "10",
-                      fill: "#b2c5f3",
-                      "fill-opacity": "0.5",
-                      transform: "scale(1.00712 1.00712)"
-                    }
-                  },
-                  [
-                    _c("animateTransform", {
-                      staticStyle: {
-                        "animation-play-state": "running",
-                        "animation-delay": "0s"
-                      },
-                      attrs: {
-                        attributeName: "transform",
-                        type: "scale",
-                        begin: "-0.375s",
-                        values: "1.1 1.1;1 1",
-                        keyTimes: "0;1",
-                        dur: "1s",
-                        repeatCount: "indefinite"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("animate", {
-                      staticStyle: {
-                        "animation-play-state": "running",
-                        "animation-delay": "0s"
-                      },
-                      attrs: {
-                        attributeName: "fill-opacity",
-                        keyTimes: "0;1",
-                        dur: "1s",
-                        repeatCount: "indefinite",
-                        values: "1;0",
-                        begin: "-0.375s"
-                      }
-                    })
-                  ],
-                  1
-                )
-              ]
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "g",
-          {
-            staticStyle: {
-              "animation-play-state": "running",
-              "animation-delay": "0s"
-            },
-            attrs: {
-              transform: "translate(28.78679656440357,28.786796564403577)"
-            }
-          },
-          [
-            _c(
-              "g",
-              {
-                staticStyle: {
-                  "animation-play-state": "running",
-                  "animation-delay": "0s"
-                },
-                attrs: { transform: "rotate(225)" }
-              },
-              [
-                _c(
-                  "circle",
-                  {
-                    staticStyle: {
-                      "animation-play-state": "running",
-                      "animation-delay": "0s"
-                    },
-                    attrs: {
-                      cx: "0",
-                      cy: "0",
-                      r: "10",
-                      fill: "#b2c5f3",
-                      "fill-opacity": "0.375",
-                      transform: "scale(1.01962 1.01962)"
-                    }
-                  },
-                  [
-                    _c("animateTransform", {
-                      staticStyle: {
-                        "animation-play-state": "running",
-                        "animation-delay": "0s"
-                      },
-                      attrs: {
-                        attributeName: "transform",
-                        type: "scale",
-                        begin: "-0.25s",
-                        values: "1.1 1.1;1 1",
-                        keyTimes: "0;1",
-                        dur: "1s",
-                        repeatCount: "indefinite"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("animate", {
-                      staticStyle: {
-                        "animation-play-state": "running",
-                        "animation-delay": "0s"
-                      },
-                      attrs: {
-                        attributeName: "fill-opacity",
-                        keyTimes: "0;1",
-                        dur: "1s",
-                        repeatCount: "indefinite",
-                        values: "1;0",
-                        begin: "-0.25s"
-                      }
-                    })
-                  ],
-                  1
-                )
-              ]
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "g",
-          {
-            staticStyle: {
-              "animation-play-state": "running",
-              "animation-delay": "0s"
-            },
-            attrs: { transform: "translate(49.99999999999999,20)" }
-          },
-          [
-            _c(
-              "g",
-              {
-                staticStyle: {
-                  "animation-play-state": "running",
-                  "animation-delay": "0s"
-                },
-                attrs: { transform: "rotate(270)" }
-              },
-              [
-                _c(
-                  "circle",
-                  {
-                    staticStyle: {
-                      "animation-play-state": "running",
-                      "animation-delay": "0s"
-                    },
-                    attrs: {
-                      cx: "0",
-                      cy: "0",
-                      r: "10",
-                      fill: "#b2c5f3",
-                      "fill-opacity": "0.25",
-                      transform: "scale(1.03212 1.03212)"
-                    }
-                  },
-                  [
-                    _c("animateTransform", {
-                      staticStyle: {
-                        "animation-play-state": "running",
-                        "animation-delay": "0s"
-                      },
-                      attrs: {
-                        attributeName: "transform",
-                        type: "scale",
-                        begin: "-0.125s",
-                        values: "1.1 1.1;1 1",
-                        keyTimes: "0;1",
-                        dur: "1s",
-                        repeatCount: "indefinite"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("animate", {
-                      staticStyle: {
-                        "animation-play-state": "running",
-                        "animation-delay": "0s"
-                      },
-                      attrs: {
-                        attributeName: "fill-opacity",
-                        keyTimes: "0;1",
-                        dur: "1s",
-                        repeatCount: "indefinite",
-                        values: "1;0",
-                        begin: "-0.125s"
-                      }
-                    })
-                  ],
-                  1
-                )
-              ]
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "g",
-          {
-            staticStyle: {
-              "animation-play-state": "running",
-              "animation-delay": "0s"
-            },
-            attrs: {
-              transform: "translate(71.21320343559643,28.78679656440357)"
-            }
-          },
-          [
-            _c(
-              "g",
-              {
-                staticStyle: {
-                  "animation-play-state": "running",
-                  "animation-delay": "0s"
-                },
-                attrs: { transform: "rotate(315)" }
-              },
-              [
-                _c(
-                  "circle",
-                  {
-                    staticStyle: {
-                      "animation-play-state": "running",
-                      "animation-delay": "0s"
-                    },
-                    attrs: {
-                      cx: "0",
-                      cy: "0",
-                      r: "10",
-                      fill: "#b2c5f3",
-                      "fill-opacity": "0.125",
-                      transform: "scale(1.04462 1.04462)"
-                    }
-                  },
-                  [
-                    _c("animateTransform", {
-                      staticStyle: {
-                        "animation-play-state": "running",
-                        "animation-delay": "0s"
-                      },
-                      attrs: {
-                        attributeName: "transform",
-                        type: "scale",
-                        begin: "0s",
-                        values: "1.1 1.1;1 1",
-                        keyTimes: "0;1",
-                        dur: "1s",
-                        repeatCount: "indefinite"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("animate", {
-                      staticStyle: {
-                        "animation-play-state": "running",
-                        "animation-delay": "0s"
-                      },
-                      attrs: {
-                        attributeName: "fill-opacity",
-                        keyTimes: "0;1",
-                        dur: "1s",
-                        repeatCount: "indefinite",
-                        values: "1;0",
-                        begin: "0s"
-                      }
-                    })
-                  ],
-                  1
-                )
-              ]
-            )
-          ]
-        )
-      ]
-    )
-  ])
+  return _vm._m(0)
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "d-flex justify-content-center p-2" }, [
+      _c("span", { staticClass: "d-inline-block" }, [
+        _vm._v("\n    Loading...\n  ")
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "spinner-border",
+          staticStyle: { width: "25px", height: "25px", color: "#cfcfcf" },
+          attrs: { role: "status" }
+        },
+        [_c("span", { staticClass: "sr-only" }, [_vm._v("Loading...")])]
+      )
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -95259,6 +94763,7 @@ Vue.component("curriculum-modal", __webpack_require__(/*! ./components/Curriculu
 Vue.component("my-table", __webpack_require__(/*! ./components/Table.vue */ "./resources/js/components/Table.vue")["default"]);
 Vue.component("table-loading", __webpack_require__(/*! ./components/TableLoading.vue */ "./resources/js/components/TableLoading.vue")["default"]);
 Vue.component("student-outcome-modal", __webpack_require__(/*! ./components/StudentOutcomeModal.vue */ "./resources/js/components/StudentOutcomeModal.vue")["default"]);
+Vue.component("exam-modal", __webpack_require__(/*! ./components/ExamModal.vue */ "./resources/js/components/ExamModal.vue")["default"]);
 Vue.component("datepicker", vuejs_datepicker__WEBPACK_IMPORTED_MODULE_0__["default"]);
 Vue.component("vue-select", vue_select__WEBPACK_IMPORTED_MODULE_1___default.a);
 Vue.directive("uppercase", {
@@ -95766,6 +95271,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CurriculumModal_vue_vue_type_template_id_2a7202d2___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CurriculumModal_vue_vue_type_template_id_2a7202d2___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/ExamModal.vue":
+/*!***********************************************!*\
+  !*** ./resources/js/components/ExamModal.vue ***!
+  \***********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ExamModal_vue_vue_type_template_id_4965a0f3___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ExamModal.vue?vue&type=template&id=4965a0f3& */ "./resources/js/components/ExamModal.vue?vue&type=template&id=4965a0f3&");
+/* harmony import */ var _ExamModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ExamModal.vue?vue&type=script&lang=js& */ "./resources/js/components/ExamModal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ExamModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ExamModal_vue_vue_type_template_id_4965a0f3___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ExamModal_vue_vue_type_template_id_4965a0f3___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/ExamModal.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/ExamModal.vue?vue&type=script&lang=js&":
+/*!************************************************************************!*\
+  !*** ./resources/js/components/ExamModal.vue?vue&type=script&lang=js& ***!
+  \************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ExamModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./ExamModal.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ExamModal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ExamModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/ExamModal.vue?vue&type=template&id=4965a0f3&":
+/*!******************************************************************************!*\
+  !*** ./resources/js/components/ExamModal.vue?vue&type=template&id=4965a0f3& ***!
+  \******************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExamModal_vue_vue_type_template_id_4965a0f3___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./ExamModal.vue?vue&type=template&id=4965a0f3& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ExamModal.vue?vue&type=template&id=4965a0f3&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExamModal_vue_vue_type_template_id_4965a0f3___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExamModal_vue_vue_type_template_id_4965a0f3___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

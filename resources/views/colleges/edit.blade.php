@@ -1,4 +1,4 @@
-@extends('layouts.sb_admin')
+@extends('layout.app', ['active' => 'colleges'])
 
 @if(isset($college))
   @section('title', 'Update College')
@@ -11,20 +11,19 @@
 
   <a href="{{ isset($college) ? url('colleges/' . $college->id)  : url('colleges') }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
 
-<div class="row" id="app">
+<div class="row" id="app" v-cloak>
   <div class="col-sm-8 mx-auto mt-4">
     <div class="card">
       <div class="card-header">
         @if (isset($college))
-          <h2 class="h3">Update College</h2>
+          <h2 class="page-header">Update College</h2>
         @else
-          <h2 class="h3">Add New College</h2>
+          <h2 class="page-header">Add New College</h2>
         @endif
         
 
       </div>
       <div class="card-body">
-        <p class="text-warning">All Fields with * are required</p>
         @if($errors->any())
         <div class="alert alert-danger">
           <strong>Please fix the following: </strong>
@@ -43,7 +42,7 @@
            @endif
 
           <div class="form-group">
-            <label>College Code *</label>
+            <label>College Code</label>
             <input 
               type="text" 
               placeholder="Enter College Code" 
@@ -54,7 +53,7 @@
             <small class="text-info">College Code must be unique</small>
           </div>
           <div class="form-group">
-            <label>College Name *</label>
+            <label>College Name</label>
             <input 
               type="text" 
               placeholder="Enter College Description" 
@@ -65,15 +64,15 @@
               >
           </div>
           <div class="form-group">
-            <label>Select Dean *</label>
+            <label>Dean</label>
             
-            <div v-if="!showSelect">
+            {{-- <div v-if="!showSelect">
             @if(isset($college))
               <p ><b>Current Dean:</b> {{ $college->faculty->user->getFullName() }} <button v-on:click="changeDean" type="button" class="btn btn-sm btn-primary">Change <i class="fa fa-edit"></i></button></p>
             @endif
-            </div>
+            </div> --}}
 
-            <vue-select v-else v-model="faculty_id" :reduce="faculty => faculty.id" placeholder="Search Dean" :filterable="false" :options="options" v-on:search="onSearch">
+            {{-- <vue-select v-else v-model="faculty_id" :reduce="faculty => faculty.id" placeholder="Search Dean" :filterable="false" :options="options" v-on:search="onSearch">
               <template slot="no-options">
                 Type to search Users...
               </template>
@@ -88,7 +87,33 @@
                  @{{ option.last_name + ' ' + option.first_name + ', ' + option.middle_name  }}
                 </div>
               </template>
-            </vue-select>
+            </vue-select> --}}
+            <div v-if="showSearch">
+              <input type="search" v-model="searchText" v-on:input="searchFaculty" placeholder="Search faculty..." class="form-control">
+
+              <ul class="list-group">
+                <li v-for="f in faculties" class="list-group-item d-flex justify-content-between">
+                  <div>
+                    <i class="fa fa-user"></i> 
+                    @{{ f.full_name }} - @{{ f.user_type }} 
+                  </div>
+                  <div>
+                    <button v-on:click="selectFaculty(f.id)" type="button" class="btn btn-sm btn-success">Select</button>
+                  </div>
+                </li>
+              </ul>
+              <ul v-if="faculties.length == 0 && searchText != ''" class="list-group">
+                <li class="list-group-item">
+                  No record found.
+                </li>
+              </ul>
+            </div>
+
+            <div v-else>
+              <label>Selected:</label> @{{ faculty.full_name }}
+              <button v-on:click="changeDean" type="button" class="btn btn-sm btn-primary">Change <i class="fa fa-edit"></i></button>
+            </div>
+
             <input type="hidden" :value="faculty_id" name="faculty_id">
           </div>
           <div class="d-flex justify-content-end">
@@ -113,7 +138,10 @@
       college_code: '{{ old('college_code') ? old('college_code') : $college->college_code ?? '' }}',
       college_name: '{{ old('name') ? old('name') : $college->name ?? '' }}',
       faculty: {},
-      showSelect: {{ isset($college) ? 'false' : 'true' }}
+      showSelect: {{ isset($college) ? 'false' : 'true' }},
+      faculties: [],
+      searchText: '',
+      showSearch: '{{ old('faculty_id') || isset($college) ? false : true }}'
     },
     methods: {
       onSearch(search, loading) {
@@ -125,7 +153,8 @@
         ApiClient.get('/faculties?q=' + escape(search)).
         then(response => {
           loading(false);
-          this.options = response.data;
+          console.log(response.data);
+          //this.options = response.data;
         })
       },
       getFaculty() {
@@ -134,9 +163,29 @@
           this.faculty = response.data.data;
         })
       },
+      searchFaculty() {
+        if(this.searchText.trim() == '') {
+          return this.faculties = [];
+        }
+
+        ApiClient.get('/faculties?q=' + this.searchText).
+        then(response => {
+          //loading(false);
+          //console.log(response.data);
+          this.faculties = response.data.data;
+        })
+        
+      },
       changeDean() {
+        this.showSearch = true;
         this.showSelect = true;
         this.faculty_id = '';
+      },
+      selectFaculty(faculty_id) {
+        this.faculties = [];
+        this.faculty_id = faculty_id;
+        this.getFaculty();
+        this.showSearch = false;
       }
     },
     created() {

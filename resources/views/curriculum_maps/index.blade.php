@@ -15,7 +15,8 @@
                     @foreach($curricula as $curriculum)
                       <a href="{{ url('/curriculum_mapping/' . $curriculum->id) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                       <div>
-                        {{ $curriculum->program->program_code . ' - ' . $curriculum->name }} 
+                        {{ $curriculum->program->program_code . ' - ' . $curriculum->name }} {{ $curriculum->year }}
+                        <span class="text-primary">v{{ $curriculum->revision_no }}.0</span>
                         <br>
                         <small class="text-muted">{{ $curriculum->program->college->name }}</small>
                       </div>

@@ -6,10 +6,10 @@
 @section('content')
   <div id="app">
     @can('isSAdmin')
-      <a href="{{ url('/curricula') }}" class="btn btn-success mb-3 btn-sm"><i class="fa fa-arrow-left"></i> Back</a>
+      <a href="{{ url('/curricula') }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
     @endcan
 
-    <div class="d-flex justify-content-between mb-3">
+    <div class="d-flex justify-content-between mb-3 mt-3">
       <div>
         <h1 class="page-header">Curricula</h1>
       </div>
@@ -76,11 +76,12 @@
       </div> --}}
       <div class="card">
         <div class="card-body">
-          <table class="table">
+          <table class="table table-borderless">
             <thead>
               <tr>
-                <th scope="col">#</th>
+                <th scope="col">ID</th>
                 <th scope="col">Name</th>
+                <th scope="col">Revision No</th>
                 <th scope="col">Program</th>
                 <th scope="col">Year</th>
                 <th>Action</th>
@@ -91,9 +92,10 @@
               <tr>
                 <th>{{ $curriculum->id }}</th>
                 <td>{{ $curriculum->name }}</td>
+                <td>{{ $curriculum->revision_no }}.0</td>
                 <td>{{ $curriculum->program->description }}</td>
                 <td>{{ $curriculum->year }}</td>
-                <td><a href="{{ url('/curricula/' . $curriculum->id) }}" class="btn btn-success btn-sm"><i class="fa fa-search "></i></a></td>
+                <td><a href="{{ url('/curricula/' . $curriculum->id . '?college_id=' . request('college_id')) }}" class="btn btn-success btn-sm"><i class="fa fa-search "></i></a></td>
               </tr>
               @endforeach
             </tbody>

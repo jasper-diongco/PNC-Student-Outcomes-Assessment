@@ -1,4 +1,4 @@
-@extends('layouts.sb_admin')
+@extends('layout.app', ['active' => 'curricula'])
 
 @section('title', 'Deactivated Courses')
 
@@ -9,59 +9,64 @@
 <div id="app">
   <div class="d-flex justify-content-between mb-3">
     <div>
-      <h1 class="h3 mb-4 text-gray-800">List of deactivated courses</h1>
+      <h1 class="page-header">List of deactivated courses</h1>
     </div>
   </div>
-
-  @if(count($curriculum_courses) > 0) 
-      <table class="table">
-        <thead class="thead-dark">
-          <tr>
+  
+  <div class="card">
+    <div class="card-body">
+        @if(count($curriculum_courses) > 0) 
+        <table class="table table-borderless">
+          <thead>
             <tr>
-              <th><input type="checkbox" v-model="is_checked_all"></th>
-              <th>Course Code</th>
-              <th>Description</th>
-              <th>Lec Unit</th>
-              <th>Lab Unit</th>
-              <th>Year/Sem</th>
-              <th class="text-center">Action</th>
+              <tr>
+                <th><input type="checkbox" v-model="is_checked_all"></th>
+                <th>Course Code</th>
+                <th>Description</th>
+                <th>Lec Unit</th>
+                <th>Lab Unit</th>
+                <th>Year/Sem</th>
+                <th class="text-center">Action</th>
+              </tr>
             </tr>
-          </tr>
-        </thead>
-        <tbody class="bg-white">
-          @foreach ($curriculum_courses as $curriculum_course)
-            <tr>
-              <td><input type="checkbox" v-model="checked_courses" value="{{ $curriculum_course->id }}"></td>
-              <th>{{ $curriculum_course->course->course_code }}</th>
-              <td>{{ $curriculum_course->course->description }}</td>
-              <td>{{ $curriculum_course->course->lec_unit }}</td>
-              <td>{{ $curriculum_course->course->lab_unit }}</td>
-              <td>{{ $curriculum_course->year_level . ' / ' . $curriculum_course->semester  }}</td>
-              <td class="text-center">
-                <form v-on:submit.prevent="activateCourse" action="{{ url('/curriculum_courses/' . $curriculum_course->id . '/activate') }}" method="post">
-                  @csrf
-                  <button class="btn btn-success btn-sm">Activate <i class="fa fa-history"></i></button>
-                </form>
-              </td>
-            </tr>
-          @endforeach
-        </tbody>
-      </table>
-      <div v-show="checked_courses.length > 0">
-        <form v-on:submit.prevent="activateSelected" action="{{ url('/curriculum_courses/activate_selected') }}" method="post">
-          @csrf
-          <input type="hidden" name="checked_courses" :value="checked_courses_json()">
-          <button class="btn btn-primary btn-sm">Activate <i class="fa fa-history"></i></button>
-        </form>
-      </div>
-    
-  @else
-    <div class="text-center bg-white p-3">No Deactivated Course Found in Database.</div>
-  @endif
+          </thead>
+          <tbody class="bg-white">
+            @foreach ($curriculum_courses as $curriculum_course)
+              <tr>
+                <td><input type="checkbox" v-model="checked_courses" value="{{ $curriculum_course->id }}"></td>
+                <th>{{ $curriculum_course->course->course_code }}</th>
+                <td>{{ $curriculum_course->course->description }}</td>
+                <td>{{ $curriculum_course->course->lec_unit }}</td>
+                <td>{{ $curriculum_course->course->lab_unit }}</td>
+                <td>{{ $curriculum_course->year_level . ' / ' . $curriculum_course->semester  }}</td>
+                <td class="text-center">
+                  <form v-on:submit.prevent="activateCourse" action="{{ url('/curriculum_courses/' . $curriculum_course->id . '/activate') }}" method="post">
+                    @csrf
+                    <button class="btn btn-success btn-sm">Activate <i class="fa fa-history"></i></button>
+                  </form>
+                </td>
+              </tr>
+            @endforeach
+          </tbody>
+        </table>
+        <div v-show="checked_courses.length > 0">
+          <form v-on:submit.prevent="activateSelected" action="{{ url('/curriculum_courses/activate_selected') }}" method="post">
+            @csrf
+            <input type="hidden" name="checked_courses" :value="checked_courses_json()">
+            <button class="btn btn-primary btn-sm">Activate <i class="fa fa-history"></i></button>
+          </form>
+        </div>
+      
+    @else
+      <div class="text-center bg-white p-3">No Deactivated Course Found in Database.</div>
+    @endif
 
-  <div class="my-3 d-flex justify-content-end">
-    {{ $curriculum_courses->appends(request()->input())->links() }}
+    <div class="my-3 d-flex justify-content-end">
+      {{ $curriculum_courses->appends(request()->input())->links() }}
+    </div>
+    </div>
   </div>
+  
 </div>
 
   

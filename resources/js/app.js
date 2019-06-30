@@ -97,6 +97,8 @@ Vue.component(
   require("./components/StudentOutcomeModal.vue").default
 );
 
+Vue.component("exam-modal", require("./components/ExamModal.vue").default);
+
 Vue.component("datepicker", Datepicker);
 
 Vue.component("vue-select", VueSelect);

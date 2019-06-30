@@ -6,7 +6,7 @@
   <a href="{{ url('/programs') }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
 
   <div id="app">
-    <h1 class="h3 mt-4 mb-3">{{ $program->description }}</h1>
+    <h1 class="page-header mt-3">{{ $program->description }}</h1>
     <div class="card">
       <div class="card-body">
         <div class="d-flex justify-content-between align-items-center">
@@ -19,7 +19,7 @@
             </div>
           </div>
           @if(Gate::check('isDean') || Gate::check('isSAdmin'))
-            <button v-on:click="getRandColor" type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#programModal">
+            <button v-on:click="getRandColor" type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#programModal">
               Update <i class="fa fa-edit"></i>
             </button>
           @endif
@@ -96,10 +96,10 @@
                 @csrf
                 {{ method_field('PUT') }}
                 {{-- Field for program code --}}
-                <div class="form-group row">
-                    <label for="program_code" class="col-md-3 col-form-label text-md-right"><b>Program Code</b></label>
+                <div class="form-group">
+                    <label for="program_code">Program Code</label>
 
-                    <div class="col-md-9">
+                    <div>
                         <input 
                           id="program_code" 
                           type="text" 
@@ -118,10 +118,10 @@
                 {{-- /end Field for program code --}}
 
                 {{-- Field for program description --}}
-                <div class="form-group row">
-                    <label for="description" class="col-md-3 col-form-label text-md-right"><b>Description</b></label>
+                <div class="form-group">
+                    <label for="description">Description</label>
 
-                    <div class="col-md-9">
+                    <div>
                         <input 
                           id="description" 
                           type="text" 
@@ -139,10 +139,10 @@
                 {{-- /end Field for program description --}}
 
                 {{-- Field for college_id --}}
-              <div class="form-group row">
-                  <label for="description" class="col-md-3 col-form-label text-md-right"><b>Select College</b></label>
+              <div class="form-group">
+                  <label for="description">Select College</label>
 
-                  <div class="col-md-9">
+                  <div>
                       <select
                         id="college_id" 
                         type="text" 
@@ -179,7 +179,7 @@
                 :disabled="btnLoading">Close</button>
               <button 
                 type="submit" 
-                class="btn btn-primary"
+                class="btn btn-success"
                 :disabled="btnLoading">
                 Update from database
                 <div v-show="btnLoading" class="spinner-border text-light spinner-border-sm" role="status">

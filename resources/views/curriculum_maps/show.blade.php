@@ -15,23 +15,23 @@
 
     @if (count($curriculum->program->studentOutcomes) > 0 && count($curriculum->curriculumCourses) > 0)
 
-    <div class="text-primary mb-2"><strong>Legends</strong></div>
+    <div class="text-success mb-2"><strong>Legends</strong></div>
 
     <div class="legends d-flex mb-4">
       <div class="d-flex align-items-center mr-5" data-toggle="tooltip" data-placement="bottom" title="Students are introduced to knowledge and skills and are able to remember and understand what they have learned">
         <div class="learning-legend" style="background:#d8faee;"></div>
         <div class="mx-1">&mdash;</div>
-        <div class="text-success"><b>Introduced</b></div>
+        <div class="text-success">Introduced</div>
       </div>
       <div class="d-flex align-items-center mr-5" data-toggle="tooltip" data-placement="bottom" title="Students are practice through activities that help them learn how to apply their learning or skills">
         <div class="learning-legend" style="background:#fcebc0;"></div>
         <div class="mx-1">&mdash;</div>
-        <div class="text-success"><b>Reinforced</b></div>
+        <div class="text-success">Reinforced</div>
       </div>
       <div class="d-flex align-items-center mr-5" data-toggle="tooltip" data-placement="bottom" title="Students are able to integrate the knowledge and skills in order to accumulate, evaluate, and create new ideas">
         <div class="learning-legend" style="background:#fad6d2;"></div>
         <div class="mx-1">&mdash;</div>
-        <div class="text-success"><b>Demonstrated</b></div>
+        <div class="text-success">Demonstrated</div>
       </div>
     </div>
     
@@ -53,10 +53,10 @@
         </div>
         <div class="card-body">
           <div class="row mb-3" v-if="curriculum_mapping_status.status == 0">
-            <div class="col-md-2">
+            <div class="col-md-3">
               <div class="d-flex align-items-center">
                 <div class="mr-2">
-                  <label class="col-form-label"><b>Select Year:</b></label>
+                  <label class="col-form-label">Select Year:</label>
                 </div>
                 <div>
                 <select v-model="selectedYear" class="form-control" v-on:change="getSemCourses">
@@ -65,10 +65,10 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
               <div class="d-flex align-items-center">
                 <div class="mr-2">
-                  <label class="col-form-label"><b>Select Semester:</b></label>
+                  <label class="col-form-label">Select Semester:</label>
                 </div>
                 <div>
                 <select v-model="selectedSem" class="form-control" v-on:change="getSemCourses">
@@ -82,7 +82,7 @@
             <div class="col-md-3">
               <div class="d-flex align-items-center">
                 <div class="mr-2">
-                  <label class="col-form-label"><b>Total Units:</b></label>
+                  <label class="col-form-label">Total Units:</label>
                 </div>
                 <div class="text-success">
                   <b>@{{ getTotalSubUnit(selectedYear, selectedSem, 'all') }}</b>
@@ -290,44 +290,40 @@
           </div>
           <div class="modal-body ">
             <!-- Field for course_code  -->
-              <div class="form-group row">
+              <div class="form-group">
                 <label
                   for="so_code"
-                  class="col-md-3 col-form-label text-md-right"
-                  ><b>Student Outcome</b></label
+                  >Student Outcome</label
                 >
-                <div class="col-md-9">
+                <div>
                   <input type="text" class="form-control" v-model="so_code" readonly>
-                  <small class="text-primary">@{{ so_desc }}</small>
+                  <small class="text-success">@{{ so_desc }}</small>
                 </div>
               </div>
               <!-- /end Field for course_code -->
 
               <!-- Field for so_code  -->
-              <div class="form-group row">
+              <div class="form-group">
                 <label
-                  for="course_code"
-                  class="col-md-3 col-form-label text-md-right"
-                  
-                  ><b>Course Code</b></label
+                  for="course_code"               
+                  >Course Code</label
                 >
-                <div class="col-md-9">
+                <div>
                   <input type="text" class="form-control" v-model="course_code" readonly>
-                  <small class="text-primary">@{{ course_desc }}</small>
+                  <small class="text-success">@{{ course_desc }}</small>
                 </div>
               </div>
               <!-- /end Field for so_code -->
 
 
             <!-- Field for learning_level  -->
-              <div class="form-group row">
+              <div class="form-group">
                 <label
                   for="course_code"
-                  class="col-md-3 col-form-label text-md-right"
-                  ><b>Learning Level</b></label
+                  >Learning Level</label
                 >
 
-                <div class="col-md-9">
+                <div>
                   <select
                     id="learning_level"
                     class="form-control"

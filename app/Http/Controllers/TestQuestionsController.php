@@ -71,9 +71,11 @@ class TestQuestionsController extends Controller
             return TestQuestionResource::collection($test_questions);
         }
 
-        
+        $easy_count = TestQuestion::countEasy(request('student_outcome_id'), request('course_id'));
+        $average_count = TestQuestion::countAverage(request('student_outcome_id'), request('course_id'));
+        $difficult_count = TestQuestion::countDifficult(request('student_outcome_id'), request('course_id'));
 
-        return view('test_questions.index', compact('student_outcome', 'course'));
+        return view('test_questions.index', compact('student_outcome', 'course', 'easy_count', 'average_count', 'difficult_count'));
     }
 
     public function show(TestQuestion $test_question) {

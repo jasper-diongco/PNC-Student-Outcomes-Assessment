@@ -23,10 +23,11 @@
       <div class="row d-flex justify-content-between mb-3">
         <div class="col-md-4">
           <div class="input-group">
-            <div class="input-group-prepend">
+            
+            <input v-on:input="searchCourses" v-model="search" type="search" class="form-control" placeholder="Search course...">
+            <div class="input-group-append">
               <span class="input-group-text"><i class="fa fa-search"></i></span>
             </div>
-            <input v-on:input="searchCourses" v-model="search" type="search" class="form-control" placeholder="Search course...">
           </div>
         </div>
         @can('isSAdmin')
@@ -59,7 +60,7 @@
         
       </div>
       <div class="table-responsive">
-        <table class="table">
+        <table class="table table-borderless">
           <thead>
             <tr>
               <th scope="col">Course ID</th>

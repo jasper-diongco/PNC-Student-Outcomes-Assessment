@@ -9,11 +9,20 @@
 
 <div class="d-flex justify-content-between mb-2 mt-3">
   <div>
-    <h1 class="h3 mb-1 text-gray-800">Test Question <i class="fa fa-question-circle text-primary"></i></h1>
+    <h1 class="page-header">Test Question <i class="fa fa-file-alt"></i></h1>
   </div>
 </div>
 
 <div id="app">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h5 class="py-0 my-0">{{ $test_question->title }}</h5>
+        </div>
+        <div>
+            <a href="{{ url('/test_questions/' . $test_question->id . '/edit?student_outcome_id='. request('student_outcome_id') . '&course_id=' . request('course_id') . '&program_id=' . request('program_id')) }}" class="btn btn-sm btn-success"><i class="fa fa-edit"></i> Edit</a>
+        </div>
+    </div>
 
     <div class="card mb-3">
         <div class="card-body">
@@ -44,20 +53,23 @@
     
     
     
+
     <div class="card question">
-        <div class="card-header text-white bg-success">
+        {{-- <div class="card-header">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <h5 class="py-0 my-0">{{ $test_question->title }}</h5>
                 </div>
                 <div>
-                    <a href="{{ url('/test_questions/' . $test_question->id . '/edit?student_outcome_id='. request('student_outcome_id') . '&course_id=' . request('course_id') . '&program_id=' . request('program_id')) }}" class="btn btn-sm btn-dark"><i class="fa fa-edit"></i> Edit</a>
+                    <a href="{{ url('/test_questions/' . $test_question->id . '/edit?student_outcome_id='. request('student_outcome_id') . '&course_id=' . request('course_id') . '&program_id=' . request('program_id')) }}" class="btn btn-sm btn-success"><i class="fa fa-edit"></i> Edit</a>
                 </div>
             </div>
             
-        </div>
+        </div> --}}
         <div class="card-body">
-            <div>{!! $test_question->getHtml() !!}</div>
+            {{-- <h5>{{ $test_question->title }}</h5>
+            <a href="{{ url('/test_questions/' . $test_question->id . '/edit?student_outcome_id='. request('student_outcome_id') . '&course_id=' . request('course_id') . '&program_id=' . request('program_id')) }}" class="btn btn-sm btn-dark"><i class="fa fa-edit"></i> Edit</a> --}}
+            <div class="test-question-body">{!! $test_question->getHtml() !!}</div>
             <hr>
             <div class="choices">
                 <div class="row">

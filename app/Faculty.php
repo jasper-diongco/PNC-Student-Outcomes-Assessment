@@ -16,4 +16,8 @@ class Faculty extends Model
     public function college() {
       return $this->belongsTo('App\College');
     }
+
+    public function getCollege() {
+        return College::find($this->college_id);
+    }
 }

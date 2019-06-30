@@ -4,7 +4,7 @@
     <button
       v-if="isUpdate"
       type="button"
-      class="btn btn-primary btn-sm"
+      class="btn btn-secondary btn-sm"
       data-toggle="modal"
       data-target="#courseModal"
       @click="getRandColor"
@@ -14,12 +14,12 @@
     <button
       v-else-if="addDirectly"
       type="button"
-      class="btn btn-primary btn-round"
+      class="btn btn-success-b"
       data-toggle="modal"
       data-target="#courseModal"
       @click="getRandColor"
     >
-      Add new Course <i class="fa fa-plus"></i>
+      Add new Course
     </button>
     <button
       v-else
@@ -63,14 +63,13 @@
             </div>
             <div class="modal-body">
               <!-- Field for course code  -->
-              <div class="form-group row">
+              <div class="form-group">
                 <label
                   for="course_code"
-                  class="col-md-3 col-form-label text-md-right"
-                  ><b>Course Code</b></label
+                  >Course Code</label
                 >
 
-                <div class="col-md-9">
+
                   <input
                     id="course_code"
                     type="text"
@@ -81,19 +80,17 @@
                     :class="{ 'is-invalid': form.errors.has('course_code') }"
                   />
                   <has-error :form="form" field="course_code"></has-error>
-                </div>
               </div>
               <!-- /end Field for course code -->
 
               <!-- Field for description  -->
-              <div class="form-group row">
+              <div class="form-group">
                 <label
                   for="description"
-                  class="col-md-3 col-form-label text-md-right"
-                  ><b>Description</b></label
+                  >Description</label
                 >
 
-                <div class="col-md-9">
+                <div>
                   <input
                     id="description"
                     type="text"
@@ -109,14 +106,13 @@
               <!-- /end Field for description -->
 
               <!-- Field for description  -->
-              <div class="form-group row">
+              <div class="form-group">
                 <label
                   for="college_id"
-                  class="col-md-3 col-form-label text-md-right"
-                  ><b>Select College</b></label
+                  >Select College</label
                 >
 
-                <div class="col-md-9">
+                <div>
                   <select
                     id="college_id"
                     class="form-control"
@@ -141,61 +137,71 @@
               </div>
               <!-- /end Field for description -->
 
-              <!-- Field for lecture_unit  -->
-              <div class="form-group row">
-                <label
-                  for="lec_unit"
-                  class="col-md-3 col-form-label text-md-right"
-                  ><b>Lec Unit</b></label
-                >
 
-                <div class="col-md-9">
-                  <input
-                    id="lec_unit"
-                    type="number"
-                    class="form-control"
-                    name="lec_unit"
-                    v-model="form.lec_unit"
-                    v-uppercase
-                    :class="{ 'is-invalid': form.errors.has('lec_unit') }"
-                  />
-                  <has-error :form="form" field="lec_unit"></has-error>
+              <div class="row">
+                <div class="col-6">
+                  <!-- Field for lecture_unit  -->
+                  <div class="form-group">
+                    <label
+                      for="lec_unit"
+                      >Lec Unit</label
+                    >
+
+                    <div>
+                      <input
+                        id="lec_unit"
+                        type="number"
+                        class="form-control"
+                        name="lec_unit"
+                        v-model="form.lec_unit"
+                        v-uppercase
+                        :class="{ 'is-invalid': form.errors.has('lec_unit') }"
+                      />
+                      <has-error :form="form" field="lec_unit"></has-error>
+                    </div>
+                  </div>
+                  <!-- /end Field for lecture_unit -->
+                </div>
+                <div class="col-6">
+                  <!-- Field for lab_unit  -->
+                  <div class="form-group">
+                    <label
+                      for="lab_unit"
+                      >Lab Unit</label
+                    >
+
+                    <div>
+                      <input
+                        id="lab_unit"
+                        type="number"
+                        class="form-control"
+                        name="lab_unit"
+                        v-model="form.lab_unit"
+                        v-uppercase
+                        :class="{ 'is-invalid': form.errors.has('lab_unit') }"
+                      />
+                      <has-error :form="form" field="lab_unit"></has-error>
+                    </div>
+                  </div>
+                  <!-- /end Field for lab_unit -->
                 </div>
               </div>
-              <!-- /end Field for lecture_unit -->
 
-              <!-- Field for lab_unit  -->
-              <div class="form-group row">
-                <label
-                  for="lab_unit"
-                  class="col-md-3 col-form-label text-md-right"
-                  ><b>Lab Unit</b></label
-                >
 
-                <div class="col-md-9">
-                  <input
-                    id="lab_unit"
-                    type="number"
-                    class="form-control"
-                    name="lab_unit"
-                    v-model="form.lab_unit"
-                    v-uppercase
-                    :class="{ 'is-invalid': form.errors.has('lab_unit') }"
-                  />
-                  <has-error :form="form" field="lab_unit"></has-error>
-                </div>
-              </div>
-              <!-- /end Field for lab_unit -->
+              
+
+              
+
+              
 
               <!-- Field for privacy  -->
-              <div class="form-group row">
+              <div class="form-group">
                 <label
                   for="privacy"
-                  class="col-md-3 col-form-label text-md-right"
-                  ><b>Privacy</b></label
+                  >Privacy</label
                 >
 
-                <div class="col-md-9">
+                <div>
                   <select
                     id="privacy"
                     class="form-control"
@@ -225,7 +231,7 @@
                 Close
               </button>
               <button
-                class="btn btn-primary"
+                class="btn btn-success"
                 :disabled="form.busy"
                 type="submit"
               >

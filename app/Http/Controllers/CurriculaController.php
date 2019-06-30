@@ -51,16 +51,35 @@ class CurriculaController extends Controller
             }
         }
 
+        if(Auth::user()->user_type_id == 's_admin') {
+            $programs = Program::where('college_id', request('college_id'))->get();
+            $curricula = Curriculum::select('curricula.*')
+                                ->join('programs', 'programs.id', '=', 'curricula.program_id')
+                                ->join('colleges', 'colleges.id', '=', 'programs.college_id')
+                                ->where('colleges.id', request('college_id'))
+                                ->get();
+        } else {
+            $programs = Program::where('college_id', Session::get('college_id'))->get();
+            $curricula = Curriculum::select('curricula.*')
+                                ->join('programs', 'programs.id', '=', 'curricula.program_id')
+                                ->join('colleges', 'colleges.id', '=', 'programs.college_id')
+                                ->where('colleges.id', Session::get('college_id'))
+                                ->latest()
+                                ->get();
 
-        $programs = Program::where('college_id', Session::get('college_id'))->get();
-
-        $curricula = [];
+        }
+        
+        /*$curricula = [];
 
         $list = DB::select('SELECT ref_id, max(curricula.id) as id from ((curricula INNER JOIN programs ON programs.id = curricula.program_id) INNER JOIN colleges ON colleges.id = programs.college_id) WHERE programs.college_id = :college_id GROUP BY ref_id', ['college_id' => request('college_id')]);
 
         foreach ($list as $item) {
             $curricula[] = Curriculum::find($item->id);
-        }
+        }*/
+
+
+        
+
 
         return view('curricula.index')
             ->with('programs', $programs)
@@ -216,6 +235,12 @@ class CurriculaController extends Controller
                 }
             }
         }
+
+        CurriculumMappingStatus::create([
+            'curriculum_id' => $newCurriculum->id,
+            'status' => false
+        ]);
+
         Session::flash('message', 'Curriculum successfully cloned!');
 
         return $newCurriculum;

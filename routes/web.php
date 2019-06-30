@@ -266,6 +266,7 @@ Route::get('/test_bank/{program}/list_student_outcomes', 'TestBankController@lis
 // Exam routes
 
 Route::get('/exams', 'ExamsController@index');
+Route::get('/exams/create', 'ExamsController@create');
 
 // End Exam routes
 

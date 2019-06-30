@@ -304,3 +304,94 @@ body {
 .so_collapse:hover {
   text-decoration: none !important;
 }
+
+.border-left-success {
+  border-left: 4px solid #11c26d;
+}
+.border-left-warning {
+  border-left: 4px solid #eb6709;
+}
+.border-left-danger {
+  border-left: 4px solid #ff4c52;
+}
+
+.table-borderless tr {
+  border-bottom: 1px solid #efefef;
+}
+
+.login-title {
+  font-weight: 300;
+  color: #585858;
+  font-size: 32px;
+}
+
+#btn-login {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+#input-g-email input,
+#input-g-password input {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+#input-g-email input:focus,
+#input-g-password input:focus {
+  border: 1px solid #11c26d;
+}
+
+#input-g-email span,
+#input-g-password span {
+  border-radius: 0;
+  background: #f0f0f0;
+}
+#input-g-email span i,
+#input-g-password span i {
+  color: #6b6b6b;
+}
+.btn-tab {
+  box-shadow: 0;
+  border-radius: 0;
+  width: 100%;
+  border-bottom: 2px solid #b5b5b5;
+  background: #ededed;
+}
+.btn-tab-active {
+  border-bottom: 2px solid #0bb2d4;
+}
+.btn-tab-exam {
+  border-left: 0.5px solid #b5b5b5;
+}
+.btn-tab-question {
+  border-right: 0.5px solid #b5b5b5;
+}
+
+.testbank-tab-content {
+  padding: 0;
+}
+
+.test-bank-nav {
+  width: 50%;
+}
+
+.test-bank-nav .nav-link {
+  color: #37474f;
+}
+
+.test-bank-nav .nav-link.active i {
+  color: #0bb2d4;
+}
+
+.test-bank-nav .nav-link.active {
+  border-bottom: 2px solid #11c26d;
+}
+
+.test-question-body {
+  font-weight: 600;
+}
+
+.test-question-body pre,
+.test-question-body .badge {
+  font-weight: 400;
+}

@@ -1,4 +1,4 @@
-@extends('layouts.sb_admin')
+@extends('layout.app', ['active' => 'colleges'])
 
 @section('title', 'Colleges Index')
 
@@ -7,10 +7,10 @@
 
 <div class="d-flex justify-content-between mb-3">
   <div>
-    <h1 class="h2">List of Colleges</h1>
+    <h1 class="page-header">List of Colleges</h1>
   </div>
   <div>
-    <a href="{{ url('colleges/create') }}" class="btn btn-success btn-round">Add New College <i class="fa fa-plus"></i></a>
+    <a href="{{ url('colleges/create') }}" class="btn btn-success-b">Add New College</a>
   </div>
 </div>
 

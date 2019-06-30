@@ -34,6 +34,19 @@ class FacultiesController extends Controller
             if(request('q') != '') {
 
                 if(Gate::check('isSAdmin')) {
+                    // $searched_faculties = Faculty::join('users', 'users.id', '=', 'faculties.user_id')
+                    // ->where('users.is_active', true)
+                    // ->where(function($q) {
+                    //     $q->where('first_name', 'LIKE', '%' . request('q') . '%')
+                    //     ->orWhere('middle_name', 'LIKE', '%' . request('q') . '%')
+                    //     ->orWhere('last_name', 'LIKE', '%' . request('q') . '%')
+                    //     ->orWhere('email', 'LIKE', '%' . request('q') . '%')
+                    //     ->orWhere(DB::raw("CONCAT(last_name, ' ', first_name, ', ', middle_name)"), 'LIKE', '%' . request('q') . '%')
+                    //     ->orWhere(DB::raw("CONCAT(first_name, ' ', last_name)"), 'LIKE', '%' . request('q') . '%');
+                    // })   
+                    // ->select('faculties.*')
+                    // ->get();
+
                     $searched_faculties = Faculty::join('users', 'users.id', '=', 'faculties.user_id')
                     ->where('users.is_active', true)
                     ->where(function($q) {
@@ -46,6 +59,8 @@ class FacultiesController extends Controller
                     })   
                     ->select('faculties.*')
                     ->get();
+
+
 
                 } else {
                     $searched_faculties = Faculty::join('users', 'users.id', '=', 'faculties.user_id')
@@ -63,6 +78,8 @@ class FacultiesController extends Controller
                     ->select('faculties.*')
                     ->get();
                 }
+
+                //$searched_faculties = Faculty::all();
                 
                 return FacultyResource::collection($searched_faculties);
 

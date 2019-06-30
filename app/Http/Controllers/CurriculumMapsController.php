@@ -42,6 +42,7 @@ class CurriculumMapsController extends Controller
           ->join('colleges','colleges.id', '=', 'programs.college_id')
           ->where('programs.college_id', request('college_id'))
           ->select('curricula.*')
+          ->latest()
           ->paginate(10); 
       }
 

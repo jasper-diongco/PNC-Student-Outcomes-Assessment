@@ -46,7 +46,7 @@
                 <label
                   for="course_code"
                   class="col-md-3 col-form-label text-md-right"
-                  ><b>Course Code</b></label
+                  >Course Code</label
                 >
 
                 <div class="col-md-9">
@@ -68,7 +68,7 @@
                 <label
                   for="description"
                   class="col-md-3 col-form-label text-md-right"
-                  ><b>Description</b></label
+                  >Description</label
                 >
 
                 <div class="col-md-9">
@@ -86,7 +86,7 @@
               <!-- Field for year level  -->
               <div class="form-group row">
                 <label for="year" class="col-md-3 col-form-label text-md-right"
-                  ><b>Year Level</b></label
+                  >Year Level</label
                 >
 
                 <div class="col-md-9">
@@ -118,7 +118,7 @@
               <!-- Field for year level  -->
               <div class="form-group row">
                 <label for="year" class="col-md-3 col-form-label text-md-right"
-                  ><b>Semester</b></label
+                  >Semester</label
                 >
 
                 <div class="col-md-9">
@@ -265,7 +265,7 @@
                   Close
                 </button>
                 <button
-                  class="btn btn-primary"
+                  class="btn btn-success"
                   :disabled="form.busy"
                   type="submit"
                 >

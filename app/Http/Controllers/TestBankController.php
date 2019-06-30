@@ -25,7 +25,7 @@ class TestBankController extends Controller
     }
 
     public function listStudentOutcome(Program $program) {
-
+        
         return view('test_bank.list_student_outcomes', compact('program'));
     }
 }

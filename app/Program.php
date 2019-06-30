@@ -17,6 +17,6 @@ class Program extends Model
     }
 
     public function curricula() {
-        return $this->hasMany('App\Curriculum');
+        return $this->hasMany('App\Curriculum')->latest();
     }
 }

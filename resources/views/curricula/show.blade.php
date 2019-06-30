@@ -28,10 +28,19 @@
     </curriculum-modal>
     <!-- End curriculum modal -->
     
-    <a href="{{ url('/curricula?college_id='. Session::get('college_id')) }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
+    <a href="{{ url('/curricula?college_id='. request('college_id')) }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
     
     <h1 class="page-header mt-3">{{ $curriculum->name }}</h1>
-    <p class="mr-5"><i class="fa fa-file-alt text-primary"></i> {{ $curriculum->description }}</p>
+
+    <div><i class="fa fa-code-branch text-primary"></i> <label>Revision no:</label> {{ $curriculum->revision_no }}.0</div>
+
+    @if($curriculum->description) 
+      <p class="mr-5"><i class="fa fa-file-alt text-primary"></i> <label>Description:</label> {{ $curriculum->description }}</p>
+    @else
+      <p class="mr-5"><i class="fa fa-file-alt text-primary"></i> <label>Description:</label> <i>No description.</i></p>
+    @endif
+
+
     <div class="d-flex">  
       <p class="mr-5"><i class="fa fa-book text-success"></i> {{ count($curriculum->curriculumCourses) }} courses</p>
     </div>
@@ -39,7 +48,7 @@
     @if (!$curriculum->checkIfLatestVersion())
       <div class="alert alert-warning">
         <i class="fa fa-exclamation-triangle"></i>
-        This is not the latest version of <b>{{ $curriculum->program->program_code }}</b> curriculum. View the latest version <a href="{{ url('/curricula/' . $curriculum->getLatestVersion()->id) }}">here</a>
+        This is not the latest version of <b>{{ $curriculum->name }}</b> curriculum. View the latest version <a href="{{ url('/curricula/' . $curriculum->getLatestVersion()->id) }}">here</a>
       </div>
     @endif
 
@@ -48,11 +57,11 @@
       <div class="row">
         <div class="col-md-8">
           <div class="form-group row">
-            <div class="col-md-2 text-md-right">
-              <label class="col-form-label "><b>Search Courses: </b></label>
+            <div class="col-md-3">
+              <label class="col-form-label">Search Courses:</label>
             </div>
             <div style="width: 100%" class="d-flex flex-column col-md-9">
-              <div >
+              <div>
                 <input v-on:input="searchCourses" v-model="searchCourseText" class="form-control" type="search" name="search_course" placeholder="Type to search courses...">
               </div>
 
@@ -79,14 +88,20 @@
                     </li>
                 </ul>
               </div>
-              <div v-else-if="this.searching">
+              <div v-else-if="noCourseFound" class="card">
+                <div class="card-body">
+                  No course found.
+                </div>
+                
+              </div>
+              <div v-if="this.searching">
                 <table-loading></table-loading>
               </div>
             </div>
           </div>
         </div>
         
-        <div class="col-md-4 text-md-right">
+        <div class="col-md-4 d-flex justify-content-end">
           @if(Gate::check('isDean') || Gate::check('isSAdmin'))
             <!-- COURSE MODAL -->
               <course-modal 
@@ -103,16 +118,18 @@
     @else
       <div class="d-flex justify-content-end align-self-center my-3">
         <div>
-            <button class="btn btn-secondary mr-2 btn-sm">Print <i class="fa fa-print"></i></button>    
+            {{-- <button class="btn btn-secondary mr-2 btn-sm">Print <i class="fa fa-print"></i></button>    --}} 
         </div>
         @if ($curriculum->checkIfLatestVersion())
         @if(Gate::check('isDean') || Gate::check('isSAdmin'))
-          <div>
+          {{-- <div>
             <form v-on:submit.prevent="updateCurriculum" action="{{ url('/curricula/' . $curriculum->id. '/edit') }}" method="post">
               @csrf
               <button class="btn btn-success btn-sm" type="submit">Edit <i class="fa fa-edit"></i></button>
             </form>
-          </div>
+          </div> --}}
+          <button v-on:click="reviseCurriculum" 
+            class="btn btn-success btn-sm" >Revise <i class="fa fa-edit"></i></button>
         @endif
         @endif
       </div>
@@ -190,7 +207,7 @@
 
             <div class="card-body">
               <div v-if="getSemCourses(year, sem).length > 0" class="table-responsive">
-                <table class="table">
+                <table class="table table-borderless">
                   <thead>
                     <tr>
                       <th>Course Code</th>
@@ -278,8 +295,8 @@
 
             <div class="card-body">
               <div v-if="getSemCourses(year, 3).length > 0" class="table-responsive">
-                <table class="table">
-                  <thead class="thead-light">
+                <table class="table table-borderless">
+                  <thead>
                     <tr>
                       <th>Course Code</th>
                       <th>Description</th>
@@ -364,6 +381,7 @@
       el: '#app',
       data: {
         searching: false,
+        noCourseFound: false,
         searchCourseText: '',
         searched_courses: [],
         maxYearLevel: {{ $curriculum->year_level }},
@@ -402,6 +420,7 @@
       methods: {
         searchCourses :_.debounce(() => {
             if(vm.searchCourseText == '') {
+              vm.noCourseFound = false;
               return vm.searched_courses = [];
             }
 
@@ -411,6 +430,12 @@
 
               vm.searched_courses = response.data.data;
               vm.searching = false;
+
+              if(vm.searched_courses.length > 0) {
+                vm.noCourseFound = false;
+              } else {
+                vm.noCourseFound = true;
+              }
             }).
             catch(err => {
               console.log(err);

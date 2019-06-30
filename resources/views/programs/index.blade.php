@@ -88,7 +88,7 @@
         @endcan
         
         <div class="table-responsive">
-          <table id="students-table" class="table">
+          <table id="students-table" class="table table-borderless">
             <thead>
               <tr>
                 <th scope="col">#</th>
@@ -144,10 +144,10 @@
             
               @csrf
               {{-- Field for program code --}}
-              <div class="form-group row">
-                  <label for="program_code" class="col-md-3 col-form-label text-md-right"><b>Program Code</b></label>
+              <div class="form-group">
+                  <label for="program_code">Program Code</label>
 
-                  <div class="col-md-9">
+                  <div>
                       <input 
                         id="program_code" 
                         type="text" 
@@ -166,10 +166,10 @@
               {{-- /end Field for program code --}}
 
               {{-- Field for program description --}}
-              <div class="form-group row">
-                  <label for="description" class="col-md-3 col-form-label text-md-right"><b>Description</b></label>
+              <div class="form-group">
+                  <label for="description">Description</label>
 
-                  <div class="col-md-9">
+                  <div>
                       <input 
                         id="description" 
                         type="text" 
@@ -188,10 +188,10 @@
 
 
               {{-- Field for college_id --}}
-              <div class="form-group row">
-                  <label for="description" class="col-md-3 col-form-label text-md-right"><b>Select College</b></label>
+              <div class="form-group">
+                  <label for="description">Select College</label>
 
-                  <div class="col-md-9">
+                  <div>
                       <select
                         id="college_id" 
                         type="text" 
@@ -230,7 +230,7 @@
               :disabled="btnLoading">Close</button>
             <button 
               type="submit" 
-              class="btn btn-primary"
+              class="btn btn-success"
               :disabled="btnLoading">
               Add to database
               <div v-show="btnLoading" class="spinner-border text-light spinner-border-sm" role="status">

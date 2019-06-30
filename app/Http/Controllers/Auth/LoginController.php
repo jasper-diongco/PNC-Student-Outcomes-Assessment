@@ -42,7 +42,7 @@ class LoginController extends Controller
 
     public function redirectTo() {
 
-        Session::put('toggle_sb', 1);
+        //Session::put('toggle_sb', 1);
 
         if(Auth::user()->is_active == false) {
             
@@ -70,6 +70,20 @@ class LoginController extends Controller
     //     return redirect()->route('/login');
     //     //return redirect('/login');
     // }
+
+    protected function authenticated(\Illuminate\Http\Request $request, $user)
+    {
+        if ($request->ajax()){
+
+            return response()->json([
+                'auth' => auth()->check(),
+                'user' => $user,
+                'intended' => $this->redirectPath(),
+            ]);
+
+        }
+    }
+    
     public function logout() {
         Auth::logout();
         Session::flush();
