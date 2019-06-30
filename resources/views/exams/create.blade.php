@@ -146,6 +146,9 @@
                             type="submit"
                         >
                             Generate new exam
+                            <div v-if="form.busy" class="spinner-border spinner-border-sm text-light" role="status">
+                              <span class="sr-only">Loading...</span>
+                            </div>
                         </button>
                     </div>
                     
@@ -170,12 +173,17 @@
                 form: new Form({
                     description: "",
                     time_limit: 60,
-                    passing_grade: 60
+                    passing_grade: 60,
+                    curriculum_id: '{{ request('curriculum_id') }}',
+                    student_outcome_id: '{{ request('student_outcome_id') }}'
                 })
             },
             methods: {
                 addExam() {
-                    alert("Test");
+                    this.form.post(myRootURL + '/exams')
+                    .then(response => {
+                        console.log(response);
+                    });
                 },
                 saveExam() {
                     this.addExam();

@@ -113,4 +113,14 @@ class TestQuestion extends Model
                 ->where('difficulty_level_id', $difficulty_level_id)
                 ->count();
     }
+
+    public static function getRandTestQuestions($student_outcome_id='',$course_id='', $difficulty_level_id='', $count=0) {
+        return TestQuestion::where('student_outcome_id', $student_outcome_id)
+                ->where('course_id', $course_id)
+                ->where('is_active', true)
+                ->where('difficulty_level_id', $difficulty_level_id)
+                ->inRandomOrder()
+                ->take($count)
+                ->get();
+    }
 }
