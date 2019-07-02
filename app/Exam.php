@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\ExamCourseRequirement;
 use App\StudentOutcome;
 use App\Curriculum;
+use App\Exam;
 
 class Exam extends Model
 {
@@ -72,5 +73,50 @@ class Exam extends Model
 
 
         return $requirements;
+    }
+
+    public function getCourses() {
+        $student_outcome = StudentOutcome::find(request('student_outcome_id'));
+        $curriculum = Curriculum::find(request('curriculum_id'));
+
+        $curriculum_maps = $student_outcome->curriculumMaps;
+        $curriculum_courses = $curriculum->curriculumCourses;
+
+        $courses = [];
+
+        foreach ($curriculum_maps as $curriculum_map) {
+
+            foreach ($curriculum_courses as $curriculum_course) {
+
+                if($curriculum_map->curriculumCourse->course->id == $curriculum_course->course_id) {
+                    $courses[] = $curriculum_map->curriculumCourse->course;
+                    break;
+                }
+            }
+        }
+
+        return $courses;
+    }
+
+
+    public function examTestQuestions() {
+        return $this->hasMany('App\ExamTestQuestion');
+    }
+
+    public function getTestQuestions() {
+        return TestQuestion::select('test_questions.*')
+            ->join('exam_test_questions', 'exam_test_questions.test_question_id', '=',  'test_questions.id')
+            ->where('exam_test_questions.exam_id', $this->id)
+            ->with('choices')
+            ->with('user')
+            ->get();
+    }
+
+    public function countTestQuestionsByCourse($course_id) {
+        return TestQuestion::select('test_questions.*')
+            ->join('exam_test_questions', 'exam_test_questions.test_question_id', '=',  'test_questions.id')
+            ->where('exam_test_questions.exam_id', $this->id)
+            ->where('test_questions.course_id', $course_id)
+            ->count();
     }
 }

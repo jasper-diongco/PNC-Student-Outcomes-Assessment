@@ -202,8 +202,21 @@ div.mdl-layout__drawer > nav.mdl-navigation > a.mdl-navigation__link {
   color: #5a5c69;
 }
 
+.test-num {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background: #ededed;
+  width: 40px;
+  height: 40px;
+  font-weight: 700;
+  color: #5a5c69;
+}
+
 .choice:hover {
   box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.13);
+  transform: scale(1.01);
 }
 
 [v-cloak] > * {

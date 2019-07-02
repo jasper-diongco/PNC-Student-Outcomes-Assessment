@@ -33,7 +33,7 @@
         @can('isSAdmin')
           <div class="col-md-4 d-flex row align-items-center">
             <div class="col-6 text-right">
-              <label class="col-form-label">Filter By College:</label>
+              <label class="col-form-label text-dark"><i class="text-success fa fa-university"></i> Filter By College:</label>
             </div>
             <div class="col-6">
               <select v-on:change="getCourses" class="form-control" name="filter_by_college" id="filter_by_college" v-model="filter_by_college">
@@ -47,7 +47,7 @@
         @endcan
         <div class="col-md-4 d-flex row">
           <div class="col-6 text-right">
-            <label class="col-form-label">Filter By Privacy:</label>
+            <label class="col-form-label text-dark">Filter By Privacy:</label>
           </div>
           <div class="col-6">
             <select v-on:change="getCourses" class="form-control" name="filter_by_privacy" id="filter_by_college" v-model="filter_by_privacy">

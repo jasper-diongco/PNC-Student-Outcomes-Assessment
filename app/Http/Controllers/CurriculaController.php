@@ -77,12 +77,13 @@ class CurriculaController extends Controller
             $curricula[] = Curriculum::find($item->id);
         }*/
 
-
+        $college = College::findOrFail(request('college_id'));
         
 
 
         return view('curricula.index')
             ->with('programs', $programs)
+            ->with('college', $college)
             ->with('curricula', $curricula);
     }
 

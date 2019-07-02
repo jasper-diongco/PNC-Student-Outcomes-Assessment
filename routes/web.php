@@ -215,6 +215,8 @@ Route::put('/test_questions/{test_question}', 'TestQuestionsController@update');
 
 Route::get('/test_questions/{test_question}', 'TestQuestionsController@show');
 
+Route::get('/test_questions/{test_question}/preview', 'TestQuestionsController@preview');
+
 // End TestQuestions Routes
 
 // ImageObject Routes
@@ -268,6 +270,8 @@ Route::get('/test_bank/{program}/list_student_outcomes', 'TestBankController@lis
 Route::get('/exams', 'ExamsController@index');
 Route::get('/exams/create', 'ExamsController@create');
 Route::post('/exams', 'ExamsController@store');
+Route::get('/exams/{exam}', 'ExamsController@show');
+Route::get('/exams/{exam}/preview', 'ExamsController@preview');
 // End Exam routes
 
 

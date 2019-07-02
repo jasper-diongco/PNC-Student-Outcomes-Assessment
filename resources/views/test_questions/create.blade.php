@@ -7,10 +7,18 @@
 
 <a href="{{ url('/test_questions?student_outcome_id='. request('student_outcome_id') . '&course_id=' . request('course_id') . '&program_id=' . request('program_id')) }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
 
-<div class="d-flex justify-content-between mb-2 mt-3">
+<div class="d-flex justify-content-between mt-3">
   <div>
-    <h1 class="h3 mb-1 text-gray-800">Add new Test Question</h1>
+    <h1 class="page-header mb-3">Add new Test Question</h1>
   </div>
+</div>
+
+
+<div class="d-flex mb-3">
+
+    <div class="mr-3"><label>Program: </label> <span class="text-info">{{ $student_outcome->program->program_code }}</span></div>
+    <div class="mr-3"><label>Student Outcome: </label> <span class="text-info">{{ $student_outcome->so_code }}</span></div>
+    <div class="mr-3"><label>Course: </label> <span class="text-info">{{ $course->course_code . ' - ' . $course->description }}</span></div>
 </div>
 
 

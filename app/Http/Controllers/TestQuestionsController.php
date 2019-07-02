@@ -83,9 +83,17 @@ class TestQuestionsController extends Controller
         return view('test_questions.show', compact('test_question'));
     }
 
+    public function preview(TestQuestion $test_question) {
+        
+        return view('test_questions.preview', compact('test_question'));
+    }
+
     public function edit(TestQuestion $test_question) {
 
-        return view('test_questions.edit', compact('test_question'));
+        $student_outcome = StudentOutcome::findOrFail(request('student_outcome_id'));
+        $course = Course::findOrFail(request('course_id'));
+
+        return view('test_questions.edit', compact('test_question', 'student_outcome', 'course'));
     }
 
     public function getCreators() {
@@ -137,7 +145,11 @@ class TestQuestionsController extends Controller
     }
 
     public function create() {
-        return view('test_questions.create');
+
+        $student_outcome = StudentOutcome::findOrFail(request('student_outcome_id'));
+        $course = Course::findOrFail(request('course_id'));
+
+        return view('test_questions.create', compact('student_outcome', 'course'));
     }
 
     public function store() {

@@ -61,8 +61,10 @@
                     <label>Total:</label> {{ $total_test_questions }}
                     <ul class="list-group" style="font-size: 14px; list-style: none; padding-left: 0; cursor: pointer;">
                         @foreach($curriculum_course_requirements as $requirement)
-                            <li data-toggle="collapse" data-target="#collapse{{ $requirement->curriculum_map->curriculumCourse->course->course_code }}" class="list-group-item"><i class="fa fa-caret-right text-success"></i> {{ $requirement->curriculum_map->curriculumCourse->course->course_code }} - <span >{{ $requirement->total }}</span></li>
-                            <div class="bg-white collapse" id="collapse{{ $requirement->curriculum_map->curriculumCourse->course->course_code }}">
+                            <li data-toggle="collapse" data-target="#collapse{{ $requirement->curriculum_map->curriculumCourse->course->course_code }}" class="list-group-item"><i class="fa fa-caret-right text-success"></i> {{ $requirement->curriculum_map->curriculumCourse->course->course_code }} - <span >{{ $requirement->total }}</span>
+                                
+                            </li>
+                            <div class="pl-3 bg-white collapse" id="collapse{{ $requirement->curriculum_map->curriculumCourse->course->course_code }}">
                                 <ul style="list-style: none; padding-left: 10px;">
                                     <li><i class="fa fa-angle-right text-success"></i>  Easy - {{ $requirement->easy }}</li>
                                     <li><i class="fa fa-angle-right text-success"></i>  Average - {{ $requirement->average }}</li>
@@ -71,6 +73,8 @@
                             </div>
                             
                         @endforeach
+
+
                     </ul>
 
                     
@@ -78,7 +82,15 @@
                 
             </div>
             <div class="col-md-9">
-                <h1 class="page-header">Add new Exam <i class="fa fa-file-alt"></i></h1>
+                <h1 class="page-header mb-3">Add new Exam <i class="fa fa-file-alt"></i></h1>
+    
+                <div class="d-flex mb-3">
+
+                    <div class="mr-3"><label>Program: </label> <span class="text-info">{{ $program->program_code }}</span></div>
+                    <div class="mr-3"><label>Student Outcome: </label> <span class="text-info">{{ $student_outcome->so_code }}</span></div>
+                    <div class="mr-3"><label>Curriculum: </label> <span class="text-info">{{ $curriculum->name . ' ' . $curriculum->year . ' - v' . $curriculum->revision_no }}.0</span></div>
+                </div>
+
                 <form
                     v-on:submit.prevent="saveExam"
                     v-on:keydown="form.onKeydown($event)"
@@ -182,7 +194,8 @@
                 addExam() {
                     this.form.post(myRootURL + '/exams')
                     .then(response => {
-                        console.log(response);
+                        //console.log(response);
+                        window.location.replace(myRootURL + '/exams/' + response.data.exam.id + '?program_id='+ {{ request('program_id') }} +'&student_outcome_id='+ {{ request('student_outcome_id') }} +'&curriculum_id=' + {{ request('curriculum_id') }});
                     });
                 },
                 saveExam() {

@@ -86,7 +86,7 @@
             {{-- exams --}}
             <div class="tab-pane fade" id="exam_content-{{$student_outcome->id}}" role="tabpanel">
               <label class="ml-3 mt-2">Select Curriculum:</label>
-              <div class="list-group">
+              {{-- <div class="list-group">
                 @foreach($program->curricula as $curriculum)
                   <a href="{{ url('/exams?student_outcome_id=' . $student_outcome->id . '&program_id=' . $student_outcome->program_id . '&curriculum_id=' . $curriculum->id) }}" class="list-group-item list-group-item-action">
                     <div class="d-flex justify-content-between">
@@ -100,7 +100,45 @@
                     </div>    
                   </a>
                 @endforeach
-              </div>
+              </div> --}}
+
+              <table class="table table-borderless mx-2">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Revision No.</th>
+                    <th>Year</th>
+                    <th>Available Exams</th>
+                    <th>Select</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @foreach($program->curricula as $curriculum)
+                    <tr>
+                      <td>
+                        {{ $curriculum->id }}
+                      </td>
+                      <td>
+                        {{ $curriculum->name }}
+                      </td>
+                      <td>
+                        {{ $curriculum->revision_no }}
+                      </td>
+                      <td>
+                        {{ $curriculum->year }}
+                      </td>
+                      <td>
+                        <?php $count = $curriculum->countExam($student_outcome->id) ?>
+                        <span class="badge {{ $count > 0 ? 'badge-info' : 'badge-dark' }}">{{ $count }} exam{{ $count > 1 ? 's' : '' }}</span>
+                      </td>
+                      <td>
+                        <a href="{{ url('/exams?student_outcome_id=' . $student_outcome->id . '&program_id=' . $student_outcome->program_id . '&curriculum_id=' . $curriculum->id) }}" class="btn btn-sm btn-secondary">Select</a>
+                      </td>
+                    </tr>
+                  @endforeach
+                </tbody>
+              </table>
             </div>
             {{-- end exams --}}
           </div>

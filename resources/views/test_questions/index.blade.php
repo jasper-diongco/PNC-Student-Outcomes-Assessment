@@ -6,9 +6,9 @@
     
     <a href="{{ url('/test_bank/' . request('program_id') . '/list_student_outcomes') }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
     
-    <div class="d-flex justify-content-between mb-3 mt-3">
+    <div class="d-flex justify-content-between mt-3">
         <div>
-          <h1 class="page-header">Test Questions &mdash; {{ $student_outcome->so_code }} & {{ $course->course_code . ' - ' . $course->description }}</h1>
+          <h1 class="page-header mb-3">Test Questions</h1>
         </div>
         <div>
           @if(Gate::check('isDean') || Gate::check('isSAdmin'))
@@ -16,6 +16,13 @@
             <a href="{{ url('/test_questions/create?student_outcome_id='. request('student_outcome_id') . '&course_id=' . request('course_id') . '&program_id=' . request('program_id')) }}" class="btn btn-success-b">Add new Test Question</a>
           @endif
         </div>
+    </div>
+
+    <div class="d-flex mb-3">
+
+        <div class="mr-3"><label>Program: </label> <span class="text-info">{{ $student_outcome->program->program_code }}</span></div>
+        <div class="mr-3"><label>Student Outcome: </label> <span class="text-info">{{ $student_outcome->so_code }}</span></div>
+        <div class="mr-3"><label>Course: </label> <span class="text-info">{{ $course->course_code . ' - ' . $course->description }}</span></div>
     </div>
 
     <div id="app" class="card">
@@ -35,7 +42,8 @@
                 <div class="col-md-8">
                   <div class="d-flex justify-content-end">
                     <div class="d-flex mr-2">
-                      <div class="mr-2"><label class="col-form-label">Filter By Difficulty: </label></div>
+                      <div class="mr-2"><label class="col-form-label text-dark">
+                        <i class="text-success fa fa-layer-group"></i> Filter By Level: </label></div>
                       <div>
                         <select class="form-control" v-model="difficulty_id" v-on:change="filterByDifficulty">
                           <option value="">All</option>
@@ -46,7 +54,7 @@
                       </div>
                     </div>
                     <div class="d-flex">
-                      <div class="mr-2"><label class="col-form-label">Filter By Creator: </label></div>
+                      <div class="mr-2"><label class="col-form-label text-dark"><i class="text-success fa fa-user"> </i> Filter By Creator: </label></div>
                       <div>
                         <select class="form-control" v-model="user_id" v-on:change="filterByCreator">
                           <option value="">All</option>
@@ -68,7 +76,7 @@
               <table id="students-table" class="table table-borderless">
                 <thead>
                   <tr>
-                    <th scope="col">#</th>
+                    <th scope="col">ID</th>
                     <th scope="col" width="35%">Title</th>
                     <th scope="col">Level</th>
                     <th scope="col">Choices</th>

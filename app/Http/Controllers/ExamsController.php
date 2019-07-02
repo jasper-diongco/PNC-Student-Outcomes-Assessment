@@ -6,15 +6,29 @@ use Illuminate\Http\Request;
 use App\TestQuestion;
 use App\Exam;
 use App\ExamTestQuestion;
+use App\Program;
+use App\Curriculum;
+use App\StudentOutcome;
 use Illuminate\Support\Facades\Auth;
 
 class ExamsController extends Controller
 {
     public function index() {
-        return view('exams.index');
+
+        $program = Program::findOrFail(request('program_id'));
+        $curriculum = Curriculum::findOrFail(request('curriculum_id'));
+        $student_outcome = StudentOutcome::findOrFail(request('student_outcome_id'));
+
+        $exams = $curriculum->getExams(request('student_outcome_id'));
+
+        return view('exams.index', compact('program', 'curriculum', 'student_outcome', 'exams'));
     }
 
     public function create() {
+
+        $program = Program::findOrFail(request('program_id'));
+        $curriculum = Curriculum::findOrFail(request('curriculum_id'));
+        $student_outcome = StudentOutcome::findOrFail(request('student_outcome_id'));
 
         $count_easy = TestQuestion::countTestQuestion(request('student_outcome_id'), 1);
         $count_average = TestQuestion::countTestQuestion(request('student_outcome_id'), 2);
@@ -28,7 +42,7 @@ class ExamsController extends Controller
             $total_test_questions += $r->total;
         }
 
-        return view('exams.create', compact('count_easy', 'count_average', 'count_difficult', 'curriculum_course_requirements', 'total_test_questions'));
+        return view('exams.create', compact('count_easy', 'count_average', 'count_difficult', 'curriculum_course_requirements', 'total_test_questions', 'program', 'curriculum', 'student_outcome'));
     }
 
     public function store() {
@@ -102,10 +116,29 @@ class ExamsController extends Controller
         }
 
         if($is_valid) {
-           return $exam_test_questions; 
+           return response()->json(['exam' => $exam ,'test_questions' => $exam_test_questions], 201); 
         } else {
             return response()->json(['message' => 'Insufficient test questions!'] ,422);
         }
         
     }
+
+
+    public function show(Exam $exam) {
+
+        $test_questions = $exam->getTestQuestions();
+        $courses = $exam->getCourses();
+
+        return view('exams.show', compact('exam', 'test_questions', 'courses'));
+    }
+
+    public function preview(Exam $exam) {
+
+        $test_questions = $exam->getTestQuestions();
+        $courses = $exam->getCourses();
+
+        return view('exams.preview', compact('exam', 'test_questions', 'courses'));
+    }
+
+
 }

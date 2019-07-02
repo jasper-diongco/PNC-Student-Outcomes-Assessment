@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\CurriculumCourse;
 use App\CurriculumMap;
+use App\Exam;
 
 class Curriculum extends Model
 {
@@ -68,5 +69,21 @@ class Curriculum extends Model
         return Curriculum::where('ref_id', $this->ref_id)
             ->latest()
             ->first();
+    }
+
+
+    public function countExam($student_outcome_id='') {
+        return Exam::where('curriculum_id', $this->id)
+            ->where('student_outcome_id', $student_outcome_id)
+            ->where('is_active', true)
+            ->count();
+    }
+
+    public function getExams($student_outcome_id='') {
+        return Exam::where('curriculum_id', $this->id)
+            ->where('student_outcome_id', $student_outcome_id)
+            ->where('is_active', true)
+            ->latest()
+            ->get();
     }
 }
