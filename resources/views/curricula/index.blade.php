@@ -9,7 +9,7 @@
       <a href="{{ url('/curricula') }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
     @endcan
 
-    <div class="d-flex justify-content-between mb-3 mt-3">
+    <div class="d-flex justify-content-between mb-3">
       <div>
         <h1 class="page-header">Curricula</h1>
       </div>
@@ -76,7 +76,7 @@
       </div> --}}
       <div class="card">
         <div class="card-body">
-          <h5 class="mb-3"><i class="text-info fa fa-book-open"></i> {{ $college->college_code }} List of curriculum</h5>
+          <h5 class="mb-3 text-info"> {{ $college->college_code }} CURRICULA</h5>
           <table class="table table-borderless">
             <thead>
               <tr>
@@ -96,7 +96,7 @@
                 <td>{{ $curriculum->revision_no }}.0</td>
                 <td>{{ $curriculum->program->description }}</td>
                 <td>{{ $curriculum->year }}</td>
-                <td><a href="{{ url('/curricula/' . $curriculum->id . '?college_id=' . request('college_id')) }}" class="btn btn-secondary btn-sm"><i class="fa fa-search "></i></a></td>
+                <td><a href="{{ url('/curricula/' . $curriculum->id . '?college_id=' . request('college_id')) }}" class="btn btn-success btn-sm"><i class="fa fa-search "></i></a></td>
               </tr>
               @endforeach
             </tbody>

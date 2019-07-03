@@ -54,7 +54,7 @@
                       </div>
                     </div>
                     <div class="d-flex">
-                      <div class="mr-2"><label class="col-form-label text-dark"><i class="text-success fa fa-user"> </i> Filter By Creator: </label></div>
+                      <div class="mr-2"><label class="col-form-label text-dark"><i class="text-success fa fa-user"> </i> Filter By Author: </label></div>
                       <div>
                         <select class="form-control" v-model="user_id" v-on:change="filterByCreator">
                           <option value="">All</option>
@@ -80,7 +80,7 @@
                     <th scope="col" width="35%">Title</th>
                     <th scope="col">Level</th>
                     <th scope="col">Choices</th>
-                    <th scope="col">Created By</th>
+                    <th scope="col">Author</th>
                     <th scope="col">Created At</th>
                     <th scope="col">Actions</th>
                   </tr>

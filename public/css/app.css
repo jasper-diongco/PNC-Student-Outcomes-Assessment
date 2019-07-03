@@ -10130,24 +10130,24 @@ card-header {
   rder-top-left-radius: 2px;
 }
 
-.icon-nav {
+#main-nav .icon-nav {
   font-size: 20px;
 }
 
-.nav-item.active {
+#main-nav .nav-item.active {
   background: #f6fefa;
   color: #05a85c;
 }
 
-.nav-item.active .nav-link i {
+#main-nav .nav-item.active .nav-link i {
   color: #05a85c;
 }
 
-.nav-item.active .nav-link span {
+#main-nav .nav-item.active .nav-link span {
   color: #05a85c;
 }
 
-.nav-item:hover {
+#main-nav .nav-item:hover {
   background: #f6fefa;
 }
 
@@ -10530,4 +10530,12 @@ body {
 .test-question-body pre,
 .test-question-body .badge {
   font-weight: 400;
+}
+
+.bg-success-light {
+  background: #e6fdf2;
+}
+
+.bg-danger-light {
+  background: #ffe5e6;
 }

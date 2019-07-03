@@ -20,4 +20,15 @@ class Student extends Model
     public function curriculum() {
         return $this->belongsTo('App\Curriculum');
     }
+
+    public function grades() {
+        return $this->hasMany('App\Grade')->with('gradeValue');
+    }
+
+    public function getGradesByCourse($course_id) {
+        return Grade::where('course_id', $course_id)
+            ->where('student_id', $this->id)
+            ->orderBy('created_at', 'DESC')
+            ->get();
+    }
 }

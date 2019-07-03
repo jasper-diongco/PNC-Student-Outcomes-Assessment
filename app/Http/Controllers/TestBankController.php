@@ -9,6 +9,11 @@ use App\Program;
 
 class TestBankController extends Controller
 {
+
+    public function __construct() {
+        $this->middleware('auth');
+    }
+
     public function listProgram() {
         //authenticate
         if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
@@ -25,6 +30,11 @@ class TestBankController extends Controller
     }
 
     public function listStudentOutcome(Program $program) {
+
+        //authenticate
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
         
         return view('test_bank.list_student_outcomes', compact('program'));
     }

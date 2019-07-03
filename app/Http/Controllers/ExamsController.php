@@ -10,10 +10,22 @@ use App\Program;
 use App\Curriculum;
 use App\StudentOutcome;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use Gate;
 
 class ExamsController extends Controller
 {
+    public function __construct() {
+        $this->middleware('auth');
+
+    }
+
     public function index() {
+
+        //authenticate
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
 
         $program = Program::findOrFail(request('program_id'));
         $curriculum = Curriculum::findOrFail(request('curriculum_id'));
@@ -25,6 +37,11 @@ class ExamsController extends Controller
     }
 
     public function create() {
+
+        //authenticate
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
 
         $program = Program::findOrFail(request('program_id'));
         $curriculum = Curriculum::findOrFail(request('curriculum_id'));
@@ -46,6 +63,11 @@ class ExamsController extends Controller
     }
 
     public function store() {
+
+        //authenticate
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
 
         $is_valid = true;
 
@@ -116,6 +138,7 @@ class ExamsController extends Controller
         }
 
         if($is_valid) {
+           Session::flash('message', 'Exam successfully created'); 
            return response()->json(['exam' => $exam ,'test_questions' => $exam_test_questions], 201); 
         } else {
             return response()->json(['message' => 'Insufficient test questions!'] ,422);
@@ -126,16 +149,32 @@ class ExamsController extends Controller
 
     public function show(Exam $exam) {
 
+        //authenticate
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
+
         $test_questions = $exam->getTestQuestions();
         $courses = $exam->getCourses();
 
-        return view('exams.show', compact('exam', 'test_questions', 'courses'));
+        $program = Program::findOrFail(request('program_id'));
+        $curriculum = Curriculum::findOrFail(request('curriculum_id'));
+        $student_outcome = StudentOutcome::findOrFail(request('student_outcome_id'));
+
+        return view('exams.show', compact('exam', 'test_questions', 'courses', 'program', 'curriculum', 'student_outcome'));
     }
 
     public function preview(Exam $exam) {
 
+        //authenticate
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
+
         $test_questions = $exam->getTestQuestions();
         $courses = $exam->getCourses();
+
+        //Session::flash('message', 'Exam preview is showing');
 
         return view('exams.preview', compact('exam', 'test_questions', 'courses'));
     }

@@ -6,7 +6,7 @@
             </div>
             <div class="mr-3">
                 <i class="fa fa-user text-dark"></i>
-                Created By:{{ $test_question->user->first_name . ' ' . $test_question->user->last_name }}
+                Author: {{ $test_question->user->first_name . ' ' . $test_question->user->last_name }}
             </div>
             <div class="mr-3">
                 <i class="fa fa-layer-group text-dark"></i>

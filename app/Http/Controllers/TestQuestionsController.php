@@ -21,7 +21,18 @@ use App\Http\Resources\TestQuestionResource;
 class TestQuestionsController extends Controller
 {
 
+    public function __construct() {
+
+        $this->middleware('auth');
+
+    }
+
     public function index() {
+
+        //authenticate
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
 
         $student_outcome = StudentOutcome::findOrFail(request('student_outcome_id'));
         $course = Course::findOrFail(request('course_id'));
@@ -79,16 +90,31 @@ class TestQuestionsController extends Controller
     }
 
     public function show(TestQuestion $test_question) {
+
+        //authenticate
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
         
         return view('test_questions.show', compact('test_question'));
     }
 
     public function preview(TestQuestion $test_question) {
-        
+
+        //authenticate
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
+
         return view('test_questions.preview', compact('test_question'));
     }
 
     public function edit(TestQuestion $test_question) {
+
+        //authenticate
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
 
         $student_outcome = StudentOutcome::findOrFail(request('student_outcome_id'));
         $course = Course::findOrFail(request('course_id'));
@@ -97,6 +123,12 @@ class TestQuestionsController extends Controller
     }
 
     public function getCreators() {
+
+        //authenticate
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
+
         $student_outcome = StudentOutcome::findOrFail(request('student_outcome_id'));
         $course = Course::findOrFail(request('course_id'));
 
@@ -109,6 +141,7 @@ class TestQuestionsController extends Controller
     }
 
     public function listProgram() {
+
         //authenticate
         if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
             return abort('401', 'Unauthorized');
@@ -146,6 +179,11 @@ class TestQuestionsController extends Controller
 
     public function create() {
 
+        //authenticate
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
+
         $student_outcome = StudentOutcome::findOrFail(request('student_outcome_id'));
         $course = Course::findOrFail(request('course_id'));
 
@@ -153,6 +191,11 @@ class TestQuestionsController extends Controller
     }
 
     public function store() {
+
+        //authenticate
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
 
        $data = $this->validateData();
 
@@ -206,6 +249,12 @@ class TestQuestionsController extends Controller
     }
 
     public function update(TestQuestion $test_question) {
+
+        //authenticate
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
+        
         $data = $this->validateData();
 
         //$so = StudentOutcome::findOrFail($data['student_outcome_id']);

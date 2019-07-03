@@ -16,7 +16,7 @@ class Curriculum extends Model
     }
 
     public function curriculumCourses() {
-        return $this->hasMany('App\CurriculumCourse')->where('is_active', 1);
+        return $this->hasMany('App\CurriculumCourse')->where('is_active', 1)->with('course');
     }
 
     public function getDeactivatedCourses() {

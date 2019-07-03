@@ -44,6 +44,7 @@ Route::get('/colleges/{college}/dashboard', 'CollegesController@dashboard');
 // Faculties Routes
 
 Route::get('/faculties', 'FacultiesController@index');
+Route::get('/faculties/search_faculties', 'FacultiesController@searchFaculties');
 
 Route::get('/faculties/create', 'FacultiesController@create');
 
@@ -274,6 +275,14 @@ Route::get('/exams/{exam}', 'ExamsController@show');
 Route::get('/exams/{exam}/preview', 'ExamsController@preview');
 // End Exam routes
 
+//OBE Routes
+
+Route::get('/students/{student}/obe_curriculum', 'OBEController@show');
+Route::get('/students/{student}/refresh_student_grades', 'OBEController@refreshStudentGrades');
+
+//Grade Routes
+Route::post('/grades', 'GradesController@store');
+
 
 
 
@@ -291,3 +300,11 @@ Route::get('/user_is_deactivated', function() {
     Auth::logout();
     return view('user_deactivated');
 });
+
+
+
+/*********************   Students routes    ************************/
+
+//home route
+
+Route::get('/s/home', 's\HomeController@index');

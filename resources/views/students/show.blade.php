@@ -15,10 +15,10 @@
                     <div class="card-header d-flex justify-content-between align-items-center">
 
                         <div>
-                            <h4>Student Information</h4>
+                            <h4 class="page-header mb-0">Student Information</h4>
                         </div>
                         <div>
-                            <a href="{{ url('/students/' . $student->id . '/edit') }}" class="btn btn-primary btn-sm">Edit Information <i class="fa fa-edit"></i></a>
+                            <a href="{{ url('/students/' . $student->id . '/edit') }}" class="btn btn-success-b btn-sm">Update Information <i class="fa fa-edit"></i></a>
                         </div>
                     </div>
 
@@ -29,7 +29,7 @@
                                 <img src="{{ asset('img/user.svg') }}" alt="user-icon" style="width: 40px" class=" mr-3">
                             </div>
                             <div>
-                                <h5>{{ $student->student_id }} - <b>{{ $student->user->getFullName() }}</b></h5>
+                                <h5>{{ $student->student_id }} - <label>{{ $student->user->getFullName() }}</label></h5>
                             </div>
                         </div>
                             
@@ -37,7 +37,7 @@
                           <div class="card">
                             <div class="card-header" id="headingOne">
                               <h2 class="mb-0">
-                                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                <button class="btn btn-link text-success" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                   <b>Basic Information</b>
                                 </button>
                               </h2>
@@ -80,7 +80,7 @@
                             <div class="card-header d-flex justify-content-between" id="headingTwo">
                               <div>
                                   <h2 class="mb-0">
-                                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    <button class="text-success btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                                       <b>Academic Information</b>
                                     </button>
                                   </h2>
@@ -91,7 +91,7 @@
                             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
                               <div class="card-body">
                                 <div class="mb-3 d-flex justify-content-end">
-                                  <a href="{{ url('/students/' . $student->id . '/edit_academic') }}" class="btn btn-dark btn-sm">Update <i class="fa fa-edit"></i></a>
+                                  <a href="{{ url('/students/' . $student->id . '/edit_academic') }}" class="btn btn-success btn-sm">Update <i class="fa fa-edit"></i></a>
                                 </div>
                                 <ul class="list-group list-group-flush">
                                     
@@ -116,7 +116,7 @@
                           <div class="card">
                             <div class="card-header" id="headingThree">
                               <h2 class="mb-0">
-                                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                <button class="text-success btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
                                   <b>Account Information</b>
                                 </button>
                               </h2>
@@ -145,7 +145,7 @@
                           <div class="card">
                             <div class="card-header" id="headingThree">
                               <h2 class="mb-0">
-                                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseThree">
+                                <button class="text-success btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseThree">
                                   <b>Extra Information</b>
                                 </button>
                               </h2>

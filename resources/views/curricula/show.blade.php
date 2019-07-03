@@ -32,9 +32,15 @@
     
     <h1 class="page-header mt-3">{{ $curriculum->name }}</h1>
 
-    <div><i class="fa fa-code-branch text-primary"></i> <label>Revision no:</label> {{ $curriculum->revision_no }}.0</div>
+    <div class="d-flex">
+      <div class="mr-4"><i class="fa fa-code-branch text-primary"></i> <label>Revision no:</label> {{ $curriculum->revision_no }}.0</div>
 
-    <div><i class="fa fa-calendar-check text-primary"></i> <label>Year:</label> {{ $curriculum->year }}</div>
+      <div class="mr-4"><i class="fa fa-calendar-check text-primary"></i> <label>Year:</label> {{ $curriculum->year }}</div>
+
+      <div class="mr-4"><i class="fa fa-user text-primary"></i> <label>Author:</label> {{ $curriculum->user->getFullName() }}</div>
+    </div>
+
+    
 
     @if($curriculum->description) 
       <p class="mr-5"><i class="fa fa-file-alt text-primary"></i> <label>Description:</label> {{ $curriculum->description }}</p>

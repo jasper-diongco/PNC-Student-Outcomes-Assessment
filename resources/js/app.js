@@ -76,6 +76,8 @@ Vue.component("image-modal", require("./components/ImageModal.vue").default);
 Vue.component("code-modal", require("./components/CodeModal.vue").default);
 Vue.component("math-modal", require("./components/MathModal.vue").default);
 
+Vue.component("grade-modal", require("./components/GradeModal.vue").default);
+
 Vue.component(
   "curriculum-course-modal",
   require("./components/CurriculumCourseModal.vue").default

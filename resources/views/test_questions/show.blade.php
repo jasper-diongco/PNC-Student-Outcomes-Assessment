@@ -28,11 +28,11 @@
         <div class="card-body">
             <div class="d-flex mb-3">
                 <div class="mr-3">
-                    ID: {{ $test_question->id }}
+                    <label>ID:</label> {{ $test_question->id }}
                 </div>
                 <div class="mr-3">
                     <i class="fa fa-user text-dark"></i>
-                    Created By:{{ $test_question->user->first_name . ' ' . $test_question->user->last_name }}
+                    Author: {{ $test_question->user->first_name . ' ' . $test_question->user->last_name }}
                 </div>
                 <div class="mr-3">
                     <i class="fa fa-layer-group text-dark"></i>
@@ -45,8 +45,8 @@
             </div>
 
             <div class="d-flex mb-3">
-                <div class="d-flex mr-3"><b class="mr-2">Student Outcome: </b><h5 class="text-success">{{ $test_question->studentOutcome->so_code }}</h5></div>
-                <div class="d-flex"><b class="mr-2">Course: </b><h5 class="text-success">{{ $test_question->course->course_code . ' - ' . $test_question->course->description }}</h5></div>
+                <div class="d-flex mr-3"><label class="mr-2">Student Outcome: </label><h5 class="text-success">{{ $test_question->studentOutcome->so_code }}</h5></div>
+                <div class="d-flex"><label class="mr-2">Course: </label><h5 class="text-success">{{ $test_question->course->course_code . ' - ' . $test_question->course->description }}</h5></div>
             </div>
         </div>
     </div>
@@ -95,4 +95,12 @@
             }
         });
     </script>
+    @if(Session::has('message'))
+    <script>
+      toast.fire({
+        type: 'success',
+        title: '{{ Session::get('message') }}'
+      })
+    </script>
+  @endif
 @endpush

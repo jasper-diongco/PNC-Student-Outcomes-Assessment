@@ -12,7 +12,7 @@
             <div class="col-md-8 mx-auto mt-3">
                 <div class="card shadow">
                     <div class="card-header">
-                        <h3>Update Academic Information</h3>
+                        <h3 class="page-header">Update Academic Information</h3>
                     </div>
 
                     <div class="card-body">
@@ -21,21 +21,20 @@
                                 <img src="{{ asset('img/user.svg') }}" alt="user-icon" style="width: 40px" class=" mr-3">
                             </div>
                             <div>
-                                <h5>{{ $student->student_id }} - <b>{{ $student->user->getFullName() }}</b></h5>
+                                <h5>{{ $student->student_id }} - <label>{{ $student->user->getFullName() }}</label></h5>
                             </div>
                         </div>
                         <form autocomplete="off" v-on:submit.prevent="updateAcademic" v-on:keydown="form.onKeydown($event)">
                             
                             
                             <!-- Field for college  -->
-                            <div class="form-group row">
+                            <div class="form-group">
                                 <label
                                   for="college"
-                                  class="col-md-2 col-form-label text-md-right"
-                                  ><b>College</b></label
+                                  >College</label
                                 >
 
-                                <div class="col-md-10">
+                                <div>
                                   <select
                                     id="college"
                                     type="text"
@@ -53,14 +52,13 @@
                             <!-- /end Field for college -->
 
                             <!-- Field for program  -->
-                            <div class="form-group row">
+                            <div class="form-group">
                                 <label
                                   for="program"
-                                  class="col-md-2 col-form-label text-md-right"
-                                  ><b>Program</b></label
+                                  >Program</label
                                 >
 
-                                <div class="col-md-10">
+                                <div>
                                   <select
                                     id="program"
                                     type="text"
@@ -84,14 +82,13 @@
 
 
                             <!-- Field for curriculum  -->
-                            <div class="form-group row">
+                            <div class="form-group">
                                 <label
                                   for="curriculum"
-                                  class="col-md-2 col-form-label text-md-right"
-                                  ><b>Curriculum</b></label
+                                  >Curriculum</label
                                 >
 
-                                <div class="col-md-10">
+                                <div>
                                   <select
                                     id="curriculum"
                                     type="text"
@@ -112,8 +109,8 @@
                             <!-- /end Field for curriculum --> 
 
                             <div class="d-flex justify-content-end">
-                                <a href="{{ url('/students') }}" class="btn btn-dark mr-2" :disabled="form.busy">Cancel</a>
-                                <button class="btn btn-primary" :disabled="form.busy">Update Information <div v-show="form.busy" class="spinner-border text-light spinner-border-sm" role="status">
+                                <a href="{{ url('/students') }}" class="btn btn-secondary mr-2" :disabled="form.busy">Cancel</a>
+                                <button class="btn btn-success" :disabled="form.busy">Update Information <div v-show="form.busy" class="spinner-border text-light spinner-border-sm" role="status">
                                   <span class="sr-only">Loading...</span>
                                 </div></button>
                             </div>

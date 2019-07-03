@@ -41,10 +41,11 @@ class ProgramsController extends Controller
 
         $colleges = College::all();
         
-
+        $college_name = Gate::check('isSAdmin')  ? 'PNC' : Auth::user()->getFaculty()->college->college_code;
 
         return view('programs.index')
             ->with('programs', $programs)
+            ->with('college_name', $college_name)
             ->with('colleges', $colleges);
     }
 

@@ -111,9 +111,9 @@
                   </li>
               </template>
             </ul>
-            <div class="tab-content" id="myTabContent">
+            <div class="tab-content p-0" id="myTabContent">
                 <template v-for="(choice, index) in choices">
-                    <div v-if="choice.is_active"  :key="index" class="tab-pane fade show" :class="{ 'active': index == 0 }" :id="'c' + (index + 1)" role="tabpanel">
+                    <div v-if="choice.is_active"  :key="index" class="tab-pane fade show p-0" :class="{ 'active': index == 0 }" :id="'c' + (index + 1)" role="tabpanel">
                         {{-- <div class="text-danger">@{{ errors.first('choice ' + (index + 1)) }}</div>
                         <ckeditor 
                             :editor="choice.editor" 

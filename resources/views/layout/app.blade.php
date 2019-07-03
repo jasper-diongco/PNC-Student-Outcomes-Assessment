@@ -13,7 +13,8 @@
     <title>PNC | SOA - @yield('title')</title>
 
     {{-- fonts --}}
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&display=swap" rel="stylesheet">
+    {{-- <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&display=swap" rel="stylesheet"> --}}
+    <link rel="stylesheet" href="{{ asset('fonts/open_sans.css') }}">
 
     <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
 
@@ -35,7 +36,6 @@
               {{-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button> --}}
-
               @auth
                 <div class="dropdown">
                   <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -65,6 +65,25 @@
         <nav id="main-nav" class="navbar navbar-expand-lg navbar-dark bg-white">
           <div class="container">
               <ul class="nav">
+
+                @can('isStud')
+                    <li class="nav-item {{ $active == 'home-student' ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ url('/s/home') }}">
+                            <div class="d-flex flex-column justify-content-center text-center">
+                                <i class="fa fa-home icon-nav"></i> 
+                                <span>Home</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="nav-item {{ $active == 'my-grades' ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ url('s/home') }}">
+                            <div class="d-flex flex-column justify-content-center text-center">
+                                <i class="fa fa-file-alt icon-nav"></i> 
+                                <span>OBE Curriculum</span>
+                            </div>
+                        </a>
+                    </li>
+                @endcan
 
                   <!-- Nav Item - Dashboard -->
                   @if(Gate::check('isDean') || Gate::check('isProf'))

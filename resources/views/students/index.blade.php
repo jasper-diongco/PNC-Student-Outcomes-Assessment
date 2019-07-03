@@ -30,7 +30,7 @@
         <div class="col-md-8">
           <div class="d-flex justify-content-end">
             <div class="d-flex mr-4">
-              <div class="mr-2"><label class="col-form-label">Filter By College: </label></div>
+              <div class="mr-2"><i class="fa fa-university text-success"></i> <label class="col-form-label"> Filter By College: </label></div>
               <div>
                 <select class="form-control" v-on:change="filterByCollege" v-model="college_id">
                   <option value="">All</option>
@@ -39,7 +39,7 @@
               </div>
             </div>
             <div class="d-flex">
-              <div class="mr-2"><label class="col-form-label">Filter By Program: </label></div>
+              <div class="mr-2"><i class="fa fa-graduation-cap text-success"></i> <label class="col-form-label">Filter By Program: </label></div>
               <div>
                 <select class="form-control" v-model="program_id" v-on:change="filterByProgram">
                   <option value="">All</option>
@@ -60,18 +60,19 @@
               <th scope="col">Email</th>
               <th scope="col">College</th>
               <th scope="col">Program</th>
+              <th scope="col">OBE</th>
               <th scope="col">Actions</th>
             </tr>
           </thead>
           <tbody>
             <template v-if="tableLoading">
               <tr>
-                <td colspan="6"><table-loading></table-loading></td>
+                <td colspan="7"><table-loading></table-loading></td>
               </tr>
             </template>
             <template v-else-if="students.length <= 0">
               <tr>
-                <td class="text-center" colspan="6">No Record Found in Database.</td>
+                <td class="text-center" colspan="7">No Record Found in Database.</td>
               </tr>
             </template>
             <template v-else>
@@ -82,12 +83,18 @@
                   <td>@{{ student.college_code }}</td>
                   <td>@{{ student.program_code }}</td>
                   <td>
+                    <a :href="'students/' + student.id + '/obe_curriculum'" class="btn btn-info btn-sm">
+                      <i class="fa fa-file-alt"></i> View
+                    </a>
+                  </td>
+                  <td>
                     <a title="View Details" class="btn btn-light btn-sm" :href=" 'students/' + student.id">
                       <i class="fa fa-search"></i>
                     </a>
                     <a title="Edit" class="btn btn-success btn-sm" :href=" 'students/' + student.id + '/edit'">
                       <i class="fa fa-edit"></i>
                     </a>
+                    
                   </td>
               </tr>
             </template>

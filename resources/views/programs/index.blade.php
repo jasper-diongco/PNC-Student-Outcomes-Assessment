@@ -86,7 +86,7 @@
             
           </div>
         @endcan
-        
+        <h5 class="text-info">{{ $college_name }} LIST OF PROGRAMS</h5>
         <div class="table-responsive">
           <table id="students-table" class="table table-borderless">
             <thead>

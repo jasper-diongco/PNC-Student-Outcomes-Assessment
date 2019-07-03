@@ -14,6 +14,13 @@ class TestQuestion extends Model
         return $this->hasMany('App\Choice')->where('is_active', true);
     }
 
+    public function choicesRandom() {
+        return Choice::where('is_active', true)
+            ->where('test_question_id', $this->id)
+            ->inRandomOrder()   
+            ->get();
+    }
+
     public function difficultyLevel() {
         return $this->belongsTo('App\DifficultyLevel');
     }

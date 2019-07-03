@@ -3436,6 +3436,230 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/GradeModal.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/GradeModal.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ["studentId", "courseId", "courseCode", "gradeValues"],
+  data: function data() {
+    return {
+      grade_value_id: "",
+      grade_value_id_error: false,
+      search_professor: "",
+      search_professor_loading: false,
+      faculties: [],
+      selected_faculty: null,
+      selected_faculty_error: false,
+      isLoading: false
+    };
+  },
+  methods: {
+    addGrade: function addGrade() {
+      var _this = this;
+
+      this.isLoading = true;
+
+      if (this.grade_value_id == "") {
+        this.grade_value_id_error = true;
+      } else {
+        this.grade_value_id_error = false;
+      }
+
+      if (this.selected_faculty == null) {
+        this.selected_faculty_error = true;
+      } else {
+        this.selected_faculty_error = false;
+      }
+
+      if (!this.grade_value_id_error && !this.selected_faculty_error) {
+        ApiClient.post("/grades", {
+          grade_value_id: this.grade_value_id,
+          student_id: this.studentId,
+          course_id: this.courseId,
+          faculty_id: this.selected_faculty.id
+        }).then(function (response) {
+          $("#gradeModal").modal("hide");
+          toast.fire({
+            type: "success",
+            title: "Grade Successfully Added"
+          });
+          console.log(response);
+          _this.isLoading = false;
+
+          _this.$emit("grade-added");
+        })["catch"](function (error) {
+          alert("An error has occured. Please try again");
+          _this.isLoading = false;
+        });
+      }
+    },
+    searchProfessor: function searchProfessor() {
+      var vm = this; // _.debounce(() => {
+
+      if (vm.search_professor == "") {
+        return vm.faculties = [];
+      }
+
+      vm.search_professor_loading = true;
+      ApiClient.get("/faculties/search_faculties?q=" + vm.search_professor).then(function (response) {
+        vm.search_professor_loading = false;
+        vm.faculties = response.data;
+      }); // }, 300);
+    },
+    selectFaculty: function selectFaculty(faculty) {
+      this.selected_faculty = faculty;
+      this.faculties = [];
+      this.search_professor = "";
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ImageModal.vue?vue&type=script&lang=js&":
 /*!*********************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ImageModal.vue?vue&type=script&lang=js& ***!
@@ -76611,6 +76835,323 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/GradeModal.vue?vue&type=template&id=0f9ccac1&":
+/*!*************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/GradeModal.vue?vue&type=template&id=0f9ccac1& ***!
+  \*************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "modal fade",
+      attrs: { id: "gradeModal", tabindex: "-1", role: "dialog" }
+    },
+    [
+      _c("div", { staticClass: "modal-dialog", attrs: { role: "document" } }, [
+        _c("div", { staticClass: "modal-content" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("div", { staticClass: "modal-body" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", [_vm._v("Course")]),
+              _vm._v(" "),
+              _c("input", {
+                staticClass: "form-control",
+                attrs: { type: "text", readonly: "" },
+                domProps: { value: _vm.courseCode }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", [_vm._v("Grade")]),
+              _vm._v(" "),
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.grade_value_id,
+                      expression: "grade_value_id"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  class: { "is-invalid": _vm.grade_value_id_error },
+                  on: {
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.grade_value_id = $event.target.multiple
+                        ? $$selectedVal
+                        : $$selectedVal[0]
+                    }
+                  }
+                },
+                [
+                  _c(
+                    "option",
+                    { staticClass: "d-none", attrs: { value: "" } },
+                    [_vm._v("Select Grade")]
+                  ),
+                  _vm._v(" "),
+                  _vm._l(_vm.gradeValues, function(gradeValue) {
+                    return _c(
+                      "option",
+                      {
+                        key: gradeValue.id,
+                        domProps: { value: gradeValue.id }
+                      },
+                      [
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(gradeValue.value) +
+                            "\n                        "
+                        )
+                      ]
+                    )
+                  })
+                ],
+                2
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "invalid-feedback" }, [
+                _vm._v("Please Select Grade")
+              ])
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "form-group" },
+              [
+                _c("label", [_vm._v("Professor")]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.search_professor,
+                      expression: "search_professor"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  class: { "is-invalid": _vm.selected_faculty_error },
+                  attrs: { type: "search", placeholder: "Search Professor..." },
+                  domProps: { value: _vm.search_professor },
+                  on: {
+                    input: [
+                      function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.search_professor = $event.target.value
+                      },
+                      _vm.searchProfessor
+                    ]
+                  }
+                }),
+                _vm._v(" "),
+                _c("div", { staticClass: "invalid-feedback" }, [
+                  _vm._v(
+                    "\n                        Please select professor.\n                    "
+                  )
+                ]),
+                _vm._v(" "),
+                _vm.search_professor_loading
+                  ? [_c("table-loading")]
+                  : [
+                      _vm.faculties.length > 0
+                        ? _c(
+                            "ul",
+                            { staticClass: "list-group" },
+                            _vm._l(_vm.faculties, function(faculty) {
+                              return _c(
+                                "li",
+                                { staticClass: "list-group-item" },
+                                [
+                                  _c(
+                                    "div",
+                                    {
+                                      staticClass:
+                                        "d-flex justify-content-between"
+                                    },
+                                    [
+                                      _c("div", [
+                                        _vm._v(
+                                          "\n                                        " +
+                                            _vm._s(
+                                              faculty.user.last_name +
+                                                ", " +
+                                                faculty.user.first_name +
+                                                " " +
+                                                faculty.user.middle_name
+                                            ) +
+                                            "\n                                        - " +
+                                            _vm._s(
+                                              faculty.college.college_code
+                                            ) +
+                                            "\n                                    "
+                                        )
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("div", [
+                                        _c(
+                                          "button",
+                                          {
+                                            staticClass:
+                                              "btn btn-sm btn-success",
+                                            on: {
+                                              click: function($event) {
+                                                return _vm.selectFaculty(
+                                                  faculty
+                                                )
+                                              }
+                                            }
+                                          },
+                                          [
+                                            _vm._v(
+                                              "\n                                            Select\n                                        "
+                                            )
+                                          ]
+                                        )
+                                      ])
+                                    ]
+                                  )
+                                ]
+                              )
+                            }),
+                            0
+                          )
+                        : _vm._e()
+                    ],
+                _vm._v(" "),
+                _vm.selected_faculty
+                  ? _c("div", [
+                      _c("label", { staticClass: "mt-3" }, [
+                        _vm._v("Selected: ")
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "span",
+                        {
+                          staticClass: "text-primary",
+                          staticStyle: { "font-size": "120%" }
+                        },
+                        [
+                          _vm._v(
+                            _vm._s(
+                              _vm.selected_faculty.user.last_name +
+                                ", " +
+                                _vm.selected_faculty.user.first_name +
+                                " " +
+                                _vm.selected_faculty.user.middle_name
+                            )
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c("i", {
+                        staticClass: "fa fa-check-circle text-success"
+                      })
+                    ])
+                  : _vm._e()
+              ],
+              2
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "modal-footer" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-secondary",
+                attrs: { type: "button", "data-dismiss": "modal" }
+              },
+              [_vm._v("\n                    Close\n                ")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-success",
+                attrs: { type: "button", disabled: _vm.isLoading },
+                on: { click: _vm.addGrade }
+              },
+              [
+                _vm._v("\n                    Add Grade\n                    "),
+                _vm.isLoading
+                  ? _c(
+                      "div",
+                      {
+                        staticClass:
+                          "spinner-border spinner-border-sm text-light",
+                        attrs: { role: "status" }
+                      },
+                      [
+                        _c("span", { staticClass: "sr-only" }, [
+                          _vm._v("Loading...")
+                        ])
+                      ]
+                    )
+                  : _vm._e()
+              ]
+            )
+          ])
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "h5",
+        { staticClass: "modal-title", attrs: { id: "exampleModalLabel" } },
+        [_vm._v("\n                    Add Grade\n                ")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      )
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ImageModal.vue?vue&type=template&id=2d115486&":
 /*!*************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ImageModal.vue?vue&type=template&id=2d115486& ***!
@@ -94758,6 +95299,7 @@ Vue.component("account-modal", __webpack_require__(/*! ./components/AccountModal
 Vue.component("image-modal", __webpack_require__(/*! ./components/ImageModal.vue */ "./resources/js/components/ImageModal.vue")["default"]);
 Vue.component("code-modal", __webpack_require__(/*! ./components/CodeModal.vue */ "./resources/js/components/CodeModal.vue")["default"]);
 Vue.component("math-modal", __webpack_require__(/*! ./components/MathModal.vue */ "./resources/js/components/MathModal.vue")["default"]);
+Vue.component("grade-modal", __webpack_require__(/*! ./components/GradeModal.vue */ "./resources/js/components/GradeModal.vue")["default"]);
 Vue.component("curriculum-course-modal", __webpack_require__(/*! ./components/CurriculumCourseModal.vue */ "./resources/js/components/CurriculumCourseModal.vue")["default"]);
 Vue.component("curriculum-modal", __webpack_require__(/*! ./components/CurriculumModal.vue */ "./resources/js/components/CurriculumModal.vue")["default"]);
 Vue.component("my-table", __webpack_require__(/*! ./components/Table.vue */ "./resources/js/components/Table.vue")["default"]);
@@ -95409,6 +95951,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/GradeModal.vue":
+/*!************************************************!*\
+  !*** ./resources/js/components/GradeModal.vue ***!
+  \************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _GradeModal_vue_vue_type_template_id_0f9ccac1___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./GradeModal.vue?vue&type=template&id=0f9ccac1& */ "./resources/js/components/GradeModal.vue?vue&type=template&id=0f9ccac1&");
+/* harmony import */ var _GradeModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./GradeModal.vue?vue&type=script&lang=js& */ "./resources/js/components/GradeModal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _GradeModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _GradeModal_vue_vue_type_template_id_0f9ccac1___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _GradeModal_vue_vue_type_template_id_0f9ccac1___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/GradeModal.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/GradeModal.vue?vue&type=script&lang=js&":
+/*!*************************************************************************!*\
+  !*** ./resources/js/components/GradeModal.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_GradeModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./GradeModal.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/GradeModal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_GradeModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/GradeModal.vue?vue&type=template&id=0f9ccac1&":
+/*!*******************************************************************************!*\
+  !*** ./resources/js/components/GradeModal.vue?vue&type=template&id=0f9ccac1& ***!
+  \*******************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_GradeModal_vue_vue_type_template_id_0f9ccac1___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./GradeModal.vue?vue&type=template&id=0f9ccac1& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/GradeModal.vue?vue&type=template&id=0f9ccac1&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_GradeModal_vue_vue_type_template_id_0f9ccac1___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_GradeModal_vue_vue_type_template_id_0f9ccac1___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

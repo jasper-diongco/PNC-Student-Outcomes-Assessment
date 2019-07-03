@@ -106,8 +106,8 @@
                     <button v-if="choices.length > 3" v-on:click="removeChoice(index)" data-toggle="tooltip" data-placement="top" title="Remove" class="btn btn-sm btn-light"><i class="fa fa-minus text-danger"></i></button></a>
               </li>
             </ul>
-            <div class="tab-content" id="myTabContent">
-                <div v-for="(choice, index) in choices" :key="index" class="tab-pane fade show" :class="{ 'active': index == 0 }" :id="'c' + (index + 1)" role="tabpanel">
+            <div class="tab-content p-0" id="myTabContent">
+                <div v-for="(choice, index) in choices" :key="index" class="tab-pane fade show p-0" :class="{ 'active': index == 0 }" :id="'c' + (index + 1)" role="tabpanel">
                     {{-- <div class="text-danger">@{{ errors.first('choice ' + (index + 1)) }}</div>
                     <ckeditor 
                         :editor="choice.editor" 

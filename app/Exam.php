@@ -12,6 +12,11 @@ class Exam extends Model
 {
     public $guarded = [];
 
+
+    public function user() {
+        return $this->belongsTo('App\User');
+    }
+
     public static function getRequirements($student_outcome_id='', $curriculum_id=''){
         $requirements = [];
         $student_outcome = StudentOutcome::find($student_outcome_id);
@@ -111,6 +116,28 @@ class Exam extends Model
             ->with('user')
             ->get();
     }
+
+    public function getTestQuestionsByCourse($course_id='') {
+        return TestQuestion::select('test_questions.*')
+            ->join('exam_test_questions', 'exam_test_questions.test_question_id', '=',  'test_questions.id')
+            ->where('exam_test_questions.exam_id', $this->id)
+            ->where('test_questions.course_id', $course_id)
+            ->with('choices')
+            ->with('user')
+            ->get();
+    }
+    public function getRandomTestQuestionsByCourse($course_id='') {
+        return TestQuestion::select('test_questions.*')
+            ->join('exam_test_questions', 'exam_test_questions.test_question_id', '=',  'test_questions.id')
+            ->where('exam_test_questions.exam_id', $this->id)
+            ->where('test_questions.course_id', $course_id)
+            ->with('choices')
+            ->with('user')
+            ->inRandomOrder()
+            ->get();
+    }
+
+
 
     public function countTestQuestionsByCourse($course_id) {
         return TestQuestion::select('test_questions.*')

@@ -49,4 +49,8 @@ class User extends Authenticatable
     public function getFaculty() {
         return Faculty::where('user_id', $this->id)->first();
     }
+
+    public function getStudent() {
+        return Student::where('user_id', $this->id)->first();
+    }
 }

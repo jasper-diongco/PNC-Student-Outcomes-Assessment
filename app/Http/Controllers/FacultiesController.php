@@ -123,6 +123,25 @@ class FacultiesController extends Controller
         return view('faculties.index', compact('deactivated_faculties_count'));
     }
 
+    public function searchFaculties() {
+        $searched_faculties = Faculty::join('users', 'users.id', '=', 'faculties.user_id')
+            ->where('users.is_active', true)
+            ->where(function($q) {
+                $q->where('first_name', 'LIKE', '%' . request('q') . '%')
+                ->orWhere('middle_name', 'LIKE', '%' . request('q') . '%')
+                ->orWhere('last_name', 'LIKE', '%' . request('q') . '%')
+                ->orWhere('email', 'LIKE', '%' . request('q') . '%')
+                ->orWhere(DB::raw("CONCAT(last_name, ' ', first_name, ', ', middle_name)"), 'LIKE', '%' . request('q') . '%')
+                ->orWhere(DB::raw("CONCAT(first_name, ' ', last_name)"), 'LIKE', '%' . request('q') . '%');
+            })   
+            ->select('faculties.*')
+            ->with('user')
+            ->with('college')
+            ->get();
+
+        return $searched_faculties;
+    }
+
     /**
      * Show the form for creating a new resource.
      *

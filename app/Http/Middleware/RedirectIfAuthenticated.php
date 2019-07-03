@@ -29,6 +29,11 @@ class RedirectIfAuthenticated
             } else if(Auth::user()->user_type_id == 'prof') {
                 Session::put('college_id', Auth::user()->getFaculty()->college_id);
                 return redirect('/colleges/' . Auth::user()->getFaculty()->college_id . '/dashboard');
+            } else if(Auth::user()->user_type_id == 'stud') {
+                //Session::put('college_id', Auth::user()->getFaculty()->college_id);
+                //exit("Test");
+                //Auth::logout();
+                //Session::flush();
             }
         }
         return $next($request);

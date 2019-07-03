@@ -1,6 +1,6 @@
 @extends('layout.app', ['active' => 'test_questions'])
 
-@section('title', 'Show Exam')
+@section('title', 'Exam Details')
 
 @section('content')
     <div id="app" v-cloak>
@@ -11,6 +11,13 @@
                 <h1 class="page-header mb-3">Exam Details</h1>
             </div>
             
+        </div>
+
+        <div class="d-flex mb-3">
+
+            <div class="mr-3"><label>Program: </label> <span class="text-info">{{ $program->program_code }}</span></div>
+            <div class="mr-3"><label>Student Outcome: </label> <span class="text-info">{{ $student_outcome->so_code }}</span></div>
+            <div class="mr-3"><label>Curriculum: </label> <span class="text-info">{{ $curriculum->name . ' ' . $curriculum->year . ' - v' . $curriculum->revision_no }}.0</span></div>
         </div>
 
         <div class="mt-2 card">
@@ -32,7 +39,9 @@
                         <i class="fa fa-calendar text-dark"></i> Created At  : {{ $exam->created_at->format('M d, Y') }}
                     </div>
                 </div>
-
+                <div class="mr-2 mb-2">
+                        <i class="fa fa-user text-dark"></i> Author: {{ $exam->user->getFullName() }}
+                    </div>
                 <div class="mr-2">
                         <i class="fa fa-file-alt text-dark"></i> Description: {{ $exam->description }}
                     </div>
@@ -351,5 +360,13 @@
             }
         });
     </script>
+    @if(Session::has('message'))
+        <script>
+          toast.fire({
+            type: 'success',
+            title: '{{ Session::get('message') }}'
+          })
+        </script>
+      @endif
 @endpush
 

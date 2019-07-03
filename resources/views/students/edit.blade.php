@@ -12,21 +12,20 @@
             <div class="col-md-8 mx-auto mt-3">
                 <div class="card shadow">
                     <div class="card-header">
-                        <h3>Update Student Information</h3>
+                        <h3 class="page-header mb-0">Update Student Information</h3>
                     </div>
 
                     <div class="card-body">
                         <img src="{{ asset('img/user.svg') }}" alt="user-icon" style="width: 40px" class="mb-2">
                         <form autocomplete="off" v-on:submit.prevent="updateStudent" v-on:keydown="form.onKeydown($event)">
                             <!-- Field for year student_id  -->
-                            <div class="form-group row">
+                            <div class="form-group">
                                 <label
                                   for="student_id"
-                                  class="col-md-2 col-form-label text-md-right"
-                                  ><b>Student ID</b></label
+                                  >Student ID</label
                                 >
 
-                                <div class="col-md-10">
+                                <div>
                                   <input
                                     id="student_id"
                                     type="text"
@@ -41,14 +40,13 @@
                             <!-- /end Field for student_id -->
                             
                             <!-- Field for year last_name  -->
-                            <div class="form-group row">
+                            <div class="form-group">
                                 <label
                                   for="last_name"
-                                  class="col-md-2 col-form-label text-md-right"
-                                  ><b>Last Name</b></label
+                                  >Last Name</label
                                 >
 
-                                <div class="col-md-10">
+                                <div>
                                   <input
                                     id="last_name"
                                     type="text"
@@ -64,14 +62,13 @@
                             <!-- /end Field for last_name -->  
 
                             <!-- Field for year first_name  -->
-                            <div class="form-group row">
+                            <div class="form-group">
                                 <label
                                   for="first_name"
-                                  class="col-md-2 col-form-label text-md-right"
-                                  ><b>First Name</b></label
+                                  >First Name</label
                                 >
 
-                                <div class="col-md-10">
+                                <div>
                                   <input
                                     id="first_name"
                                     type="text"
@@ -87,14 +84,13 @@
                             <!-- /end Field for first_name --> 
 
                             <!-- Field for year middle_name  -->
-                            <div class="form-group row">
+                            <div class="form-group">
                                 <label
                                   for="middle_name"
-                                  class="col-md-2 col-form-label text-md-right"
-                                  ><b>Middle Name</b></label
+                                  >Middle Name</label
                                 >
 
-                                <div class="col-md-10">
+                                <div>
                                   <input
                                     id="middle_name"
                                     type="text"
@@ -110,14 +106,13 @@
                             <!-- /end Field for middle_name --> 
 
                             <!-- Field for year sex  -->
-                            <div class="form-group row">
+                            <div class="form-group">
                                 <label
                                   for="sex"
-                                  class="col-md-2 col-form-label text-md-right"
-                                  ><b>Sex</b></label
+                                  >Sex</label
                                 >
 
-                                <div class="col-md-10">
+                                <div>
                                   <select
                                     id="sex"
                                     type="text"
@@ -135,14 +130,13 @@
                             <!-- /end Field for sex --> 
 
                             <!-- Field for sex  -->
-                            <div class="form-group row">
+                            <div class="form-group">
                                 <label
                                   for="date_of_birth"
-                                  class="col-md-2 col-form-label text-md-right"
-                                  ><b>Date of Birth</b></label
+                                  >Date of Birth</label
                                 >
 
-                                <div class="col-md-10">
+                                <div>
                                   <datepicker 
                                     id="date_of_birth"
                                     placeholder="Select Date" 
@@ -160,14 +154,13 @@
                             <!-- /end Field for date_of_birth --> 
 
                             <!-- Field for year email  -->
-                            <div class="form-group row">
+                            <div class="form-group">
                                 <label
                                   for="email"
-                                  class="col-md-2 col-form-label text-md-right"
                                   ><b>Email</b></label
                                 >
 
-                                <div class="col-md-10">
+                                <div>
                                     <div class="input-group">
                                       <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1"><i class='fa fa-envelope'></i></span>
@@ -329,8 +322,8 @@
                             </div>
                             <!-- /end Field for password --> --}}
                             <div class="d-flex justify-content-end">
-                                <a href="{{ url('/students') }}" class="btn btn-dark mr-2" :disabled="form.busy">Cancel</a>
-                                <button class="btn btn-primary" :disabled="form.busy">Update Information <div v-show="form.busy" class="spinner-border text-light spinner-border-sm" role="status">
+                                <a href="{{ url('/students') }}" class="btn btn-secondary mr-2" :disabled="form.busy">Cancel</a>
+                                <button class="btn btn-success" :disabled="form.busy">Update Information <div v-show="form.busy" class="spinner-border text-light spinner-border-sm" role="status">
                                   <span class="sr-only">Loading...</span>
                                 </div></button>
                             </div>
