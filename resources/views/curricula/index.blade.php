@@ -4,10 +4,7 @@
 
 
 @section('content')
-  <div id="app">
-    @can('isSAdmin')
-      <a href="{{ url('/curricula') }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
-    @endcan
+  <div id="app" v-cloak>
 
     <div class="d-flex justify-content-between mb-3">
       <div>
@@ -76,7 +73,29 @@
       </div> --}}
       <div class="card">
         <div class="card-body">
-          <h5 class="mb-3 text-info"> {{ $college->college_code }} CURRICULA</h5>
+
+          <div class="d-flex justify-content-between">
+            <div>
+              <h5 class="mb-3 text-info">List of Curriculum</h5>
+            </div>
+            <div class="d-flex align-items-baseline">
+              <div class="mr-2">
+
+                <label class="text-dark"><i class="fa fa-graduation-cap text-success"></i> Filter By Program</label>
+              </div>
+              <div>
+                <select class="form-control" v-model="program_id" v-on:change="filterByProgram">
+                  <option value="">All</option>
+                  @foreach($programs as $program)
+                    <option value="{{ $program->id }}">{{ $program->program_code }}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+          </div>
+          
+
+
           <table class="table table-borderless">
             <thead>
               <tr>
@@ -89,16 +108,23 @@
               </tr>
             </thead>
             <tbody>
-              @foreach($curricula as $curriculum)
-              <tr>
-                <th>{{ $curriculum->id }}</th>
-                <td>{{ $curriculum->name }}</td>
-                <td>{{ $curriculum->revision_no }}.0</td>
-                <td>{{ $curriculum->program->description }}</td>
-                <td>{{ $curriculum->year }}</td>
-                <td><a href="{{ url('/curricula/' . $curriculum->id . '?college_id=' . request('college_id')) }}" class="btn btn-success btn-sm"><i class="fa fa-search "></i></a></td>
-              </tr>
-              @endforeach
+              <template v-if="curricula_show.length > 0">
+                <tr v-for="curriculum in curricula_show" :key="curriculum.id">
+                  <th>@{{ curriculum.id }}</th>
+                  <td>@{{ curriculum.name }}</td>
+                  <td>@{{ curriculum.revision_no }}.0</td>
+                  <td>@{{ curriculum.program.description }}</td>
+                  <td>@{{ curriculum.year }}</td>
+                  <td><a :href="'curricula/' + curriculum.id" class="btn btn-success btn-sm"><i class="fa fa-search "></i></a></td>
+                </tr>
+              </template>
+              <template v-else>
+                <tr>
+                  <td colspan="6" align="center">
+                    No Record found in database.
+                  </td>
+                </tr>
+              </template>
             </tbody>
           </table>
         </div>
@@ -120,12 +146,27 @@
     new Vue({
       el: '#app',
       data: {
-            visible: false
+            visible: false,
+            program_id: '',
+            curricula: @json($curricula),
+            curricula_show: []
         },
         methods: {
             show: function () {
                 this.visible = true;
+            },
+            filterByProgram() {
+              if(this.program_id == '') {
+                return this.curricula_show = this.curricula;
+              }
+
+              this.curricula_show = this.curricula.filter(curriculum => {
+                return curriculum.program_id == this.program_id;
+              });
             }
+        },
+        created() {
+          this.filterByProgram();
         }
     });
   </script>

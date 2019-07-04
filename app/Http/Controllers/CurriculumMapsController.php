@@ -7,6 +7,7 @@ use App\Curriculum;
 use App\CurriculumCourse;
 use App\StudentOutcome;
 use App\CurriculumMap;
+use App\Program;
 use App\CurriculumMappingStatus;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
@@ -28,7 +29,7 @@ class CurriculumMapsController extends Controller
       
 
       if(Auth::user()->user_type_id == 's_admin') {
-          $curricula = Curriculum::paginate(10);        
+          $curricula = Curriculum::latest()->with('program')->get();        
       } else {
         //validate
         if(request('college_id') == '') {
@@ -39,15 +40,24 @@ class CurriculumMapsController extends Controller
         }
 
         $curricula = Curriculum::join('programs', 'programs.id', '=', 'curricula.program_id')
-          ->join('colleges','colleges.id', '=', 'programs.college_id')
-          ->where('programs.college_id', request('college_id'))
-          ->select('curricula.*')
-          ->latest()
-          ->paginate(10); 
+              ->join('colleges','colleges.id', '=', 'programs.college_id')
+              ->where('programs.college_id', request('college_id'))
+              ->select('curricula.*')
+              ->latest()
+              ->with('program')
+              ->get(); 
       }
 
-      return view('curriculum_maps.index', compact('curricula'));
+      foreach ($curricula as $curriculum) {
+          $curriculum->program->load('college');
+      }
+
+      $programs = Program::all();
+
+      return view('curriculum_maps.index', compact('curricula', 'programs'));
     }
+
+
 
     public function show($id) {
       //authenticate

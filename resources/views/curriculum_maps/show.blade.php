@@ -8,50 +8,68 @@
     <a href="{{ url('/curriculum_mapping') }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
     <div class="d-flex justify-content-between mb-2 mt-3">
       <div>
-        <h1 class="page-header">Curriculum Mapping</h1>
+        <h1 class="page-header mb-0">Curriculum Mapping</h1>
       </div>
     </div>
+    
+    <div class="d-flex mt-2">
+        <div class="mr-4"><i class="fa fa-code-branch text-primary"></i> <label>Revision no:</label> {{ $curriculum->revision_no }}.0</div>
 
+        <div class="mr-4"><i class="fa fa-calendar-check text-primary"></i> <label>Year:</label> {{ $curriculum->year }}</div>
+
+        <div class="mr-4"><i class="fa fa-user text-primary"></i> <label>Author:</label> {{ $curriculum->user->getFullName() }}</div>
+      </div>
+
+      
+
+      @if($curriculum->description) 
+        <p class="mr-5"><i class="fa fa-file-alt text-primary"></i> <label>Description:</label> {{ $curriculum->description }}</p>
+      @else
+        <p class="mr-5"><i class="fa fa-file-alt text-primary"></i> <label>Description:</label> <i>No description.</i></p>
+      @endif
 
     @if (count($curriculum->program->studentOutcomes) > 0 && count($curriculum->curriculumCourses) > 0)
 
-    <div class="text-success mb-2"><strong>Legends</strong></div>
+    <div class="mt-3"><label class="text-dark">Label</div>
 
     <div class="legends d-flex mb-4">
       <div class="d-flex align-items-center mr-5" data-toggle="tooltip" data-placement="bottom" title="Students are introduced to knowledge and skills and are able to remember and understand what they have learned">
         <div class="learning-legend" style="background:#d8faee;"></div>
         <div class="mx-1">&mdash;</div>
-        <div class="text-success">Introduced</div>
+        <div class="text-primary">Introduced</div>
       </div>
       <div class="d-flex align-items-center mr-5" data-toggle="tooltip" data-placement="bottom" title="Students are practice through activities that help them learn how to apply their learning or skills">
         <div class="learning-legend" style="background:#fcebc0;"></div>
         <div class="mx-1">&mdash;</div>
-        <div class="text-success">Reinforced</div>
+        <div class="text-primary">Reinforced</div>
       </div>
       <div class="d-flex align-items-center mr-5" data-toggle="tooltip" data-placement="bottom" title="Students are able to integrate the knowledge and skills in order to accumulate, evaluate, and create new ideas">
         <div class="learning-legend" style="background:#fad6d2;"></div>
         <div class="mx-1">&mdash;</div>
-        <div class="text-success">Demonstrated</div>
+        <div class="text-primary">Demonstrated</div>
       </div>
     </div>
     
       <div class="card">
-        <div class="card-header d-flex justify-content-between">
-          <h2 class="h5 text-primary">Curriculum Map &mdash; @{{ curriculum.name }}</h2>
-          
-          @if (Gate::check('isDean') || Gate::check('isSAdmin'))
+        
+        <div class="card-body pt-4">
 
-          <div v-if="curriculum_mapping_status.status == 1">
-            <form action="{{ url('/curriculum_mapping/'. $curriculum->id .'/edit') }}" method="post" v-on:submit.prevent="editCurriculumMapping">
-              @csrf
-              <button type="submit" class="btn btn-sm btn-primary">Edit <i class="fa fa-edit"></i></button>
-            </form>
+          <div class="d-flex justify-content-between mb-3">
+            <h2 class="h5"> <i class="fa fa-map text-info"></i> Curriculum Map &mdash; @{{ curriculum.name }}</h2>
+            
+            @if (Gate::check('isDean') || Gate::check('isSAdmin'))
+
+            <div v-if="curriculum_mapping_status.status == 1">
+              <form action="{{ url('/curriculum_mapping/'. $curriculum->id .'/edit') }}" method="post" v-on:submit.prevent="editCurriculumMapping">
+                @csrf
+                <button type="submit" class="btn btn-sm btn-primary">Edit <i class="fa fa-edit"></i></button>
+              </form>
+            </div>
+
+            @endif
+
           </div>
 
-          @endif
-
-        </div>
-        <div class="card-body">
           <div class="row mb-3" v-if="curriculum_mapping_status.status == 0">
             <div class="col-md-3">
               <div class="d-flex align-items-center">

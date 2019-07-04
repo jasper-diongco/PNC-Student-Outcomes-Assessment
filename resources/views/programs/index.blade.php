@@ -63,30 +63,29 @@
     @endif --}}
     <div class="card">
       <div class="card-body">
-
-        @can('isSAdmin')
-          <div class="row">
-            <div class="col-md-12">
-              <div class="d-flex justify-content-end">
-                <div class="d-flex mr-4 mb-2">
-                  <div class="mr-2"><label class="col-form-label">Filter By College: </label></div>
-                  <div>
-                    <form v-on:change="filterByCollege" ref="filterForm" :action="myRootURL + '/programs/?college_id=' + filter_by_college_id">
-                      <select class="form-control" name="college_id" :value=" filter_by_college_id"  v-model="filter_by_college_id">
-                        <option value="">All</option>
-                        @foreach ($colleges as $college)
-                          <option value="{{ $college->id }}">{{ $college->college_code }}</option>
-                        @endforeach
-                      </select>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
+        
+        <div class="d-flex justify-content-between">
+          <div>
+            <h5 class="text-info">{{ $college_name }} LIST OF PROGRAMS</h5>
           </div>
+        @can('isSAdmin')
+          
+            <div class="d-flex mr-4 mb-2">
+              <div class="mr-2"><label class="col-form-label">Filter By College: </label></div>
+              <div>
+                <form v-on:change="filterByCollege" ref="filterForm" :action="myRootURL + '/programs/?college_id=' + filter_by_college_id">
+                  <select class="form-control" name="college_id" :value=" filter_by_college_id"  v-model="filter_by_college_id">
+                    <option value="">All</option>
+                    @foreach ($colleges as $college)
+                      <option value="{{ $college->id }}">{{ $college->college_code }}</option>
+                    @endforeach
+                  </select>
+                </form>
+              </div>
+            </div>        
         @endcan
-        <h5 class="text-info">{{ $college_name }} LIST OF PROGRAMS</h5>
+        </div>
+        
         <div class="table-responsive">
           <table id="students-table" class="table table-borderless">
             <thead>

@@ -35,28 +35,29 @@ class CurriculaController extends Controller
         }
 
 
-        if(Auth::user()->user_type_id == 's_admin') {
-            $colleges = College::all();
-            if(request('college_id') == '') {
-                return view('curricula.list')->with('colleges', $colleges);
-            }
+        // if(Auth::user()->user_type_id == 's_admin') {
+        //     $colleges = College::all();
+        //     if(request('college_id') == '') {
+        //         return view('curricula.list')->with('colleges', $colleges);
+        //     }
             
-        } else {
-            //validate
-            if(request('college_id') == '') {
-                // abort('404', 'Page not found');
-                return redirect('/curricula?college_id='. Session::get('college_id'));
-            } else if (request('college_id') != Session::get('college_id')) {
-                return abort('401', 'Unauthorized');
-            }
-        }
+        // } else {
+        //     //validate
+        //     if(request('college_id') == '') {
+        //         // abort('404', 'Page not found');
+        //         return redirect('/curricula?college_id='. Session::get('college_id'));
+        //     } else if (request('college_id') != Session::get('college_id')) {
+        //         return abort('401', 'Unauthorized');
+        //     }
+        // }
 
         if(Auth::user()->user_type_id == 's_admin') {
-            $programs = Program::where('college_id', request('college_id'))->get();
+            $programs = Program::all();
             $curricula = Curriculum::select('curricula.*')
                                 ->join('programs', 'programs.id', '=', 'curricula.program_id')
                                 ->join('colleges', 'colleges.id', '=', 'programs.college_id')
-                                ->where('colleges.id', request('college_id'))
+                                ->latest()
+                                ->with('program')
                                 ->get();
         } else {
             $programs = Program::where('college_id', Session::get('college_id'))->get();
@@ -65,6 +66,7 @@ class CurriculaController extends Controller
                                 ->join('colleges', 'colleges.id', '=', 'programs.college_id')
                                 ->where('colleges.id', Session::get('college_id'))
                                 ->latest()
+                                ->with('program')
                                 ->get();
 
         }
@@ -77,13 +79,13 @@ class CurriculaController extends Controller
             $curricula[] = Curriculum::find($item->id);
         }*/
 
-        $college = College::findOrFail(request('college_id'));
-        
+        //$college = College::findOrFail(request('college_id'));
+        $colleges = College::all();
 
 
         return view('curricula.index')
             ->with('programs', $programs)
-            ->with('college', $college)
+            ->with('colleges', $colleges)
             ->with('curricula', $curricula);
     }
 

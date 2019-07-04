@@ -66,10 +66,8 @@ class CoursesController extends Controller
                 }
                 
             } else if(request('filter_by_college') != '') {
-                if(Gate::check('isSAdmin')) {
-                    return CourseResource::collection(Course::where('college_id', request('filter_by_college'))
-                        ->paginate(10));
-                }
+                return CourseResource::collection(Course::where('college_id', request('filter_by_college'))
+                    ->paginate(10));
             } else if(request('filter_by_privacy') != '') {
                 if(Gate::check('isSAdmin')) {
                     return CourseResource::collection(Course::
@@ -94,7 +92,6 @@ class CoursesController extends Controller
         }
 
         $courses_count = 0;
-
         if(Gate::check('isSAdmin')) {
             $courses_count = Course::count();
         } else {
@@ -102,6 +99,7 @@ class CoursesController extends Controller
         }
 
         $colleges = College::all();
+        $courses = Course::latest()->get();
 
         return view('courses.index')
             ->with('colleges', $colleges)
@@ -141,7 +139,6 @@ class CoursesController extends Controller
             'college_id' => 'required',
             'lec_unit' => 'required|integer|between:0,20',
             'lab_unit' => 'required|integer|between:0,20',
-            'privacy' => 'required',
             'color' => 'required'
         ]);
         
@@ -151,7 +148,7 @@ class CoursesController extends Controller
             'college_id' => request('college_id'),
             'lec_unit' => request('lec_unit'),
             'lab_unit' => request('lab_unit'),
-            'is_public' => request('privacy'),
+            'is_public' => true,
             'color' => request('color')
         ]);
 
@@ -211,7 +208,6 @@ class CoursesController extends Controller
             'college_id' => 'required',
             'lec_unit' => 'required|integer|between:0,20',
             'lab_unit' => 'required|integer|between:0,20',
-            'privacy' => 'required',
             'color' => 'required'
         ]);
 

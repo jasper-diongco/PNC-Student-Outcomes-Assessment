@@ -195,7 +195,7 @@
               
 
               <!-- Field for privacy  -->
-              <div class="form-group">
+<!--               <div class="form-group">
                 <label
                   for="privacy"
                   >Privacy</label
@@ -218,7 +218,7 @@
                   </select>
                   <has-error :form="form" field="privacy"></has-error>
                 </div>
-              </div>
+              </div> -->
               <!-- /end Field for privacy -->
             </div>
             <div class="modal-footer">
@@ -263,7 +263,7 @@ export default {
         description: "",
         lec_unit: "",
         lab_unit: "",
-        privacy: "",
+        privacy: 1,
         college_id: "",
         color: ""
       }),

@@ -613,9 +613,10 @@
             text: "Do you want to save this curriculum now?",
             type: 'question',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes'
+            confirmButtonColor: '#1cc88a',
+            cancelButtonColor: '#858796',
+            confirmButtonText: 'Yes',
+            width: '400px'
           }).then((result) => {
             if (result.value) {
               event.target.submit();
@@ -646,8 +647,9 @@
             type: 'question',
             showCancelButton: true,
             confirmButtonColor: '#1cc88a',
-            cancelButtonColor: '#e74a3b',
-            confirmButtonText: 'Yes'
+            cancelButtonColor: '#858796',
+            confirmButtonText: 'Yes',
+            width: '400px'
           }).then((result) => {
             if (result.value) {
               event.target.submit();

@@ -32,7 +32,16 @@ class CollegesController extends Controller
             return abort('401', 'Unauthorized');
         }
 
-        $colleges = College::all();
+        $colleges = College::with('faculty')->get();
+
+        foreach ($colleges as $college) {
+            $college->faculty->load('user');
+        }
+
+        if(request()->ajax() && request('json') == true) {
+            return $colleges;
+        }
+        
         return view('colleges.index')->with('colleges', $colleges);
     }
 
@@ -130,8 +139,11 @@ class CollegesController extends Controller
 
             DB::commit();
 
-            Session::flash('message', 'College Successfully added to database'); 
-            return redirect('colleges/'. $college->id);
+            //Session::flash('message', 'College Successfully added to database'); 
+
+
+            //return redirect('colleges/'. $college->id);
+            return $college;
 
         } catch (\PDOException $e) {
             DB::rollBack();
@@ -152,6 +164,12 @@ class CollegesController extends Controller
         }
 
         $college = College::findOrFail($id);
+
+        $college->faculty->load('user');
+
+        if(request()->ajax() && request('json') == true) {
+            return $college;
+        }
 
         return view('colleges.show')->with('college', $college);
     }
@@ -220,8 +238,10 @@ class CollegesController extends Controller
 
 
 
-        Session::flash('message', 'College Successfullyupdated from database'); 
-        return redirect('colleges/'. $college->id);
+        //Session::flash('message', 'College Successfullyupdated from database'); 
+        //return redirect('colleges/'. $college->id);
+        $college->faculty->load('user');
+        return $college;
     }
 
     /**

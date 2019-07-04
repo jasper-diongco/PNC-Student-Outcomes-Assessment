@@ -15,6 +15,7 @@
 $fa-font-path: "../webfonts";
 
 $bg-color: #f1f4f5;
+//$bg-color: #fbfbfb;
 $body-color: #7a7a7a;
 
 // Variable Overrides
@@ -415,4 +416,27 @@ body {
 
 .bg-danger-light {
   background: #ffe5e6;
+}
+
+.card-header {
+  background-color: #e6e6e6;
+}
+
+#search-input input {
+  background: #f3f3f3;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  padding-left: 20px;
+  border: 0;
+}
+
+#search-input span {
+  background: #f3f3f3;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  border: 0;
+}
+
+#search-input input:focus {
+  box-shadow: none;
 }

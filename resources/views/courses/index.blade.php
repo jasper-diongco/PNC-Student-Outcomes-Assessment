@@ -22,18 +22,18 @@
     <div class="card-body">
       <div class="row d-flex justify-content-between mb-3">
         <div class="col-md-4">
-          <div class="input-group">
+          <div class="input-group" id="search-input">
             
-            <input v-on:input="searchCourses" v-model="search" type="search" class="form-control" placeholder="Search course...">
+            <input v-on:input="searchCourses" v-model="search" type="search" class="form-control"  placeholder="Search course...">
             <div class="input-group-append">
               <span class="input-group-text"><i class="fa fa-search"></i></span>
             </div>
           </div>
         </div>
-        @can('isSAdmin')
+
           <div class="col-md-4 d-flex row align-items-center">
             <div class="col-6 text-right">
-              <label class="col-form-label text-dark"><i class="text-success fa fa-university"></i> Filter By College:</label>
+              <label class="col-form-label text-dark">Filter By College:</label>
             </div>
             <div class="col-6">
               <select v-on:change="getCourses" class="form-control" name="filter_by_college" id="filter_by_college" v-model="filter_by_college">
@@ -44,8 +44,7 @@
               </select>
             </div>   
           </div>
-        @endcan
-        <div class="col-md-4 d-flex row">
+        {{-- <div class="col-md-4 d-flex row">
           <div class="col-6 text-right">
             <label class="col-form-label text-dark">Filter By Privacy:</label>
           </div>
@@ -56,7 +55,7 @@
               <option value="private">Private</option>
             </select>
           </div>   
-        </div>
+        </div> --}}
         
       </div>
       <div class="table-responsive">
@@ -68,7 +67,7 @@
               <th scope="col">Description</th>
               <th scope="col">Units</th>
               <th scope="col">College</th>
-              <th scope="col">Privacy</th>
+              {{-- <th scope="col">Privacy</th> --}}
               <th scope="col">Actions</th>
             </tr>
           </thead>
@@ -90,9 +89,9 @@
                 <td>@{{ course.description }}</td>
                 <td>@{{ course.lec_unit + course.lab_unit }}</td>
                 <td>@{{ course.college_code}}</td>
-                <td>
+               {{--  <td>
                   <span v-if="course.is_public">public <i class="fa fa-globe-americas"></i></span>
-                  <span v-else>private <i class="fa fa-lock"></i></span></td>
+                  <span v-else>private <i class="fa fa-lock"></i></span></td> --}}
 
 
 

@@ -48,6 +48,7 @@ class StudentsController extends Controller
                         ->join('programs', 'programs.id', '=', 'students.program_id')
                         ->join('colleges', 'colleges.id', '=', 'programs.college_id')
                         ->where('colleges.id', Session::get('college_id'))
+                        ->latest()
                         ->paginate(10);
 
                     if(request('filter_by_college') != '') {
@@ -55,6 +56,7 @@ class StudentsController extends Controller
                         ->join('programs', 'programs.id', '=', 'students.program_id')
                         ->join('colleges', 'colleges.id', '=', 'programs.college_id')
                         ->where('colleges.id', request('filter_by_college'))
+                        ->latest()
                         ->paginate(10);
                     }
 
@@ -63,6 +65,7 @@ class StudentsController extends Controller
                         ->join('programs', 'programs.id', '=', 'students.program_id')
                         ->join('colleges', 'colleges.id', '=', 'programs.college_id')
                         ->where('programs.id', request('filter_by_program'))
+                        ->latest()
                         ->paginate(10);
                     }
 
@@ -75,8 +78,9 @@ class StudentsController extends Controller
 
         $colleges = College::all();
         $programs = Program::all();
+        $curriculums = Curriculum::all();
         
-        return view('students.index', compact('colleges', 'programs'));
+        return view('students.index', compact('colleges', 'programs', 'curriculums'));
     }
 
     public function create() {
@@ -268,7 +272,7 @@ class StudentsController extends Controller
 
             DB::commit();
 
-            Session::flash('message', 'Student Successfully added to database'); 
+            //Session::flash('message', 'Student Successfully added to database'); 
             //return redirect('/students/'. $student->id);
 
             return $student;

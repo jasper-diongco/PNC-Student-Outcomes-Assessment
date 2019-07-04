@@ -77,7 +77,10 @@ Vue.component("code-modal", require("./components/CodeModal.vue").default);
 Vue.component("math-modal", require("./components/MathModal.vue").default);
 
 Vue.component("grade-modal", require("./components/GradeModal.vue").default);
-
+Vue.component(
+  "college-modal",
+  require("./components/CollegeModal.vue").default
+);
 Vue.component(
   "curriculum-course-modal",
   require("./components/CurriculumCourseModal.vue").default
@@ -85,6 +88,11 @@ Vue.component(
 Vue.component(
   "curriculum-modal",
   require("./components/CurriculumModal.vue").default
+);
+
+Vue.component(
+  "add-student-modal",
+  require("./components/AddStudentModal.vue").default
 );
 
 Vue.component("my-table", require("./components/Table.vue").default);

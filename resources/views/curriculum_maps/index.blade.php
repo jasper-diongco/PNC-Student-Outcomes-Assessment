@@ -4,29 +4,39 @@
 
 
 @section('content')
-    <div id="app">
+    <div id="app" v-cloak>
         <div>
             <div>
                 <h1 class="page-header">Curriculum Mapping &mdash; Select Curriculum</h1>
 
                 @if(count($curricula) > 0)
-                  {{-- <div class="list-group">
-                    
-                    @foreach($curricula as $curriculum)
-                      <a href="{{ url('/curriculum_mapping/' . $curriculum->id) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                      <div>
-                        {{ $curriculum->program->program_code . ' - ' . $curriculum->name }} {{ $curriculum->year }}
-                        <span class="text-primary">v{{ $curriculum->revision_no }}.0</span>
-                        <br>
-                        <small class="text-muted">{{ $curriculum->program->college->name }}</small>
-                      </div>
-                        <i class="fa fa-chevron-right"></i>
-                      </a>
-                    @endforeach  
-                  </div> --}}
                   <div class="card">
                     <div class="card-body">
-                      <h5 class="text-info">List of Curriculum</h5>
+                      <div class="d-flex justify-content-between">
+                        <div>
+                          <h5 class="text-info">List of Curriculum</h5>
+                        </div>
+                        @can('isSAdmin')
+                          <div class="d-flex align-items-center">
+                            <div class="mr-2">
+                              <i class="fa fa-graduation-cap text-success"></i>
+                              <label class="text-dark">Filter By Program</label>
+                            </div>
+                            <div>
+                              <select v-on:change="filterByProgram" class="form-control" v-model="program_id">
+                                <option value="">All</option>
+                                @foreach($programs as $program)
+                                  <option value="{{ $program->id }}">{{ $program->program_code }}</option>
+                                @endforeach
+                              </select>
+                            </div> 
+                              
+                          </div>
+                        @endcan
+                      </div>
+                      
+
+
                       <table class="table table-borderless">
                         <thead>
                           <tr>
@@ -40,17 +50,23 @@
                           </tr>
                         </thead>
                         <tbody>
-                          @foreach($curricula as $curriculum)
-                            <tr>
-                              <td>{{ $curriculum->id }}</td>
-                              <td>{{ $curriculum->program->program_code }}</td>
-                              <td>{{ $curriculum->name }}</td>
-                              <td>{{ $curriculum->year }}</td>
-                              <td>{{ $curriculum->revision_no }}</td>
-                              <td>{{ $curriculum->program->college->name }}</td>
-                              <td><a href="{{ url('/curriculum_mapping/' . $curriculum->id) }}" class="btn btn-sm btn-success"><i class="fa fa-search"></i></a></td>
-                            </tr>
-                          @endforeach
+                            <template v-if="curricula_show.length > 0">
+                              <tr v-for="curriculum in curricula_show">
+                                <td>@{{ curriculum.id }}</td>
+                                <td>@{{ curriculum.program.program_code }}</td>
+                                <td>@{{ curriculum.name }}</td>
+                                <td>@{{ curriculum.year }}</td>
+                                <td>@{{ curriculum.revision_no }}</td>
+                                <td>@{{ curriculum.program.college.college_code }}</td>
+                                <td><a :href="'curriculum_mapping/' + curriculum.id" class="btn btn-sm btn-success"><i class="fa fa-search"></i></a></td>
+                              </tr>
+                            </template>
+                            <template v-else>
+                                <tr>
+                                  <td colspan="7" align="center">No Record found in database.</td>
+                                </tr>
+                            </template>
+                            
                         </tbody>
                       </table>
                     </div>
@@ -60,11 +76,6 @@
                   <div class="text-center bg-white p-3">No Curriculum Found in Database.</div>
                 @endif
 
-                <div class="my-3 d-flex justify-content-end">
-                  {{ $curricula->appends(request()->input())->links() }}
-                </div>
-
-                <div class="mb-4"></div>
             </div>
         </div>
     </div>
@@ -72,7 +83,30 @@
 
 @push('scripts')
   <script>
-    
+      new Vue({
+        el: '#app',
+        data: {
+          curricula: @json($curricula),
+          curricula_show: [],
+          program_id: ''
+        },
+        methods: {
+          filterByProgram() {
+            if(this.program_id == '') {
+              return this.curricula_show = this.curricula;
+            }
+
+            this.curricula_show = this.curricula.filter(curriculum => {
+              return curriculum.program_id == this.program_id;
+            });
+
+          }
+        },
+
+        created() {
+          this.filterByProgram();
+        }
+      });
   </script>
 
   @if(Session::has('message'))

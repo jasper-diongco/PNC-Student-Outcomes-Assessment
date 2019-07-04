@@ -19,10 +19,10 @@
     <div class="card-body">
       <div class="row">
         <div class="col-md-4">
-          <div class="input-group mb-3">
+          <div class="input-group mb-3" id="search-input">
             <input v-on:input="searchFaculties" v-model="search" type="search" class="form-control" placeholder="Search faculty...">
             <div class="input-group-append">
-              <button class="input-group-text btn btn-primary"><i class="fa fa-search"></i></button>
+              <span class="input-group-text"><i class="fa fa-search"></i></span>
             </div>
           </div>
         </div>
