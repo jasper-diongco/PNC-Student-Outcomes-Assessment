@@ -62,15 +62,15 @@ Vue.component(AlertError.name, AlertError);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
 Vue.component(
-  "example-component",
-  require("./components/ExampleComponent.vue").default
+    "example-component",
+    require("./components/ExampleComponent.vue").default
 );
 Vue.component("prism-editor", VuePrismEditor);
 Vue.component("checked-icon", require("./components/CheckedIcon.vue").default);
 Vue.component("course-modal", require("./components/CourseModal.vue").default);
 Vue.component(
-  "account-modal",
-  require("./components/AccountModal.vue").default
+    "account-modal",
+    require("./components/AccountModal.vue").default
 );
 Vue.component("image-modal", require("./components/ImageModal.vue").default);
 Vue.component("code-modal", require("./components/CodeModal.vue").default);
@@ -78,33 +78,42 @@ Vue.component("math-modal", require("./components/MathModal.vue").default);
 
 Vue.component("grade-modal", require("./components/GradeModal.vue").default);
 Vue.component(
-  "college-modal",
-  require("./components/CollegeModal.vue").default
+    "college-modal",
+    require("./components/CollegeModal.vue").default
 );
 Vue.component(
-  "curriculum-course-modal",
-  require("./components/CurriculumCourseModal.vue").default
+    "curriculum-course-modal",
+    require("./components/CurriculumCourseModal.vue").default
 );
 Vue.component(
-  "curriculum-modal",
-  require("./components/CurriculumModal.vue").default
+    "curriculum-modal",
+    require("./components/CurriculumModal.vue").default
 );
 
 Vue.component(
-  "add-student-modal",
-  require("./components/AddStudentModal.vue").default
+    "add-student-modal",
+    require("./components/AddStudentModal.vue").default
+);
+Vue.component(
+    "update-student-modal",
+    require("./components/UpdateStudentModal.vue").default
+);
+
+Vue.component(
+    "faculty-modal",
+    require("./components/FacultyModal.vue").default
 );
 
 Vue.component("my-table", require("./components/Table.vue").default);
 
 Vue.component(
-  "table-loading",
-  require("./components/TableLoading.vue").default
+    "table-loading",
+    require("./components/TableLoading.vue").default
 );
 
 Vue.component(
-  "student-outcome-modal",
-  require("./components/StudentOutcomeModal.vue").default
+    "student-outcome-modal",
+    require("./components/StudentOutcomeModal.vue").default
 );
 
 Vue.component("exam-modal", require("./components/ExamModal.vue").default);
@@ -114,9 +123,9 @@ Vue.component("datepicker", Datepicker);
 Vue.component("vue-select", VueSelect);
 
 Vue.directive("uppercase", {
-  update(el) {
-    el.value = el.value.toUpperCase();
-  }
+    update(el) {
+        el.value = el.value.toUpperCase();
+    }
 });
 
 /**
@@ -126,23 +135,23 @@ Vue.directive("uppercase", {
  */
 
 window.swalError = function() {
-  swal.fire({
-    type: "error",
-    title: "Oops...",
-    text: "Something went wrong!"
-  });
+    swal.fire({
+        type: "error",
+        title: "Oops...",
+        text: "Something went wrong!"
+    });
 };
 window.serverError = function() {
-  swal.fire({
-    type: "error",
-    title: "Oops...",
-    text: "Something went wrong! Try refreshing the page."
-  });
+    swal.fire({
+        type: "error",
+        title: "Oops...",
+        text: "Something went wrong! Try refreshing the page."
+    });
 };
 
 window.toast = swal.mixin({
-  toast: true,
-  position: "top-end",
-  showConfirmButton: false,
-  timer: 3000
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000
 });

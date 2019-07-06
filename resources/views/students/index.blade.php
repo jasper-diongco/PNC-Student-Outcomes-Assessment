@@ -4,6 +4,7 @@
 
 @section('content')
 <div id="app">
+  <update-student-modal :student-id="student_id" v-on:refresh-students="getStudents"></update-student-modal>
   <div class="d-flex justify-content-between mb-3">
     <div>
       <h1 class="page-header">List of Students</h1>
@@ -35,7 +36,7 @@
         <div class="col-md-8">
           <div class="d-flex justify-content-end">
             <div class="d-flex mr-4">
-              <div class="mr-2"><i class="fa fa-university text-success"></i> <label class="col-form-label"> Filter By College: </label></div>
+              <div class="mr-2"> <label class="col-form-label"> Filter By College: </label></div>
               <div>
                 <select class="form-control" v-on:change="filterByCollege" v-model="college_id">
                   <option value="">All</option>
@@ -96,9 +97,9 @@
                     <a title="View Details" class="btn btn-light btn-sm" :href=" 'students/' + student.id">
                       <i class="fa fa-search"></i>
                     </a>
-                    <a title="Edit" class="btn btn-success btn-sm" :href=" 'students/' + student.id + '/edit'">
+                    <button title="Edit" v-on:click="openUpdateModal(student.id)" class="btn btn-success btn-sm">
                       <i class="fa fa-edit"></i>
-                    </a>
+                    </button>
                     
                   </td>
               </tr>
@@ -153,7 +154,8 @@
         programs: @json($programs),
         college_id: '',
         program_id: '',
-        selectedPrograms: []
+        selectedPrograms: [],
+        student_id: ''
       },
       methods: {
         getStudents(page=1) {
@@ -202,6 +204,10 @@
           }
 
           this.getStudents();
+        },
+        openUpdateModal(student_id) {
+          this.student_id = student_id;
+          $('#updateStudentModal').modal('show');
         }
       },
       created() {

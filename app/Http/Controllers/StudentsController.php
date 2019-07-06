@@ -198,7 +198,7 @@ class StudentsController extends Controller
 
             DB::commit();
 
-            Session::flash('message', 'Student Information Successfully updated from database'); 
+            //Session::flash('message', 'Student Information Successfully updated from database'); 
             //return redirect('/students/'. $student->id);
 
             return $student;
@@ -233,7 +233,7 @@ class StudentsController extends Controller
 
         $student->update();
 
-        Session::flash('message', 'Student Academic Information Successfully updated from database'); 
+        Session::flash('message', 'Student Academic Information Successfully updated'); 
 
         return $student;
 
@@ -288,6 +288,12 @@ class StudentsController extends Controller
 
         if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
             return abort('401', 'Unauthorized');
+        }
+
+        $student->load('user');
+
+        if(request()->ajax() && request('json') == true) {
+            return $student;
         }
 
         return view('students.show', compact('student'));

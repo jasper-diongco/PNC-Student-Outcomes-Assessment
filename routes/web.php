@@ -44,11 +44,14 @@ Route::get('/colleges/{college}/dashboard', 'CollegesController@dashboard');
 // Faculties Routes
 
 Route::get('/faculties', 'FacultiesController@index');
+
 Route::get('/faculties/search_faculties', 'FacultiesController@searchFaculties');
 
 Route::get('/faculties/create', 'FacultiesController@create');
 
 Route::post('/faculties', 'FacultiesController@store');
+
+Route::get('/faculties/get_faculty/{faculty}', 'FacultiesController@getFaculty');
 
 Route::get('/faculties/deactivated', 'FacultiesController@deactivated');
 

@@ -3,22 +3,26 @@
 @section('title', 'Faculties Index')
 
 @section('content')
+<div id="app">
+  <faculty-modal is-dean="{{ Gate::check('isDean') ? 'true': 'false' }}" college-id="{{ Session::get('college_id') }}" :colleges='@json($colleges)' v-on:refresh-faculties="getFaculties"></faculty-modal>
+
+  <faculty-modal is-dean="{{ Gate::check('isDean') ? 'true' : 'false' }}" college-id="{{ Session::get('college_id') }}" :colleges='@json($colleges)' v-on:refresh-faculties="getFaculties" is-update="true" :faculty-id="faculty_id"></faculty-modal>
   <div class="d-flex justify-content-between mb-3">
     <div>
       <h1 class="page-header">List of Faculties</h1>
     </div>
     <div>
       @if(Gate::check('isDean') || Gate::check('isSAdmin'))
-        <a href="{{ url('faculties/create') }}" class="btn btn-success-b">Add New Faculty</a>
+        <a href="#" data-toggle="modal" data-target="#facultyModal" class="btn btn-success-b">Add New Faculty</a>
       @endif
     </div>
   </div>
   
 
-  <div class="card" id="app">
+  <div class="card">
     <div class="card-body">
-      <div class="row">
-        <div class="col-md-4">
+      <div class="d-flex justify-content-between">
+        <div>
           <div class="input-group mb-3" id="search-input">
             <input v-on:input="searchFaculties" v-model="search" type="search" class="form-control" placeholder="Search faculty...">
             <div class="input-group-append">
@@ -26,14 +30,29 @@
             </div>
           </div>
         </div>
+        <div>
         @if ($deactivated_faculties_count > 0)
-          <div class="col-md-4 offset-4">
-            <div class="d-flex justify-content-end">
+            <div>
               <a href="{{ url('/faculties/deactivated') }}" class="btn btn-light btn-sm">View Deactivated Faculties ({{ $deactivated_faculties_count }}) <i class="fa fa-users"></i></a>
             </div>
-          </div>
         @endif
-        
+        @can('isSAdmin')
+          <div class="d-flex align-items-baseline">
+            <div>
+              <label class="text-dark mr-2">Filter By College</label>
+            </div>
+            <div>
+              <select class="form-control" v-model="filter_college_id" v-on:change="filterByCollege">
+                <option value="">All</option>
+                @foreach($colleges as $college)
+                  <option value="{{ $college->id }}">{{ $college->college_code }}</option>
+                @endforeach
+            </select>
+            </div>
+            
+          </div>
+        @endcan
+        </div>
       </div>
       
       <div class="table-responsive">
@@ -62,7 +81,7 @@
             <template v-else>
               <tr v-for="faculty in faculties" >
                   <td>@{{ faculty.user_id }}</td>
-                  <td>@{{ faculty.last_name + ', ' + faculty.first_name + ' ' + faculty.middle_name }}</td>
+                  <td>@{{ faculty.last_name + ', ' + faculty.first_name + ' ' + (faculty.middle_name ? faculty.middle_name  : '') }}</td>
                   <td>@{{ faculty.email }}</td>
                   <td>@{{ faculty.college_code }}</td>
                   <td>@{{ faculty.user_type }}</td>
@@ -70,9 +89,9 @@
                     <a title="View Details" class="btn btn-light btn-sm" :href=" 'faculties/' + faculty.id">
                       <i class="fa fa-search"></i>
                     </a>
-                    <a title="Edit Information" class="btn btn-success btn-sm" :href=" 'faculties/' + faculty.id + '/edit'">
+                    <button title="Edit Information" v-on:click="openUpdateModal(faculty.id)" class="btn btn-success btn-sm">
                       <i class="fa fa-edit"></i>
-                    </a>
+                    </button>
                   </td>
               </tr>
             </template>
@@ -99,7 +118,7 @@
       </nav>
     </div>
   </div>
-
+</div>
 @endsection
 
 @push('scripts')
@@ -121,7 +140,9 @@
         },
         links: {},
         totalPagination: 0,
-        tableLoading: true
+        tableLoading: true,
+        faculty_id: '',
+        filter_college_id: ''
       },
       methods: {
         getFaculties(page) {
@@ -134,6 +155,17 @@
             this.totalPagination = Math.ceil(this.meta.total / this.meta.per_page);
             this.tableLoading = false;
           });
+        },
+        filterByCollege() {
+          this.tableLoading = true;
+          ApiClient.get("/faculties?json=true&filter_by_college=" + this.filter_college_id)
+            .then(response => {
+              this.faculties = response.data.data;
+              this.meta = response.data.meta;
+              this.links = response.data.links;
+              this.totalPagination = Math.ceil(this.meta.total / this.meta.per_page);
+              this.tableLoading = false;
+            });
         },
         searchFaculties: _.debounce(() => {
             vm.tableLoading = true;
@@ -148,6 +180,11 @@
           }, 300),
         paginate(page) {
           this.getFaculties(page);
+        },
+        openUpdateModal(faculty_id) {
+          this.faculty_id = faculty_id;
+          $('#facultyModalUpdate').modal('show');
+
         }
       },
       created() {

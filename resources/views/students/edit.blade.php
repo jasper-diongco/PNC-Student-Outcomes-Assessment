@@ -119,7 +119,7 @@
                                     class="form-control"
                                     :class="{ 'is-invalid': form.errors.has('sex') }"
                                     v-model="form.sex"
-                                  />
+                                  >
                                     <option value="" style="display: none;">Select Sex</option>
                                     <option value="M">Male</option>
                                     <option value="F">Female</option>
@@ -129,7 +129,7 @@
                             </div>
                             <!-- /end Field for sex --> 
 
-                            <!-- Field for sex  -->
+                            <!-- Field for date of birth  -->
                             <div class="form-group">
                                 <label
                                   for="date_of_birth"

@@ -83,6 +83,16 @@ class FacultiesController extends Controller
                 
                 return FacultyResource::collection($searched_faculties);
 
+            } else if(request('json') == true && request('filter_by_college') != '') {
+                return FacultyResource::collection(
+                    Faculty::select('faculties.*')
+                        ->join('users','users.id', '=', 'faculties.user_id')
+                        ->where('users.is_active', true)
+                        ->where('college_id', request('filter_by_college'))
+                        ->latest()
+                        ->paginate(10)
+                );
+
             } else {
                 if(Gate::check('isSAdmin')) {
                     return FacultyResource::collection(
@@ -119,8 +129,9 @@ class FacultiesController extends Controller
             ->count(); 
         }
         
+        $colleges = College::all();
 
-        return view('faculties.index', compact('deactivated_faculties_count'));
+        return view('faculties.index', compact('deactivated_faculties_count', 'colleges'));
     }
 
     public function searchFaculties() {
@@ -179,7 +190,7 @@ class FacultiesController extends Controller
             'date_of_birth' => 'required|date',
             'contact_no' => 'nullable|regex:/^[0-9\s-]*$/',
             'address' => 'nullable|string|max:255',
-            'college_id' => 'required',
+            'college' => 'required',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:8|max:20'
         ]);
@@ -194,8 +205,6 @@ class FacultiesController extends Controller
                 'last_name' => strtoupper(request('last_name')),
                 'sex' => request('sex'),
                 'date_of_birth' => request('date_of_birth'),
-                'contact_no' => request('contact_no'),
-                'address' => request('address'),
                 'email' => request('email'),
                 'password' => Hash::make(request('password')),
                 'user_type_id' => 'prof'
@@ -203,14 +212,15 @@ class FacultiesController extends Controller
 
             $faculty = Faculty::create([
                 'user_id' => $user->id,
-                'college_id' => request('college_id'),
+                'college_id' => request('college'),
                 'is_active' => true
             ]);
 
             DB::commit();
 
-            Session::flash('message', 'Faculty Successfully added to database'); 
-            return redirect('faculties/'. $faculty->id);
+            //Session::flash('message', 'Faculty Successfully added to database'); 
+            //return redirect('faculties/'. $faculty->id);
+            return $faculty;
 
         } catch (\PDOException $e) {
             DB::rollBack();
@@ -240,6 +250,18 @@ class FacultiesController extends Controller
             return new FacultyResource($faculty);
         }
         return view('faculties.show')->with('faculty', $faculty);
+    }
+
+    public function getFaculty(Faculty $faculty)
+    {
+        //authenticate
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
+
+        $faculty->load('user');
+
+        return $faculty;
     }
 
     /**
@@ -302,7 +324,7 @@ class FacultiesController extends Controller
             'date_of_birth' => 'required|date',
             'contact_no' => 'nullable|regex:/^[0-9\s-]*$/',
             'address' => 'nullable|string|max:255',
-            'college_id' => 'required'
+            'college' => 'required'
         ]);
 
         try {
@@ -322,13 +344,11 @@ class FacultiesController extends Controller
             //     'user_type_id' => 'prof'
             // ]);
 
-            $user->first_name = request('first_name');
-            $user->middle_name = request('middle_name');
-            $user->last_name = request('last_name');
+            $user->first_name = strtoupper(request('first_name'));
+            $user->middle_name = strtoupper(request('middle_name'));
+            $user->last_name = strtoupper(request('last_name'));
             $user->sex = request('sex');
             $user->date_of_birth = request('date_of_birth');
-            $user->contact_no = request('contact_no');
-            $user->address = request('address');
             // $user->email = request('email');
             // $user->password = Hash::make(request('password'));
 
@@ -340,7 +360,7 @@ class FacultiesController extends Controller
             //     'is_active' => true
             // ]);
 
-            $faculty->college_id = request('college_id');
+            $faculty->college_id = request('college');
             $faculty->update();
 
             DB::commit();
@@ -352,9 +372,9 @@ class FacultiesController extends Controller
                 return redirect('profile/faculty/'. $faculty->id);
             }
 
-            Session::flash('message', 'Faculty Successfully updated from database');
+            //Session::flash('message', 'Faculty Successfully updated from database');
 
-            return redirect('faculties/'. $faculty->id);
+            return $faculty;
 
         } catch (\PDOException $e) {
             DB::rollBack();

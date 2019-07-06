@@ -6,15 +6,11 @@
 @section('content')
 
 <a href="{{  url('faculties') }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
-
+<h1 class="page-header mt-3">Add Faculty</h1>
 <div class="row" id="app">
-  <div class="col-xs-12 col-md-8 mx-auto mb-5">
-    <div class="card mt-3">
-      <div class="card-header">
-        <h3 class="page-header">Add Faculty</h3>
-      </div>
+  <div class="col-xs-12 col-md-12 mx-auto mb-5">
+    <div class="card">
       <div class="card-body">
-        <p class="text-warning">All Fields with * are required</p>
         @if($errors->any())
         <div class="alert alert-danger">
           <strong>Please fix the following: </strong>
@@ -29,7 +25,7 @@
            {{ csrf_field() }}
 
           <div class="form-group">
-            <label>First Name *</label>
+            <label>First Name</label>
             <input 
               type="text" 
               placeholder="Enter First Name" 
@@ -50,7 +46,7 @@
               v-model="middle_name">
           </div>
           <div class="form-group">
-            <label>Last Name *</label>
+            <label>Last Name</label>
             <input 
               type="text" 
               placeholder="Enter Last Name" 
@@ -62,7 +58,7 @@
           
           
           <div class="form-group">
-            <label>Sex *</label>
+            <label>Sex</label>
             <div class="custom-control custom-radio">
               <input value="M" type="radio" id="male" name="sex" class="custom-control-input" {{ old('sex') && old('sex') == 'M' ? 'checked' : ''   }} >
               <label class="custom-control-label" for="male">Male</label>
@@ -74,14 +70,14 @@
           </div>
 
           <div class="form-group">
-            <label>Date Of Birth *</label>
+            <label>Date Of Birth</label>
             <datepicker 
               placeholder="Select Date" 
               name="date_of_birth" 
               value="{{ old('date_of_birth') }}"></datepicker>
           </div>
 
-          <div class="form-group">
+          {{-- <div class="form-group">
             <label>Contact Number (optional)</label>
             <input 
               name="contact_no" 
@@ -89,9 +85,9 @@
               class="form-control" 
               placeholder="Enter Contact Number"
               value="{{ old('contact_no') }}">
-          </div>
+          </div> --}}
 
-          <div class="form-group">
+          {{-- <div class="form-group">
             <label for="address">Address (optional)</label>
             <textarea 
               id="address" 
@@ -99,11 +95,11 @@
               class="form-control" 
               placeholder="Enter Address"
               >{{ old('address') }}</textarea>
-          </div>
+          </div> --}}
 
 
           <div class="form-group">
-            <label for="college_id">Select College *</label>
+            <label for="college_id">Select College</label>
             <select name="college_id" id="college_id" class="form-control" v-model="college_id" {{ Gate::check('isSAdmin') ? '' : 'disabled' }}>
               <option value="" style="display: none">Select College</option>
               @foreach($colleges as $college)
@@ -121,7 +117,7 @@
           <hr>
           <h4>Account Information</h4>
           <div class="form-group">
-            <label>Email *</label>
+            <label>Email</label>
             <input 
               type="email" 
               placeholder="Enter Email" 
@@ -130,7 +126,7 @@
               value="{{ old('email') }}">
           </div>
           <div class="form-group">
-            <label>Password *</label>
+            <label>Password</label>
             <input 
               :type="showPass ? 'text' : 'password'" 
               placeholder="Enter Password" 

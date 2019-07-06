@@ -6,16 +6,14 @@
 @section('content')
 
     <a href="{{ url('/students') }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
-    
+    <h1 class="page-header mt-3">Update Academic Information</h1>
     <div id="app">
         <div class="row">
-            <div class="col-md-8 mx-auto mt-3">
-                <div class="card shadow">
-                    <div class="card-header">
-                        <h3 class="page-header">Update Academic Information</h3>
-                    </div>
+            <div class="col-md-12 mx-auto mt-3">
+                <div class="card">
 
                     <div class="card-body">
+                        
                         <div class="d-flex align-items-center mb-4">
                             <div>
                                 <img src="{{ asset('img/user.svg') }}" alt="user-icon" style="width: 40px" class=" mr-3">
