@@ -311,3 +311,13 @@ Route::get('/user_is_deactivated', function() {
 //home route
 
 Route::get('/s/home', 's\HomeController@index');
+
+//obe route
+
+Route::get('/s/{student}/obe_curriculum', 's\StudentOBEController@show');
+
+//assessments routes
+
+Route::get('/s/assessments', 's\AssessmentsController@index');
+
+Route::get('/s/assessments/{student_outcome}', 's\AssessmentsController@show');

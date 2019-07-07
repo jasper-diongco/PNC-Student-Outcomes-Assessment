@@ -103,6 +103,32 @@ class Exam extends Model
         return $courses;
     }
 
+    public function getCourses1($student_outcome_id, $curriculum_id) {
+        // $student_outcome = StudentOutcome::find(request('student_outcome_id'));
+        // $curriculum = Curriculum::find(request('curriculum_id'));
+
+        $student_outcome = StudentOutcome::find($student_outcome_id);
+        $curriculum = Curriculum::find($curriculum_id);
+
+        $curriculum_maps = $student_outcome->curriculumMaps;
+        $curriculum_courses = $curriculum->curriculumCourses;
+
+        $courses = [];
+
+        foreach ($curriculum_maps as $curriculum_map) {
+
+            foreach ($curriculum_courses as $curriculum_course) {
+
+                if($curriculum_map->curriculumCourse->course->id == $curriculum_course->course_id) {
+                    $courses[] = $curriculum_map->curriculumCourse->course;
+                    break;
+                }
+            }
+        }
+
+        return $courses;
+    }
+
 
     public function examTestQuestions() {
         return $this->hasMany('App\ExamTestQuestion');
@@ -114,6 +140,13 @@ class Exam extends Model
             ->where('exam_test_questions.exam_id', $this->id)
             ->with('choices')
             ->with('user')
+            ->get();
+    }
+    public function getRandomTestQuestions() {
+        return TestQuestion::select('test_questions.*')
+            ->join('exam_test_questions', 'exam_test_questions.test_question_id', '=',  'test_questions.id')
+            ->where('exam_test_questions.exam_id', $this->id)
+            ->inRandomOrder()
             ->get();
     }
 
@@ -131,7 +164,6 @@ class Exam extends Model
             ->join('exam_test_questions', 'exam_test_questions.test_question_id', '=',  'test_questions.id')
             ->where('exam_test_questions.exam_id', $this->id)
             ->where('test_questions.course_id', $course_id)
-            ->with('choices')
             ->with('user')
             ->inRandomOrder()
             ->get();

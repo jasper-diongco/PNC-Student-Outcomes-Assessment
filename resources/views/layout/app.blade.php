@@ -1,5 +1,10 @@
 <?php
     $active = $active ?? '';
+    $container_fluid = $container_fluid ?? false;
+    $hide_navigation = $hide_navigation ?? false;
+    $brand = $brand ?? 'PNC | SOA';
+    $assessment = $assessment ?? false;
+    $fixed_top = $fixed_top ?? false;
 ?>
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -26,16 +31,22 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
+<div class="d-flex flex-column sticky-footer-wrapper">
     <header>
         <!-- navbar -->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-success">
-          <div class="container">
-            <a class="navbar-brand" href="#">PNC | SOA</a>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-success {{ $fixed_top ? 'fixed-top' : '' }}">
+          @if($container_fluid)
+                <div class="container-fluid">
+            @else
+                <div class="container">
+            @endif
+            <a class="navbar-brand" href="#">{{ $brand }}</a>
               
               
               {{-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button> --}}
+              @if(!$assessment)
               @auth
                 <div class="dropdown">
                   <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -56,14 +67,20 @@
                   </div>
                 </div>
             @endauth
+            @endif
           </div> 
           
         </nav>
         <!-- //navbar -->
         
+        @if (!$hide_navigation)
         <!-- navigation -->
         <nav id="main-nav" class="navbar navbar-expand-lg navbar-dark bg-white">
-          <div class="container">
+            @if($container_fluid)
+                <div class="container-fluid">
+            @else
+                <div class="container">
+            @endif
               <ul class="nav">
 
                 @can('isStud')
@@ -75,14 +92,24 @@
                             </div>
                         </a>
                     </li>
-                    <li class="nav-item {{ $active == 'my-grades' ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ url('s/home') }}">
+                    <li class="nav-item {{ $active == 'assessments' ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ url('/s/assessments') }}">
+                            <div class="d-flex flex-column justify-content-center text-center">
+                                <i class="fas fa-file-signature icon-nav"></i> 
+                                <span>Assessments</span>
+                            </div>
+                        </a>
+                    </li>
+                    @if(Gate::check('isStud'))
+                    <li class="nav-item {{ $active == 'obe-curriculum' ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ url('s/' . Auth::user()->getStudent()->id . '/obe_curriculum') }}">
                             <div class="d-flex flex-column justify-content-center text-center">
                                 <i class="fa fa-file-alt icon-nav"></i> 
                                 <span>OBE Curriculum</span>
                             </div>
                         </a>
                     </li>
+                    @endif
                 @endcan
 
                   <!-- Nav Item - Dashboard -->
@@ -208,11 +235,18 @@
           
         </nav>
         <!-- //navigation -->
+
+        @endif
     </header>
         
-    <main id="page-content" class="pt-3">
+    <main id="page-content" class="pt-3 flex-fill {{ $fixed_top ? 'pt-5 mt-3' : '' }}">
         <!-- Begin Page Content -->
-        <div class="container">
+        @if($container_fluid)
+            <div class="container-fluid">
+        @else
+            <div class="container">
+        @endif
+        
 
           <!-- Page Heading -->
           
@@ -225,6 +259,7 @@
     <footer id="sticky-footer" class="py-2 mt-5">
         <div class="pl-3">Pamantasan ng Cabuyao &copy; 2019 | Student Outcomes Assessment</div>
     </footer>
+</div>
 </body>
 </html>
 

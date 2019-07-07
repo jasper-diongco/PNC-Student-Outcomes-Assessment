@@ -246,10 +246,16 @@ class FacultiesController extends Controller
         }
 
         $faculty = Faculty::findOrFail($id);
+
         if($request->ajax()) {
             return new FacultyResource($faculty);
         }
-        return view('faculties.show')->with('faculty', $faculty);
+
+        $colleges = College::all();
+
+        return view('faculties.show')
+            ->with('colleges', $colleges)
+            ->with('faculty', $faculty);
     }
 
     public function getFaculty(Faculty $faculty)

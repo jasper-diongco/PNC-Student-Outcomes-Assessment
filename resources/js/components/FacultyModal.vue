@@ -210,7 +210,14 @@
 
 <script>
 export default {
-  props: ["colleges", "isDean", "collegeId", "isUpdate", "facultyId"],
+  props: [
+    "colleges",
+    "isDean",
+    "collegeId",
+    "isUpdate",
+    "facultyId",
+    "refreshUpdate"
+  ],
   data() {
     return {
       form: new Form({
@@ -298,14 +305,27 @@ export default {
       this.form
         .put(myRootURL + "/faculties/" + this.facultyId)
         .then(response => {
-          toast.fire({
-            type: "success",
-            title: "Faculty Successfully Updated"
-          });
+          if (!this.refreshUpdate) {
+            toast.fire({
+              type: "success",
+              title: "Faculty Successfully Updated"
+            });
 
-          $("#facultyModalUpdate").modal("hide");
+            $("#facultyModalUpdate").modal("hide");
 
-          this.$emit("refresh-faculties");
+            this.$emit("refresh-faculties");
+          } else {
+            swal
+              .fire({
+                title: "Success",
+                text: "Faculty Successfully Updated",
+                type: "success",
+                confirmButtonText: "OK"
+              })
+              .then(() => {
+                window.location.reload();
+              });
+          }
         });
     },
     saveFaculty() {
@@ -319,6 +339,10 @@ export default {
   created() {
     if (this.isDean == true) {
       this.form.college = this.collegeId;
+    }
+
+    if (this.refreshUpdate == true) {
+      this.getFaculty();
     }
   }
 };

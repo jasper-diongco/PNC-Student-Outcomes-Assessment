@@ -5,17 +5,17 @@
 @section('content')
   <a href="{{ url('faculties') }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
   
-  @if(Session::has('message'))
+  {{-- @if(Session::has('message'))
     @component('components.alert')
       {{ Session::get('message') }}
     @endcomponent
-  @endif
+  @endif --}}
 
   <h1 class="page-header mt-3">Faculty Information</h1>
   
   <div id="app">
-  
-    <div class="card mt-4">
+    <faculty-modal is-dean="{{ Gate::check('isDean') ? 'true' : 'false' }}" college-id="{{ Session::get('college_id') }}" :colleges='@json($colleges)' is-update="true" :faculty-id="{{ $faculty->id }}" :refresh-update="true"></faculty-modal>
+    <div class="card mt-4" >
 
       <div class="card-body pt-4">
         <div class="d-flex justify-content-between">
@@ -34,7 +34,8 @@
                 </div>
               @endif
               <div>
-                <a href="{{ url('faculties/' . $faculty->id . '/edit') }}" class="btn btn-success btn-sm">Update Information <i class="fa fa-edit"></i></a>
+                {{-- <a href="{{ url('faculties/' . $faculty->id . '/edit') }}" class="btn btn-success btn-sm">Update Information <i class="fa fa-edit"></i></a> --}}
+                <button data-toggle="modal" data-target="#facultyModalUpdate" class="btn btn-success btn-sm">Update Information <i class="fa fa-edit"></i></button>
               </div>
             </div>
           @endif
@@ -47,7 +48,7 @@
           <li class="list-group-item"><label>First Name:</label> {{ $faculty->user->first}} </li>
           <li class="list-group-item"><label>Middle Name:</label> {{ $faculty->user->middle_name}} </li>
           <li class="list-group-item"><label>Sex:</label> {{ $faculty->user->sex == 'M' ? 'Male' : 'Female' }}</li>
-          <li class="list-group-item"><label>Date of Birth:</label> {{ $faculty->user->date_of_birth }}</li>
+          <li class="list-group-item"><label>Date of Birth:</label> @{{ dateOfBirth() }}</li>
           <li class="list-group-item"><label>College:</label> {{ $faculty->college->name }}</li>
           <li class="list-group-item"><label>Email:</label> {{ $faculty->user->email }} </li>
           <li class="list-group-item"><label>User Type:</label> {{ $faculty->user->userType->description }}</li>
@@ -91,6 +92,12 @@
               event.target.submit();
             }
           });
+        },
+        parseDate(date) {
+          return moment(date).format("MMM D YYYY");  
+        },
+        dateOfBirth() {
+          return this.parseDate('{{ $faculty->user->date_of_birth  }}');
         }
       }
     });
