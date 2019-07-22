@@ -69,6 +69,10 @@ Route::put('/faculties/{faculty}/update_account', 'FacultiesController@updateAcc
 
 Route::post('/programs/{program}/save_student_outcomes', 'ProgramsController@save_student_outcomes');
 Route::post('/programs/{program}/revise_student_outcomes', 'ProgramsController@revise_student_outcomes');
+
+Route::get('/programs/{program}/get_learning_levels', 'ProgramsController@get_learning_levels');
+Route::post('/programs/{program}/add_learning_level', 'ProgramsController@add_learning_level');
+Route::put('/programs/{program}/update_learning_level/{learning_level}', 'ProgramsController@update_learning_level');
 Route::resource('/programs', 'ProgramsController');
 Route::post('/programs/check_code', 'ProgramsController@check_code');
 

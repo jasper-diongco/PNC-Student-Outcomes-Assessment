@@ -18,7 +18,7 @@
         <div class="mr-4"><i class="fa fa-calendar-check text-primary"></i> <label>Year:</label> {{ $curriculum->year }}</div>
 
         <div class="mr-4"><i class="fa fa-user text-primary"></i> <label>Author:</label> {{ $curriculum->user->getFullName() }}</div>
-      </div>
+    </div>
 
       
 

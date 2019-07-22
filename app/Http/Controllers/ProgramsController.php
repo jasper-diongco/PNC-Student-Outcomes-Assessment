@@ -12,6 +12,7 @@ use App\StudentOutcomeArchiveVersion;
 use App\StudentOutcomeArchive;
 use App\PerformanceCriteriaArchive;
 use App\PerformanceCriteriaIndicatorArchive;
+use App\LearningLevel;
 
 class ProgramsController extends Controller
 {
@@ -221,5 +222,68 @@ class ProgramsController extends Controller
 
 
         return $program;
+    }
+
+    public function add_learning_level(Program $program) {
+
+        $data = request()->validate([
+            'letter' => 'required|min:1|max:1|alpha',
+            'name' => 'required|string',
+            'color' => 'required'
+        ]);
+
+        $letter_check = LearningLevel::where('program_id', $program->id)->where('letter', $data['letter'])->get();
+
+        if(count($letter_check) > 0) {
+            return response()->json([
+                "message" => "The given data was invalid.",
+                "errors" => [
+                    "letter" => ["The letter is already taken."]
+                ]
+            ], 422);
+        }
+
+        $learning_level = new LearningLevel();
+        $learning_level->program_id = $program->id;
+        $learning_level->letter = strtoupper($data['letter']);
+        $learning_level->name = $data['name'];
+        $learning_level->color = $data['color'];
+        $learning_level->save();
+
+        return $learning_level;
+    }
+
+    public function update_learning_level(Program $program, LearningLevel $learning_level) {
+        $data = request()->validate([
+            'letter' => 'required|min:1|max:1|alpha',
+            'name' => 'required|string',
+            'color' => 'required'
+        ]);
+
+        $letter_check = LearningLevel::where('program_id', $program->id)->where('letter', $data['letter'])->where('id', '!=', $learning_level->id)->get();
+
+        if(count($letter_check) > 0) {
+            return response()->json([
+                "message" => "The given data was invalid.",
+                "errors" => [
+                    "letter" => ["The letter is already taken."]
+                ]
+            ], 422);
+        }
+
+        $learning_level->program_id = $program->id;
+        $learning_level->letter = strtoupper($data['letter']);
+        $learning_level->name = $data['name'];
+        $learning_level->color = $data['color'];
+        $learning_level->save();
+
+        return $learning_level;
+    }
+
+    public function get_learning_levels(Program $program) {
+
+        $learning_levels = $program->learningLevels;
+
+        return $learning_levels;
     }
 }

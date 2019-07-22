@@ -78,6 +78,10 @@ Vue.component("math-modal", require("./components/MathModal.vue").default);
 
 Vue.component("grade-modal", require("./components/GradeModal.vue").default);
 Vue.component(
+    "learning-level-modal",
+    require("./components/LearningLevelModal.vue").default
+);
+Vue.component(
     "college-modal",
     require("./components/CollegeModal.vue").default
 );

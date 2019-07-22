@@ -23,4 +23,8 @@ class Program extends Model
     public function curricula() {
         return $this->hasMany('App\Curriculum')->latest();
     }
+
+    public function learningLevels() {
+      return $this->hasMany('App\LearningLevel');
+    }
 }

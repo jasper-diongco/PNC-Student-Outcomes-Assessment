@@ -9,6 +9,7 @@ use App\StudentOutcome;
 use App\CurriculumMap;
 use App\Program;
 use App\CurriculumMappingStatus;
+use App\LearningLevel;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -78,10 +79,13 @@ class CurriculumMapsController extends Controller
 
       $curriculum_mapping_status = CurriculumMappingStatus::where('curriculum_id', $curriculum->id)->first();
 
-      return view('curriculum_maps.show')
+      $learning_levels = $curriculum->program->learningLevels;
+
+      return view('curriculum_maps.show1')
         ->with('curriculum', $curriculum)
         ->with('curriculum_courses', $curriculum_courses)
         ->with('curriculum_maps', $curriculum_maps)
+        ->with('learning_levels', $learning_levels)
         ->with('curriculum_mapping_status', $curriculum_mapping_status);
     }
 

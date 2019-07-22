@@ -6,5 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class LearningLevel extends Model
 {
-    public $fillable = ['name', 'description']
+    public $guarded = [];
+    public $timestamps = false;
 }
