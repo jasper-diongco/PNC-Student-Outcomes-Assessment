@@ -4,7 +4,7 @@
 
 @section('content')
 
-<a href="{{ url('/student_outcomes?program_id='. request('program_id')) }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
+{{-- <a href="{{ url('/student_outcomes?program_id='. request('program_id')) }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a> --}}
 
 <div id="app" class="mt-3">
 

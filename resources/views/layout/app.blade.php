@@ -40,7 +40,10 @@
             @else
                 <div class="container">
             @endif
-            <a class="navbar-brand" href="#">{{ $brand }}</a>
+            <a class="navbar-brand" href="#">{{ $brand }} </a>
+            {{--< div>
+                <img src="{{ asset('img/pnc_logo_name_small.png') }}"  style="width: 100px;">
+            </div>  --}}
               
               
               {{-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

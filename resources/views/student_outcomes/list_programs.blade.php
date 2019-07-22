@@ -4,11 +4,12 @@
 
 @section('content')
 
-
 <div class="d-flex justify-content-between mb-3">
+
   <div>
     <h1 class="page-header">Student Outcomes &mdash; Select Program</h1>
   </div>
+
 </div>
 
 @if(count($programs) > 0) 

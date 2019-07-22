@@ -145,9 +145,14 @@
 </div> --}}
 
 <div id="app">
+    
     <div class="row mt-5">
+        {{-- <div class="col-md-7">
+            <img src="{{ asset('svg/authentication.svg') }}"  class="w-75 mt-5">
+        </div>  --}}
         <div class="col-md-5 mx-auto">
             <div class="card">
+                
                 <div class="card-body p-5">
                     <form v-on:submit.prevent="login" action="{{ route('login') }}" method="POST">
                         <h1 class="login-title mb-4">Login to your account</h1>
@@ -180,6 +185,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 @endsection
