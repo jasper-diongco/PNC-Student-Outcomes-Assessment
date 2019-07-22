@@ -67,7 +67,8 @@ Route::put('/faculties/{faculty}/update_account', 'FacultiesController@updateAcc
 // End Faculties Routes
 
 
-
+Route::post('/programs/{program}/save_student_outcomes', 'ProgramsController@save_student_outcomes');
+Route::post('/programs/{program}/revise_student_outcomes', 'ProgramsController@revise_student_outcomes');
 Route::resource('/programs', 'ProgramsController');
 Route::post('/programs/check_code', 'ProgramsController@check_code');
 
@@ -91,11 +92,13 @@ Route::get('/curricula/{curriculum}', 'CurriculaController@show');
 // StudentOutcomes Routes
 
 Route::get('/student_outcomes', 'StudentOutcomesController@index');
-
+Route::post('/student_outcomes', 'StudentOutcomesController@store');
 Route::get('/student_outcomes/list_program', 'StudentOutcomesController@listProgram');
 Route::get('/student_outcomes/{student_outcome}', 'StudentOutcomesController@show');
 Route::put('/student_outcomes/{student_outcome}', 'StudentOutcomesController@update');
-Route::post('/student_outcomes', 'StudentOutcomesController@store');
+Route::delete('/student_outcomes/{student_outcome}', 'StudentOutcomesController@delete');
+Route::post('/student_outcomes/{student_outcome}/activate', 'StudentOutcomesController@activate');
+
 
 // StudentOutcomes Routes
 

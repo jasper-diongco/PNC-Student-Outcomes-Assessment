@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Gate;
 use App\Rules\TextOnly;
+use App\StudentOutcomeArchiveVersion;
 
 class StudentOutcomesController extends Controller
 {
@@ -36,10 +37,12 @@ class StudentOutcomesController extends Controller
         }
         $program = Program::find(request('program_id'));
         $programs = Program::all();
+        $so_archive_versions = StudentOutcomeArchiveVersion::where('program_id', $program->id)->orderBy('revision_no', 'DESC')->get();
 
         return view('student_outcomes.index')
             ->with('program', $program)
-            ->with('programs', $programs);
+            ->with('programs', $programs)
+            ->with('so_archive_versions', $so_archive_versions);
     }
 
     public function listProgram() {
@@ -85,7 +88,7 @@ class StudentOutcomesController extends Controller
 
 
         $request->validate([
-            'so_code' => 'required|max:10|alpha_num|unique:student_outcomes',
+            'so_code' => 'required|max:10|alpha_num',
             'description' => ['required', new TextOnly],
             'program' => 'required',
             'performance_criteria' => 'required|regex:/^[\pL\s\-0-9_.,()\']+$/u',
@@ -100,7 +103,7 @@ class StudentOutcomesController extends Controller
         ]);
 
         $student_outcome = StudentOutcome::create([
-            'so_code' => request('so_code'),
+            'so_code' => strtoupper(request('so_code')),
             'description' => request('description'),
             'program_id' => request('program')
         ]);
@@ -179,7 +182,7 @@ class StudentOutcomesController extends Controller
         }
 
         $request->validate([
-            'so_code' => 'required|max:10|alpha_num|unique:student_outcomes,so_code,'.$id,
+            'so_code' => 'required|max:10|alpha_num',
             'description' => ['required', new TextOnly],
             'program' => 'required',
             'performance_criteria' => 'required|regex:/^[\pL\s\-0-9_.,()\']+$/u',
@@ -194,7 +197,7 @@ class StudentOutcomesController extends Controller
         ]);
 
         $student_outcome = StudentOutcome::findOrFail($id);
-        $student_outcome->so_code = request('so_code');
+        $student_outcome->so_code = strtoupper(request('so_code'));
         $student_outcome->description = request('description');
         $student_outcome->program_id = request('program');
 
@@ -223,6 +226,20 @@ class StudentOutcomesController extends Controller
         }
 
         Session::flash('message', 'Student Outcome successfully updated from database');
+
+        return $student_outcome;
+    }
+
+    public function delete(StudentOutcome $student_outcome) {
+        $student_outcome->is_active = false;
+        $student_outcome->save();
+
+        return $student_outcome;
+    }
+
+    public function activate(StudentOutcome $student_outcome) {
+        $student_outcome->is_active = true;
+        $student_outcome->save();
 
         return $student_outcome;
     }

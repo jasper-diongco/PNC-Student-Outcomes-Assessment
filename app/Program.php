@@ -13,7 +13,11 @@ class Program extends Model
     }
 
     public function studentOutcomes() {
-      return $this->hasMany('App\StudentOutcome')->orderBy('so_code', 'ASC');
+      return $this->hasMany('App\StudentOutcome')->orderBy('so_code', 'ASC')->where('is_active', true);
+    }
+
+    public function deactivated_student_outcomes() {
+      return StudentOutcome::where('program_id', $this->id)->orderBy('so_code', 'ASC')->where('is_active', false)->get();
     }
 
     public function curricula() {

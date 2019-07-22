@@ -10,19 +10,21 @@
 
   <div class="d-flex justify-content-between mb-3">
     <div>
-      <h1 class="page-header">Student Outcome &mdash; {{ $student_outcome->so_code }}</h1>
+      <h1 class="page-header">Student Outcome &mdash; {{ $student_outcome->program->program_code }}</h1>
 
     </div>
-    <div>
-      @if(Gate::check('isDean') || Gate::check('isSAdmin'))
-        <student-outcome-modal 
-          :is-update="true" 
-          :programs='@json($programs)' 
-          :student-outcome='@json($student_outcome)'
-          :performance-criteria='@json($student_outcome->performanceCriterias[0])'
-          :performance-indicators='@json($student_outcome->performanceCriterias[0]->performanceCriteriaIndicators)'></student-outcome-modal>
-      @endif
-    </div>
+    @if($student_outcome->is_active && !$student_outcome->program->so_is_saved)
+      <div>
+        @if(Gate::check('isDean') || Gate::check('isSAdmin') )
+          <student-outcome-modal 
+            :is-update="true" 
+            :programs='@json($programs)' 
+            :student-outcome='@json($student_outcome)'
+            :performance-criteria='@json($student_outcome->performanceCriterias[0])'
+            :performance-indicators='@json($student_outcome->performanceCriterias[0]->performanceCriteriaIndicators)'></student-outcome-modal>
+        @endif
+      </div>
+    @endif
   </div>
 
   <div class="card">
@@ -33,7 +35,7 @@
           {{ $student_outcome->so_code }}
           </div>
         </div>
-        <div>{{ $student_outcome->description }}</div>
+        <div><label>{{ $student_outcome->description }}</label></div>
       </div>
     </div>
     <div class="card-body">
