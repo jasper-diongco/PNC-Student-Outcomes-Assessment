@@ -5,18 +5,28 @@
 @section('content')
 
 
-<div class="d-flex justify-content-between mb-3">
-  <div>
-    <h1 class="page-header">Test Bank &mdash; Select Program</h1>
-  </div>
-  <div>
-    {{-- <select class="form-control">
-      <option value="">All</option>
-      @foreach($colleges as $college)
-        <option value="{{ $college->id }}" {{ request('college_id') == $college->id ? 'selected' : '' }}>{{ $college->college_code }}</option>
-      @endforeach
-    </select> --}}
-  </div>
+
+
+<div class="card p-3 mb-3">
+    
+
+    <div class="d-flex justify-content-between mb-3">
+      <div>
+        <h1 class="page-header">Test Bank &mdash; Select Program</h1>
+      </div>
+      <div>
+        {{-- <select class="form-control">
+          <option value="">All</option>
+          @foreach($colleges as $college)
+            <option value="{{ $college->id }}" {{ request('college_id') == $college->id ? 'selected' : '' }}>{{ $college->college_code }}</option>
+          @endforeach
+        </select> --}}
+      </div>
+    </div>
+
+    <div class="mx-auto" style="width: 400px">
+      <img src="{{ asset('svg/list.svg') }}" class="w-100">
+    </div>
 </div>
 
 
@@ -57,7 +67,7 @@
               <td>{{ $program->description }}</td>
               <td>{{ count($program->studentOutcomes) }}</td>
               <td>{{ $program->college->college_code }}</td>
-              <td><a href="{{ url('/test_bank/' . $program->id . '/list_student_outcomes') }}" class="btn btn-sm btn-success"><i class="fa fa-search"></i></a></td>
+              <td><a href="{{ url('/test_bank/' . $program->id . '/list_student_outcomes') }}" class="btn btn-sm btn-info">Select</a></td>
             </tr>
           @endforeach
         </tbody>

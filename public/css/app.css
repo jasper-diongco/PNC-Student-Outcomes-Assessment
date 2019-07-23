@@ -10766,3 +10766,58 @@ body,
   -webkit-transform: rotate(45deg);
   transform: rotate(45deg);
 }
+
+.my-select {
+  cursor: pointer;
+  background: #f2f2f2;
+  color: #545454;
+  font-weight: 600;
+  border-radius: 20px;
+  box-shadow: 0;
+  border: 0;
+  outline: none;
+  padding: 8px 20px;
+  transition: all 0.3s;
+}
+
+.my-select:hover {
+  background: #dedede;
+}
+
+.my-select:focus {
+  box-shadow: 0;
+}
+
+.select-student-outcome {
+  cursor: pointer;
+  background: #f2f2f2;
+  color: #545454;
+  font-weight: 600;
+  border-radius: 8px;
+  box-shadow: 0;
+  border: 0;
+  outline: none;
+  padding: 8px 20px;
+  transition: all 0.3s;
+}
+
+.select-student-outcome:hover {
+  background: #dedede;
+}
+
+.select-student-outcome:focus {
+  box-shadow: 0;
+}
+
+.list-dropdown-so {
+  box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.13), -3px -3px 8px rgba(0, 0, 0, 0.13);
+}
+.list-dropdown-so .list-group-item {
+  background: #fcfcfc;
+  border: 0;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+.list-dropdown-so .list-group-item:hover {
+  background: #f0f0f0;
+}

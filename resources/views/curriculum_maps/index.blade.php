@@ -56,7 +56,8 @@
                                 <td>@{{ curriculum.program.program_code }}</td>
                                 <td>@{{ curriculum.name }}</td>
                                 <td>@{{ curriculum.year }}</td>
-                                <td>@{{ curriculum.revision_no }}</td>
+                                <td>@{{ curriculum.revision_no }}.0 
+                                </td>
                                 <td>@{{ curriculum.program.college.college_code }}</td>
                                 <td><a :href="'curriculum_mapping/' + curriculum.id" class="btn btn-sm btn-success"><i class="fa fa-search"></i></a></td>
                               </tr>

@@ -28,7 +28,7 @@
     </curriculum-modal>
     <!-- End curriculum modal -->
     
-    <a href="{{ url('/curricula?college_id='. request('college_id')) }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
+    {{-- <a href="{{ url('/curricula?college_id='. request('college_id')) }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a> --}}
     
     <h1 class="page-header mt-3">{{ $curriculum->name }}</h1>
 
@@ -77,7 +77,7 @@
                 <ul class="list-group mt-1" style="">
                   <li v-for="course in searched_courses" v-on:click="selectCourse(course)" :key="course.id" class="list-group-item d-flex align-items-center justify-content-between">
                     <div class="d-flex">
-                      <div class="avatar-course mr-2" :style="{ background: course.color }"> @{{ course.course_code }}</div>
+                      <div class="avatar mr-2" :style="{ background: course.color }"><i class="fa fa-book"></i></div>
                       @{{ course.course_code }}
                       &mdash; 
                       <div class="d-flex flex-column"> 
@@ -87,7 +87,7 @@
                     </div>
                     <div>
                       @if(Gate::check('isDean') || Gate::check('isSAdmin'))
-                        <button v-on:click="selectCourse(course)" 
+                        <button v-if="!checkIfAdded(course)" v-on:click="selectCourse(course)" 
                         class="btn btn-primary btn-sm" 
                         data-toggle="modal"
                         data-target="#curriculumCourseModal">Add</button>
@@ -663,6 +663,16 @@
             }
           }
           return false;
+        },
+        checkIfAdded(course) {
+          var found = false;
+          for(var i = 0; i < this.curriculum.curriculum_courses.length; i++) {
+            if(this.curriculum.curriculum_courses[i].course_id == course.id) {
+              found = true;
+            }
+          }
+
+          return found;
         }
       },
       created() {

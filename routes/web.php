@@ -270,10 +270,11 @@ Route::put('/math_objects/{math_object}', 'MathObjectsController@update');
 
 
 // Test bank Routes
-
+Route::get('/test_bank', 'TestBankController@index');
 Route::get('/test_bank/list_programs', 'TestBankController@listProgram');
 Route::get('/test_bank/{program}/list_student_outcomes', 'TestBankController@listStudentOutcome');
-
+Route::get('/test_bank/{program}/get_student_outcomes', 'TestBankController@get_student_outcomes');
+Route::get('/test_bank/get_curriculum_courses_mapped/{student_outcome_id}', 'TestBankController@get_curriculum_courses_mapped');
 // End Test bank routes
 
 // Exam routes

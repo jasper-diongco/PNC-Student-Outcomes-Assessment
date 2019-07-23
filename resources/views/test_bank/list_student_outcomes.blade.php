@@ -1,6 +1,6 @@
 @extends('layout.app', ['active' => 'test_questions'])
 
-@section('title', 'Test Questions')
+@section('title', 'Test Bank')
 
 @section('content')
 
@@ -11,6 +11,7 @@
     <h1 class="page-header mt-3">Test Bank &mdash; {{ $program->program_code }} - List of Student Outcomes</h1>
   </div>
 </div>
+
 
 @if(count($program->studentOutcomes) > 0) 
   <div class="list-group">

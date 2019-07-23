@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\CurriculumMappingStatus;
+use App\CurriculumMap;
 use Gate;
 
 class CurriculaController extends Controller
@@ -235,16 +236,39 @@ class CurriculaController extends Controller
                         'type' => 2,
                         'pre_req_id' => $curriculum_course->id
                     ]);
+
+                    
+
                 }
+
+                //clone the curriculum mapping
+                $curriculum_maps = CurriculumMap::where('curriculum_course_id', $cloneItem->id)->where('is_checked', true)->get();
+
+                foreach ($curriculum_maps as $curriculum_map) {
+                    $new_curriculum_map = new CurriculumMap();
+                    $new_curriculum_map->student_outcome_id = $curriculum_map->student_outcome_id;
+                    $new_curriculum_map->curriculum_course_id = $newItem->id;
+                    $new_curriculum_map->is_checked = $curriculum_map->is_checked;
+                    $new_curriculum_map->learning_level_id = $curriculum_map->learning_level_id;
+                    $new_curriculum_map->save();
+                }
+
+
+
             }
         }
+
+        //clone the curriculum mapping
+        // foreach ($curriculum->curriculumCourses as $curriculum_course) {
+            
+        // }
 
         CurriculumMappingStatus::create([
             'curriculum_id' => $newCurriculum->id,
             'status' => false
         ]);
 
-        Session::flash('message', 'Curriculum successfully cloned!');
+        Session::flash('message', 'Curriculum successfully revised.');
 
         return $newCurriculum;
     }
