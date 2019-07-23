@@ -75,6 +75,7 @@ class CurriculumMapsController extends Controller
         ->join('curricula', 'curricula.id', '=', 'curriculum_courses.curriculum_id')
         ->select('curriculum_maps.*')
         ->where('curriculum_id', $id)
+        ->with('learningLevel')
         ->get();
 
       $curriculum_mapping_status = CurriculumMappingStatus::where('curriculum_id', $curriculum->id)->first();
@@ -89,6 +90,15 @@ class CurriculumMapsController extends Controller
         ->with('curriculum_mapping_status', $curriculum_mapping_status);
     }
 
+    // public function get_curriculum_maps($id) {
+    //   //authenticate
+    //   if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+    //       return abort('401', 'Unauthorized');
+    //   }
+
+    //   $curriculum = Curriculum::findOrFail($id);
+    // }
+
     public function edit($id) {
         //authenticate
         if(!Gate::allows('isDean') && !Gate::allows('isSAdmin')) {
@@ -99,9 +109,11 @@ class CurriculumMapsController extends Controller
         $cm_status->status = 0;
         $cm_status->update();
 
-        Session::flash('message', 'You can now edit this curriculum mapping');
+        //Session::flash('message', 'You can now edit this curriculum mapping');
 
-        return redirect('/curriculum_mapping/' . $id);
+        //return redirect('/curriculum_mapping/' . $id);
+
+        return $cm_status;
     }
 
     public function saveMaps(Request $request) {
@@ -143,7 +155,8 @@ class CurriculumMapsController extends Controller
         DB::commit();
         // all good
 
-        Session::flash('message', 'Curriculum mapping successfully saved');
+        //Session::flash('message', 'Curriculum mapping successfully saved');
+        return $curriculum_mapping_status;
       }
       catch (\Exception $e) {
           DB::rollback();

@@ -19,4 +19,8 @@ class CurriculumMap extends Model
             ->where('is_active', true)
             ->count();
     }
+
+    public function learningLevel() {
+        return $this->belongsTo('App\LearningLevel');
+    }
 }
