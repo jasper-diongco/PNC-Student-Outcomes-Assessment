@@ -5,20 +5,54 @@
 @section('content')
 
 
-<a href="{{ url('/test_questions?student_outcome_id='. request('student_outcome_id') . '&course_id=' . request('course_id') . '&program_id=' . request('program_id')) }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
-
-<div class="d-flex justify-content-between mt-3">
-  <div>
-    <h1 class="page-header mb-3">Edit Test Question #{{ $test_question->id }}</h1>
-  </div>
-</div>
+{{-- <a href="{{ url('/test_questions?student_outcome_id='. request('student_outcome_id') . '&course_id=' . request('course_id') . '&program_id=' . request('program_id')) }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a> --}}
 
 
-<div class="d-flex mb-3">
 
-    <div class="mr-3"><label>Program: </label> <span class="text-info">{{ $student_outcome->program->program_code }}</span></div>
-    <div class="mr-3"><label>Student Outcome: </label> <span class="text-info">{{ $student_outcome->so_code }}</span></div>
-    <div class="mr-3"><label>Course: </label> <span class="text-info">{{ $course->course_code . ' - ' . $course->description }}</span></div>
+
+{{-- <div class="d-flex mb-3">
+
+    <div class="mr-3"><label>Program: </label> <span class="text-info fs-19">{{ $student_outcome->program->program_code }}</span></div>
+    <div class="mr-3"><label>Student Outcome: </label> <span class="text-info fs-19">{{ $student_outcome->so_code }}</span></div>
+    <div class="mr-3"><label>Course: </label> <span class="text-info fs-19">{{ $course->course_code . ' - ' . $course->description }}</span></div>
+</div> --}}
+
+<div class="card mb-3">
+    <div class="card-body pt-3">
+
+        <a href="{{ url('/test_questions?student_outcome_id='. request('student_outcome_id') . '&course_id=' . request('course_id') . '&program_id=' . request('program_id')) }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
+
+        <div class="d-flex justify-content-between mt-2">
+          <div>
+            <h1 class="page-header mb-3">Edit Test Question</h1>
+          </div>
+        </div>
+
+        <div class="d-flex mb-3">
+            <div class="mr-3">
+                <label>ID:</label> {{ $test_question->id }}
+            </div>
+            <div class="mr-3">
+                <i class="fa fa-user text-dark"></i>
+                Author: {{ $test_question->user->first_name . ' ' . $test_question->user->last_name }}
+            </div>
+            <div class="mr-3">
+                <i class="fa fa-layer-group text-dark"></i>
+                Level of Difficulty: {{ $test_question->difficultyLevel->description }} <i class="fa fa-circle {{ $test_question->difficulty_level_id == 1 ? 'text-success' : ''   }} {{ $test_question->difficulty_level_id == 2 ? 'text-warning' : ''   }}{{ $test_question->difficulty_level_id == 3 ? 'text-danger' : ''   }}"></i>
+            </div>
+            <div class="mr-3">
+                <i class="fa fa-calendar-plus text-dark"></i>
+                Date Created: {{ $test_question->created_at->format('M d, Y') .', ' . $test_question->created_at->diffForHumans() }}
+            </div>
+        </div>
+
+        <div class="d-flex mb-3">
+
+            <div class="mr-3"><label>Program: </label> <span class="text-info fs-19">{{ $student_outcome->program->program_code }}</span></div>
+            <div class="mr-3"><label>Student Outcome: </label> <span class="text-info fs-19">{{ $student_outcome->so_code }}</span></div>
+            <div class="mr-3"><label>Course: </label> <span class="text-info fs-19">{{ $course->course_code . ' - ' . $course->description }}</span></div>
+        </div>
+    </div>
 </div>
 
 

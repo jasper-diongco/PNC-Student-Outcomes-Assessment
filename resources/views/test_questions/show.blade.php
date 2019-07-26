@@ -9,18 +9,40 @@
 
 <div class="d-flex justify-content-between mb-2 mt-3">
   <div>
-    <h1 class="page-header">Test Question <i class="fa fa-file-alt"></i></h1>
+    <h1 class="page-header">Test Question Details</h1>
   </div>
 </div>
 
 <div id="app">
-
+    @if(!$test_question->is_active)
+        <div class="alert alert-warning">
+            <i class="fa fa-exclamation-triangle"></i> This test question is archived.
+        </div>
+    @endif
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
             <h5 class="py-0 my-0">{{ $test_question->title }}</h5>
         </div>
         <div>
-            <a href="{{ url('/test_questions/' . $test_question->id . '/edit?student_outcome_id='. request('student_outcome_id') . '&course_id=' . request('course_id') . '&program_id=' . request('program_id')) }}" class="btn btn-sm btn-success"><i class="fa fa-edit"></i> Edit</a>
+            @if($test_question->is_active)
+                <button :disabled="isLoading" v-on:click="archiveTestQuestion" class="btn btn-sm mr-2">
+                    <i class="fa fa-archive"></i> 
+                    Archive
+                    <div v-if="isLoading" class="spinner-border spinner-border-sm text-dark" role="status">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                </button>
+                <a href="{{ url('/test_questions/' . $test_question->id . '/edit?student_outcome_id='. request('student_outcome_id') . '&course_id=' . request('course_id') . '&program_id=' . request('program_id')) }}" class="btn btn-sm btn-success"><i class="fa fa-edit"></i> Edit</a>
+            @else
+                <button :disabled="isLoading" v-on:click="activateTestQuestion" class="btn btn-sm mr-2 btn-info">
+                    <i class="fa fa-history"></i> 
+                    Activate 
+                    <div v-if="isLoading" class="spinner-border spinner-border-sm text-light" role="status">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                </button>
+            @endif
+            
         </div>
     </div>
 
@@ -86,9 +108,73 @@
         var vm = new Vue({
             el: '#app',
             data: {
-                
+                isLoading: false,
+                test_question: @json($test_question)
             },
             methods: {
+                archiveTestQuestion() {
+                    swal.fire({
+                    title: 'Do you want to archive?',
+                    text: "Please confirm",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#1cc88a',
+                    cancelButtonColor: '#858796',
+                    confirmButtonText: 'Yes',
+                    width: '400px'
+                  }).then((result) => {
+                    if (result.value) {
+                      this.isLoading = true;
+                      ApiClient.post('/test_questions/' + this.test_question.id + '/archive')
+                      .then(response => {
+                        this.isLoading = false;
+                        // this.curriculum_mapping_status = response.data;
+                        // toast.fire({
+                        //     type: 'success',
+                        //     title: 'You can now update this curriculum'
+                        // });
+                        window.location.reload();
+                      })
+                      .catch(error => {
+                        this.isLoading = false;
+                        alert("An error has occured. Please try again");
+                      })
+                    }
+                  });
+
+                },
+                activateTestQuestion() {
+                    swal.fire({
+                    title: 'Do you want to activate?',
+                    text: "Please confirm",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#1cc88a',
+                    cancelButtonColor: '#858796',
+                    confirmButtonText: 'Yes',
+                    width: '400px'
+                  }).then((result) => {
+                    if (result.value) {
+                      this.isLoading = true;
+                      ApiClient.post('/test_questions/' + this.test_question.id + '/activate')
+                      .then(response => {
+                        this.isLoading = false;
+                        // this.curriculum_mapping_status = response.data;
+                        // toast.fire({
+                        //     type: 'success',
+                        //     title: 'You can now update this curriculum'
+                        // });
+                        //console.log(response);
+                        window.location.reload();
+                      })
+                      .catch(error => {
+                        this.isLoading = false;
+                        alert("An error has occured. Please try again");
+                      })
+                    }
+                  });
+
+                }
             },
             created() {
                 MathLive.renderMathInDocument();

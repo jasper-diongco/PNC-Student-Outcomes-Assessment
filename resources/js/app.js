@@ -120,6 +120,10 @@ Vue.component(
     require("./components/StudentOutcomeModal.vue").default
 );
 
+Vue.component("bar-chart", require("./components/BarChart.vue").default);
+Vue.component("donut-chart", require("./components/DonutChart.vue").default);
+Vue.component("pie-chart", require("./components/PieChart.vue").default);
+
 Vue.component("exam-modal", require("./components/ExamModal.vue").default);
 
 Vue.component("datepicker", Datepicker);
@@ -159,3 +163,5 @@ window.toast = swal.mixin({
     showConfirmButton: false,
     timer: 3000
 });
+
+

@@ -5,21 +5,33 @@
 @section('content')
 
 
-<a href="{{ url('/test_questions?student_outcome_id='. request('student_outcome_id') . '&course_id=' . request('course_id') . '&program_id=' . request('program_id')) }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
 
-<div class="d-flex justify-content-between mt-3">
-  <div>
-    <h1 class="page-header mb-3">Add new Test Question</h1>
-  </div>
+
+<div class="card mb-4">
+    <div class="card-body pt-3">
+        <a href="{{ url('/test_questions?student_outcome_id='. request('student_outcome_id') . '&course_id=' . request('course_id') . '&program_id=' . request('program_id')) }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
+        {{-- <div class="mx-auto" style="width: 400px">
+          <img src="{{ asset('svg/questions1.svg') }}" class="w-100">
+        </div> --}}
+        
+        <div class="d-flex justify-content-between mt-2">
+          <div>
+            <h1 class="page-header mb-3">Add new Test Question</h1>
+          </div>
+        </div>
+
+        <div class="d-flex mb-3">
+
+            <div class="mr-3"><label>Program: </label> <span class="text-info fs-19">{{ $student_outcome->program->program_code }}</span></div>
+            <div class="mr-3"><label>Student Outcome: </label> <span class="text-info fs-19">{{ $student_outcome->so_code }}</span></div>
+            <div class="mr-3"><label>Course: </label> <span class="text-info fs-19">{{ $course->course_code . ' - ' . $course->description }}</span></div>
+        </div>
+
+    </div>
 </div>
 
 
-<div class="d-flex mb-3">
 
-    <div class="mr-3"><label>Program: </label> <span class="text-info">{{ $student_outcome->program->program_code }}</span></div>
-    <div class="mr-3"><label>Student Outcome: </label> <span class="text-info">{{ $student_outcome->so_code }}</span></div>
-    <div class="mr-3"><label>Course: </label> <span class="text-info">{{ $course->course_code . ' - ' . $course->description }}</span></div>
-</div>
 
 
 

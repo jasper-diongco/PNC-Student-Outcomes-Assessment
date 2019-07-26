@@ -451,6 +451,35 @@ body {
   background: #eae8e8;
 }
 
+#search-input-darker input {
+  background: #e8e8e8;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  padding-left: 20px;
+  border: 0;
+}
+
+#search-input-darker span {
+  background: #e8e8e8;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  border: 0;
+}
+
+#search-input-darker input:focus {
+  box-shadow: none;
+}
+
+#search-input-darker input,
+#search-input-darker span {
+  transition: 0.4s all;
+}
+
+#search-input-darker:hover input,
+#search-input-darker:hover span {
+  background: #eae8e8;
+}
+
 .list-student-outcomes .list-group-item {
   border: 0;
   //cursor: pointer;
@@ -723,4 +752,8 @@ body,
   .list-group-item:hover {
     background: #f0f0f0;
   }
+}
+
+.fs-19 {
+  font-size: 19px;
 }

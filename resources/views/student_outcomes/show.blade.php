@@ -4,11 +4,12 @@
 
 @section('content')
 
-{{-- <a href="{{ url('/student_outcomes?program_id='. request('program_id')) }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a> --}}
+
 
 <div id="app" class="mt-3">
-
+  
   <div class="d-flex justify-content-between mb-3">
+    {{-- <a href="{{ url('/student_outcomes?program_id='. request('program_id')) }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a> --}}
     <div>
       <h1 class="page-header">Student Outcome &mdash; {{ $student_outcome->program->program_code }}</h1>
 

@@ -4,11 +4,12 @@
 
 @section('content')
 
-{{-- <a href="{{ url('/student_outcomes/list_program?college_id='. Session::get('college_id')) }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a> --}}
+
 
 <div id="app" class="mt-3" v-cloak>
   
   <div class="card p-3 mb-3">
+    <a href="{{ url('/student_outcomes/list_program?college_id='. Session::get('college_id')) }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
     <div class="mx-auto" style="width: 400px">
       <img src="{{ asset('svg/goals.svg') }}" class="w-100">
     </div>

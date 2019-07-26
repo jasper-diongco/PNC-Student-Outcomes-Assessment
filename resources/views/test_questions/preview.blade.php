@@ -1,4 +1,4 @@
-<div class="card mb-3 bg-light">
+{{-- <div class="card mb-3 bg-light">
     <div class="card-body">
         <div class="d-flex mb-3">
             <div class="mr-3">
@@ -23,7 +23,7 @@
             <div class="d-flex"><b class="mr-2">Course: </b><h5 class="text-success">{{ $test_question->course->course_code . ' - ' . $test_question->course->description }}</h5></div>
         </div>
     </div>
-</div>
+</div> --}}
 
 <div class="card question">
     <div class="card-body">

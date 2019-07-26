@@ -57,6 +57,20 @@ class TestBankController extends Controller
         return $courses;
     }
 
+    public function get_curricula(Program $program) {
+
+        $student_outcome_id = request('student_outcome_id');
+
+        $curricula = $program->curricula;
+
+        foreach ($curricula as $curriculum) {
+            $curriculum->load('program');
+            $curriculum->exam_count = $curriculum->countExam($student_outcome_id);
+        }
+
+        return $curricula;
+    }
+
     public function listProgram() {
         //authenticate
         if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {

@@ -5,9 +5,12 @@
 @section('content')
 <div id="app" v-cloak>
     <div class="card p-3 px-4 mb-3">
-    
+        <div class="mx-auto" style="width: 400px">
+          <img src="{{ asset('svg/updates.svg') }}" class="w-100">
+        </div>
 
-        <div class="d-flex justify-content-between mb-3">
+        <div class="d-flex justify-content-between mb-1">
+
           <div>
             <h1 class="page-header">Test Bank</h1>
           </div>
@@ -26,12 +29,10 @@
           </div>
         </div>
 
-        <div class="mx-auto" style="width: 400px">
-          <img src="{{ asset('svg/database.svg') }}" class="w-100">
-        </div>
+        
         
         <template v-if="selected_student_outcome != ''">
-            <div class="select-student-outcome d-flex align-items-center mt-4 justify-content-between" v-on:click="toggleDropDown">
+            <div class="select-student-outcome d-flex align-items-center mt-1 justify-content-between" v-on:click="toggleDropDown">
                 <div class="d-flex align-items-center">
                     <div class="mr-3">
                         <div class="avatar-student-outcome bg-success">@{{ selected_student_outcome.so_code }}</div>
@@ -62,15 +63,15 @@
     <div id="main-nav-tabs">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li class="nav-item">
-            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Test Questions</a>
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#test-questions" role="tab" aria-selected="true">Test Questions</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Exams</a>
+            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#exams" role="tab" aria-controls="profile" aria-selected="false">Exams</a>
           </li>
 
         </ul>
         <div class="tab-content" id="myTabContent">
-          <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+          <div class="tab-pane fade show active" id="test-questions" role="tabpanel" aria-labelledby="home-tab">
             <div class="p-3">
                 <h5 class="text-dark">List of Courses <i class="fa fa-book text-info"></i></h5>
                 <div v-if="isLoading" class="bg-white p-3">
@@ -91,7 +92,7 @@
                                         </div>   
                                     </div>
                                     <div>
-                                        <button class="btn btn-info btn-sm">Select</button>
+                                        <a :href="'/pnc_soa/public/test_questions?student_outcome_id=' + selected_student_outcome.id + '&course_id=' + course_mapped.id  + '&program_id=' + selected_student_outcome.program_id" class="btn btn-info btn-sm">Select</a>
                                     </div>
                                 </div>
                             </li>
@@ -103,16 +104,39 @@
                 </div>
             </div>
           </div>
-          <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+          <div class="tab-pane fade" id="exams" role="tabpanel">
               <div class="p-3">
-                    <h5 class="text-dark">List of Courses <i class="fa fa-book text-info"></i></h5>
-                    <ul class="list-group list-student-outcomes">
-                        <li class="list-group-item">Cras justo odio</li>
-                        <li class="list-group-item">Dapibus ac facilisis in</li>
-                        <li class="list-group-item">Morbi leo risus</li>
-                        <li class="list-group-item">Porta ac consectetur ac</li>
-                        <li class="list-group-item">Vestibulum at eros</li>
-                    </ul>
+                    <h5 class="text-dark">List of Curriculum <i class="fa fa-file-alt text-info"></i></h5>
+                    <div v-if="isLoading" class="bg-white p-3">
+                        <table-loading></table-loading>
+                    </div>
+                    <div v-else>
+                        <div v-if="curricula.length > 0">
+                            <ul class="list-group">
+                                <li v-for="curriculum in curricula" :key="curriculum.id" class="list-group-item">
+                                    <div class="d-flex justify-content-between align-items-baseline">
+                                        <div class="d-flex">
+                                            <div class="mr-3">
+                                                <div class="avatar bg-success"><i class="fa fa-book-open"></i></div>
+                                            </div>
+                                            <div>
+                                                <div style="font-size: 16px">@{{ curriculum.program.program_code }} - @{{ curriculum.name }}</div>
+                                                <div class="text-warning" style="font-size: 14px">Revision no. 1.0</div>
+                                                <div class="text-muted">@{{ curriculum.exam_count }} exams</div>
+                                            </div>   
+                                        </div>
+                                        <div>
+                                            <a :href="'/pnc_soa/public/exams?student_outcome_id=' + selected_student_outcome.id + '&program_id=' + selected_student_outcome.program_id + '&curriculum_id=' + curriculum.id" class="btn btn-sm btn-info">Select</a>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div v-else class="bg-white p-3">
+                            No Curriculum found.
+                        </div>
+                    </div>
                 </div>
           </div>
         </div>
@@ -120,16 +144,6 @@
 
     <div class="mt-3 card">
 
-        {{-- <div class="card-body pt-4">
-            <h5 class="text-dark">List of Courses <i class="fa fa-book text-info"></i></h5>
-            <ul class="list-group">
-                <li class="list-group-item">Cras justo odio</li>
-                <li class="list-group-item">Dapibus ac facilisis in</li>
-                <li class="list-group-item">Morbi leo risus</li>
-                <li class="list-group-item">Porta ac consectetur ac</li>
-                <li class="list-group-item">Vestibulum at eros</li>
-            </ul>
-        </div> --}}
 
     </div>
 </div>
@@ -146,7 +160,8 @@
                 showDropDown: false,
                 selected_student_outcome: '',
                 courses_mapped: [],
-                isLoading: false
+                isLoading: false,
+                curricula: []
             },
             methods: {
                 getStudentOutcomes() {
@@ -158,6 +173,7 @@
                         if(this.student_outcomes.length > 0) {
                             this.selected_student_outcome = this.student_outcomes[0];
                             this.getCoursesMapped();
+                            this.getCurricula();
                         } else {
                             this.selected_student_outcome = '';
                             this.courses_mapped = [];
@@ -171,6 +187,7 @@
                     this.toggleDropDown();
                     this.selected_student_outcome = student_outcome;
                     this.getCoursesMapped();
+                    this.getCurricula();
                 },
                 getCoursesMapped() {
                     this.isLoading = true;
@@ -178,6 +195,23 @@
                     .then(response => {
                         this.isLoading = false;
                         this.courses_mapped = response.data;
+                    })
+                    .catch(err => {
+                        alert("An Error has occured. Please try again");
+                        this.isLoading = false;
+                    })
+                },
+                getCurricula() {
+                    this.isLoading = true;
+
+                    ApiClient.get("test_bank/" + this.program_id + "/get_curricula?student_outcome_id=" + this.selected_student_outcome.id)
+                    .then(response => {
+                        this.curricula = response.data;
+                        this.isLoading = false;
+                    })
+                    .catch(err => {
+                        alert("An Error has occured. Please try again");
+                        this.isLoading = false;
                     })
                 }
             },

@@ -143,7 +143,7 @@
 
                         <!-- Nav Item - Test Question -->
                         <li class="nav-item {{ $active == 'test_questions' ? 'active' : '' }}">
-                          <a class="nav-link" href="{{ url('/test_bank/list_programs?college_id='. Session::get('college_id')) }}">
+                          <a class="nav-link" href="{{ url('/test_bank?program_id=' . Session::get('program_id')) }}">
                                 <div class="d-flex flex-column justify-content-center text-center">
                                     <i class="fas fa-database icon-nav"></i>
                                     <span>Test Bank</span>

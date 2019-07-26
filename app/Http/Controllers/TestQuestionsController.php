@@ -44,6 +44,7 @@ class TestQuestionsController extends Controller
                 $searched_test_questions = TestQuestion::where('student_outcome_id', $student_outcome->id)
                 ->where('course_id', $course->id)
                 ->where('title', 'LIKE' ,'%' . request('q') . '%')
+                ->where('is_active', true)
                 ->latest()
                 ->get();
 
@@ -55,6 +56,7 @@ class TestQuestionsController extends Controller
                 ->where('course_id', $course->id)
                 ->where('user_id', request('user_id'))
                 ->where('difficulty_level_id', request('difficulty_id'))
+                ->where('is_active', true)
                 ->latest()
                 ->paginate(10);
             }
@@ -62,19 +64,24 @@ class TestQuestionsController extends Controller
                 $test_questions = TestQuestion::where('student_outcome_id', $student_outcome->id)
                 ->where('course_id', $course->id)
                 ->where('user_id', request('user_id'))
+                ->where('is_active', true)
                 ->latest()
                 ->paginate(10);
             } else if(request('difficulty_id') != '') {
                 $test_questions = TestQuestion::where('student_outcome_id', $student_outcome->id)
                 ->where('course_id', $course->id)
                 ->where('difficulty_level_id', request('difficulty_id'))
+                ->where('is_active', true)
                 ->latest()
                 ->paginate(10);
             } else {
                 $test_questions = TestQuestion::where('student_outcome_id', $student_outcome->id)
                 ->where('course_id', $course->id)
+                ->where('is_active', true)
                 ->latest()
                 ->paginate(10);
+
+                
             }
 
             
@@ -86,7 +93,34 @@ class TestQuestionsController extends Controller
         $average_count = TestQuestion::countAverage(request('student_outcome_id'), request('course_id'));
         $difficult_count = TestQuestion::countDifficult(request('student_outcome_id'), request('course_id'));
 
-        return view('test_questions.index', compact('student_outcome', 'course', 'easy_count', 'average_count', 'difficult_count'));
+        $deactivated_test_questions = TestQuestion::where('student_outcome_id', $student_outcome->id)
+                ->where('course_id', $course->id)
+                ->where('is_active', false)
+                ->latest()
+                ->with('choices')
+                ->get();
+
+        return view('test_questions.index', compact('student_outcome', 'course', 'easy_count', 'average_count', 'difficult_count', 'deactivated_test_questions'));
+    }
+
+    public function search_deactivated() {
+
+        //authenticate
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
+
+        $student_outcome = StudentOutcome::findOrFail(request('student_outcome_id'));
+        $course = Course::findOrFail(request('course_id'));
+
+
+        $deactivated_test_questions = TestQuestion::where('student_outcome_id', $student_outcome->id)
+                ->where('title', 'LIKE', '%' . request('query') . '%')
+                ->where('course_id', $course->id)
+                ->where('is_active', false)
+                ->latest()
+                ->with('choices')
+                ->get();
     }
 
     public function show(TestQuestion $test_question) {
@@ -318,5 +352,25 @@ class TestQuestionsController extends Controller
             'student_outcome_id' => 'required',
             'ref_id' => 'required'
         ]);
+    }
+
+    public function archive(TestQuestion $test_question) {
+
+        $test_question->is_active = false;
+        $test_question->save();
+
+        Session::flash('message', 'Test question successfully archived');
+
+        return $test_question;
+    }
+
+    public function activate(TestQuestion $test_question) {
+        
+        $test_question->is_active = true;
+        $test_question->save();
+
+        Session::flash('message', 'Test question successfully activated');
+
+        return $test_question;
     }
 }

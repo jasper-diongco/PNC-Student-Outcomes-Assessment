@@ -21,7 +21,8 @@ class TestQuestionResource extends JsonResource
             'difficulty_level_id' => $this->difficulty_level_id,
             'difficulty_level_desc' => $this->difficultyLevel->description,
             'user' => $this->user,
-            'created_at' => $this->created_at
+            'created_at' => $this->created_at,
+            'choices' => $this->choices
         ];
     }
 }

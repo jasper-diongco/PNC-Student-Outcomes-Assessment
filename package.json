@@ -29,11 +29,13 @@
     },
     "dependencies": {
         "@ckeditor/ckeditor5-essentials": "^11.0.1",
+        "chart.js": "^2.8.0",
         "mathlive": "^0.29.1",
         "startbootstrap-sb-admin-2": "^4.0.3",
         "sweetalert2": "^8.10.7",
         "vee-validate": "^2.2.7",
         "vform": "^1.0.0",
+        "vue-chartjs": "^3.4.2",
         "vue-prism-editor": "^0.2.1",
         "vue-select": "^3.1.0",
         "vuejs-datepicker": "^1.5.4"

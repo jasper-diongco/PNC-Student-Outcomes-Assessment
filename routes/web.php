@@ -210,6 +210,8 @@ Route::put('/students/{student}', 'StudentsController@update');
 
 Route::get('/test_questions', 'TestQuestionsController@index');
 
+Route::get('/test_questions/search_deactivated', 'TestQuestionsController@search_deactivated');
+
 Route::get('/test_questions/create', 'TestQuestionsController@create');
 
 Route::post('/test_questions', 'TestQuestionsController@store');
@@ -222,11 +224,17 @@ Route::get('/test_questions/{program}/list_student_outcomes', 'TestQuestionsCont
 
 Route::get('/test_questions/{test_question}/edit', 'TestQuestionsController@edit');
 
+Route::get('/test_questions/{test_question}/preview', 'TestQuestionsController@preview');
+
+Route::post('/test_questions/{test_question}/archive', 'TestQuestionsController@archive');
+
+Route::post('/test_questions/{test_question}/activate', 'TestQuestionsController@activate');
+
 Route::put('/test_questions/{test_question}', 'TestQuestionsController@update');
 
 Route::get('/test_questions/{test_question}', 'TestQuestionsController@show');
 
-Route::get('/test_questions/{test_question}/preview', 'TestQuestionsController@preview');
+
 
 // End TestQuestions Routes
 
@@ -272,6 +280,7 @@ Route::put('/math_objects/{math_object}', 'MathObjectsController@update');
 // Test bank Routes
 Route::get('/test_bank', 'TestBankController@index');
 Route::get('/test_bank/list_programs', 'TestBankController@listProgram');
+Route::get('/test_bank/{program}/get_curricula', 'TestBankController@get_curricula');
 Route::get('/test_bank/{program}/list_student_outcomes', 'TestBankController@listStudentOutcome');
 Route::get('/test_bank/{program}/get_student_outcomes', 'TestBankController@get_student_outcomes');
 Route::get('/test_bank/get_curriculum_courses_mapped/{student_outcome_id}', 'TestBankController@get_curriculum_courses_mapped');
