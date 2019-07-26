@@ -33,7 +33,22 @@ class ExamsController extends Controller
 
         $exams = $curriculum->getExams(request('student_outcome_id'));
 
-        return view('exams.index', compact('program', 'curriculum', 'student_outcome', 'exams'));
+        $deactivated_exams = $curriculum->getDeactivatedExams(request('student_outcome_id'));
+
+        return view('exams.index', compact('program', 'curriculum', 'student_outcome', 'exams', 'deactivated_exams'));
+    }
+
+    public function get_exams() {
+        //authenticate
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
+
+        $curriculum = Curriculum::findOrFail(request('curriculum_id'));
+
+        $exams = $curriculum->getExams(request('student_outcome_id'));
+
+        return $exams;
     }
 
     public function create() {
@@ -177,6 +192,34 @@ class ExamsController extends Controller
         //Session::flash('message', 'Exam preview is showing');
 
         return view('exams.preview', compact('exam', 'test_questions', 'courses'));
+    }
+
+    public function deactivate(Exam $exam) {
+        //authenticate
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
+
+        $exam->is_active = false;
+        $exam->save();
+
+        Session::flash('message', 'Exam successfully archived');
+
+        return $exam;
+    }
+
+    public function activate(Exam $exam) {
+        //authenticate
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
+
+        $exam->is_active = true;
+        $exam->save();
+
+        Session::flash('message', 'Exam successfully activated');
+
+        return $exam;
     }
 
 

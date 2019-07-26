@@ -84,6 +84,18 @@ class Curriculum extends Model
             ->where('student_outcome_id', $student_outcome_id)
             ->where('is_active', true)
             ->latest()
+            ->with('user')
+            ->with('examTestQuestions')
+            ->get();
+    }
+
+    public function getDeactivatedExams($student_outcome_id='') {
+        return Exam::where('curriculum_id', $this->id)
+            ->where('student_outcome_id', $student_outcome_id)
+            ->where('is_active', false)
+            ->latest()
+            ->with('user')
+            ->with('examTestQuestions')
             ->get();
     }
 }

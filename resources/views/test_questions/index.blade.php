@@ -113,7 +113,7 @@
 
                                 <div class="text-muted">@{{ getDifficulty(test_question.difficulty_level_id) }} - @{{ test_question.choices.length }} choices </div>
                                 <div style="font-size: 13px" class="text-muted mt-1">
-                                  <i class="fa fa-user"></i> Jasper Diongco | Jul 23, 2019
+                                  <i class="fa fa-user"></i> @{{ test_question.user.first_name + ' ' + test_question.user.last_name }} | @{{ parseDate(test_question.created_at) }}
                                 </div>
                             </div>   
                         </div>

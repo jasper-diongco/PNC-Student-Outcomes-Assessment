@@ -108,6 +108,11 @@ Vue.component(
     require("./components/FacultyModal.vue").default
 );
 
+Vue.component(
+    "add-exam-modal",
+    require("./components/AddExamModal.vue").default
+);
+
 Vue.component("my-table", require("./components/Table.vue").default);
 
 Vue.component(

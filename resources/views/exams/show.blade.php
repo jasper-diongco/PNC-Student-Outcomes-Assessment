@@ -32,16 +32,20 @@
                 <pie-chart :data="pie_data"></pie-chart>
             </div>
         </div>
+        
+        @if(!$exam->is_active)
+          <div class="alert alert-warning">
+            <i class="fa fa-exclamation-triangle"></i> This exam is deactivated
+          </div>
+        @endif
 
-{{--         <ul class="list-group">
-          <li class="list-group-item">Cras justo odio</li>
-          <li class="list-group-item">Dapibus ac facilisis in</li>
-          <li class="list-group-item">Morbi leo risus</li>
-          <li class="list-group-item">Porta ac consectetur ac</li>
-          <li class="list-group-item">Vestibulum at eros</li>
-        </ul> --}}
         <div class="d-flex justify-content-end">
+          @if(!$exam->is_active)
+            <button v-on:click="activateExam" class="btn btn-sm btn-info mr-2"><i class="fa fa-history"></i> Activate</button>
+          @else
+            <button v-on:click="archiveExam" class="btn btn-sm mr-2"><i class="fa fa-archive"></i> Archive</button>
             <a href="{{ url('/exams/'. $exam->id .'/preview?program_id='. request('program_id') .'&student_outcome_id=' . request('student_outcome_id'). '&curriculum_id='. request('curriculum_id')) }}" class="btn btn-info btn-sm">Preview <i class="fa fa-external-link-alt"></i></a>
+          @endif
         </div>
         <div id="main-nav-tabs">
             <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -342,6 +346,7 @@
         var vm = new Vue({
             el: '#app',
             data: {
+                exam_id: '{{ $exam->id }}' ,
                 test_questions: @json($test_questions),
                 show_test_questions: [],
                 paginated_test_questions: [],
@@ -361,7 +366,8 @@
                         }
                     ],
                     labels: ["Easy", "Ave", "Difficult"]
-                }
+                },
+                isLoading: false
 
             },
             computed: {
@@ -509,6 +515,59 @@
                     return this.test_questions.filter(test_question => {
                         return test_question.difficulty_level_id == difficulty_level_id
                     }).length;
+                },
+                archiveExam() {
+                  swal.fire({
+                    title: 'Do you want to archive?',
+                    text: "Please confirm",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#1cc88a',
+                    cancelButtonColor: '#858796',
+                    confirmButtonText: 'Yes',
+                    width: '400px'
+                  }).then((result) => {
+                    if (result.value) {
+                      this.isLoading = true;
+                      ApiClient.post('/exams/' + this.exam_id + '/deactivate')
+                      .then(response => {
+                        this.isLoading = false;
+                        window.location.reload();
+                        console.log(response);
+                      })
+                      .catch(error => {
+                        this.isLoading = false;
+                        alert("An error has occured. Please try again");
+                      })
+                    }
+                  });
+
+                },
+                activateExam() {
+                  swal.fire({
+                    title: 'Do you want to activate?',
+                    text: "Please confirm",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#1cc88a',
+                    cancelButtonColor: '#858796',
+                    confirmButtonText: 'Yes',
+                    width: '400px'
+                  }).then((result) => {
+                    if (result.value) {
+                      this.isLoading = true;
+                      ApiClient.post('/exams/' + this.exam_id + '/activate')
+                      .then(response => {
+                        this.isLoading = false;
+                        window.location.reload();
+                        console.log(response);
+                      })
+                      .catch(error => {
+                        this.isLoading = false;
+                        alert("An error has occured. Please try again");
+                      })
+                    }
+                  });
                 }
             },
             created() {
