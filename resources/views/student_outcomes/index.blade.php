@@ -10,12 +10,12 @@
   
   <div class="card p-3 mb-3">
     <a href="{{ url('/student_outcomes/list_program?college_id='. Session::get('college_id')) }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
-    <div class="mx-auto" style="width: 400px">
+    {{-- <div class="mx-auto" style="width: 400px">
       <img src="{{ asset('svg/goals.svg') }}" class="w-100">
-    </div>
+    </div> --}}
         <div class="d-flex justify-content-between mb-0 mt-3">
       <div>
-        <h1 class="page-header mt-0">Student Outcomes &mdash; {{ $program->program_code }}</h1>
+        <h1 class="page-header mt-0">Student Outcomes</h1>
       </div>
       <div>
         @if(!$program->so_is_saved)
@@ -30,7 +30,10 @@
         @endif
       </div>
     </div>
-    <label class="text-dark"><i class="fa fa-code-branch text-info"></i> <span>Revision Number:</span> {{ $program->so_rev_no }}.0 </label> 
+    <label class="text-dark"><i class="fa fa-graduation-cap"></i> Program: <span class="text-info fs-19">{{ $program->description }}</span></label> 
+    <label class="text-dark"><i class="fa fa-code-branch"></i> Revision Number: <span class="text-info fs-19">{{ $program->so_rev_no }}.0</span></label>
+
+
   </div>
   
 

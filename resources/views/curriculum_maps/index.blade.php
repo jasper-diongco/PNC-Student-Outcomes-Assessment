@@ -7,15 +7,13 @@
     <div id="app" v-cloak>
         <div>
             <div>
-                <h1 class="page-header">Curriculum Mapping &mdash; Select Curriculum</h1>
+                
 
                 @if(count($curricula) > 0)
                   <div class="card">
                     <div class="card-body">
-                      <div class="d-flex justify-content-between">
-                        <div>
-                          <h5 class="text-info">List of Curriculum</h5>
-                        </div>
+                      <h1 class="page-header"><i class="fa fa-map" style="color:#a1a1a1"></i> Curriculum Mapping</h1>
+                      <div class="d-flex justify-content-end">
                         @can('isSAdmin')
                           <div class="d-flex align-items-center">
                             <div class="mr-2">
@@ -59,7 +57,7 @@
                                 <td>@{{ curriculum.revision_no }}.0 
                                 </td>
                                 <td>@{{ curriculum.program.college.college_code }}</td>
-                                <td><a :href="'curriculum_mapping/' + curriculum.id" class="btn btn-sm btn-success"><i class="fa fa-search"></i></a></td>
+                                <td><a :href="'curriculum_mapping/' + curriculum.id" class="btn btn-sm btn-info">View <i class="fa fa-search"></i></a></td>
                               </tr>
                             </template>
                             <template v-else>

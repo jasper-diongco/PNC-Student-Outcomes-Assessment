@@ -10,10 +10,10 @@
         <learning-level-modal :program_id="program.id" :learning_levels="learning_levels" v-on:update-learning-levels="getLearningLevels" :is_update="true" :learning_level="learning_level"></learning-level-modal>
         <div class="card p-3 mb-3">
             <a href="{{ url('/curriculum_mapping') }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
-            <div class="mx-auto" style="width: 400px">
+            {{-- <div class="mx-auto" style="width: 400px">
               <img src="{{ asset('svg/map.svg') }}" class="w-100">
-            </div>
-            <div class="d-flex">
+            </div> --}}
+            <div class="d-flex mt-3">
                 <h1 class="page-header">Curriculum Mapping</h1>
             </div>
             

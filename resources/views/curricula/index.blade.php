@@ -6,19 +6,7 @@
 @section('content')
   <div id="app" v-cloak>
 
-    <div class="d-flex justify-content-between mb-3">
-      <div>
-        <h1 class="page-header">Curricula</h1>
-      </div>
 
-      <div>
-        @if(Gate::check('isDean') || Gate::check('isSAdmin'))
-          <!-- CURRICULUM MODAL -->
-          <curriculum-modal :programs='@json($programs)' :curricula='@json($curricula)'></curriculum-modal>
-          <!-- END MODAL -->
-        @endif
-      </div>
-    </div>
 
 
     {{-- <div class="row mb-3">
@@ -73,15 +61,29 @@
       </div> --}}
       <div class="card">
         <div class="card-body">
-
-          <div class="d-flex justify-content-between">
-            <div>
-              <h5 class="mb-3 text-info">List of Curriculum</h5>
+          <div class="d-flex justify-content-between mb-1">
+            <div class="d-flex align-items-baseline">
+              <div class="mr-2">
+                <h1 class="page-header"> Curricula</h1>
+              </div>
+              <div>
+                <img src="{{asset('img/29302.svg')}}" alt="" width="35px">
+              </div>
             </div>
+
+            <div>
+              @if(Gate::check('isDean') || Gate::check('isSAdmin'))
+                <!-- CURRICULUM MODAL -->
+                <curriculum-modal :programs='@json($programs)' :curricula='@json($curricula)'></curriculum-modal>
+                <!-- END MODAL -->
+              @endif
+            </div>
+          </div>
+          <div class="d-flex justify-content-end">
             <div class="d-flex align-items-baseline">
               <div class="mr-2">
 
-                <label class="text-dark"><i class="fa fa-graduation-cap text-success"></i> Filter By Program</label>
+                <label class="text-dark">Filter By Program</label>
               </div>
               <div>
                 <select class="form-control" v-model="program_id" v-on:change="filterByProgram">
@@ -115,7 +117,7 @@
                   <td>@{{ curriculum.revision_no }}.0</td>
                   <td>@{{ curriculum.program.description }}</td>
                   <td>@{{ curriculum.year }}</td>
-                  <td><a :href="'curricula/' + curriculum.id" class="btn btn-success btn-sm"><i class="fa fa-search "></i></a></td>
+                  <td><a :href="'curricula/' + curriculum.id" class="btn btn-info btn-sm">View <i class="fa fa-search "></i></a></td>
                 </tr>
               </template>
               <template v-else>

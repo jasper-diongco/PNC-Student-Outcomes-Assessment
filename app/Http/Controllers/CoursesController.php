@@ -58,25 +58,25 @@ class CoursesController extends Controller
                 if(Gate::check('isSAdmin')) {
                     return CourseResource::collection(Course::where('college_id', request('filter_by_college'))
                         ->where('is_public', request('filter_by_privacy') == 'public' ? true : false )
-                        ->paginate(10));
+                        ->paginate(20));
                 } else {
                     return CourseResource::collection(Course::where('college_id', Session::get('college_id'))
                         ->where('is_public', request('filter_by_privacy') == 'public' ? true : false)
-                        ->paginate(10));
+                        ->paginate(20));
                 }
                 
             } else if(request('filter_by_college') != '') {
                 return CourseResource::collection(Course::where('college_id', request('filter_by_college'))
-                    ->paginate(10));
+                    ->paginate(20));
             } else if(request('filter_by_privacy') != '') {
                 if(Gate::check('isSAdmin')) {
                     return CourseResource::collection(Course::
                         where('is_public', request('filter_by_privacy') == 'public' ? true : false )
-                        ->paginate(10));
+                        ->paginate(20));
                 } else {
                     return CourseResource::collection(Course::where('college_id', Session::get('college_id'))
                         ->where('is_public', request('filter_by_privacy') == 'public' ? true : false)
-                        ->paginate(10));
+                        ->paginate(20));
                 }
             } else {
                 if(Gate::check('isSAdmin')) {
@@ -85,7 +85,7 @@ class CoursesController extends Controller
                     return CourseResource::collection(Course::where('college_id', Session::get('college_id'))
                         ->orWhere('is_public', true)
                         ->latest()
-                        ->paginate(10));
+                        ->paginate(20));
                 }
             }
             

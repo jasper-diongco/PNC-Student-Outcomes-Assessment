@@ -10339,8 +10339,9 @@ div.mdl-layout__drawer > nav.mdl-navigation > a.mdl-navigation__link {
 }
 
 .page-header {
-  font-size: 25px;
+  font-size: 20px;
   margin-bottom: 25px;
+  font-weight: 400;
   color: #5e5e5e;
 }
 
@@ -10853,4 +10854,8 @@ body,
 
 .fs-19 {
   font-size: 19px;
+}
+
+.new-green-bg {
+  background: #cbff90;
 }

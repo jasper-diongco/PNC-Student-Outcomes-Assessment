@@ -8,7 +8,7 @@
         
     
         {{-- <a href="{{ url('test_bank/'. request('program_id') .'/list_student_outcomes') }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a> --}}
-        <add-exam-modal v-on:new-exam-added="getExams" :curriculum-id="curriculum_id" :student-outcome-id="student_outcome_id"></add-exam-modal>
+        <add-exam-modal v-on:new-exam-added="getExams" :curriculum-id="curriculum_id" :student-outcome-id="student_outcome_id" :courses="requirements_template"></add-exam-modal>
                 
 
         <div class="card">
@@ -208,7 +208,8 @@
                 deactivated_exams: @json($deactivated_exams),
                 student_outcome_id: '{{ request('student_outcome_id') }}',
                 program_id: '{{ request('program_id') }}',
-                curriculum_id: '{{ request('curriculum_id') }}'
+                curriculum_id: '{{ request('curriculum_id') }}',
+                requirements_template: @json($requirements_template)
             },
             methods: {
                 parseDate(date) {

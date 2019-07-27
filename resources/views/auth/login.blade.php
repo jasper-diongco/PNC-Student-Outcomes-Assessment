@@ -1,4 +1,4 @@
-@extends('layout.app')
+@extends('layout.app', ['hide_header' => true, 'dark_bg' => true, 'hide_footer' => true])
 
 @section('title', 'Login')
 
@@ -145,15 +145,22 @@
 </div> --}}
 
 <div id="app">
+    {{-- <img src="{{ asset('img/pnc_logo_name_small.png') }}" width="200px"> --}}
     
-    <div class="row mt-5">
+    <div class="text-center mt-5" style="color:#048409; font-size: 23px;">PNC |<span style="color: #fff;font-weight: 300"> Student Outcomes Assessment</span></div>
+
+    <div class="row mt-4">
         {{-- <div class="col-md-7">
             <img src="{{ asset('svg/authentication.svg') }}"  class="w-75 mt-5">
         </div>  --}}
         <div class="col-md-5 mx-auto">
-            <div class="card">
+            <div class="card shadow">
                 
-                <div class="card-body p-5">
+                <div class="card-body pt-4 pb-5 px-5">
+                    <div style="width: 130px" class="mx-auto mb-3">
+                        <img src="{{ asset('img/pnc_logo_name_small.png') }}" style="width: 100%"> 
+                    </div>
+                    
                     <form v-on:submit.prevent="login" action="{{ route('login') }}" method="POST">
                         <h1 class="login-title mb-4">Login to your account</h1>
                         <div id="input-g-email" class="input-group mb-3">

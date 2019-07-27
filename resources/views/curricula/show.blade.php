@@ -28,121 +28,123 @@
     </curriculum-modal>
     <!-- End curriculum modal -->
     
-    {{-- <a href="{{ url('/curricula?college_id='. request('college_id')) }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a> --}}
-    
-    <h1 class="page-header mt-3">{{ $curriculum->name }}</h1>
+    <div class="card p-4">
+      <a href="{{ url('/curricula?college_id='. request('college_id')) }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
+      
+      <h1 class="page-header mt-3">{{ $curriculum->name }}</h1>
 
-    <div class="d-flex">
-      <div class="mr-4"><i class="fa fa-code-branch text-primary"></i> <label>Revision no:</label> {{ $curriculum->revision_no }}.0</div>
+      <div class="d-flex">
+        <div class="mr-4"><i class="fa fa-code-branch text-primary"></i> <label>Revision no:</label> {{ $curriculum->revision_no }}.0</div>
 
-      <div class="mr-4"><i class="fa fa-calendar-check text-primary"></i> <label>Year:</label> {{ $curriculum->year }}</div>
+        <div class="mr-4"><i class="fa fa-calendar-check text-primary"></i> <label>Year:</label> {{ $curriculum->year }}</div>
 
-      <div class="mr-4"><i class="fa fa-user text-primary"></i> <label>Author:</label> {{ $curriculum->user->getFullName() }}</div>
-    </div>
-
-    
-
-    @if($curriculum->description) 
-      <p class="mr-5"><i class="fa fa-file-alt text-primary"></i> <label>Description:</label> {{ $curriculum->description }}</p>
-    @else
-      <p class="mr-5"><i class="fa fa-file-alt text-primary"></i> <label>Description:</label> <i>No description.</i></p>
-    @endif
-
-
-    <div class="d-flex">  
-      <p class="mr-5"><i class="fa fa-book text-success"></i> {{ count($curriculum->curriculumCourses) }} courses</p>
-    </div>
-
-    @if (!$curriculum->checkIfLatestVersion())
-      <div class="alert alert-warning">
-        <i class="fa fa-exclamation-triangle"></i>
-        This is not the latest version of <b>{{ $curriculum->name }}</b> curriculum. View the latest version <a href="{{ url('/curricula/' . $curriculum->getLatestVersion()->id) }}">here</a>
+        <div class="mr-4"><i class="fa fa-user text-primary"></i> <label>Author:</label> {{ $curriculum->user->getFullName() }}</div>
       </div>
-    @endif
 
-    @if (!$curriculum->is_saved)
+      
 
-      <div class="row">
-        <div class="col-md-8">
-          <div class="form-group row">
-            <div class="col-md-3">
-              <label class="col-form-label">Search Courses:</label>
-            </div>
-            <div style="width: 100%" class="d-flex flex-column col-md-9">
-              <div>
-                <input v-on:input="searchCourses" v-model="searchCourseText" class="form-control" type="search" name="search_course" placeholder="Type to search courses...">
+      @if($curriculum->description) 
+        <p class="mr-5"><i class="fa fa-file-alt text-primary"></i> <label>Description:</label> {{ $curriculum->description }}</p>
+      @else
+        <p class="mr-5"><i class="fa fa-file-alt text-primary"></i> <label>Description:</label> <i>No description.</i></p>
+      @endif
+
+
+      <div class="d-flex">  
+        <p class="mr-5"><i class="fa fa-book text-success"></i> {{ count($curriculum->curriculumCourses) }} courses</p>
+      </div>
+      
+
+      @if (!$curriculum->checkIfLatestVersion())
+        <div class="alert alert-warning">
+          <i class="fa fa-exclamation-triangle"></i>
+          This is not the latest version of <b>{{ $curriculum->name }}</b> curriculum. View the latest version <a href="{{ url('/curricula/' . $curriculum->getLatestVersion()->id) }}">here</a>
+        </div>
+      @endif
+
+      @if (!$curriculum->is_saved)
+
+        <div class="row">
+          <div class="col-md-8">
+            <div class="form-group row">
+              <div class="col-md-3">
+                <label class="col-form-label">Search Courses:</label>
               </div>
-
-              <div v-if="searched_courses.length > 0" class="search-course">
-                <ul class="list-group mt-1" style="">
-                  <li v-for="course in searched_courses" v-on:click="selectCourse(course)" :key="course.id" class="list-group-item d-flex align-items-center justify-content-between">
-                    <div class="d-flex">
-                      <div class="avatar mr-2" :style="{ background: course.color }"><i class="fa fa-book"></i></div>
-                      @{{ course.course_code }}
-                      &mdash; 
-                      <div class="d-flex flex-column"> 
-                        <div>@{{ course.description }}</div>
-                        <small class="text-muted">@{{ course.college }}</small>
-                      </div>
-                    </div>
-                    <div>
-                      @if(Gate::check('isDean') || Gate::check('isSAdmin'))
-                        <button v-if="!checkIfAdded(course)" v-on:click="selectCourse(course)" 
-                        class="btn btn-primary btn-sm" 
-                        data-toggle="modal"
-                        data-target="#curriculumCourseModal">Add</button>
-                      @endif
-                    </div> 
-                    </li>
-                </ul>
-              </div>
-              <div v-else-if="noCourseFound" class="card">
-                <div class="card-body">
-                  No course found.
+              <div style="width: 100%" class="d-flex flex-column col-md-9">
+                <div>
+                  <input v-on:input="searchCourses" v-model="searchCourseText" class="form-control" type="search" name="search_course" placeholder="Type to search courses...">
                 </div>
-                
-              </div>
-              <div v-if="this.searching">
-                <table-loading></table-loading>
+
+                <div v-if="searched_courses.length > 0" class="search-course">
+                  <ul class="list-group mt-1" style="">
+                    <li v-for="course in searched_courses" v-on:click="selectCourse(course)" :key="course.id" class="list-group-item d-flex align-items-center justify-content-between">
+                      <div class="d-flex">
+                        <div class="avatar mr-2" :style="{ background: course.color }"><i class="fa fa-book"></i></div>
+                        @{{ course.course_code }}
+                        &mdash; 
+                        <div class="d-flex flex-column"> 
+                          <div>@{{ course.description }}</div>
+                          <small class="text-muted">@{{ course.college }}</small>
+                        </div>
+                      </div>
+                      <div>
+                        @if(Gate::check('isDean') || Gate::check('isSAdmin'))
+                          <button v-if="!checkIfAdded(course)" v-on:click="selectCourse(course)" 
+                          class="btn btn-primary btn-sm" 
+                          data-toggle="modal"
+                          data-target="#curriculumCourseModal">Add</button>
+                        @endif
+                      </div> 
+                      </li>
+                  </ul>
+                </div>
+                <div v-else-if="noCourseFound" class="card">
+                  <div class="bg-light p-3">
+                    No course found.
+                  </div>
+                  
+                </div>
+                <div v-if="this.searching">
+                  <table-loading></table-loading>
+                </div>
               </div>
             </div>
           </div>
+          
+          <div class="col-md-4 d-flex justify-content-end">
+            @if(Gate::check('isDean') || Gate::check('isSAdmin'))
+              <!-- COURSE MODAL -->
+                <course-modal 
+                  :college-id="college_id" 
+                  :colleges='@json($colleges)'
+                  :add-directly="true"
+                  v-on:open-curriculum-course="openCurriculumCourse"></course-modal>
+              <!-- END MODAL -->
+
+
+            @endif
+          </div>
         </div>
-        
-        <div class="col-md-4 d-flex justify-content-end">
-          @if(Gate::check('isDean') || Gate::check('isSAdmin'))
-            <!-- COURSE MODAL -->
-              <course-modal 
-                :college-id="college_id" 
-                :colleges='@json($colleges)'
-                :add-directly="true"
-                v-on:open-curriculum-course="openCurriculumCourse"></course-modal>
-            <!-- END MODAL -->
-
-
+      @else
+        <div class="d-flex justify-content-end my-3">
+          <div>
+              {{-- <button class="btn btn-secondary mr-2 btn-sm">Print <i class="fa fa-print"></i></button>    --}} 
+          </div>
+          @if ($curriculum->checkIfLatestVersion())
+            @if(Gate::check('isDean') || Gate::check('isSAdmin'))
+              {{-- <div>
+                <form v-on:submit.prevent="updateCurriculum" action="{{ url('/curricula/' . $curriculum->id. '/edit') }}" method="post">
+                  @csrf
+                  <button class="btn btn-success btn-sm" type="submit">Edit <i class="fa fa-edit"></i></button>
+                </form>
+              </div> --}}
+              <button v-on:click="reviseCurriculum" 
+                class="btn btn-success btn-sm" >Revise <i class="fa fa-edit"></i></button>
+            @endif
           @endif
         </div>
-      </div>
-    @else
-      <div class="d-flex justify-content-end align-self-center my-3">
-        <div>
-            {{-- <button class="btn btn-secondary mr-2 btn-sm">Print <i class="fa fa-print"></i></button>    --}} 
-        </div>
-        @if ($curriculum->checkIfLatestVersion())
-        @if(Gate::check('isDean') || Gate::check('isSAdmin'))
-          {{-- <div>
-            <form v-on:submit.prevent="updateCurriculum" action="{{ url('/curricula/' . $curriculum->id. '/edit') }}" method="post">
-              @csrf
-              <button class="btn btn-success btn-sm" type="submit">Edit <i class="fa fa-edit"></i></button>
-            </form>
-          </div> --}}
-          <button v-on:click="reviseCurriculum" 
-            class="btn btn-success btn-sm" >Revise <i class="fa fa-edit"></i></button>
-        @endif
-        @endif
-      </div>
-    @endif
-
+      @endif
+    </div>
     
     <div v-show="!isLoading">
       <div class="alert alert-success mt-3">

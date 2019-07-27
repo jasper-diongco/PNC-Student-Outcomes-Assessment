@@ -4,28 +4,22 @@
 
 
 @section('content')
-<div id="app">
-  <div class="card p-3 mb-3">
-    <div class="mx-auto" style="width: 400px">
-      <img src="{{ asset('svg/book.svg') }}" class="w-100">
-    </div>
-    <div class="d-flex justify-content-between mb-3">
-      <div>
-        <h1 class="page-header">List of Courses</h1>
-      </div>
-
-      <div>
-        @if(Gate::check('isDean') || Gate::check('isSAdmin'))
-          <!-- COURSE MODAL -->
-          <course-modal :college-id="college_id" :colleges='@json($colleges)'></course-modal>
-          <!-- END MODAL -->
-        @endif
-      </div>
-    </div>
-    
-  </div>
+<div id="app" v-cloak>
   <div class="card">
     <div class="card-body">
+      <div class="d-flex justify-content-between mb-3">
+        <div>
+          <h1 class="page-header"><i class="fa fa-book" style="color: #a1a1a1"></i> Courses Management</h1>
+        </div>
+
+        <div>
+          @if(Gate::check('isDean') || Gate::check('isSAdmin'))
+            <!-- COURSE MODAL -->
+            <course-modal :college-id="college_id" :colleges='@json($colleges)'></course-modal>
+            <!-- END MODAL -->
+          @endif
+        </div>
+      </div>
       <div class="row d-flex justify-content-between mb-3">
         <div class="col-md-4">
           <div class="input-group" id="search-input">
@@ -102,7 +96,8 @@
 
 
                 <td>
-                  <a title="View Details" class="btn btn-success btn-sm" :href=" 'courses/' + course.id">
+                  <a title="View Details" class="btn btn-info btn-sm" :href=" 'courses/' + course.id">
+                    View
                     <i class="fa fa-search"></i>
                   </a>
                 </td>
@@ -193,10 +188,12 @@
       }
     },
     created() {
-      setTimeout(() => {
-        this.getCourses();
-      }, 
-      1000);
+      // setTimeout(() => {
+      //   this.getCourses();
+      // }, 
+      // 1000);
+
+      this.getCourses();
       
     }
   });

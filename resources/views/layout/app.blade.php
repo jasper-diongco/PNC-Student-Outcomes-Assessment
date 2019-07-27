@@ -2,6 +2,9 @@
     $active = $active ?? '';
     $container_fluid = $container_fluid ?? false;
     $hide_navigation = $hide_navigation ?? false;
+    $hide_header = $hide_header ?? false;
+    $hide_footer = $hide_footer ?? false;
+    $dark_bg = $dark_bg ?? false;
     $brand = $brand ?? 'PNC | SOA';
     $assessment = $assessment ?? false;
     $fixed_top = $fixed_top ?? false;
@@ -30,11 +33,12 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body>
+<body @if($dark_bg) style="background: linear-gradient(to right, #76b852, #8dc26f);" @endif>
 <div class="d-flex flex-column sticky-footer-wrapper">
     <header>
         <!-- navbar -->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-success {{ $fixed_top ? 'fixed-top' : '' }}">
+        @if(!$hide_header)
+        <nav class="navbar navbar-expand-lg navbar-dark bg-success  {{ $fixed_top ? 'fixed-top' : '' }}">
           @if($container_fluid)
                 <div class="container-fluid">
             @else
@@ -75,6 +79,7 @@
           
         </nav>
         <!-- //navbar -->
+        @endif
         
         @if (!$hide_navigation)
         <!-- navigation -->
@@ -258,10 +263,11 @@
         </div>
         <!-- /.container-fluid -->
     </main>
-            
+    @if(!$hide_footer) 
     <footer id="sticky-footer" class="py-2 mt-5">
         <div class="pl-3">Pamantasan ng Cabuyao &copy; 2019 | Student Outcomes Assessment</div>
     </footer>
+    @endif
 </div>
 </body>
 </html>

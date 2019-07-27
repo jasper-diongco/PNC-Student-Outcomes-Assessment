@@ -4,15 +4,15 @@
 
 @section('content')
 <div id="app" v-cloak>
-    <div class="card p-3 px-4 mb-3">
-        <div class="mx-auto" style="width: 400px">
+    <div class="card p-4 px-4 mb-3">
+        {{-- <div class="mx-auto" style="width: 400px">
           <img src="{{ asset('svg/updates.svg') }}" class="w-100">
-        </div>
+        </div> --}}
 
         <div class="d-flex justify-content-between mb-1">
 
           <div>
-            <h1 class="page-header">Test Bank</h1>
+            <h1 class="page-header"><i class="fa fa-database" style="color: #a1a1a1"></i> Test Bank</h1>
           </div>
           <div class="d-flex align-items-baseline">
             <div>
@@ -29,24 +29,33 @@
           </div>
         </div>
 
-        
-        
-        <template v-if="selected_student_outcome != ''">
-            <div class="select-student-outcome d-flex align-items-center mt-1 justify-content-between" v-on:click="toggleDropDown">
-                <div class="d-flex align-items-center">
-                    <div class="mr-3">
-                        <div class="avatar-student-outcome bg-success">@{{ selected_student_outcome.so_code }}</div>
+        <template v-if="!loadingStudentOutcomes">
+            <template v-if="selected_student_outcome != ''">
+                <div class="select-student-outcome d-flex align-items-center mt-1 justify-content-between" v-on:click="toggleDropDown">
+                    <div class="d-flex align-items-center">
+                        <div class="mr-3">
+                            <div class="avatar-student-outcome bg-success">@{{ selected_student_outcome.so_code }}</div>
+                        </div>
+                        <div style="font-weight: 400">
+                            @{{ selected_student_outcome.description }}
+                        </div>
                     </div>
-                    <div>
-                        @{{ selected_student_outcome.description }}
-                    </div>
+                    <div><i class="fa fa-caret-down"></i></div>
                 </div>
-                <div><i class="fa fa-caret-down"></i></div>
+            </template>
+            <div v-else style="font-size: 18px;" class="text-center mt-4">
+                No Student Outcome
             </div>
         </template>
-        <div v-else style="font-size: 18px;" class="text-center mt-4">
-            No Student Outcome
-        </div>
+        <template v-else>
+            <div class="d-flex text-muted">
+               Fetching student outcomes...
+                <div class="spinner-grow text-dark ml-2" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div> 
+            </div>
+            
+        </template>
 
         <ul v-show="showDropDown" class="list-group list-dropdown-so mt-1">
           <li v-on:click="selectStudentOutcome(student_outcome)" v-for="student_outcome in student_outcomes" :key="student_outcome.id" class="list-group-item d-flex align-items-center">
@@ -84,7 +93,7 @@
                                 <div class="d-flex justify-content-between align-items-baseline">
                                     <div class="d-flex">
                                         <div class="mr-3">
-                                            <div class="avatar" :style="{ 'background': course_mapped.color }"><i class="fa fa-book"></i></div>
+                                            <div class="avatar new-green-bg" style="color:#858585"><i class="fa fa-book"></i></div>
                                         </div>
                                         <div>
                                             <div style="font-size: 16px">@{{ course_mapped.course_code }} - @{{ course_mapped.description }}</div>
@@ -121,7 +130,7 @@
                                             </div>
                                             <div>
                                                 <div style="font-size: 16px">@{{ curriculum.program.program_code }} - @{{ curriculum.name }}</div>
-                                                <div class="text-warning" style="font-size: 14px">Revision no. 1.0</div>
+                                                <div class="text-warning" style="font-size: 14px">Revision no. @{{ curriculum.revision_no }}.0</div>
                                                 <div class="text-muted">@{{ curriculum.exam_count }} exams</div>
                                             </div>   
                                         </div>
@@ -161,14 +170,17 @@
                 selected_student_outcome: '',
                 courses_mapped: [],
                 isLoading: false,
+                loadingStudentOutcomes: false,
                 curricula: []
             },
             methods: {
                 getStudentOutcomes() {
                     this.isLoading = true;
+                    this.loadingStudentOutcomes = true;
                     ApiClient.get("/test_bank/" + this.program_id + "/get_student_outcomes")
                     .then(response => {
                         this.isLoading = false;
+                        this.loadingStudentOutcomes = false;
                         this.student_outcomes = response.data;
                         if(this.student_outcomes.length > 0) {
                             this.selected_student_outcome = this.student_outcomes[0];

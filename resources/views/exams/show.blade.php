@@ -10,9 +10,9 @@
             <a href="{{ url('/exams?program_id='. request('program_id') .'&student_outcome_id=' . request('student_outcome_id'). '&curriculum_id='. request('curriculum_id')) }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
 
 
-            <div class="mx-auto" style="width: 400px">
+            {{-- <div class="mx-auto" style="width: 400px">
               <img src="{{ asset('svg/exam.svg') }}" class="w-100">
-            </div>
+            </div> --}}
 
 
             <div class="mt-3 d-flex justify-content-between align-items-baseline">

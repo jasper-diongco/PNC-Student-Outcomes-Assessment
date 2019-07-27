@@ -9,9 +9,9 @@
     <div class="card p-3 px-4 mb-3">
       {{-- <a href="{{ url('/test_bank/' . request('program_id') . '/list_student_outcomes') }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a> --}}
       <a href="{{ url('/test_bank?program_id=' . request('program_id') ) }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
-        <div class="mx-auto" style="width: 400px">
+        {{-- <div class="mx-auto" style="width: 400px">
           <img src="{{ asset('svg/questions1.svg') }}" class="w-100">
-        </div>
+        </div> --}}
         <div class="d-flex justify-content-between mt-3">
             <div>
               <h1 class="page-header mb-3">Test Questions</h1>

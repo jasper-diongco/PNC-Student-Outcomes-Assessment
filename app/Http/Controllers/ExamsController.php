@@ -11,6 +11,7 @@ use App\Curriculum;
 use App\StudentOutcome;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 use Gate;
 
 class ExamsController extends Controller
@@ -35,7 +36,24 @@ class ExamsController extends Controller
 
         $deactivated_exams = $curriculum->getDeactivatedExams(request('student_outcome_id'));
 
-        return view('exams.index', compact('program', 'curriculum', 'student_outcome', 'exams', 'deactivated_exams'));
+        $curriculum_course_requirements = Exam::getRequirements(request('student_outcome_id'), request('curriculum_id'));
+
+        $requirements_template = [];
+
+        foreach ($curriculum_course_requirements as $curriculum_course_requirement) {
+            $requirement = [
+                'course' => $curriculum_course_requirement->curriculum_map->curriculumCourse->course,
+                'test_question_count' => $curriculum_course_requirement->total,
+                'easy' => $curriculum_course_requirement->easy,
+                'average' => $curriculum_course_requirement->average,
+                'difficult' => $curriculum_course_requirement->difficult,
+                'isLoading' => true
+            ];
+
+            $requirements_template[] = $requirement;
+        }
+
+        return view('exams.index', compact('program', 'curriculum', 'student_outcome', 'exams', 'deactivated_exams', 'requirements_template'));
     }
 
     public function get_exams() {
@@ -90,74 +108,93 @@ class ExamsController extends Controller
             'student_outcome_id' => 'required',
             'curriculum_id' => 'required',
             'description' => 'required',
-            'time_limit' => 'required',
-            'passing_grade' => 'required'
+            'time_limit' => 'required|numeric|min:30|max:120',
+            'passing_grade' => 'required|numeric|min:40|max:100'
         ]);
 
 
-        //create the exam
-        $exam = Exam::create([
-            'student_outcome_id' => $data['student_outcome_id'],
-            'curriculum_id' => $data['curriculum_id'],
-            'description' => $data['description'],
-            'time_limit' => $data['time_limit'],
-            'passing_grade' => $data['passing_grade'],
-            'user_id' => Auth::user()->id,
-            'is_active' => true
-        ]);
+        DB::beginTransaction();
 
+        try {
+            
 
-        $curriculum_course_requirements = Exam::getRequirements(request('student_outcome_id'), request('curriculum_id'));
+            $curriculum_course_requirements = Exam::getRequirements(request('student_outcome_id'), request('curriculum_id'));
 
-        $exam_test_questions = [];
-        $test_questions = [];
+            $exam_test_questions = [];
+            $test_questions = [];
 
-        foreach ($curriculum_course_requirements as $requirement) {
+            foreach ($curriculum_course_requirements as $requirement) {
 
-            $rand_test_questions_easy = TestQuestion::getRandTestQuestions($data['student_outcome_id'],$requirement->curriculum_map->curriculumCourse->course->id, 1, $requirement->easy);
+                $rand_test_questions_easy = TestQuestion::getRandTestQuestions($data['student_outcome_id'],$requirement->curriculum_map->curriculumCourse->course->id, 1, $requirement->easy);
 
-            if($requirement->easy > $rand_test_questions_easy->count()) {
-                $is_valid = false;
+                if($requirement->easy > $rand_test_questions_easy->count()) {
+                    $is_valid = false;
+                }
+
+                $rand_test_questions_average = TestQuestion::getRandTestQuestions($data['student_outcome_id'],$requirement->curriculum_map->curriculumCourse->course->id, 2, $requirement->average);
+
+                if($requirement->average > $rand_test_questions_average->count()) {
+                    $is_valid = false;
+                }
+
+                $rand_test_questions_difficult = TestQuestion::getRandTestQuestions($data['student_outcome_id'],$requirement->curriculum_map->curriculumCourse->course->id, 3, $requirement->difficult);
+
+                if($requirement->difficult > $rand_test_questions_difficult->count()) {
+                    $is_valid = false;
+                }
+
+                $test_questions = array_merge($test_questions, $rand_test_questions_easy->toArray());
+
+                $test_questions = array_merge($test_questions, $rand_test_questions_average->toArray());
+
+                $test_questions = array_merge($test_questions, $rand_test_questions_difficult->toArray());
             }
 
-            $rand_test_questions_average = TestQuestion::getRandTestQuestions($data['student_outcome_id'],$requirement->curriculum_map->curriculumCourse->course->id, 2, $requirement->average);
+            
 
-            if($requirement->average > $rand_test_questions_average->count()) {
-                $is_valid = false;
+            
+
+            if($is_valid) {
+                //create the exam
+                $exam = Exam::create([
+                    'student_outcome_id' => $data['student_outcome_id'],
+                    'curriculum_id' => $data['curriculum_id'],
+                    'description' => $data['description'],
+                    'time_limit' => $data['time_limit'],
+                    'passing_grade' => $data['passing_grade'],
+                    'user_id' => Auth::user()->id,
+                    'is_active' => true
+                ]);
+
+
+                foreach ($test_questions as $test_q) {
+                    // $exam_test_question = new ExamTestQuestion();
+                    // $exam_test_question->exam_id = $exam->id;
+                    // $exam_test_question->test_question_id = $test_q['id'];
+                    // $exam_test_question->create();
+                    $exam_test_question = ExamTestQuestion::create([
+                        'exam_id' => $exam->id,
+                        'test_question_id' => $test_q['id']
+                    ]);
+
+                    $exam_test_questions[] = $exam_test_question;
+                }
+
+                DB::commit();
+
+               Session::flash('message', 'Exam successfully created'); 
+
+               return response()->json(['exam' => $exam ,'test_questions' => $exam_test_questions], 201); 
+            } else {
+                return response()->json(['message' => 'Insufficient test questions!', 'my_code' => 'insufficient'] ,422);
             }
-
-            $rand_test_questions_difficult = TestQuestion::getRandTestQuestions($data['student_outcome_id'],$requirement->curriculum_map->curriculumCourse->course->id, 3, $requirement->difficult);
-
-            if($requirement->difficult > $rand_test_questions_difficult->count()) {
-                $is_valid = false;
-            }
-
-            $test_questions = array_merge($test_questions, $rand_test_questions_easy->toArray());
-
-            $test_questions = array_merge($test_questions, $rand_test_questions_average->toArray());
-
-            $test_questions = array_merge($test_questions, $rand_test_questions_difficult->toArray());
         }
-
-        foreach ($test_questions as $test_q) {
-            // $exam_test_question = new ExamTestQuestion();
-            // $exam_test_question->exam_id = $exam->id;
-            // $exam_test_question->test_question_id = $test_q['id'];
-            // $exam_test_question->create();
-            $exam_test_question = ExamTestQuestion::create([
-                'exam_id' => $exam->id,
-                'test_question_id' => $test_q['id']
-            ]);
-
-            $exam_test_questions[] = $exam_test_question;
+        catch (\Exception $e) {
+            DB::rollback();
+            // something went wrong
+            return response()->json(['message' => 'Internal server error!'] ,500);
         }
-
-        if($is_valid) {
-           Session::flash('message', 'Exam successfully created'); 
-           return response()->json(['exam' => $exam ,'test_questions' => $exam_test_questions], 201); 
-        } else {
-            return response()->json(['message' => 'Insufficient test questions!'] ,422);
-        }
+        
         
     }
 

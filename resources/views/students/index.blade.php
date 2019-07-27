@@ -5,24 +5,25 @@
 @section('content')
 <div id="app">
   <update-student-modal :student-id="student_id" v-on:refresh-students="getStudents"></update-student-modal>
-  <div class="d-flex justify-content-between mb-3">
-    <div>
-      <h1 class="page-header">List of Students</h1>
-    </div>
-    <div>
-      @if(Gate::check('isProf') || Gate::check('isDean') || Gate::check('isSAdmin'))
-        {{-- <a href="{{ url('/students/create') }}" class="btn btn-success-b">Add New Student</a> --}}
-        <add-student-modal :colleges='@json($colleges)' 
-          :programs='@json($programs)' 
-          :curriculums='@json($curriculums)'
-          v-on:refresh-students="getStudents"></add-student-modal>
-      @endif
-    </div>
-  </div>
+  
   
 
   <div class="card">
     <div class="card-body">
+      <div class="d-flex justify-content-between mb-1">
+        <div>
+          <h1 class="page-header">Students Management</h1>
+        </div>
+        <div>
+          @if(Gate::check('isProf') || Gate::check('isDean') || Gate::check('isSAdmin'))
+            {{-- <a href="{{ url('/students/create') }}" class="btn btn-success-b">Add New Student</a> --}}
+            <add-student-modal :colleges='@json($colleges)' 
+              :programs='@json($programs)' 
+              :curriculums='@json($curriculums)'
+              v-on:refresh-students="getStudents"></add-student-modal>
+          @endif
+        </div>
+      </div>
       <div class="row">
         <div class="col-md-4">
           <div class="input-group mb-3" id="search-input">
@@ -45,7 +46,7 @@
               </div>
             </div>
             <div class="d-flex">
-              <div class="mr-2"><i class="fa fa-graduation-cap text-success"></i> <label class="col-form-label">Filter By Program: </label></div>
+              <div class="mr-2"><label class="col-form-label">Filter By Program: </label></div>
               <div>
                 <select class="form-control" v-model="program_id" v-on:change="filterByProgram">
                   <option value="">All</option>

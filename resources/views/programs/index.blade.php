@@ -4,19 +4,7 @@
 
 @section('content')
 <div id="app">
-  <div class="d-flex justify-content-between mb-3">
-    <div>
-      <h1 class="page-header">List of Programs</h1>
-    </div>
-
-    <div>
-      @if(Gate::check('isDean') || Gate::check('isSAdmin'))
-        <button v-on:click="getRandColor" type="button" class="btn btn-success-b" data-toggle="modal" data-target="#programModal">
-          Add New Program
-        </button>
-      @endif
-    </div>
-  </div>
+  
 
   @if ($errors->any())
     <div class="alert alert-danger">
@@ -63,11 +51,20 @@
     @endif --}}
     <div class="card">
       <div class="card-body">
-        
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between mb-0">
           <div>
-            <h5 class="text-info">{{ $college_name }} LIST OF PROGRAMS</h5>
+            <h1 class="page-header"><i class="fa fa-graduation-cap" style="color: #a1a1a1"></i> Programs</h1>
           </div>
+
+          <div>
+            @if(Gate::check('isDean') || Gate::check('isSAdmin'))
+              <button v-on:click="getRandColor" type="button" class="btn btn-success-b" data-toggle="modal" data-target="#programModal">
+                Add New Program
+              </button>
+            @endif
+          </div>
+        </div>
+        <div class="d-flex justify-content-between">
         @can('isSAdmin')
           
             <div class="d-flex mr-4 mb-2">
@@ -90,7 +87,7 @@
           <table id="students-table" class="table table-borderless">
             <thead>
               <tr>
-                <th scope="col">#</th>
+                <th scope="col">ID</th>
                 <th scope="col">Program Code</th>
                 <th scope="col">Description</th>
                 <th scope="col">College</th>
@@ -110,7 +107,8 @@
                     <td>{{ $program->description }}</td>
                     <td>{{ $program->college->college_code }}</td>
                     <td>
-                      <a title="View Details" class="btn btn-success btn-sm" href="{{ url('/programs/' . $program->id) }}">
+                      <a title="View Details" class="btn btn-info btn-sm" href="{{ url('/programs/' . $program->id) }}">
+                        View
                         <i class="fa fa-search"></i>
                       </a>
                     </td>

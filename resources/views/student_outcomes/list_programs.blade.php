@@ -6,9 +6,7 @@
 
 <div class="d-flex justify-content-between mb-3">
 
-  <div>
-    <h1 class="page-header">Student Outcomes &mdash; Select Program</h1>
-  </div>
+  
 
 </div>
 
@@ -29,7 +27,9 @@
   </div> --}}
   <div class="card">
     <div class="card-body">
-      <h5 class="text-info">List of Programs</h5>
+      <div>
+        <h1 class="page-header"><i class="fa fa-flag" style="color: #a1a1a1"></i> Student Outcomes</h1>
+      </div>
       <table class="table table-borderless">
         <thead>
           <tr>
@@ -49,7 +49,7 @@
               <td>{{ $program->description }}</td>
               <td>{{ count($program->studentOutcomes) }}</td>
               <td>{{ $program->college->college_code }}</td>
-              <td><a href="{{ url('/student_outcomes?program_id=' . $program->id) }}" class="btn btn-sm btn-success"><i class="fa fa-search"></i></a></td>
+              <td><a href="{{ url('/student_outcomes?program_id=' . $program->id) }}" class="btn btn-sm btn-info">View <i class="fa fa-search"></i></a></td>
             </tr>
           @endforeach
         </tbody>

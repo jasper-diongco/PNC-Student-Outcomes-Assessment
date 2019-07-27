@@ -7,20 +7,21 @@
   <faculty-modal is-dean="{{ Gate::check('isDean') ? 'true': 'false' }}" college-id="{{ Session::get('college_id') }}" :colleges='@json($colleges)' v-on:refresh-faculties="getFaculties"></faculty-modal>
 
   <faculty-modal is-dean="{{ Gate::check('isDean') ? 'true' : 'false' }}" college-id="{{ Session::get('college_id') }}" :colleges='@json($colleges)' v-on:refresh-faculties="getFaculties" is-update="true" :faculty-id="faculty_id"></faculty-modal>
-  <div class="d-flex justify-content-between mb-3">
-    <div>
-      <h1 class="page-header">List of Faculties</h1>
-    </div>
-    <div>
-      @if(Gate::check('isDean') || Gate::check('isSAdmin'))
-        <a href="#" data-toggle="modal" data-target="#facultyModal" class="btn btn-success-b">Add New Faculty</a>
-      @endif
-    </div>
-  </div>
+
   
 
   <div class="card">
     <div class="card-body">
+      <div class="d-flex justify-content-between mb-0">
+        <div>
+          <h1 class="page-header">List of Faculties</h1>
+        </div>
+        <div>
+          @if(Gate::check('isDean') || Gate::check('isSAdmin'))
+            <a href="#" data-toggle="modal" data-target="#facultyModal" class="btn btn-success-b">Add New Faculty</a>
+          @endif
+        </div>
+      </div>
       <div class="d-flex justify-content-between">
         <div>
           <div class="input-group mb-3" id="search-input">
