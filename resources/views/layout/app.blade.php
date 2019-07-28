@@ -33,7 +33,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body @if($dark_bg) style="background: linear-gradient(to right, #76b852, #8dc26f);" @endif>
+<body @if($dark_bg) style="background: #648466;" @endif>
 <div class="d-flex flex-column sticky-footer-wrapper">
     <header>
         <!-- navbar -->

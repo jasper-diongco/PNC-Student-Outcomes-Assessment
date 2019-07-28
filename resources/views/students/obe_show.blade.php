@@ -6,18 +6,20 @@
     <div id="app" v-cloak>
         <grade-modal :student-id="student_id" :course-id="course_id" :course-code="course_code" :grade-values="grade_values" v-on:grade-added="refreshStudentGrades"></grade-modal>
 
-        <a href="{{ url('/students') }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
         
-        <div class="mt-3">
-            <h1 class="page-header mb-3">OBE Curriculum &mdash; {{ $curriculum->name }}</h1>
+        <div class="card p-4">
+            <a href="{{ url('/students') }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
+            <div class="mt-3">
+                <h1 class="page-header mb-3">OBE Curriculum &mdash; {{ $curriculum->name }}</h1>
 
+            </div>
+            
+            <div class="mr-4"><i class="fa fa-user text-primary"></i> <label>Student:</label> <span class="text-info" style="font-size: 130%">{{ $student->user->getFullName() }}</span>, {{ $student->program->program_code }}</div>
+
+            <div class="mr-4"><i class="fa fa-calendar-check text-primary"></i> <label>Year:</label> {{ $curriculum->year }}</div>
+
+            <div class="mr-4"><i class="fa fa-file-alt text-primary"></i> <label>Description:</label> {{ $curriculum->description }}</div>
         </div>
-        
-        <div class="mr-4"><i class="fa fa-user text-primary"></i> <label>Student:</label> <span class="text-info" style="font-size: 130%">{{ $student->user->getFullName() }}</span>, {{ $student->program->program_code }}</div>
-
-        <div class="mr-4"><i class="fa fa-calendar-check text-primary"></i> <label>Year:</label> {{ $curriculum->year }}</div>
-
-        <div class="mr-4"><i class="fa fa-file-alt text-primary"></i> <label>Description:</label> {{ $curriculum->description }}</div>
         
         {{-- <h5 class="mt-4 mb-2"><i class="fa fa-file-alt"></i> Grades</h5> --}}
         <div class="d-flex justify-content-end mt-4 mb-2">

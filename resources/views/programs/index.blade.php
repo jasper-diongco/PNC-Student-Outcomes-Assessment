@@ -17,39 +17,7 @@
     </div>
   @endif
   
-    {{-- @if(count($programs) > 0)
-      @foreach ($programs as $program)
-        <div class="col-md-4 mb-3">
-          <div class="card shadow" style="height: 100%">
-            <div class="card-body">
-              <div class="d-flex align-items-center justify-content-start mb-2">
-                <div class="avatar mr-2" style="background: {{ $program->color  }}">
-                  {{ substr($program->program_code, 0 , 2) == 'BS' ? substr($program->program_code, 2) :  $program->program_code }}
-                </div>
-                <div>
-                  <h4 class="card-title my-0">{{ $program->program_code }} </h4>
-                </div>
-              </div>
-              <small class="text-muted">{{ $program->college->name }}</small>
-              <p class="card-text mt-2">{{ $program->description }}</p>
-              
-            </div>
-            <div class="card-footer bg-white">
-              <a href="{{ url('programs/' . $program->id) }}" class="btn btn-primary btn-sm card-link">View <i class="fa fa-chevron-right"></i></a>
-            </div>
-          </div>
-        </div>
-      @endforeach
-    @else
-      <div class="col-12">
-        <div class="card">
-          <div class="card-body">
-            <h3 class="text-center">No Program Found In Database.</h3>
-          </div>
-        </div>
-      </div>
-    @endif --}}
-    <div class="card">
+    <div class="card mb-3">
       <div class="card-body">
         <div class="d-flex justify-content-between mb-0">
           <div>
@@ -82,48 +50,47 @@
             </div>        
         @endcan
         </div>
-        
-        <div class="table-responsive">
-          <table id="students-table" class="table table-borderless">
-            <thead>
-              <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Program Code</th>
-                <th scope="col">Description</th>
-                <th scope="col">College</th>
-                <th scope="col">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              @if ($programs->count() <= 0)
-                <tr>
-                  <td class="text-center" colspan="6">No Record Found in Database.</td>
-                </tr>
-              @else
-                @foreach ($programs as $program)
-                <tr>
-                    <td>{{ $program->id }}</td>
-                    <td>{{ $program->program_code }}</td>
-                    <td>{{ $program->description }}</td>
-                    <td>{{ $program->college->college_code }}</td>
-                    <td>
-                      <a title="View Details" class="btn btn-info btn-sm" href="{{ url('/programs/' . $program->id) }}">
-                        View
-                        <i class="fa fa-search"></i>
-                      </a>
-                    </td>
-                </tr>
-                @endforeach
-              @endif
-                                       
-            </tbody>
-          </table>
 
-          <div class="my-3 d-flex justify-content-end">
-            {{ $programs->appends(request()->input())->links() }}
-          </div>
-        </div>
       </div>
+    </div>
+    
+    @if($programs->count() > 0)
+      <div class="d-flex flex-wrap">
+          @foreach($programs as $program)
+            <div style="width: 31%" class="card shadow mb-4 mr-3">
+                <div class="card-body pt-3">
+                    <div class="d-flex justify-content-between align-items-baseline">
+                        <div class="d-flex">
+                            <div class="mr-2">
+                                <div class="avatar" style="background: #cbff90; color:#585858;"><i class="fa fa-graduation-cap"></i></div>
+                            </div>
+                            <div style="font-weight: 600">{{ $program->program_code }}</div>
+                        </div>
+                        <div class="ml-3">
+                          <a class="btn btn-sm btn-info" href="{{ url('/programs/' . $program->id) }}" class="btn btn-sm">
+                              <i class="fa fa-search"></i> View
+                          </a>
+                        </div>
+                    </div>
+                    <div style="font-size: 13px" class="text-muted ml-2 mt-2">
+                        {{ $program->college->name }}
+                    </div>
+                    <hr>
+                    <div class="text-muted">
+                        {{ $program->description }}
+                    </div>
+                </div>
+            </div>
+          @endforeach
+      </div>
+    @else
+      <div class="p-3 bg-white text-muted">
+        No Program found.
+      </div>
+    @endif
+
+    <div class="my-3 d-flex justify-content-end">
+      {{ $programs->appends(request()->input())->links() }}
     </div>
 
   <!-- Modal -->

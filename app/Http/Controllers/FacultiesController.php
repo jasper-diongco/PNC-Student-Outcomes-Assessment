@@ -330,6 +330,7 @@ class FacultiesController extends Controller
             'date_of_birth' => 'required|date',
             'contact_no' => 'nullable|regex:/^[0-9\s-]*$/',
             'address' => 'nullable|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,'.$id,
             'college' => 'required'
         ]);
 
@@ -355,7 +356,7 @@ class FacultiesController extends Controller
             $user->last_name = strtoupper(request('last_name'));
             $user->sex = request('sex');
             $user->date_of_birth = request('date_of_birth');
-            // $user->email = request('email');
+            $user->email = request('email');
             // $user->password = Hash::make(request('password'));
 
             $user->update();

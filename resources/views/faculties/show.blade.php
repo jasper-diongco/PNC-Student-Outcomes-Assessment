@@ -11,13 +11,14 @@
     @endcomponent
   @endif --}}
 
-  <h1 class="page-header mt-3">Faculty Information</h1>
+  
   
   <div id="app">
     <faculty-modal is-dean="{{ Gate::check('isDean') ? 'true' : 'false' }}" college-id="{{ Session::get('college_id') }}" :colleges='@json($colleges)' is-update="true" :faculty-id="{{ $faculty->id }}" :refresh-update="true"></faculty-modal>
     <div class="card mt-4" >
 
       <div class="card-body pt-4">
+        {{-- <h1 class="page-header text-info">Faculty Information</h1> --}}
         <div class="d-flex justify-content-between">
           <div>
             <h4><i class="fa fa-user text-info"></i> {{ $faculty->user->getFullName()}}</h4>

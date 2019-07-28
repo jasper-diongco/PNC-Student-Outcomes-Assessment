@@ -147,7 +147,7 @@
 <div id="app">
     {{-- <img src="{{ asset('img/pnc_logo_name_small.png') }}" width="200px"> --}}
     
-    <div class="text-center mt-5" style="color:#048409; font-size: 23px;">PNC |<span style="color: #fff;font-weight: 300"> Student Outcomes Assessment</span></div>
+    <div class="text-center mt-5" style="color:#4caf50; font-size: 23px;">PNC |<span style="color: #fff;font-weight: 300"> Student Outcomes Assessment</span></div>
 
     <div class="row mt-4">
         {{-- <div class="col-md-7">
@@ -162,7 +162,7 @@
                     </div>
                     
                     <form v-on:submit.prevent="login" action="{{ route('login') }}" method="POST">
-                        <h1 class="login-title mb-4">Login to your account</h1>
+                        <h1 class="login-title mb-4" style="font-size: 25px; text-align: center">Login to your account</h1>
                         <div id="input-g-email" class="input-group mb-3">
                           <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1"><i class="fa fa-user"></i></span>

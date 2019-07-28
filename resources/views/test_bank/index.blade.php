@@ -49,8 +49,7 @@
         </template>
         <template v-else>
             <div class="d-flex text-muted">
-               Fetching student outcomes...
-                <div class="spinner-grow text-dark ml-2" role="status">
+                <div class="spinner-grow text-dark text-center ml-2" role="status">
                   <span class="sr-only">Loading...</span>
                 </div> 
             </div>
