@@ -7,16 +7,19 @@
 
 
         {{-- <a href="{{ url('s/home') }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a> --}}
-        
-        <div class="mt-3">
-            <h1 class="page-header mb-3"><i class="fa fa-file-alt text-info"></i> OBE Curriculum</h1>
+        <div class="card p-4">
+            <div class="mt-1">
+                <h1 class="page-header mb-3"><i class="fa fa-file-alt text-info"></i> OBE Curriculum</h1>
 
-        </div>
+            </div>
 
-        <div class="alert alert-success">
-            <label><i class="fa fa-book"></i> Courses: </label> @{{ curriculum_courses.length }}
-            <br>
-            <label><i class="fa fa-chart-bar"></i> Total Units: </label> {{ $curriculum->totalUnits() }}
+            {{-- <div class="alert alert-success">
+                <label><i class="fa fa-book"></i> Courses: </label> @{{ curriculum_courses.length }}
+                <br>
+                <label><i class="fa fa-chart-bar"></i> Total Units: </label> {{ $curriculum->totalUnits() }}
+            </div> --}}
+            <label class="text-muted">Program: <span class="text-info fs-19">{{ $curriculum->program->description }}</span></label>
+            <label class="text-muted">Total Units: <span class="text-info fs-19">{{ $curriculum->totalUnits() }} units</span> </label>
         </div>
         
         {{-- <h5 class="mt-4 mb-2"><i class="fa fa-file-alt"></i> Grades</h5> --}}

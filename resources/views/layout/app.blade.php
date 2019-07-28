@@ -8,6 +8,8 @@
     $brand = $brand ?? 'PNC | SOA';
     $assessment = $assessment ?? false;
     $fixed_top = $fixed_top ?? false;
+    $shadow = $shadow ?? false;
+    $custom_layout = $custom_layout ?? false;
 ?>
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -34,17 +36,18 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body @if($dark_bg) style="background: #648466;" @endif>
+@if(!$custom_layout)
 <div class="d-flex flex-column sticky-footer-wrapper">
     <header>
         <!-- navbar -->
         @if(!$hide_header)
-        <nav class="navbar navbar-expand-lg navbar-dark bg-success  {{ $fixed_top ? 'fixed-top' : '' }}">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-success {{ $fixed_top ? 'fixed-top' : '' }} {{ $shadow ? 'shadow' : '' }}">
           @if($container_fluid)
                 <div class="container-fluid">
             @else
                 <div class="container">
             @endif
-            <a class="navbar-brand" href="#">{{ $brand }} </a>
+            <a class="navbar-brand" href="#">{!! $brand !!} </a>
             {{--< div>
                 <img src="{{ asset('img/pnc_logo_name_small.png') }}"  style="width: 100px;">
             </div>  --}}
@@ -103,7 +106,7 @@
                     <li class="nav-item {{ $active == 'assessments' ? 'active' : '' }}">
                         <a class="nav-link" href="{{ url('/s/assessments') }}">
                             <div class="d-flex flex-column justify-content-center text-center">
-                                <i class="fas fa-file-signature icon-nav"></i> 
+                                <i class="fas fa-edit icon-nav"></i> 
                                 <span>Assessments</span>
                             </div>
                         </a>
@@ -269,6 +272,9 @@
     </footer>
     @endif
 </div>
+@else
+    @yield('content')
+@endif
 </body>
 </html>
 

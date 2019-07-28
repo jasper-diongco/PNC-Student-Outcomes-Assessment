@@ -37,9 +37,11 @@ $theme-colors: (
 body {
   background: $bg-color;
   font-family: "Open Sans", sans-serif;
+  overflow-x: hidden;
 }
 
 @import "layout";
+@import "exam";
 
 //@import "~startbootstrap-sb-admin-2/scss/sb-admin-2";
 // @import "~@fortawesome/fontawesome-free/scss/fontawesome.scss";
@@ -216,8 +218,9 @@ div.mdl-layout__drawer > nav.mdl-navigation > a.mdl-navigation__link {
 }
 
 .choice:hover {
-  box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.13);
-  transform: scale(1.01);
+  // box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.13);
+  // transform: scale(1.01);
+  background: #f7f7f7;
 }
 
 [v-cloak] > * {
@@ -403,7 +406,8 @@ body {
 }
 
 .test-question-body {
-  font-weight: 600;
+  font-weight: 400;
+  font-size: 18px;
 }
 
 .test-question-body pre,

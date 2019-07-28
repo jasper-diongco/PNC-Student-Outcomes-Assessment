@@ -1,96 +1,91 @@
-@extends('layout.app', ['active' => 'home-student', 'container_fluid' => true, 'hide_navigation' => true, 'brand' => 'IT01 Assessment', 'assessment' => true, 'fixed_top' => true])
+@extends('layout.app', ['active' => 'home-student', 'container_fluid' => true, 'hide_navigation' => true, 'brand' => '<i class="fa fa-edit"></i> Student Outcome A &mdash; Assessment', 'assessment' => true, 'fixed_top' => true, 'shadow' => true, 'custom_layout' => true])
 
 
 @section('title', 'Assessment')
 
 @section('content')
-    <div id="app" v-cloak>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success shadow fixed-top">
+      <a class="navbar-brand" href="#"><i class="fa fa-file-alt"></i> Student Outcome A - Assessment</a>
+    </nav>
+    {{-- <div id="app" v-cloak>
         <div class="row">
-
-            <div class="col-md-3" style="max-height: 100vh; overflow-y: auto;">
+            <div class="col-md-8 p-3 pl-4" style="max-height: 100vh; overflow-y: auto;">
                 
-
-                <div class="card">
-
-                    <div class="card-body pt-3 pr-2">
-                        <div class="d-flex align-items-center">
-                            <div class="mr-1">
-                                <label class="mb-0">List of Questions</label>
-                            </div>
-                            <div>
-                                {{-- <img src="{{ asset('/img/list_md.svg') }}" style="width: 23px; height: 23px"> --}}
-                                <i class="fa fa-question-circle text-info"></i>
-                            </div>
-                        
-                        </div>
-                        
-
-                        <template v-for="template in templates">
-                        <div class="mt-2 text-info">@{{ template.course.course_code }} - @{{ template.test_questions.length }} questions</div>
-                        <ul class="list-group question-pallete">
-                          <li v-for="test_question in template.test_questions" class="list-group-item px-1">
-                              <div class="d-flex">
-                                  <div class="mr-2">
-                                      <div class="question-pallete-avatar">
-                                          @{{ test_question.counter }}
-                                      </div>
-                                  </div>
-                                  <div class="d-flex justify-content-between">
-                                    <div class="mr-2">
-                                        <a v-on:click="scroll" :href="'#tq' + test_question.id" class="text-dark">@{{ test_question.title }} </a>
-                                    </div>
-                                    <div v-if="checkIfMarked(test_question.id)" class="d-flex justify-content-end">
-                                        <i class="fa fa-bookmark text-warning"></i>
-                                    </div>
-                                    
-                                  </div>
-                              </div>
-                            </li>
-                        </ul>
-                        </template>
+            </div>
+            <div class="col-md-4 p-3 pr-4" style="max-height: 100vh; overflow-y: auto;">
+                                
+            </div>
+        </div>
+    </div> --}}
+    <div id="app">
+        <div class="exam-sidenav">
+            <div class="card shadow">
+                <div class="card-body pt-3 text-center ">
+                    <h5 class="mx-0"><i class="fa fa-clock text-info"></i> Time Remaining</h5>
+                    <div class="time-container text-muted">
+                        21:30
                     </div>
                 </div>
             </div>
-            
-            <div id="main-test-questions-content" class="col-md-9" style="max-height: 130vh; overflow-y: auto;">
-                <div class="mb-3"></div>
-                <div v-for="template in templates" class="mb-5">
-                    <h4><i class="fa fa-book text-info"></i> @{{ template.course.course_code + ' - ' + template.course.description }}</h4>
-                    <label class="mb-4" style="font-weight: 400"><i class="fa fa-question-circle text-success"></i> @{{ template.test_questions.length }} questions</label>
-                    <div :id="'tq' + test_question.id" v-for="test_question in template.test_questions" class="card mb-3">
-                        <div class="card-body text-dark pt-4">
-                            <div class="d-flex justify-content-end mb-1">
-                                <button v-on:click="markTestQuestion(test_question.id)" class="btn btn-sm btn-light"><i class="fa fa-bookmark" :class="{ 'text-warning': checkIfMarked(test_question.id), 'text-primary': !checkIfMarked(test_question.id)   }"></i> Mark</button>
+
+            <div class="card shadow mt-3">
+                <div class="card-body pt-3">
+                    
+
+                    <h5 class="mx-0"><i class="fa fa-question-circle text-info"></i> Questions</h5>
+                    
+                    <div v-for="template in templates" :key="template.course.course_code">
+                        <label class="text-muted" style="font-weight: 400; font-size: 19px"><i class="fa fa-book"></i> @{{ template.course.course_code }}</label>
+                        <div class="d-flex flex-wrap">
+                            <div v-on:click="selectTestQuestion(test_question.id)" v-for="test_question in template.test_questions" class="question-avatar mr-2 mb-2" :class="{ 'question-avatar-answered': test_question.is_answered, 'active_test_question': test_question.id == selected_test_question.id, 'question-avatar-marked': test_question.is_marked  }">
+                                @{{ test_question.counter }}              
                             </div>
-                            <div class="test-question-body text-dark d-flex">
-                                <div class="mr-2">
-                                    <div class="test-num">@{{ test_question.counter }}</div> 
-                                </div>
-                                <div class="mt-1" v-html="test_question.html">
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="choices">
-                                <div class="row">
-                                    <template v-for="choice in test_question.random_choices">
-                                        <div v-on:click="answerQuestion(test_question.id, choice.id)"  class="col-6 mb-3">
-                                            <div class="text-dark choice" :class="{ 'is-selected-choice': checkIfChoiceIsSelected(test_question.id,choice.id) }" style="height: 100%;">
-                                                <div class="d-flex">
-                                                    <div class="mr-2">
-                                                        <div class="choice-num">
-                                                            @{{ choice.letter }}
-                                                        </div>
-                                                    </div>
-                                                    <div v-html="choice.html">
-                                                    </div>
-                                                </div>
-                                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="exam-main">
+            <div class="card shadow">
+                <div class="card-body pt-3">
+                    <div class="text-muted mb-3 d-flex justify-content-start align-items-baseline"><i class="fa fa-book text-muted mr-2"></i> @{{ selected_course.course_code }} - @{{ selected_course.description }}</div>
+                    <div class="test-question-body text-dark d-flex">
+
+                        <div class="mr-2">
+                            <div class="test-num">@{{ selected_test_question.counter }}</div> 
+                        </div>
+                        <div class="mt-1" v-html="selected_test_question.body_html">
+                        </div>
+                        
+                        
+                    </div>
+                    <hr>
+                    <div class="choices">
+                        <div v-for="choice in selected_test_question.answer_sheet_test_question_choices" :key="choice.id" class="mb-3" v-on:click="selectChoice(selected_test_question.id, choice.id)">
+                            <div class="text-dark choice" style="height: 100%;">
+                                <div class="d-flex">
+                                    <div class="mr-2">
+                                        <div class="choice-num" :class="{ 'choice-selected': choice.is_selected }">
+                                            @{{ choice.letter }}
                                         </div>
-                                    </template>
+                                    </div>
+                                    <div v-html="choice.body_html">
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+        
+                        <div class="d-flex justify-content-end">
+                            <button v-on:click="markTestQuestion" class="btn btn-info mr-2"><i class="fa fa-bookmark"></i> Mark for review</button>
+                            <button v-on:click="prevQuestion" class="btn btn-info mr-2" ><i class="fa fa-arrow-circle-left"></i> Back </button>
+
+                            <button v-on:click="nextQuestion" class="btn btn-info">Next <i class="fa fa-arrow-circle-right"></i></button>
+                        </div>
                 </div>
             </div>
         </div>
@@ -102,19 +97,28 @@
     var vm = new Vue({
         el: '#app',
         data: {
-            exam: @json($exam),
             courses: @json($courses),
-            test_questions: @json($test_questions),
             counter: 1,
             templates: [],
             answers: [],
-            marks: []
+            marks: [],
+            answer_sheet: @json($answer_sheet),
+            selected_test_question: '',
+            selected_course: ''
         },
         methods: {
             getTestQuestionByCourse(course_id) {
-                return this.test_questions.filter(test_question => {
-                    return test_question.course_id == course_id;
+                return this.answer_sheet.answer_sheet_test_questions.filter(answer_sheet_test_question => {
+                    return answer_sheet_test_question.course_id == course_id;
                 });
+            },
+            selectCourse(course_id) {
+                for(var i = 0; i < this.courses.length; i++) {
+                    if(this.courses[i].id == course_id) {
+                        this.selected_course = this.courses[i];
+                        break;
+                    }               
+                }
             },
             convertToChar(index) {
                 return String.fromCharCode(index + 65);
@@ -128,77 +132,135 @@
                         test_questions: course_test_questions
                     });
                     for(var j = 0; j < course_test_questions.length; j++) {
-                        this.templates[i].test_questions[j].counter = counter;
-                        var choices = this.templates[i].test_questions[j].random_choices;
+                        //this.templates[i].test_questions[j].counter = counter;
+                        //this.templates[i].test_questions[j].is_answered = false;
+                        //this.templates[i].test_questions[j].is_marked = false;
+                        Vue.set(this.templates[i].test_questions[j], 'is_marked', false);
+                        Vue.set(this.templates[i].test_questions[j], 'counter', counter);
+                        Vue.set(this.templates[i].test_questions[j], 'is_answered', false);
+
+
+                        var choices = this.templates[i].test_questions[j].answer_sheet_test_question_choices;
                         for(var k = 0; k < choices.length; k++) {
                             choices[k].letter = this.convertToChar(k);
                         }
 
                         counter++;
-                    }                          
+                    }                        
                 }
             },
-            answerQuestion(test_question_id, choice_id) {
-
-                for(var i = 0 ; i < this.answers.length; i++) {
-                    if(this.answers[i].test_question_id == test_question_id) {
-                        this.answers.splice(i,1);
+            selectTestQuestion(test_question_id) {
+                for(var i = 0; i < this.answer_sheet.answer_sheet_test_questions.length; i++) {
+                    if(this.answer_sheet.answer_sheet_test_questions[i].id == test_question_id) {
+                        this.selected_test_question = this.answer_sheet.answer_sheet_test_questions[i];
+                        this.selectCourse(this.selected_test_question.course_id);
                         break;
-                    }
+                    }               
+                }
+                MathLive.renderMathInDocument();
+            },
+            selectChoice(test_question_id, choice_id) {
+                var test_question = this.selected_test_question;
+
+                for(var i = 0; i < test_question.answer_sheet_test_question_choices.length; i++) {  if(test_question.answer_sheet_test_question_choices[i].id == choice_id) {
+                        test_question.answer_sheet_test_question_choices[i].is_selected = 1;
+                    } else {
+                        test_question.answer_sheet_test_question_choices[i].is_selected = 0;
+                    }         
                 }
 
-                this.answers.push({
-                    test_question_id: test_question_id,
-                    choice_id: choice_id
-                });
+                test_question.is_answered = true;
+
             },
-            checkIfChoiceIsSelected(test_question_id,choice_id) {
-                var is_selected = false;
+            nextQuestion() {
+                var counter = this.selected_test_question.counter;
+                for(var i = 0; i < this.templates.length; i++) {  
+                    for(var j = 0; j < this.templates[i].test_questions.length; j++) {
+                        if(this.templates[i].test_questions[j].counter == counter + 1) {
+                            this.selected_test_question = this.templates[i].test_questions[j];
 
-                for(var i = 0 ; i < this.answers.length; i++) {
-                    if(this.answers[i].choice_id == choice_id) {
-                        is_selected = true;
-                        break;
-                    }
-                }
-
-                return is_selected;
-            },
-            scroll() {
-
-                //$(function() { $("#top").on('click', function() { $("HTML, BODY").animate({ scrollTop: 0 }, 1000); }); });
-
-                //var main = document.querySelector('#main-test-questions-content');
-
-                setTimeout(() => {
-                    window.scroll(0, -100);
-                }, 100);
-                
-            },
-            markTestQuestion(test_question_id) {
-                for(var i = 0; i < this.marks.length; i++) {
-                    if(test_question_id == this.marks[i]) {
-                        return this.marks.splice(i, 1);
+                        }
                     }       
                 }
-                this.marks.push(test_question_id);
-            },
-            checkIfMarked(test_question_id) {
-                for(var i = 0; i < this.marks.length; i++) {
-                    if(test_question_id == this.marks[i]) {
-                        return true;
-                    }
-                }
 
-                return false;
+
+            },
+            prevQuestion() {
+                var counter = this.selected_test_question.counter;
+                for(var i = 0; i < this.templates.length; i++) {  
+                    for(var j = 0; j < this.templates[i].test_questions.length; j++) {
+                        if(this.templates[i].test_questions[j].counter == counter - 1) {
+                            this.selected_test_question = this.templates[i].test_questions[j];
+
+                        }
+                    }       
+                }
+            },
+            markTestQuestion() {
+                this.selected_test_question.is_marked = true;
             }
+            // answerQuestion(test_question_id, choice_id) {
+
+            //     for(var i = 0 ; i < this.answers.length; i++) {
+            //         if(this.answers[i].test_question_id == test_question_id) {
+            //             this.answers.splice(i,1);
+            //             break;
+            //         }
+            //     }
+
+            //     this.answers.push({
+            //         test_question_id: test_question_id,
+            //         choice_id: choice_id
+            //     });
+            // },
+            // checkIfChoiceIsSelected(test_question_id,choice_id) {
+            //     var is_selected = false;
+
+            //     for(var i = 0 ; i < this.answers.length; i++) {
+            //         if(this.answers[i].choice_id == choice_id) {
+            //             is_selected = true;
+            //             break;
+            //         }
+            //     }
+
+            //     return is_selected;
+            // },
+            // scroll() {
+
+            //     //$(function() { $("#top").on('click', function() { $("HTML, BODY").animate({ scrollTop: 0 }, 1000); }); });
+
+            //     //var main = document.querySelector('#main-test-questions-content');
+
+            //     setTimeout(() => {
+            //         window.scroll(0, -100);
+            //     }, 100);
+                
+            // },
+            // markTestQuestion(test_question_id) {
+            //     for(var i = 0; i < this.marks.length; i++) {
+            //         if(test_question_id == this.marks[i]) {
+            //             return this.marks.splice(i, 1);
+            //         }       
+            //     }
+            //     this.marks.push(test_question_id);
+            // },
+            // checkIfMarked(test_question_id) {
+            //     for(var i = 0; i < this.marks.length; i++) {
+            //         if(test_question_id == this.marks[i]) {
+            //             return true;
+            //         }
+            //     }
+
+            //     return false;
+            // }
         },
         created() {
             this.createTemplate();
-            setTimeout(() => {
+            this.selected_test_question = this.templates[0].test_questions[0];
+            this.selected_course = this.courses[0];
+            setInterval(() => {
                 MathLive.renderMathInDocument();
-            }, 300);
-            
+            }, 100);
         }
     });
 </script>

@@ -27,6 +27,11 @@ class ProgramsController extends Controller
      */
     public function index()
     {
+        //authenticate
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
+        
         $programs = [];
 
 

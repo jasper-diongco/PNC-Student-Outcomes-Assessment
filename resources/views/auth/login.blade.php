@@ -1,4 +1,4 @@
-@extends('layout.app', ['hide_header' => true, 'dark_bg' => true, 'hide_footer' => true])
+@extends('layout.app', ['hide_header' => true, 'dark_bg' => true, 'hide_footer' => true, 'hide_navigation' => true])
 
 @section('title', 'Login')
 

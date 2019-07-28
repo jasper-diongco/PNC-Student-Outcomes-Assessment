@@ -5,25 +5,20 @@
 
 @section('content')
     <div id="app">
-        <h1 class="page-header">Assessment</h1>
+        
         <div class="card">
+            
+
             <div class="card-body pt-4">
-                <h5 class="mb-4" style="font-weight: 300">
-                    <div class="d-flex align-items-center">
-                        <div class="mr-2">List of Student Outcomes </div>
-                        <div>
-                            <img src="{{ asset('/img/list_md.svg') }}" style="width: 23px; height: 23px">
-                        </div>
-                    
-                    </div>
-                </h5>
+                <h1 class="page-header"><i class="fa fa-edit text-info"></i> Assessment</h1>
+                <h5 class="text-muted mb-2">List of Student Outcomes</h5>
 
                 <ul class="list-group list-student-outcomes">
                     @foreach($student_outcomes as $student_outcome)
                     <li class="list-group-item mb-3">
                         <div class="d-flex align-items-center mr-3">
                             <div>
-                              <span class="avatar-student-outcome mr-3 bg-success">{{ $student_outcome->so_code }}</span>
+                              <span class="avatar-student-outcome mr-3" style="background:#86db67">{{ $student_outcome->so_code }}</span>
                             </div>
                             <span>{{ $student_outcome->description }}</span>
 
@@ -85,7 +80,15 @@
                             </div>
                             <div>
                                 @if($student_outcome->checkIfAvailableForExam())
-                                    <a href="{{ url('/s/assessments/' . $student_outcome->id) }}" class="btn btn-sm mt-2 btn-info">Take assessment <i class="fa fa-edit"></i></a>
+                                    
+                                    @if($student_outcome->getExams(Auth::user()->getStudent()->curriculum_id)->count() > 0)
+                                        <a href="{{ url('/s/assessments/' . $student_outcome->id) }}" class="btn btn-sm mt-2 btn-info">Take assessment <i class="fa fa-edit"></i></a>
+                                    @else
+                                        <button disabled="true" class="btn btn-sm mt-2 {{ $student_outcome->checkIfAvailableForExam() ? 'btn-info' : 'btn-secondary' }}">Take Assessment <i class="fa fa-edit"></i>
+                                            </button>
+                                        <div class="text-danger text-center" style="font-size: 13px">No Available Exam</div>
+                                        
+                                    @endif
                                 @else
                                     <button disabled="true" class="btn btn-sm mt-2 {{ $student_outcome->checkIfAvailableForExam() ? 'btn-info' : 'btn-secondary' }}">Take Assessment <i class="fa fa-edit"></i></button>
                                 @endif

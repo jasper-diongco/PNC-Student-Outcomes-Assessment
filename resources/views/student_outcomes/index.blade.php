@@ -36,10 +36,12 @@
 
   </div>
   
-
-  <div v-if="!so_is_saved" class="alert alert-warning">
-    <strong>Note:</strong> Once you clicked and submited the save button. You cannot modify <i>(add, update, remove student outcomes)</i> this version anymore. Instead you can revise to do so.
-  </div>
+  
+  @if(count($program->studentOutcomes) > 0) 
+    <div v-if="!so_is_saved" class="alert alert-warning">
+      <strong>Note:</strong> Once you clicked and submited the save button. You cannot modify <i>(add, update, remove student outcomes)</i> this version anymore. Instead you can revise to do so.
+    </div>
+  @endif
   
   <div id="main-nav-tabs">
     <ul  class="nav nav-tabs" id="myTab" role="tablist">

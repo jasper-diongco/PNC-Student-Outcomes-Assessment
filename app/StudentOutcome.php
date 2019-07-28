@@ -117,8 +117,16 @@ class StudentOutcome extends Model
         return $student_grades;
     }
 
-    public function getRandomExam() {
+    public function getRandomExam($curriculum_id) {
         //need to consider the curriculum
-        return Exam::where('student_outcome_id', $this->id)->where('is_active', true)->inRandomOrder()->first();
+        return Exam::where('student_outcome_id', $this->id)
+            ->where('is_active', true)
+            ->where('curriculum_id', $curriculum_id)
+            ->inRandomOrder()
+            ->first();
+    }
+
+    public function getExams($curriculum_id) {
+        return Exam::where('student_outcome_id', $this->id)->where('is_active', true)->where('curriculum_id', $curriculum_id)->get();
     }
 }
