@@ -35,7 +35,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body @if($dark_bg) style="background: #648466;" @endif>
+<body>
 @if(!$custom_layout)
 <div class="d-flex flex-column sticky-footer-wrapper">
     <header>

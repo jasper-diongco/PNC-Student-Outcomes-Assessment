@@ -157,6 +157,7 @@ class ExamsController extends Controller
             if($is_valid) {
                 //create the exam
                 $exam = Exam::create([
+                    'exam_code' => $this->generate_exam_code(),
                     'student_outcome_id' => $data['student_outcome_id'],
                     'curriculum_id' => $data['curriculum_id'],
                     'description' => $data['description'],
@@ -196,6 +197,26 @@ class ExamsController extends Controller
         }
         
         
+    }
+
+    private function generate_exam_code() {
+        $code = 'EXAM000001';
+
+        $last_exam = Exam::orderBy('exam_code', 'DESC')->first();
+
+        if($last_exam) {
+            $last_code = $last_exam->exam_code;
+
+            $num = substr($last_code, 4);  
+            $num = intval($num);
+            $num += 1;
+
+            $new_code = "EXAM" . sprintf("%'.06d\n", $num);
+
+            $code = $new_code;
+        }
+
+        return $code;
     }
 
 

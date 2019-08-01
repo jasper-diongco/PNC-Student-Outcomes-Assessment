@@ -236,13 +236,14 @@ class TestQuestionsController extends Controller
 
 
 
-        // DB::beginTransaction();
+        DB::beginTransaction();
 
-        // try {
+        try {
 
             $so = StudentOutcome::findOrFail($data['student_outcome_id']);
 
             $test_question = TestQuestion::create([
+                'tq_code' => $this->generate_test_question_code(),
                 'title' => $data['title'],
                 'body' => $data['question_body'],
                 'student_outcome_id' => $data['student_outcome_id'],
@@ -256,29 +257,32 @@ class TestQuestionsController extends Controller
 
             foreach (request('choices') as $choice) {
                 Choice::create([
+                    'ch_code' => $this->generate_choice_code(),
                     'test_question_id' => $test_question->id,
                     'body' => $choice['editorData'],
                     'is_correct' => $choice['is_correct'],
                     'is_active' => true,
                     'user_id' => auth()->user()->id
-
                 ]);
             }
+
+            
+
+            
+
+            DB::commit();
+            // all good
 
             Session::flash('message', 'New Test question successfully added to database');
 
             return $test_question;
 
-        /*
-
-            DB::commit();
-            // all good
         } catch (\Exception $e) {
             DB::rollback();
             // something went wrong
         }
 
-        */
+        
 
     }
 
@@ -293,54 +297,67 @@ class TestQuestionsController extends Controller
 
         //$so = StudentOutcome::findOrFail($data['student_outcome_id']);
 
-        $test_question->update([
-            'title' => $data['title'],
-            'body' => $data['question_body'],
-            'student_outcome_id' => $data['student_outcome_id'],
-            'course_id' => $data['course_id'],
-            'difficulty_level_id' => $data['level_of_difficulty']
-        ]);
+        DB::beginTransaction();
 
-        foreach (request('choices') as $choice) {
+        try {
 
-            if($choice['id'] != null) {
-                $choice_retrieved = Choice::findOrFail($choice['id']);
+            $test_question->update([
+                'title' => $data['title'],
+                'body' => $data['question_body'],
+                'student_outcome_id' => $data['student_outcome_id'],
+                'course_id' => $data['course_id'],
+                'difficulty_level_id' => $data['level_of_difficulty']
+            ]);
 
-                $choice_retrieved->update([
-                    'body' => $choice['editorData'],
-                    'is_correct' => $choice['is_correct'],
-                    'is_active' => true,
-                    'is_correct' => $choice['is_correct']
-                ]);
+            foreach (request('choices') as $choice) {
 
-            } else {    
-                Choice::create([
-                    'test_question_id' => $test_question->id,
-                    'body' => $choice['editorData'],
-                    'is_correct' => $choice['is_correct'],
-                    'is_active' => true,
-                    'user_id' => auth()->user()->id
-                ]);
+                if($choice['id'] != null) {
+                    $choice_retrieved = Choice::findOrFail($choice['id']);
+
+                    $choice_retrieved->update([
+                        'body' => $choice['editorData'],
+                        'is_correct' => $choice['is_correct'],
+                        'is_active' => true,
+                        'is_correct' => $choice['is_correct']
+                    ]);
+
+                } else {    
+                    Choice::create([
+                        'test_question_id' => $test_question->id,
+                        'body' => $choice['editorData'],
+                        'is_correct' => $choice['is_correct'],
+                        'is_active' => true,
+                        'user_id' => auth()->user()->id
+                    ]);
+                }
             }
-        }
 
-        foreach (request('choices_deactivated') as $choice_deactivated) {
+            foreach (request('choices_deactivated') as $choice_deactivated) {
 
-            if($choice_deactivated['id'] != null) {
-                $choice_retrieved_ = Choice::findOrFail($choice_deactivated['id']);
+                if($choice_deactivated['id'] != null) {
+                    $choice_retrieved_ = Choice::findOrFail($choice_deactivated['id']);
 
-                $choice_retrieved_->update([
-                    'body' => $choice_deactivated['editorData'],
-                    'is_correct' => false,
-                    'is_active' => false
-                ]);
+                    $choice_retrieved_->update([
+                        'body' => $choice_deactivated['editorData'],
+                        'is_correct' => false,
+                        'is_active' => false
+                    ]);
 
+                }
             }
+
+            
+
+            DB::commit();
+            // all good
+
+            Session::flash('message', 'Test question successfully updated from database');
+            return $test_question;
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            // something went wrong
         }
-
-        Session::flash('message', 'Test question successfully updated from database');
-
-        return $test_question;
     }
 
     public function validateData() {
@@ -373,4 +390,73 @@ class TestQuestionsController extends Controller
 
         return $test_question;
     }
+
+    private function generate_test_question_code() {
+        $code = 'TQ0000001';
+
+        $last_test_question = TestQuestion::orderBy('tq_code', 'DESC')->first();
+
+        if($last_test_question) {
+            $last_code = $last_test_question->tq_code;
+
+            $num = substr($last_code, 2);  
+            $num = intval($num);
+            $num += 1;
+
+            $new_code = "TQ" . sprintf("%'.07d\n", $num);
+
+            $code = $new_code;
+        }
+
+        return $code;
+    }
+
+    private function generate_choice_code() {
+        $code = 'CH000000001';
+
+        $last_choice = Choice::orderBy('ch_code', 'DESC')->first();
+
+        if($last_choice) {
+            $last_code = $last_choice->ch_code;
+
+            $num = substr($last_code, 2);
+            $num = intval($num);
+            $num += 1;
+
+            $new_code = "CH" . sprintf("%'.09d\n", $num);
+
+            $code = $new_code;
+        }
+
+        return $code;
+    }
+
+
+    // public function generate_codes() {
+    //     $test_questions = TestQuestion::get();
+
+    //     $counter = 1;
+
+    //     foreach ($test_questions as $test_question) {
+    //         $test_question->tq_code = "TQ" . sprintf("%'.07d\n", $counter);
+    //         $test_question->save();
+    //         $counter++;
+    //     }
+
+    //     return "success";
+    // }
+
+    // public function generate_codes_choices() {
+    //     $choices = Choice::get();
+
+    //     $counter = 1;
+
+    //     foreach ($choices as $choice) {
+    //         $choice->ch_code = "CH" . sprintf("%'.09d\n", $counter);
+    //         $choice->save();
+    //         $counter++;
+    //     }
+
+    //     return "success";
+    // }
 }

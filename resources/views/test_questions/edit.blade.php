@@ -30,7 +30,7 @@
 
         <div class="d-flex mb-3">
             <div class="mr-3">
-                <label>ID:</label> {{ $test_question->id }}
+                <label>ID:</label> {{ $test_question->tq_code }}
             </div>
             <div class="mr-3">
                 <i class="fa fa-user text-dark"></i>
@@ -138,7 +138,6 @@
                   <li v-if="choice.is_active" :key="index" class="nav-item ">
                     <a class="nav-link text-dark" :class="{ 'active': index == 0, 'border-bottom-danger': errors.has('choice ' + (index + 1))  }" id="home-tab" data-toggle="tab" :href="'#c' +(index + 1) ">Choice @{{ index + 1 }} 
                          
-                        <small v-if="choice.id != null">- #@{{ choice.id }}</small>
                         <checked-icon v-if="choice.is_correct"></checked-icon>
                         <i v-else class="fa fa-check"></i>
                         <button v-if="choices.length > 3" v-on:click="removeChoice(index)" data-toggle="tooltip" data-placement="top" title="Remove" class="btn btn-sm btn-light"><i class="fa fa-minus text-danger"></i></button></a>

@@ -109,7 +109,7 @@
                                 <div class="avatar bg-white" ><i class="fa fa-question-circle" :style="avatarStyle(test_question.difficulty_level_id)"></i></div>
                             </div>
                             <div>
-                                <div style="font-size: 18px"><span style="font-weight: 600">#@{{ test_question.id }}</span> - @{{ test_question.title }}</div>
+                                <div style="font-size: 18px"><span style="font-weight: 600">@{{ test_question.tq_code }}</span> - @{{ test_question.title }}</div>
 
                                 <div class="text-muted">@{{ getDifficulty(test_question.difficulty_level_id) }} - @{{ test_question.choices.length }} choices </div>
                                 <div style="font-size: 13px" class="text-muted mt-1">
@@ -169,7 +169,7 @@
                                   <div class="avatar bg-white" ><i class="fa fa-question-circle" :style="avatarStyle(test_question.difficulty_level_id)"></i></div>
                               </div>
                               <div>
-                                  <div style="font-size: 18px"><span style="font-weight: 600">#@{{ test_question.id }}</span> - @{{ test_question.title }}</div>
+                                  <div style="font-size: 18px"><span style="font-weight: 600">@{{ test_question.tq_code }}</span> - @{{ test_question.title }}</div>
 
                                   <div class="text-muted">@{{ getDifficulty(test_question.difficulty_level_id) }} - @{{ test_question.choices.length }} choices </div>
                                   <div style="font-size: 13px" class="text-muted mt-1">

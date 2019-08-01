@@ -16,6 +16,7 @@ class CreateAnswerSheetTestQuestionChoicesTable extends Migration
         Schema::create('answer_sheet_test_question_choices', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('answer_sheet_test_question_id');
+            $table->integer('choice_id');
             $table->integer('test_question_id');
             $table->text('body');
             $table->text('body_html');

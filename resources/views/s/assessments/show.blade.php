@@ -18,13 +18,13 @@
             </div>
         </div>
     </div> --}}
-    <div id="app">
+    <div id="app" v-cloak>
         <div class="exam-sidenav">
             <div class="card shadow">
                 <div class="card-body pt-3 text-center ">
                     <h5 class="mx-0"><i class="fa fa-clock text-info"></i> Time Remaining</h5>
                     <div class="time-container text-muted">
-                        21:30
+                        @{{ getTime() }}
                     </div>
                 </div>
             </div>
@@ -45,6 +45,7 @@
                         </div>
                     </div>
                     
+                    <button v-on:click="submitAnswers" class="btn btn-info btn-block my-4">Submit Answers</button>
                 </div>
             </div>
         </div>
@@ -81,7 +82,9 @@
                     </div>
         
                         <div class="d-flex justify-content-end">
-                            <button v-on:click="markTestQuestion" class="btn btn-info mr-2"><i class="fa fa-bookmark"></i> Mark for review</button>
+
+                            <button v-if="selected_test_question.is_marked"  v-on:click="unmarkTestQuestion" class="btn btn-primary mr-2"><i class="fa fa-bookmark"></i> Unmark</button>
+                            <button v-else v-on:click="markTestQuestion" class="btn btn-info mr-2"><i class="fa fa-bookmark"></i> Mark for review</button>
                             <button v-on:click="prevQuestion" class="btn btn-info mr-2" ><i class="fa fa-arrow-circle-left"></i> Back </button>
 
                             <button v-on:click="nextQuestion" class="btn btn-info">Next <i class="fa fa-arrow-circle-right"></i></button>
@@ -104,7 +107,8 @@
             marks: [],
             answer_sheet: @json($answer_sheet),
             selected_test_question: '',
-            selected_course: ''
+            selected_course: '',
+            remaining_time: 0
         },
         methods: {
             getTestQuestionByCourse(course_id) {
@@ -137,7 +141,13 @@
                         //this.templates[i].test_questions[j].is_marked = false;
                         Vue.set(this.templates[i].test_questions[j], 'is_marked', false);
                         Vue.set(this.templates[i].test_questions[j], 'counter', counter);
-                        Vue.set(this.templates[i].test_questions[j], 'is_answered', false);
+
+                        if(this.checkIfAnswered(this.templates[i].test_questions[j].id)) {
+                            Vue.set(this.templates[i].test_questions[j], 'is_answered', true);
+                        } else {
+                            Vue.set(this.templates[i].test_questions[j], 'is_answered', false);
+                        }
+                        
 
 
                         var choices = this.templates[i].test_questions[j].answer_sheet_test_question_choices;
@@ -178,7 +188,7 @@
                     for(var j = 0; j < this.templates[i].test_questions.length; j++) {
                         if(this.templates[i].test_questions[j].counter == counter + 1) {
                             this.selected_test_question = this.templates[i].test_questions[j];
-
+                            this.selectCourse(this.selected_test_question.course_id);
                         }
                     }       
                 }
@@ -191,73 +201,115 @@
                     for(var j = 0; j < this.templates[i].test_questions.length; j++) {
                         if(this.templates[i].test_questions[j].counter == counter - 1) {
                             this.selected_test_question = this.templates[i].test_questions[j];
-
+                            this.selectCourse(this.selected_test_question.course_id);
                         }
                     }       
                 }
             },
             markTestQuestion() {
                 this.selected_test_question.is_marked = true;
-            }
-            // answerQuestion(test_question_id, choice_id) {
-
-            //     for(var i = 0 ; i < this.answers.length; i++) {
-            //         if(this.answers[i].test_question_id == test_question_id) {
-            //             this.answers.splice(i,1);
-            //             break;
-            //         }
-            //     }
-
-            //     this.answers.push({
-            //         test_question_id: test_question_id,
-            //         choice_id: choice_id
-            //     });
-            // },
-            // checkIfChoiceIsSelected(test_question_id,choice_id) {
-            //     var is_selected = false;
-
-            //     for(var i = 0 ; i < this.answers.length; i++) {
-            //         if(this.answers[i].choice_id == choice_id) {
-            //             is_selected = true;
-            //             break;
-            //         }
-            //     }
-
-            //     return is_selected;
-            // },
-            // scroll() {
-
-            //     //$(function() { $("#top").on('click', function() { $("HTML, BODY").animate({ scrollTop: 0 }, 1000); }); });
-
-            //     //var main = document.querySelector('#main-test-questions-content');
-
-            //     setTimeout(() => {
-            //         window.scroll(0, -100);
-            //     }, 100);
+            },
+            unmarkTestQuestion() {
+                this.selected_test_question.is_marked = false;
+            },
+            tickTime() {
+                setInterval(() => {
+                    this.remaining_time -= 1;
+                    if(this.remaining_time <= 0) {
+                        swal.fire({
+                            type: 'success',
+                            title: 'Time is over!',
+                            text: 'Your answer will be submitted automatically.',
+                            confirmButtonColor: '#11c26d'
+                          }).
+                          then(isConfirmed => {
+                          })
+                          .catch(error => {
+                            alert("An Error Has Occured. Please try again.");
+                            console.log(error);
+                          });
+                    }
+                }, 1000);
+            },
+            startTime() {
+                var time = moment(this.answer_sheet.created_at);
+                var now = moment(Date.now());
+                var used_time = now.diff(time,'seconds');
+                if(used_time <= 10) {
+                    used_time = 0;
+                }
+                if((used_time / 60) >  this.answer_sheet.time_limit) {
+                    alert("no remaining time");
+                } else {
+                    this.remaining_time = this.answer_sheet.time_limit * 60 - used_time;
+                    this.tickTime();
+                }
                 
-            // },
-            // markTestQuestion(test_question_id) {
-            //     for(var i = 0; i < this.marks.length; i++) {
-            //         if(test_question_id == this.marks[i]) {
-            //             return this.marks.splice(i, 1);
-            //         }       
-            //     }
-            //     this.marks.push(test_question_id);
-            // },
-            // checkIfMarked(test_question_id) {
-            //     for(var i = 0; i < this.marks.length; i++) {
-            //         if(test_question_id == this.marks[i]) {
-            //             return true;
-            //         }
-            //     }
+            },
+            getTime() {
+                var date = new Date(null);
+                date.setSeconds(this.remaining_time); // specify value for SECONDS here
+                var timeString = date.toISOString().substr(11, 8);
+                return timeString;
+            },
+            submitAnswers() {
+                var isValid = this.validateIfAllIsAnswered();
+                isValid = true;
+                if(isValid) {
+                    ApiClient.post('/s/assessments/' + this.answer_sheet.id, {
+                        answer_sheet_test_questions: this.answer_sheet.answer_sheet_test_questions
+                    })
+                    .then(response => {
+                        console.log(response);
+                    })
+                } else {
+                    swal.fire({
+                        type: 'error',
+                        title: 'Not Valid',
+                        text: 'Please answer all the test questions, before submitting the form',
+                        confirmButtonColor: '#11c26d'
+                      });
+                }
+            },
+            validateIfAllIsAnswered() {
+                var isValid = true;
 
-            //     return false;
-            // }
+                for(var i = 0; i < this.answer_sheet.answer_sheet_test_questions.length; i++) { 
+                    if(!(this.answer_sheet.answer_sheet_test_questions[i].is_answered)) {
+                        isValid = false;
+                        break;
+                    }    
+                }
+
+                return isValid;
+            },
+            checkIfAnswered(test_question_id) {
+                var test_question;
+                var is_answered = false;
+                for(var i = 0; i < this.answer_sheet.answer_sheet_test_questions.length; i++) {
+                    if(this.answer_sheet.answer_sheet_test_questions[i].id == test_question_id) {
+                        this.selected_test_question = this.answer_sheet.answer_sheet_test_questions[i];
+                        test_question = this.selected_test_question;
+                        break;
+                    }               
+                }
+
+
+                for(var i = 0; i < test_question.answer_sheet_test_question_choices.length; i++) {
+                    if(test_question.answer_sheet_test_question_choices[i].is_selected) {
+                        is_answered = true;
+                        break;
+                    }
+                }
+
+                return is_answered;   
+            }
         },
         created() {
             this.createTemplate();
             this.selected_test_question = this.templates[0].test_questions[0];
             this.selected_course = this.courses[0];
+            this.startTime();
             setInterval(() => {
                 MathLive.renderMathInDocument();
             }, 100);

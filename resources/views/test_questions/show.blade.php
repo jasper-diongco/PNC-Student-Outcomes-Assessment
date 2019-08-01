@@ -50,7 +50,7 @@
         <div class="card-body">
             <div class="d-flex mb-3">
                 <div class="mr-3">
-                    <label>ID:</label> {{ $test_question->id }}
+                    <label>ID:</label> {{ $test_question->tq_code }}
                 </div>
                 <div class="mr-3">
                     <i class="fa fa-user text-dark"></i>

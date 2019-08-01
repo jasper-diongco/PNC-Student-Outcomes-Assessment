@@ -146,23 +146,26 @@
 
 <div id="app">
     {{-- <img src="{{ asset('img/pnc_logo_name_small.png') }}" width="200px"> --}}
-    
-    <div class="text-center mt-5" style="color:#4caf50; font-size: 23px;">PNC |<span style="color: #fff;font-weight: 300"> Student Outcomes Assessment</span></div>
+    <div style="width: 130px" class="mb-3">
+            <img src="{{ asset('img/pnc_logo_name_small.png') }}" style="width: 100%"> 
+        </div>
+    <div class="text-center mt-3" style="color:#11c26d; font-size: 23px;">PNC <span style="color: #908e8e; font-weight: 300">| Student Outcomes Assessment</span></div>
 
-    <div class="row mt-4">
+    <div class="row mt-3">
         {{-- <div class="col-md-7">
             <img src="{{ asset('svg/authentication.svg') }}"  class="w-75 mt-5">
         </div>  --}}
-        <div class="col-md-5 mx-auto">
+        <div class="col-md-8 col-lg-5 mx-auto">
             <div class="card shadow">
                 
-                <div class="card-body pt-4 pb-5 px-5">
-                    <div style="width: 130px" class="mx-auto mb-3">
-                        <img src="{{ asset('img/pnc_logo_name_small.png') }}" style="width: 100%"> 
-                    </div>
+                <div class="card-body pt-5 pb-5 px-5">
+                    
                     
                     <form v-on:submit.prevent="login" action="{{ route('login') }}" method="POST">
-                        <h1 class="login-title mb-4" style="font-size: 25px; text-align: center">Login to your account</h1>
+                        <div class="d-flex justify-content-center">
+                            <i class="fa fa-user-circle text-success" style="font-size: 50px"></i>
+                        </div>
+                        <h1 class="login-title mt-1 mb-4 text-center" style="font-size: 25px;"> Login to your account</h1>
                         <div id="input-g-email" class="input-group mb-3">
                           <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1"><i class="fa fa-user"></i></span>

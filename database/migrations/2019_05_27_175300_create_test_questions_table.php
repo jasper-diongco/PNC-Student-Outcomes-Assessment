@@ -24,6 +24,7 @@ class CreateTestQuestionsTable extends Migration
             $table->boolean('is_active')->default(true);
             $table->integer('performance_criteria_id');
             $table->string('ref_id');
+            $table->string('tq_code');
             $table->timestamps();
         });
     }

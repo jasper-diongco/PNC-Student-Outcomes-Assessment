@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\DB;
 use App\AnswerSheet;
 use App\AnswerSheetTestQuestion;
 use App\AnswerSheetTestQuestionChoice;
+use App\Assessment;
+use App\AssessmentDetail;
+use Carbon\Carbon;
 
 class AssessmentsController extends Controller
 {
@@ -80,6 +83,8 @@ class AssessmentsController extends Controller
                         $choice->html = $choice->getHtml();
 
                         $answer_sheet_test_question_choice = new AnswerSheetTestQuestionChoice();
+                        $answer_sheet_test_question_choice->choice_id = $choice->id;
+
                         $answer_sheet_test_question_choice->answer_sheet_test_question_id = $answer_sheet_test_question->id;
                         $answer_sheet_test_question_choice->test_question_id = $test_question->id;
                         $answer_sheet_test_question_choice->body = $choice->body;
@@ -93,7 +98,7 @@ class AssessmentsController extends Controller
 
                 DB::commit();
                 // all good
-
+                $answer_sheet->load('answerSheetTestQuestions');
                 return view('s.assessments.show', compact('courses', 'answer_sheet'));
             } catch (\Exception $e) {
                 DB::rollback();
@@ -105,5 +110,131 @@ class AssessmentsController extends Controller
 
 
         
+    }
+
+    public function store(AnswerSheet $answer_sheet) {
+
+
+        DB::beginTransaction();
+
+        try {
+
+            $answer_sheet->is_submitted = true;
+            $answer_sheet->save();
+
+            $answer_sheet_test_questions = request('answer_sheet_test_questions');
+
+            foreach ($answer_sheet_test_questions as $answer_sheet_test_question) {
+                foreach ($answer_sheet_test_question['answer_sheet_test_question_choices'] as $choice) {
+                    if($choice['is_selected']) {
+                        $answer_sheet_test_question = AnswerSheetTestQuestion::find($choice['answer_sheet_test_question_id']);
+                        foreach ($answer_sheet_test_question->answerSheetTestQuestionChoices as $c) {
+                            $c->is_selected = false;
+                            $c->save();
+                        }
+
+                        $answer_sheet_test_question_choice = AnswerSheetTestQuestionChoice::find($choice['id']);
+                        $answer_sheet_test_question_choice->is_selected = true;
+                        $answer_sheet_test_question_choice->save();
+                    }
+                }
+            }
+
+            $this->recordAssessment($answer_sheet, $answer_sheet_test_questions);
+
+            DB::commit();
+            // all good
+
+            return $answer_sheet;
+        } catch (\Exception $e) {
+            DB::rollback();
+            // something went wrong
+            return response()->json(['message' => 'Server Error'], 500);
+        }
+    }
+
+    private function recordAssessment($answer_sheet, $answer_sheet_test_questions) {
+        $now = Carbon::now();
+        $start_time = $answer_sheet->created_at;
+
+        $total_duration = $now->diffInSeconds($start_time);
+
+        if($total_duration > $answer_sheet->time_limit * 60) {
+            $total_duration = $answer_sheet->time_limit * 60;
+        }
+
+        $assessment = Assessment::where('student_id', $answer_sheet->student_id)->where('student_outcome_id', $answer_sheet->student_outcome_id)->first();
+
+        if($assessment) {
+            $assessment->update([
+                'exam_id' => $answer_sheet->id,
+                'student_id' => $answer_sheet->student_id,
+                'student_outcome_id' => $answer_sheet->student_outcome_id,
+                'time_consumed' => $total_duration
+            ]);
+
+            foreach ($answer_sheet_test_questions as $answer_sheet_test_question) {
+                $choice_id = $this->getChoiceId($answer_sheet_test_question['answer_sheet_test_question_choices']);
+                $is_correct = $this->checkIfCorrect($answer_sheet_test_question['answer_sheet_test_question_choices'], $choice_id);
+
+                $assessment_detail = AssessmentDetail::where('assessment_id', $assessment->id)
+                                        ->where('test_question_id', $answer_sheet_test_question['test_question_id'])
+                                        ->first();
+
+                $assessment_detail->update([
+                    'choice_id' => $choice_id,
+                    'is_correct' => $is_correct
+                ]);
+            }
+
+
+
+        } else {
+            $assessment = Assessment::create([
+                'exam_id' => $answer_sheet->id,
+                'student_id' => $answer_sheet->student_id,
+                'student_outcome_id' => $answer_sheet->student_outcome_id,
+                'time_consumed' => $total_duration
+            ]);
+
+            foreach ($answer_sheet_test_questions as $answer_sheet_test_question) {
+                $choice_id = $this->getChoiceId($answer_sheet_test_question['answer_sheet_test_question_choices']);
+                $is_correct = $this->checkIfCorrect($answer_sheet_test_question['answer_sheet_test_question_choices'], $choice_id);
+                AssessmentDetail::create([
+                    'assessment_id' => $assessment->id,
+                    'test_question_id' => $answer_sheet_test_question['test_question_id'],
+                    'choice_id' => $choice_id,
+                    'is_correct' => $is_correct
+                ]);
+            }
+        }
+
+        
+
+
+    }
+
+    private function getChoiceId($choices) {
+        foreach ($choices as $choice) {
+            if($choice['is_selected']) {
+                return $choice['choice_id'];
+            }
+        }
+
+        return null;
+    }
+
+    private function checkIfCorrect($choices, $choice_id) {
+        if($choice_id == null) {
+            return false;
+        }
+
+        foreach ($choices as $choice) {
+            if($choice['is_correct'] && $choice['choice_id'] == $choice_id) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -342,3 +342,5 @@ Route::get('/s/{student}/obe_curriculum', 's\StudentOBEController@show');
 Route::get('/s/assessments', 's\AssessmentsController@index');
 
 Route::get('/s/assessments/{student_outcome}', 's\AssessmentsController@show');
+
+Route::post('/s/assessments/{answer_sheet}', 's\AssessmentsController@store');

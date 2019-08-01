@@ -62,7 +62,7 @@
         <table class="table table-borderless">
           <thead>
             <tr>
-              <th scope="col">Course ID</th>
+              {{-- <th scope="col">Course ID</th> --}}
               <th scope="col">Course Code</th>
               <th scope="col">Description</th>
               <th scope="col">Units</th>
@@ -84,7 +84,7 @@
             </template>
             <template v-else>
               <tr v-for="course in courses" :key="course.id">
-                <td>@{{ course.id }}</td>
+                {{-- <td>@{{ course.id }}</td> --}}
                 <td>@{{ course.course_code }}</td>
                 <td>@{{ course.description }}</td>
                 <td>@{{ course.lec_unit + course.lab_unit }}</td>
