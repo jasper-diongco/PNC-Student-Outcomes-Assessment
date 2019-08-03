@@ -45,7 +45,12 @@
                         </div>
                     </div>
                     
-                    <button v-on:click="submitAnswers" class="btn btn-info btn-block my-4">Submit Answers</button>
+                    <button :disabled="submitLoading" v-on:click="confirmSubmit" class="btn btn-info btn-block my-4">
+                        Submit Answers 
+                        <div v-if="submitLoading" class="spinner-border spinner-border-sm text-light" role="status">
+                          <span class="sr-only">Loading...</span>
+                        </div>
+                    </button>
                 </div>
             </div>
         </div>
@@ -108,7 +113,9 @@
             answer_sheet: @json($answer_sheet),
             selected_test_question: '',
             selected_course: '',
-            remaining_time: 0
+            remaining_time: 0,
+            interval_id: '',
+            submitLoading: false
         },
         methods: {
             getTestQuestionByCourse(course_id) {
@@ -179,6 +186,13 @@
                     }         
                 }
 
+                ApiClient.post('/s/assessments/select_choice/' + test_question.id, {
+                    answer_sheet_test_question_choices: test_question.answer_sheet_test_question_choices
+                })
+                .then(response => {
+                    //console.log(response);
+                })
+
                 test_question.is_answered = true;
 
             },
@@ -213,9 +227,10 @@
                 this.selected_test_question.is_marked = false;
             },
             tickTime() {
-                setInterval(() => {
+                this.interval_id = setInterval(() => {
                     this.remaining_time -= 1;
                     if(this.remaining_time <= 0) {
+                        //this.submitAnswers(true);
                         swal.fire({
                             type: 'success',
                             title: 'Time is over!',
@@ -223,11 +238,14 @@
                             confirmButtonColor: '#11c26d'
                           }).
                           then(isConfirmed => {
+                            this.submitAnswers(true);
                           })
                           .catch(error => {
                             alert("An Error Has Occured. Please try again.");
                             console.log(error);
                           });
+
+                          window.clearInterval(this.interval_id);
                     }
                 }, 1000);
             },
@@ -239,7 +257,8 @@
                     used_time = 0;
                 }
                 if((used_time / 60) >  this.answer_sheet.time_limit) {
-                    alert("no remaining time");
+                    //alert("no remaining time");
+                    this.submitAnswers(true);
                 } else {
                     this.remaining_time = this.answer_sheet.time_limit * 60 - used_time;
                     this.tickTime();
@@ -252,16 +271,33 @@
                 var timeString = date.toISOString().substr(11, 8);
                 return timeString;
             },
-            submitAnswers() {
+            submitAnswers(time_over) {
                 var isValid = this.validateIfAllIsAnswered();
-                isValid = true;
+
+                if(time_over == true) {
+                    isValid = true;
+                }
+
                 if(isValid) {
+                    this.submitLoading = true;
                     ApiClient.post('/s/assessments/' + this.answer_sheet.id, {
                         answer_sheet_test_questions: this.answer_sheet.answer_sheet_test_questions
                     })
                     .then(response => {
-                        console.log(response);
+                        swal.fire({
+                            type: 'success',
+                            title: 'Good Job!',
+                            text: 'Your answers has been submitted.',
+                            confirmButtonColor: '#11c26d'
+                        })
+                        .then(response => {
+                            window.location.replace(myRootURL + '/s/assessments/show_score?student_id=' + this.answer_sheet.student_id + '&student_outcome_id=' + this.answer_sheet.student_outcome_id);
+                        });
                     })
+                    .catch(err => {
+                        alert("An Error has occured. Please try submitting again");
+                        this.submitLoading = true;
+                    });
                 } else {
                     swal.fire({
                         type: 'error',
@@ -270,6 +306,25 @@
                         confirmButtonColor: '#11c26d'
                       });
                 }
+            },
+            confirmSubmit() {
+                swal.fire({
+                    type: 'question',
+                    title: 'Please confirm',
+                    text: 'do you want to submit your answers?',
+                    showCancelButton: true,
+                    width: '400px',
+                    confirmButtonColor: '#11c26d'
+                  }).
+                  then(isConfirmed => {
+                    if(isConfirmed.value) {
+                        this.submitAnswers();
+                    }
+                  })
+                  .catch(error => {
+                    alert("An Error Has Occured. Please try again.");
+                    console.log(error);
+                  });
             },
             validateIfAllIsAnswered() {
                 var isValid = true;

@@ -340,7 +340,11 @@ Route::get('/s/{student}/obe_curriculum', 's\StudentOBEController@show');
 //assessments routes
 
 Route::get('/s/assessments', 's\AssessmentsController@index');
+Route::get('/s/assessments/show_score', 's\AssessmentsController@show_score');
 
 Route::get('/s/assessments/{student_outcome}', 's\AssessmentsController@show');
 
 Route::post('/s/assessments/{answer_sheet}', 's\AssessmentsController@store');
+
+Route::post('/s/assessments/select_choice/{answer_sheet_test_question}', 's\AssessmentsController@select_choice');
+

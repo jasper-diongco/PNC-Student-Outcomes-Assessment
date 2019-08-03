@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class StudentOutcome extends Model
 {
@@ -74,6 +75,39 @@ class StudentOutcome extends Model
         // }
 
         return $is_available;
+    }
+
+    public function checkIfTaken($student_id) {
+        $assessment = Assessment::where('student_outcome_id', $this->id)
+                            ->where('student_id', $student_id)
+                            ->first();
+
+        if($assessment) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function checkIfExamOngoing($student_id) {
+        $answer_sheet = AnswerSheet::where('student_id', $student_id)
+                                ->where('student_outcome_id', $this->id)
+                                ->first();
+        if($answer_sheet && !$answer_sheet->is_submitted) {
+            
+            $now = Carbon::now();
+            $start_time = Carbon::parse($answer_sheet->created_at);
+
+            $totalDuration = $now->diffInSeconds($start_time);
+
+            if($totalDuration < $answer_sheet->time_limit * 60) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     public function getCoursesGrade() {

@@ -766,3 +766,15 @@ body,
 .new-green-bg {
   background: #cbff90;
 }
+
+.circle-border {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  // background: #f6c23e;
+  border: 3px solid #90ff90;
+  width: 120px;
+  height: 120px;
+  color: #fff;
+}

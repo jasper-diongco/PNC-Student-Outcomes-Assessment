@@ -79,10 +79,14 @@
                                 </div>
                             </div>
                             <div>
-                                @if($student_outcome->checkIfAvailableForExam())
+                                @if($student_outcome->checkIfExamOngoing($student->id))
+                                    <a href="{{ url('/s/assessments/' . $student_outcome->id) }}" class="btn btn-info btn-sm">Continue Assessment <i class="fa fa-arrow-right"></i></a>
+                                @elseif($student_outcome->checkIfTaken($student->id))
+                                    <a href="{{ url('s/assessments/show_score?student_id=' . $student->id . '&student_outcome_id=' . $student_outcome->id) }}" class="btn btn-success btn-sm">View Result <i class="fa fa-file-alt"></i></a>
+                                @elseif($student_outcome->checkIfAvailableForExam())
                                     
                                     @if($student_outcome->getExams(Auth::user()->getStudent()->curriculum_id)->count() > 0)
-                                        <a href="{{ url('/s/assessments/' . $student_outcome->id) }}" class="btn btn-sm mt-2 btn-info">Take assessment <i class="fa fa-edit"></i></a>
+                                        <button v-on:click="confirmAssessment({{ $student_outcome->id }})"  class="btn btn-sm mt-2 btn-info">Take assessment <i class="fa fa-edit"></i></button>
                                     @else
                                         <button disabled="true" class="btn btn-sm mt-2 {{ $student_outcome->checkIfAvailableForExam() ? 'btn-info' : 'btn-secondary' }}">Take Assessment <i class="fa fa-edit"></i>
                                             </button>
@@ -90,7 +94,7 @@
                                         
                                     @endif
                                 @else
-                                    <button disabled="true" class="btn btn-sm mt-2 {{ $student_outcome->checkIfAvailableForExam() ? 'btn-info' : 'btn-secondary' }}">Take Assessment <i class="fa fa-edit"></i></button>
+                                    <button disabled="true" class="btn btn-sm mt-2 btn-secondary">Take Assessment <i class="fa fa-edit"></i></button>
                                 @endif
                             </div>
                         </div>
@@ -106,7 +110,31 @@
 @push('scripts')
     <script>
         new Vue({
-            el: '#app'
+            el: '#app',
+            data: {
+            },
+            methods: {
+                confirmAssessment(student_outcome_id) {
+                    swal.fire({
+                        type: 'question',
+                        title: 'Please confirm',
+                        text: 'do you want to take the assessment?',
+                        showCancelButton: true,
+                        width: '400px',
+                        confirmButtonColor: '#11c26d'
+                      }).
+                      then(isConfirmed => {
+                        if(isConfirmed.value) {
+                            window.location.replace(myRootURL + '/s/assessments/' + student_outcome_id);
+                        }
+                      })
+                      .catch(error => {
+                        alert("An Error Has Occured. Please try again.");
+                        console.log(error);
+                      })
+                    //href="@{{ url('/s/assessments/' . $student_outcome->id) }}"
+                }
+            }
         });
     </script>
 @endpush

@@ -11,23 +11,36 @@ use App\AnswerSheetTestQuestion;
 use App\AnswerSheetTestQuestionChoice;
 use App\Assessment;
 use App\AssessmentDetail;
+use App\Student;
 use Carbon\Carbon;
+use Gate;
 
 class AssessmentsController extends Controller
 {
     public function __construct() {
         $this->middleware("auth");
+
+
     }
 
     public function index() {
 
+        if(!Gate::check('isStud')) {
+            return abort('404', 'Page not found');
+        }
+
         $student_outcomes = auth()->user()->getStudent()->program->studentOutcomes;
+        $student = auth()->user()->getStudent();
 
-
-        return view('s.assessments.index', compact('student_outcomes'));
+        return view('s.assessments.index', compact('student_outcomes', 'student'));
     }
 
     public function show(StudentOutcome $student_outcome) {
+
+        if(!Gate::check('isStud')) {
+            return abort('404', 'Page not found');
+        }
+
         $student = auth()->user()->getStudent();
         
 
@@ -36,6 +49,23 @@ class AssessmentsController extends Controller
                         ->first();
 
         if($answer_sheet) {
+
+
+
+            if($answer_sheet->is_submitted) {
+                return redirect('s/assessments/show_score?student_id=' . $student->id . '&student_outcome_id=' . $student_outcome->id);
+            } 
+
+            /*if (!$answer_sheet->checkIfHasAvailableTime()) {
+                $this->store($answer_sheet);
+                //return "asdsad";
+                //return redirect('s/assessments/show_score?student_id=' . $student->id . '&student_outcome_id=' . $student_outcome->id);
+            }*/
+
+
+
+
+
             $answer_sheet->load('answerSheetTestQuestions');
             $courses = $answer_sheet->exam->getCourses1($student_outcome->id, $student->curriculum_id);
             return view('s.assessments.show', compact('courses', 'answer_sheet'));
@@ -103,7 +133,7 @@ class AssessmentsController extends Controller
             } catch (\Exception $e) {
                 DB::rollback();
                 // something went wrong
-                return response()->json(['message' => 'An error occured'], 500);
+                return abort('500', 'Server Error');
             }
 
         }
@@ -114,6 +144,9 @@ class AssessmentsController extends Controller
 
     public function store(AnswerSheet $answer_sheet) {
 
+        if(!Gate::check('isStud')) {
+            return abort('404', 'Page not found');
+        }
 
         DB::beginTransaction();
 
@@ -144,8 +177,8 @@ class AssessmentsController extends Controller
 
             DB::commit();
             // all good
-
             return $answer_sheet;
+            
         } catch (\Exception $e) {
             DB::rollback();
             // something went wrong
@@ -154,6 +187,11 @@ class AssessmentsController extends Controller
     }
 
     private function recordAssessment($answer_sheet, $answer_sheet_test_questions) {
+
+        if(!Gate::check('isStud')) {
+            return abort('404', 'Page not found');
+        }
+
         $now = Carbon::now();
         $start_time = $answer_sheet->created_at;
 
@@ -167,7 +205,7 @@ class AssessmentsController extends Controller
 
         if($assessment) {
             $assessment->update([
-                'exam_id' => $answer_sheet->id,
+                'exam_id' => $answer_sheet->exam_id,
                 'student_id' => $answer_sheet->student_id,
                 'student_outcome_id' => $answer_sheet->student_outcome_id,
                 'time_consumed' => $total_duration
@@ -191,7 +229,7 @@ class AssessmentsController extends Controller
 
         } else {
             $assessment = Assessment::create([
-                'exam_id' => $answer_sheet->id,
+                'exam_id' => $answer_sheet->exam_id,
                 'student_id' => $answer_sheet->student_id,
                 'student_outcome_id' => $answer_sheet->student_outcome_id,
                 'time_consumed' => $total_duration
@@ -208,10 +246,66 @@ class AssessmentsController extends Controller
                 ]);
             }
         }
+    }
+
+    public function select_choice(AnswerSheetTestQuestion $answer_sheet_test_question) {
+
+        if(!Gate::check('isStud')) {
+            return abort('404', 'Page not found');
+        }
+
+        $r_answer_sheet_test_question_choices = request('answer_sheet_test_question_choices');
+
+        DB::beginTransaction();
+
+        try {
+
+            foreach ($r_answer_sheet_test_question_choices as $c) {
+                $answer_sheet_test_question_choice = AnswerSheetTestQuestionChoice::find($c['id']);
+                $answer_sheet_test_question_choice->is_selected = $c['is_selected'];
+                $answer_sheet_test_question_choice->save();
+            }      
+            DB::commit();
+            // all good
+            return $answer_sheet_test_question;
+        } catch (\Exception $e) {
+            DB::rollback();
+            // something went wrong
+        }
+    }
+
+    public function show_score() {
+
+        if(!Gate::check('isStud')) {
+            return abort('404', 'Page not found');
+        }
+
+        if(auth()->user()->getStudent()->id != request('student_id')) {
+            return abort('404', 'Page not found');
+        }
+
+        $student_id = request('student_id');
+        $student_outcome_id = request('student_outcome_id');
+
+        $student = Student::findOrFail($student_id);
+        $student_outcome = StudentOutcome::findOrFail($student_outcome_id);
+
+        $assessment = Assessment::where('student_id', $student_id)
+                                ->where('student_outcome_id', $student_outcome_id)
+                                ->first();
+        $answer_sheet = AnswerSheet::where('student_id', $student_id)
+                                ->where('student_outcome_id', $student_outcome_id)
+                                ->where('exam_id', $assessment->exam_id)
+                                ->first();
+
+        if($assessment) {
+            return view('s.assessments.show_score', compact('student_outcome', 'student', 'assessment', 'answer_sheet'));
+        } else {
+            abort(404, 'Page not found');
+        }
+
 
         
-
-
     }
 
     private function getChoiceId($choices) {
