@@ -26,7 +26,7 @@
 
                 <div class="mr-3"><label>Program: </label> <span class="text-info fs-19">{{ $program->program_code }}</span></div>
                 <div class="mr-3"><label>Student Outcome: </label> <span class="text-info fs-19">{{ $student_outcome->so_code }}</span></div>
-                <div class="mr-3"><label>Curriculum: </label> <span class="text-info fs-19">{{ $curriculum->name . ' ' . $curriculum->year . ' - revison no. ' . $curriculum->revision_no }}.0</span></div>
+                <div class="mr-3"><label>Curriculum: </label> <span class="text-info fs-19">{{ $curriculum->name . ' ' . $curriculum->year . ' - revision no. ' . $curriculum->revision_no }}.0</span></div>
             </div>
             <div style="width: 200px">
                 <pie-chart :data="pie_data"></pie-chart>
@@ -62,7 +62,7 @@
 
                 <ul class="list-group mt-2">
                   <li class="list-group-item">
-                      <label class="mb-0"><i class="fa fa-fingerprint"></i> Exam ID:</label>  {{ $exam->id }}
+                      <label class="mb-0"><i class="fa fa-fingerprint"></i> Exam ID:</label>  {{ $exam->exam_code }}
                   </li>
                   <li class="list-group-item">
                       <label><i class="fa fa-file-alt text-dark"></i> Description:</label> {{ $exam->description }}
@@ -443,7 +443,7 @@
                 filterByCourse() {
                     this.tableLoading = true;
 
-                    setTimeout(() => {
+                    // setTimeout(() => {
                         this.tableLoading = false;
                         if(this.filter_course_id == '') {
                             if(this.filter_difficulty_level_id != '') {
@@ -464,13 +464,13 @@
 
                         this.paginate(1);
                         
-                    },400);
+                    // },400);
                     
                 },
                 filterByDifficulty() {
                     this.tableLoading = true;
 
-                    setTimeout(() => {
+                    // setTimeout(() => {
                         this.tableLoading = false;
                         if(this.filter_difficulty_level_id == '') {
                             if(this.filter_course_id != '') {
@@ -491,7 +491,7 @@
 
                         this.paginate(1);
                         
-                    },400);
+                    // },400);
                 },
                 displayCourseDesc() {
                     return this.courses.filter(course => {
@@ -580,6 +580,7 @@
 
                 setInterval(() => {
                     MathLive.renderMathInDocument();
+                    Prism.highlightAll();
                 },200);
             }
         });

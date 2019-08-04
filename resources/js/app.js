@@ -67,6 +67,18 @@ Vue.component(
 );
 Vue.component("prism-editor", VuePrismEditor);
 Vue.component("checked-icon", require("./components/CheckedIcon.vue").default);
+
+//Vue.component("html-content", require("./components/HtmlContent.vue").default);
+// Vue.component("html-content", function(resolve, reject) {
+//     setInterval(function() {
+//         // Pass the component definition to the resolve callback
+//         resolve({
+//             props: ["content"],
+//             template: `<div v-html="content"></div>`
+//         });
+//     }, 100);
+// });
+
 Vue.component("course-modal", require("./components/CourseModal.vue").default);
 Vue.component(
     "account-modal",
@@ -168,5 +180,3 @@ window.toast = swal.mixin({
     showConfirmButton: false,
     timer: 3000
 });
-
-

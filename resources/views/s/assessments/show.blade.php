@@ -367,6 +367,7 @@
             this.startTime();
             setInterval(() => {
                 MathLive.renderMathInDocument();
+                Prism.highlightAll();
             }, 100);
         }
     });

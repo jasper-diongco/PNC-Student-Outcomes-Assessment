@@ -12,7 +12,7 @@
         @foreach($courses as $course)
         <h4><i class="fa fa-book text-info"></i> {{ $course->course_code . ' - ' . $course->description }}</h4>
         <label class="mb-4" style="font-weight: 400"><i class="fa fa-question-circle text-success"></i> {{ $exam->countTestQuestionsByCourse($course->id) }} questions</label>
-        <?php $course_test_questions = $exam->getRandomTestQuestionsByCourse($course->id);  ?>
+        <?php $course_test_questions = $exam->getTestQuestionsByCourse($course->id);  ?>
         @foreach($course_test_questions as $test_question)
 
             <div class="card mb-5">
@@ -29,7 +29,7 @@
                     <div class="choices">
                         <div class="row">
                             <?php $letter = 'A';  ?>
-                            @foreach ($test_question->choicesRandom() as $index => $choice)
+                            @foreach ($test_question->choices as $index => $choice)
                             <div class="col-6 mb-3">
                                 <div class="text-dark choice {{ $choice->is_correct ? 'correct-choice' : '' }}" style="height: 100%;">
                                     <div class="d-flex">

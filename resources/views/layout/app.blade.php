@@ -56,28 +56,27 @@
               {{-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button> --}}
-              @if(!$assessment)
-              @auth
-                <div class="dropdown">
-                  <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fa fa-user"></i> 
-                    {{ Auth::user()->first_name . ' ' . Auth::user()->last_name }}
-                  </button>
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    @if(Auth::user()->user_type_id == 'dean' || Auth::user()->user_type_id == 'prof')
-                    <a class="dropdown-item" href="{{ url('/profile/faculty/' . Auth::user()->getFaculty()->id ) }}"><i class="fa fa-user-circle"></i> My Profile</a>
-                    @endif
-                    <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                 document.getElementById('logout-form').submit();">
-                             <i class="fa fa-sign-out-alt"></i>Logout</a>
 
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                        @csrf
-                    </form>
-                  </div>
-                </div>
-            @endauth
-            @endif
+                  @auth
+                    <div class="dropdown">
+                      <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-user"></i> 
+                        {{ Auth::user()->first_name . ' ' . Auth::user()->last_name }}
+                      </button>
+                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        @if(Auth::user()->user_type_id == 'dean' || Auth::user()->user_type_id == 'prof')
+                        <a class="dropdown-item" href="{{ url('/profile/faculty/' . Auth::user()->getFaculty()->id ) }}"><i class="fa fa-user-circle"></i> My Profile</a>
+                        @endif
+                        <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
+                                     document.getElementById('logout-form').submit();">
+                                 <i class="fa fa-sign-out-alt"></i>Logout</a>
+
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
+                      </div>
+                    </div>
+                @endauth
           </div> 
           
         </nav>
@@ -148,6 +147,16 @@
                   @endcan
 
                     @if(Gate::check('isDean') || Gate::check('isSAdmin') || Gate::check('isProf'))
+                        
+                        <!-- Nav Item - Assessments -->
+                        <li class="nav-item {{ $active == 'assessments' ? 'active' : '' }}">
+                          <a class="nav-link" href="{{ url('/assessment_results?college_id=' . Session::get('college_id')) }}">
+                                <div class="d-flex flex-column justify-content-center text-center">
+                                    <i class="fas fa-poll icon-nav"></i>
+                                    <span>Assessments</span>
+                                </div>
+                            </a>   
+                        </li>
 
                         <!-- Nav Item - Test Question -->
                         <li class="nav-item {{ $active == 'test_questions' ? 'active' : '' }}">
@@ -158,6 +167,8 @@
                                 </div>
                             </a>   
                         </li>
+
+                        
 
                         <!-- Nav Item - Programs -->
                         <li class="nav-item {{ $active == 'programs' ? 'active' : '' }}">

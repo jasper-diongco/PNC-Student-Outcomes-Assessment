@@ -348,3 +348,9 @@ Route::post('/s/assessments/{answer_sheet}', 's\AssessmentsController@store');
 
 Route::post('/s/assessments/select_choice/{answer_sheet_test_question}', 's\AssessmentsController@select_choice');
 
+
+//assessment results routes
+
+Route::get('/assessment_results', 'AssessmentResultsController@index');
+Route::get('/assessment_results/{assessment}', 'AssessmentResultsController@show');
+

@@ -9,6 +9,17 @@ class Assessment extends Model
 {
     public $guarded = [];
 
+    public function student() {
+        return $this->belongsTo('App\Student')->with('user');
+    }
+
+    public function studentOutcome() {
+        return $this->belongsTo('App\StudentOutcome')->with('program');
+    }
+
+    public function exam() {
+        return $this->belongsTo('App\Exam');
+    }
 
     public function assessmentDetails() {
         return $this->hasMany('App\AssessmentDetail');

@@ -244,7 +244,7 @@ class ExamsController extends Controller
             return abort('401', 'Unauthorized');
         }
 
-        $test_questions = $exam->getTestQuestions();
+        $test_questions = $exam->examTestQuestions;
         $courses = $exam->getCourses();
 
         //Session::flash('message', 'Exam preview is showing');
