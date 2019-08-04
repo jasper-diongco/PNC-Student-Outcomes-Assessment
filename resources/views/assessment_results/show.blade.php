@@ -150,8 +150,7 @@ var vm = new Vue({
         templates: [],
         answer_sheet: @json($answer_sheet),
         selected_test_questions: [],
-        course_id: '',
-        sorted_test_questions: @json($sorted_test_questions)
+        course_id: ''
     },
     methods: {
         getTestQuestionByCourse(course_id) {

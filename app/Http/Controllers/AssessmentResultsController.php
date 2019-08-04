@@ -62,6 +62,6 @@ class AssessmentResultsController extends Controller
 
         $courses = $answer_sheet->exam->getCourses1($assessment->student_outcome_id, $assessment->student->curriculum_id);
 
-        return view('assessment_results.show', compact('assessment', 'answer_sheet', 'courses', 'sorted_test_questions'));
+        return view('assessment_results.show', compact('assessment', 'answer_sheet', 'courses'));
     }
 }
