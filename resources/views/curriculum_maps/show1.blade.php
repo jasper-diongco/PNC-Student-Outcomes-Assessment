@@ -40,8 +40,12 @@
             <p class="mr-5"><i class="fa fa-file-alt text-primary"></i> <label>Description:</label> <i>No description.</i></p>
           @endif
 
+          <div class="d-flex justify-content-end">
+              <a href="{{ url('/curriculum_mapping/' . $curriculum->id . '/print_curriculum_mapping') }}" target="_blank" class="btn btn-sm btn-info"><i class="fa fa-print"></i> Print</a>
+          </div>
+
           @if (!$curriculum->checkIfLatestVersion())
-              <div class="alert alert-warning">
+              <div class="alert alert-warning mt-3">
                 <i class="fa fa-exclamation-triangle"></i>
                 This is not the latest version of <b>{{ $curriculum->name }}</b> curriculum. View the latest version <a href="{{ url('/curriculum_mapping/' . $curriculum->getLatestVersion()->id) }}">here</a>
               </div>

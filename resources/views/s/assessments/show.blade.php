@@ -296,7 +296,7 @@
                     })
                     .catch(err => {
                         alert("An Error has occured. Please try submitting again");
-                        this.submitLoading = true;
+                        this.submitLoading = false;
                     });
                 } else {
                     swal.fire({

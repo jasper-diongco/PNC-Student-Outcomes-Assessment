@@ -90,6 +90,80 @@ class CurriculumMapsController extends Controller
         ->with('curriculum_mapping_status', $curriculum_mapping_status);
     }
 
+    public function print_curriculum_mapping(Curriculum $curriculum) {
+
+        $templates = $this->create_curriculum_template($curriculum);
+
+        $curriculum_mapping_templates = $this->create_curriculum_mapping_template($templates, $curriculum);
+
+        $so_count = $curriculum->program->studentOutcomes->count();
+        // $curriculum_courses = CurriculumCourse::where('curriculum_id', $curriculum->id)->where('is_active', 1)->with('course')->get();
+        
+        // $curriculum_maps = CurriculumMap::join('curriculum_courses', 'curriculum_courses.id', '=', 'curriculum_maps.curriculum_course_id')
+        //     ->join('curricula', 'curricula.id', '=', 'curriculum_courses.curriculum_id')
+        //     ->select('curriculum_maps.*')
+        //     ->where('curriculum_id', $curriculum->id)
+        //     ->with('learningLevel')
+        //     ->get();
+
+        return view('curriculum_maps.print_curriculum_mapping', compact('curriculum', 'curriculum_mapping_templates', 'so_count'));
+    }
+
+    private function create_curriculum_mapping_template($templates, $curriculum) {
+
+        foreach ($templates as $template) {
+            foreach ($template['curriculum_courses'] as $curriculum_course) {
+                $curriculum_maps = [];
+                foreach ($curriculum->program->studentOutcomes as $student_outcome) {
+                    $curriculum_map = CurriculumMap::where('is_checked', true)
+                                    ->where('curriculum_course_id', $curriculum_course->id)
+                                    ->where('student_outcome_id', $student_outcome->id)
+                                    ->first();
+                    $curriculum_maps[] = $curriculum_map;
+                } 
+
+                $curriculum_course->curriculum_maps = $curriculum_maps;  
+            }
+        }
+
+        return $templates;
+    }
+
+    private function create_curriculum_template($curriculum) {
+        $templates = [];
+
+        for($year = 1; $year <= $curriculum->year_level; $year++) {
+            for($sem = 1; $sem <= 3; $sem++) {
+                $curriculum_courses = CurriculumCourse::where('curriculum_id', $curriculum->id)
+                                        ->where('year_level', $year)
+                                        ->where('semester', $sem)
+                                        ->where('is_active', true)
+                                        ->get();
+
+                $templates[] = [
+                    'year_sem' => $this->numIndex($year) . ' year /' . $this->numIndex($sem) . ' sem',
+                    'curriculum_courses' => $curriculum_courses
+                ];
+            }
+        }
+
+        return $templates;
+    }
+
+    private function numIndex($num) {
+        if($num == 1) {
+            return "1st";
+        } else if ($num == 2) {
+            return "2nd";
+        } else if ($num == 3) {
+            return  "3rd";
+        } else if ($num >= 4) {
+            return $num . "th";
+        } else {
+            return $num;
+        }
+    }
+
     // public function get_curriculum_maps($id) {
     //   //authenticate
     //   if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {

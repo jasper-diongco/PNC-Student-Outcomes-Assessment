@@ -19,6 +19,10 @@
             <div class="mr-4"><i class="fa fa-calendar-check text-primary"></i> <label>Year:</label> {{ $curriculum->year }}</div>
 
             <div class="mr-4"><i class="fa fa-file-alt text-primary"></i> <label>Description:</label> {{ $curriculum->description }}</div>
+
+            <div class="d-flex justify-content-end">
+                <a href="{{ url('/students/' . $student->id . '/obe_curriculum_print') }}" target="_blank" class="btn btn-sm btn-info"><i class="fa fa-print"></i> Print</a>
+            </div>
         </div>
         
         {{-- <h5 class="mt-4 mb-2"><i class="fa fa-file-alt"></i> Grades</h5> --}}

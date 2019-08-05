@@ -128,7 +128,7 @@
       @else
         <div class="d-flex justify-content-end my-3">
           <div>
-              {{-- <button class="btn btn-secondary mr-2 btn-sm">Print <i class="fa fa-print"></i></button>    --}} 
+              <a href="{{ url('/curricula/'. $curriculum->id . '/print_curriculum') }}" target="_blank" class="btn mr-2 btn-sm btn-info">Print <i class="fa fa-print"></i></a>    
           </div>
           @if ($curriculum->checkIfLatestVersion())
             @if(Gate::check('isDean') || Gate::check('isSAdmin'))

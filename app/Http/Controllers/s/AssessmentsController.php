@@ -205,6 +205,7 @@ class AssessmentsController extends Controller
 
         if($assessment) {
             $assessment->update([
+                'assessment_code' => $this->generateAssessmentID(),
                 'exam_id' => $answer_sheet->exam_id,
                 'student_id' => $answer_sheet->student_id,
                 'student_outcome_id' => $answer_sheet->student_outcome_id,
@@ -229,6 +230,7 @@ class AssessmentsController extends Controller
 
         } else {
             $assessment = Assessment::create([
+                'assessment_code' => $this->generateAssessmentID(),
                 'exam_id' => $answer_sheet->exam_id,
                 'student_id' => $answer_sheet->student_id,
                 'student_outcome_id' => $answer_sheet->student_outcome_id,
@@ -246,6 +248,24 @@ class AssessmentsController extends Controller
                 ]);
             }
         }
+    }
+
+    private function generateAssessmentID() {
+        $now = Carbon::now();
+        $new_id = $now->format('Ym') . '0001';
+
+        $assessment = Assessment::where('assessment_code', 'LIKE', $now->format('Ym') . '%')
+            ->orderBy('assessment_code', 'DESC')
+            ->first();
+
+        if($assessment) {
+            $current_count = intval(substr($assessment->assessment_code, 6));
+            $current_count += 1;
+
+            return $now->format('Ym') . sprintf("%'.04d\n", $current_count);
+        }
+
+        return $new_id;
     }
 
     public function select_choice(AnswerSheetTestQuestion $answer_sheet_test_question) {

@@ -20,6 +20,8 @@ class AssessmentResultsController extends Controller
         $programs = Program::where('college_id', request('college_id'))->get();
         $assessments = Assessment::with('student')->with('studentOutcome')->get();
 
+        //$assessments = $this->get_assessments();
+
 
         foreach ($assessments as $assessment) {
             $assessment->score = $assessment->computeScore();
@@ -27,6 +29,45 @@ class AssessmentResultsController extends Controller
         }
 
         return view('assessment_results.index', compact('programs', 'assessments'));
+    }
+
+    public function get_assessments() {
+        $q = request('q');
+        $program_id = request('program_id');
+
+        
+        if($q) {
+            $assessments = Assessment::select('assessments.*')
+                ->join('students', 'students.id', '=', 'assessments.student_id')
+                ->join('users', 'users.id', '=', 'students.user_id')
+                ->with('student')
+                ->with('studentOutcome')
+                ->orWhere('assessment_code', 'LIKE', '%' . $q .'%')
+                ->orWhere('users.first_name', 'LIKE', '%' . $q .'%' )
+                ->orWhere('users.last_name', 'LIKE', '%' . $q .'%' )
+                ->orWhere('users.middle_name', 'LIKE', '%' . $q .'%' )
+                ->orWhere('students.student_id', 'LIKE', '%' . $q .'%' )
+                ->paginate(20);
+        } else if ($program_id) {
+            $assessments = Assessment::select('assessments.*')
+                    ->join('students', 'students.id', '=', 'assessments.student_id')
+                    ->with('student')
+                    ->with('studentOutcome')
+                    ->where('students.program_id', $program_id)
+                    ->paginate(20);
+        } else {
+            $assessments = Assessment::with('student')->with('studentOutcome')->paginate(20);
+        }
+
+        
+
+
+        foreach ($assessments as $assessment) {
+            $assessment->score = $assessment->computeScore();
+            $assessment->is_passed = $assessment->checkIfPassed();
+        }
+
+        return $assessments;
     }
 
     private function sortTestQuestions($exam_test_questions, $answer_sheet_test_questions) {

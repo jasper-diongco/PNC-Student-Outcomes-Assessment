@@ -86,6 +86,7 @@ Route::post('/curricula/{curriculum}/save_curriculum', 'CurriculaController@save
 Route::post('/curricula/{curriculum}/revise', 'CurriculaController@revise');
 Route::post('/curricula/{curriculum}/edit', 'CurriculaController@edit');
 Route::get('/curricula/{curriculum}/deactivated_courses', 'CurriculaController@deactivatedCourses');
+Route::get('/curricula/{curriculum}/print_curriculum', 'CurriculaController@print_curriculum');
 Route::get('/curricula/{curriculum}', 'CurriculaController@show');
 
 // End Curricula Routes
@@ -138,6 +139,8 @@ Route::post('/curriculum_mapping/save_maps', 'CurriculumMapsController@saveMaps'
 Route::post('/curriculum_mapping/{curriculum}/edit', 'CurriculumMapsController@edit');
 
 Route::get('/curriculum_mapping/{curriculum}', 'CurriculumMapsController@show');
+
+Route::get('/curriculum_mapping/{curriculum}/print_curriculum_mapping', 'CurriculumMapsController@print_curriculum_mapping');
 
 Route::get('/curriculum_mapping', 'CurriculumMapsController@index');
 
@@ -302,6 +305,7 @@ Route::get('/exams/{exam}', 'ExamsController@show');
 //OBE Routes
 
 Route::get('/students/{student}/obe_curriculum', 'OBEController@show');
+Route::get('/students/{student}/obe_curriculum_print', 'OBEController@print_obe');
 Route::get('/students/{student}/refresh_student_grades', 'OBEController@refreshStudentGrades');
 
 //Grade Routes
@@ -340,6 +344,7 @@ Route::get('/s/{student}/obe_curriculum', 's\StudentOBEController@show');
 //assessments routes
 
 Route::get('/s/assessments', 's\AssessmentsController@index');
+
 Route::get('/s/assessments/show_score', 's\AssessmentsController@show_score');
 
 Route::get('/s/assessments/{student_outcome}', 's\AssessmentsController@show');
@@ -352,5 +357,6 @@ Route::post('/s/assessments/select_choice/{answer_sheet_test_question}', 's\Asse
 //assessment results routes
 
 Route::get('/assessment_results', 'AssessmentResultsController@index');
+Route::get('/assessment_results/get_assessments', 'AssessmentResultsController@get_assessments');
 Route::get('/assessment_results/{assessment}', 'AssessmentResultsController@show');
 
