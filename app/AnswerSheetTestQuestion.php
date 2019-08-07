@@ -9,6 +9,10 @@ class AnswerSheetTestQuestion extends Model
     public $guarded = [];
 
     public function answerSheetTestQuestionChoices() {
-        return $this->hasMany('App\AnswerSheetTestQuestionChoice');
+        return $this->hasMany('App\AnswerSheetTestQuestionChoice')->orderBy('pos_order', 'ASC');
     }
+
+    // public function getAnswerSheetTestQuestionChoicesOrig() {
+    //     return $this->hasMany('App\AnswerSheetTestQuestionChoice')->orderBy('pos_order', 'ASC');
+    // }
 }

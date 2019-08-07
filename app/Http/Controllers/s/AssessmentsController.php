@@ -75,7 +75,8 @@ class AssessmentsController extends Controller
             $exam = $student_outcome->getRandomExam($student->curriculum_id);
             $courses = $exam->getCourses1($student_outcome->id, $student->curriculum_id);
             
-            $test_questions = $exam->getRandomTestQuestions();
+            //$test_questions = $exam->getRandomTestQuestions();
+            $exam_test_questions = $exam->getRandomExamTestQuestions();
 
             //create answer sheet
             DB::beginTransaction();
@@ -92,34 +93,36 @@ class AssessmentsController extends Controller
 
                 $answer_sheet->save();
 
-                foreach ($test_questions as $test_question) {
-                    $test_question->random_choices = $test_question->choicesRandom();
-                    $test_question->html = $test_question->getHtml();
+                foreach ($exam_test_questions as $exam_test_question) {
+                    $exam_test_question->testQuestion->random_choices = $exam_test_question->testQuestion->choicesRandom();
+                    $exam_test_question->testQuestion->html = $exam_test_question->testQuestion->getHtml();
 
                     $answer_sheet_test_question = new AnswerSheetTestQuestion();
                     $answer_sheet_test_question->answer_sheet_id = $answer_sheet->id;
-                    $answer_sheet_test_question->test_question_id = $test_question->id;
-                    $answer_sheet_test_question->title = $test_question->title;
-                    $answer_sheet_test_question->body = $test_question->body;
-                    $answer_sheet_test_question->body_html = $test_question->html;
+                    $answer_sheet_test_question->test_question_id = $exam_test_question->testQuestion->id;
+                    $answer_sheet_test_question->title = $exam_test_question->testQuestion->title;
+                    $answer_sheet_test_question->body = $exam_test_question->testQuestion->body;
+                    $answer_sheet_test_question->body_html = $exam_test_question->testQuestion->html;
                     $answer_sheet_test_question->student_outcome_id = $answer_sheet->student_outcome_id;
-                    $answer_sheet_test_question->course_id = $test_question->course_id;
-                    $answer_sheet_test_question->difficulty_level_id = $test_question->difficulty_level_id;
-                    $answer_sheet_test_question->performance_criteria_id = $test_question->performance_criteria_id;
+                    $answer_sheet_test_question->course_id = $exam_test_question->testQuestion->course_id;
+                    $answer_sheet_test_question->difficulty_level_id = $exam_test_question->testQuestion->difficulty_level_id;
+                    $answer_sheet_test_question->performance_criteria_id = $exam_test_question->testQuestion->performance_criteria_id;
+                    $answer_sheet_test_question->pos_order = $exam_test_question->pos_order;
 
                     $answer_sheet_test_question->save();
 
-                    foreach ($test_question->random_choices as $choice) {
+                    foreach ($exam_test_question->testQuestion->random_choices as $choice) {
                         $choice->html = $choice->getHtml();
 
                         $answer_sheet_test_question_choice = new AnswerSheetTestQuestionChoice();
                         $answer_sheet_test_question_choice->choice_id = $choice->id;
 
                         $answer_sheet_test_question_choice->answer_sheet_test_question_id = $answer_sheet_test_question->id;
-                        $answer_sheet_test_question_choice->test_question_id = $test_question->id;
+                        $answer_sheet_test_question_choice->test_question_id = $exam_test_question->testQuestion->id;
                         $answer_sheet_test_question_choice->body = $choice->body;
                         $answer_sheet_test_question_choice->body_html = $choice->html;
                         $answer_sheet_test_question_choice->is_correct = $choice->is_correct;
+                        $answer_sheet_test_question_choice->pos_order = $choice->pos_order;
 
                         $answer_sheet_test_question_choice->save();
                     }

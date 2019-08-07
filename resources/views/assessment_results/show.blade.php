@@ -8,7 +8,17 @@
     <div class="card">
         <div class="card-body pt-4">
             <a href="{{ url('/assessment_results?college_id=' . request('college_id')) }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
-            <h1 class="page-header mb-3 mt-3">Assessment Result</h1>
+            
+
+            <div class="d-flex justify-content-between align-items-baseline">
+                <div>
+                    <h1 class="page-header mb-3 mt-3">Assessment Result</h1>
+                </div>
+                <div>
+                    <a href="#" target="_blank" class="btn btn-sm btn-info"><i class="fa fa-print"></i> Print</a>
+                </div>
+                
+            </div>
             <ul class="list-group">
               <li class="list-group-item">
                   <label class="text-dark mr-2"><i class="fa fa-fingerprint"></i> Assessment ID: <span class="fs-19 text-info">{{ $assessment->assessment_code }}</span></label>
@@ -27,6 +37,8 @@
               </li>
               
             </ul>
+
+            
         </div>
     </div>
     

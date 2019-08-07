@@ -94,16 +94,16 @@ class AssessmentResultsController extends Controller
                             ->first();
         //$answer_sheet->load('answerSheetTestQuestions');
 
-        $answer_sheet_test_questions = [];
+        //$answer_sheet_test_questions = [];
 
-        $exam = Exam::findOrFail($answer_sheet->exam_id);
+        //$exam = Exam::findOrFail($answer_sheet->exam_id);
 
-        foreach ($exam->examTestQuestions as $exam_test_question) {
-            $answer_sheet_test_question = AnswerSheetTestQuestion::where('test_question_id', $exam_test_question->test_question_id)
-                ->with('answerSheetTestQuestionChoices')
-                ->first();
-            $answer_sheet_test_questions[] = $answer_sheet_test_question;
-        }
+        // foreach ($exam->examTestQuestions as $exam_test_question) {
+        //     $answer_sheet_test_question = AnswerSheetTestQuestion::where('test_question_id', $exam_test_question->test_question_id)
+        //         ->with('answerSheetTestQuestionChoices')
+        //         ->first();
+        //     $answer_sheet_test_questions[] = $answer_sheet_test_question;
+        // }
 
         //$answer_sheet->answer_sheet_test_questions = $answer_sheet_test_questions;
         //$answer_sheet->load('answerSheetTestQuestions');
@@ -116,6 +116,11 @@ class AssessmentResultsController extends Controller
         //$answer_sheet->answerSheetTestQuestions = $sorted_test_questions;
 
         $courses = $answer_sheet->exam->getCourses1($assessment->student_outcome_id, $assessment->student->curriculum_id);
+
+        $answer_sheet_test_questions = AnswerSheetTestQuestion::where('answer_sheet_id', $answer_sheet->id)
+                ->orderBy('pos_order', 'ASC')
+                ->with('answerSheetTestQuestionChoices')
+                ->get();
 
         return view('assessment_results.show', compact('assessment', 'answer_sheet', 'courses', 'answer_sheet_test_questions'));
     }

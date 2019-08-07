@@ -155,6 +155,12 @@ class Exam extends Model
             ->get();
     }
 
+    public function getRandomExamTestQuestions() {
+        return ExamTestQuestion::where('exam_id', $this->id)
+            ->inRandomOrder()
+            ->get();
+    }
+
     public function getTestQuestionsByCourse($course_id='') {
         return TestQuestion::select('test_questions.*')
             ->join('exam_test_questions', 'exam_test_questions.test_question_id', '=',  'test_questions.id')
