@@ -37,7 +37,7 @@
                         <div class="d-flex">
                             <div class="mr-2">
                                 <div class="choice-num {{ $choice->is_correct ? 'correct' : '' }}">
-                                    {{ $index + 1 }}
+                                    {{ chr($index + 65) }}
                                 </div>
                             </div>
                             <div>

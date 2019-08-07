@@ -103,6 +103,24 @@ class TestQuestionsController extends Controller
         return view('test_questions.index', compact('student_outcome', 'course', 'easy_count', 'average_count', 'difficult_count', 'deactivated_test_questions'));
     }
 
+    // public function set_choices_order() {
+    //     $test_questions = TestQuestion::all();
+
+    //     foreach ($test_questions as $test_question) {
+    //         $choices = $test_question->choices;
+    //         $counter = 1;
+
+    //         foreach ($choices as $choice) {
+    //             $choice->pos_order = $counter;
+    //             $choice->save();
+
+    //             $counter++;
+    //         }
+    //     }
+
+    //     return "OK";
+    // }
+
     public function search_deactivated() {
 
         //authenticate
@@ -255,6 +273,8 @@ class TestQuestionsController extends Controller
                 'ref_id' => $data['ref_id']
             ]);
 
+            $counter = 1;
+
             foreach (request('choices') as $choice) {
                 Choice::create([
                     'ch_code' => $this->generate_choice_code(),
@@ -262,8 +282,11 @@ class TestQuestionsController extends Controller
                     'body' => $choice['editorData'],
                     'is_correct' => $choice['is_correct'],
                     'is_active' => true,
-                    'user_id' => auth()->user()->id
+                    'user_id' => auth()->user()->id,
+                    'pos_order' => $counter
                 ]);
+
+                $counter++;
             }
 
             
@@ -309,7 +332,10 @@ class TestQuestionsController extends Controller
                 'difficulty_level_id' => $data['level_of_difficulty']
             ]);
 
+            $counter = 1;
+
             foreach (request('choices') as $choice) {
+
 
                 if($choice['id'] != null) {
                     $choice_retrieved = Choice::findOrFail($choice['id']);
@@ -318,18 +344,23 @@ class TestQuestionsController extends Controller
                         'body' => $choice['editorData'],
                         'is_correct' => $choice['is_correct'],
                         'is_active' => true,
-                        'is_correct' => $choice['is_correct']
+                        'is_correct' => $choice['is_correct'],
+                        'pos_order' => $counter
                     ]);
 
                 } else {    
                     Choice::create([
                         'test_question_id' => $test_question->id,
+                        'ch_code' => $this->generate_choice_code(),
                         'body' => $choice['editorData'],
                         'is_correct' => $choice['is_correct'],
                         'is_active' => true,
-                        'user_id' => auth()->user()->id
+                        'user_id' => auth()->user()->id,
+                        'pos_order' => $counter
                     ]);
                 }
+
+                $counter++;
             }
 
             foreach (request('choices_deactivated') as $choice_deactivated) {

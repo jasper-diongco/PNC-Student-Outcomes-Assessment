@@ -168,6 +168,8 @@ class ExamsController extends Controller
                 ]);
 
 
+                $counter = 1;
+
                 foreach ($test_questions as $test_q) {
                     // $exam_test_question = new ExamTestQuestion();
                     // $exam_test_question->exam_id = $exam->id;
@@ -175,8 +177,11 @@ class ExamsController extends Controller
                     // $exam_test_question->create();
                     $exam_test_question = ExamTestQuestion::create([
                         'exam_id' => $exam->id,
-                        'test_question_id' => $test_q['id']
+                        'test_question_id' => $test_q['id'],
+                        'pos_order' => $counter
                     ]);
+
+                    $counter++;
 
                     $exam_test_questions[] = $exam_test_question;
                 }
@@ -197,6 +202,24 @@ class ExamsController extends Controller
         }
         
         
+    }
+
+    public function generate_pos_order() {
+        $exams = Exam::all();
+
+        foreach ($exams as $exam) {
+            $exam_test_questions = $exam->examTestQuestions;
+
+            $counter = 1;
+
+            foreach ($exam_test_questions as $exam_test_question) {
+                $exam_test_question->pos_order = $counter;
+                $exam_test_question->save();
+                $counter++;
+            }
+        }
+
+        return "OK";
     }
 
     private function generate_exam_code() {
@@ -244,12 +267,22 @@ class ExamsController extends Controller
             return abort('401', 'Unauthorized');
         }
 
-        $test_questions = $exam->examTestQuestions;
+        $exam_test_questions = $exam->examTestQuestions;
         $courses = $exam->getCourses();
 
-        //Session::flash('message', 'Exam preview is showing');
+        // Session::flash('message', 'Exam preview is showing');
 
-        return view('exams.preview', compact('exam', 'test_questions', 'courses'));
+        return view('exams.preview', compact('exam', 'exam_test_questions', 'courses'));
+    }
+
+    public function print_answer_key(Exam $exam) {
+        //authenticate
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
+
+
+        return view('exams.print_answer_key', compact('exam'));
     }
 
     public function deactivate(Exam $exam) {

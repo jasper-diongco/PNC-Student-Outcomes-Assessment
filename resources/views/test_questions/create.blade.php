@@ -112,7 +112,7 @@
 
             <ul class="nav nav-tabs" id="myTab" role="tablist">
               <li v-for="(choice, index) in choices" :key="index" class="nav-item ">
-                <a class="nav-link text-dark" :class="{ 'active': index == 0, 'border-bottom-danger': errors.has('choice ' + (index + 1))  }" id="home-tab" data-toggle="tab" :href="'#c' +(index + 1) ">Choice @{{ index + 1 }} 
+                <a class="nav-link text-dark" :class="{ 'active': index == 0, 'border-bottom-danger': errors.has('choice ' + (index + 1))  }" id="home-tab" data-toggle="tab" :href="'#c' +(index + 1) ">Choice @{{ numToLetter(index + 1) }} 
                     <checked-icon v-if="choice.is_correct"></checked-icon>
                     <i v-else class="fa fa-check"></i>
                     <button v-if="choices.length > 3" v-on:click="removeChoice(index)" data-toggle="tooltip" data-placement="top" title="Remove" class="btn btn-sm btn-light"><i class="fa fa-minus text-danger"></i></button></a>
@@ -160,7 +160,7 @@
                     v-validate="'required'"
                     :class="{ 'is-invalid': errors.has('correct answer') }">
                     <option value="" class="d-none">Select Correct Answer</option>
-                    <option v-for="(choice, index) in choices" :value="index">Choice @{{ index + 1 }}</option>
+                    <option v-for="(choice, index) in choices" :value="index">Choice @{{ numToLetter(index + 1) }}</option>
                 </select>
                 <div class="invalid-feedback">@{{ errors.first('correct answer') }}</div>
             </div>
@@ -352,6 +352,11 @@
                 }
             },
             methods: {
+                numToLetter(num) {
+                    num = num + 64;
+
+                    return String.fromCharCode(num);
+                },
                 addChoice() {
                     this.choices.push({
                         is_correct: false,

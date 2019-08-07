@@ -149,12 +149,13 @@ var vm = new Vue({
         counter: 1,
         templates: [],
         answer_sheet: @json($answer_sheet),
+        answer_sheet_test_questions: @json($answer_sheet_test_questions),
         selected_test_questions: [],
         course_id: ''
     },
     methods: {
         getTestQuestionByCourse(course_id) {
-            return this.answer_sheet.answer_sheet_test_questions.filter(answer_sheet_test_question => {
+            return this.answer_sheet_test_questions.filter(answer_sheet_test_question => {
                 return answer_sheet_test_question.course_id == course_id;
             });
         },
@@ -198,9 +199,9 @@ var vm = new Vue({
         checkIfAnswered(test_question_id) {
             var test_question;
             var is_answered = false;
-            for(var i = 0; i < this.answer_sheet.answer_sheet_test_questions.length; i++) {
-                if(this.answer_sheet.answer_sheet_test_questions[i].id == test_question_id) {
-                    test_question = this.answer_sheet.answer_sheet_test_questions[i];
+            for(var i = 0; i < this.answer_sheet_test_questions.length; i++) {
+                if(this.answer_sheet_test_questions[i].id == test_question_id) {
+                    test_question = this.answer_sheet_test_questions[i];
                     break;
                 }               
             }
@@ -239,7 +240,7 @@ var vm = new Vue({
 
                     this.selected_test_questions = this.selected_test_questions.concat(test_questions);
                 }
-                //this.selected_test_questions = this.answer_sheet.answer_sheet_test_questions;
+                //this.selected_test_questions = this.answer_sheet_test_questions;
             } else {
                 this.selected_test_questions = this.getTestQuestionByCourse(this.course_id);
             }
@@ -257,6 +258,7 @@ var vm = new Vue({
         this.createTemplate();
         this.selected_test_questions = this.getTestQuestionByCourse(this.templates[0].course.id);
         this.course_id = this.courses[0].id;
+        //this.answer_sheet_test_questions = this.answer_sheet_test_questions;
 
         setInterval(() => {
             MathLive.renderMathInDocument();

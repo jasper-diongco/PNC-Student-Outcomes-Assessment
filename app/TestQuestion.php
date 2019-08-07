@@ -11,7 +11,21 @@ class TestQuestion extends Model
 
 
     public function choices() {
-        return $this->hasMany('App\Choice')->where('is_active', true);
+        return $this->hasMany('App\Choice')->where('is_active', true)->orderBy('pos_order', 'ASC');
+    }
+
+    public function getCorrectAnswer() {
+        $choices = $this->choices;
+        $correct_answer;
+
+        foreach ($choices as $choice) {
+            if($choice->is_correct) {
+                $correct_answer = $choice;
+                break;
+            }
+        }
+
+        return $correct_answer;
     }
 
     public function choicesRandom() {

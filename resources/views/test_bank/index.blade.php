@@ -92,7 +92,7 @@
                                 <div class="d-flex justify-content-between align-items-baseline">
                                     <div class="d-flex">
                                         <div class="mr-3">
-                                            <div class="avatar new-green-bg" style="color:#858585"><i class="fa fa-book"></i></div>
+                                            <div class="avatar" style="color:white; background: #4caf50;"><i class="fa fa-book"></i></div>
                                         </div>
                                         <div>
                                             <div style="font-size: 16px">@{{ course_mapped.course_code }} - @{{ course_mapped.description }}</div>

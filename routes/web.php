@@ -213,6 +213,8 @@ Route::put('/students/{student}', 'StudentsController@update');
 
 Route::get('/test_questions', 'TestQuestionsController@index');
 
+// Route::get('/test_questions/set_choices_order', 'TestQuestionsController@set_choices_order');
+
 Route::get('/test_questions/search_deactivated', 'TestQuestionsController@search_deactivated');
 
 Route::get('/test_questions/create', 'TestQuestionsController@create');
@@ -292,10 +294,12 @@ Route::get('/test_bank/get_curriculum_courses_mapped/{student_outcome_id}', 'Tes
 // Exam routes
 
 Route::get('/exams', 'ExamsController@index');
+// Route::get('/exams/generate_pos_order', 'ExamsController@generate_pos_order');
 Route::get('/exams/get_exams', 'ExamsController@get_exams');
 Route::get('/exams/create', 'ExamsController@create');
 Route::post('/exams', 'ExamsController@store');
 Route::get('/exams/{exam}/preview', 'ExamsController@preview');
+Route::get('/exams/{exam}/print_answer_key', 'ExamsController@print_answer_key');
 Route::post('/exams/{exam}/deactivate', 'ExamsController@deactivate');
 Route::post('/exams/{exam}/activate', 'ExamsController@activate');
 Route::get('/exams/{exam}', 'ExamsController@show');

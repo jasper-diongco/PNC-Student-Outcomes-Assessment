@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Program;
 use App\Assessment;
 use App\AnswerSheet;
+use App\AnswerSheetTestQuestion;
 use App\Exam;
 
 class AssessmentResultsController extends Controller
@@ -91,9 +92,22 @@ class AssessmentResultsController extends Controller
                             ->where('exam_id', $assessment->exam_id)
                             ->where('student_outcome_id', $assessment->student_outcome_id)
                             ->first();
-        $answer_sheet->load('answerSheetTestQuestions');
+        //$answer_sheet->load('answerSheetTestQuestions');
+
+        $answer_sheet_test_questions = [];
 
         $exam = Exam::findOrFail($answer_sheet->exam_id);
+
+        foreach ($exam->examTestQuestions as $exam_test_question) {
+            $answer_sheet_test_question = AnswerSheetTestQuestion::where('test_question_id', $exam_test_question->test_question_id)
+                ->with('answerSheetTestQuestionChoices')
+                ->first();
+            $answer_sheet_test_questions[] = $answer_sheet_test_question;
+        }
+
+        //$answer_sheet->answer_sheet_test_questions = $answer_sheet_test_questions;
+        //$answer_sheet->load('answerSheetTestQuestions');
+        
 
         //$exam_test_questions = $exam->load('examTestQuestions');
 
@@ -103,6 +117,6 @@ class AssessmentResultsController extends Controller
 
         $courses = $answer_sheet->exam->getCourses1($assessment->student_outcome_id, $assessment->student->curriculum_id);
 
-        return view('assessment_results.show', compact('assessment', 'answer_sheet', 'courses'));
+        return view('assessment_results.show', compact('assessment', 'answer_sheet', 'courses', 'answer_sheet_test_questions'));
     }
 }

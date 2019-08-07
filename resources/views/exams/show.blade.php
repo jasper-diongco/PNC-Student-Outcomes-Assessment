@@ -31,6 +31,18 @@
             <div style="width: 200px">
                 <pie-chart :data="pie_data"></pie-chart>
             </div>
+
+            <div class="d-flex justify-content-end mt-3">
+              @if(!$exam->is_active)
+                <button v-on:click="activateExam" class="btn btn-sm btn-info mr-2"><i class="fa fa-history"></i> Activate</button>
+              @else
+                <button v-on:click="archiveExam" class="btn btn-sm mr-2"><i class="fa fa-archive"></i> Archive</button>
+                <a href="{{ url('/exams/' . $exam->id . '/print_answer_key' ) }}" target="_blank" class="btn btn-sm btn-info mr-2">Print Answer Key <i class="fa fa-print"></i></a>
+
+                <a href="{{ url('/exams/'. $exam->id .'/preview?program_id='. request('program_id') .'&student_outcome_id=' . request('student_outcome_id'). '&curriculum_id='. request('curriculum_id')) }}" class="btn btn-primary btn-sm">Preview <i class="fa fa-external-link-alt"></i></a>
+                
+              @endif
+            </div>
         </div>
         
         @if(!$exam->is_active)
@@ -39,14 +51,7 @@
           </div>
         @endif
 
-        <div class="d-flex justify-content-end">
-          @if(!$exam->is_active)
-            <button v-on:click="activateExam" class="btn btn-sm btn-info mr-2"><i class="fa fa-history"></i> Activate</button>
-          @else
-            <button v-on:click="archiveExam" class="btn btn-sm mr-2"><i class="fa fa-archive"></i> Archive</button>
-            <a href="{{ url('/exams/'. $exam->id .'/preview?program_id='. request('program_id') .'&student_outcome_id=' . request('student_outcome_id'). '&curriculum_id='. request('curriculum_id')) }}" class="btn btn-info btn-sm">Preview <i class="fa fa-external-link-alt"></i></a>
-          @endif
-        </div>
+        
         <div id="main-nav-tabs">
             <ul class="nav nav-tabs" id="myTab" role="tablist">
               <li class="nav-item">
@@ -133,20 +138,31 @@
                     <div class="bg-white p-3">No Test question found.</div>         
                 </template>
                 <template v-else-if="!tableLoading">
-                    <ul class="list-group">
-                      <li v-for="test_question in paginated_test_questions" :key="test_question.id" class="list-group-item">
+                    <ul class="list-group" id="list-exam-test-questions">
+                      <li v-for="test_question in show_test_questions" :key="test_question.id" class="list-group-item">
                             <div class="d-flex justify-content-between align-items-baseline">
                                 <div class="d-flex">
                                     <div class="mr-3">
-                                        <div class="avatar bg-white" ><i class="fa fa-question-circle" :style="avatarStyle(test_question.difficulty_level_id)"></i></div>
+                                        {{-- <div class="avatar"><i class="fa fa-question-circle" :style="avatarStyle(test_question.difficulty_level_id)"></i></div> --}}
+                                        <div class="avatar" :style="avatarStyle(test_question.difficulty_level_id)">
+                                          @{{ test_question.counter }}
+                                        </div>
                                     </div>
                                     <div>
-                                        <div style="font-size: 18px"><span style="font-weight: 600">@{{ test_question.tq_code }}</span> - @{{ test_question.title }}</div>
-                                        <div class="text-muted">@{{ getDifficulty(test_question.difficulty_level_id) }} - @{{ test_question.choices.length }} choices</div>
+                                        <div style="font-size: 18px">
+
+                                          <div class="mb-1">{{-- <i class="fa fa-fingerprint"></i> --}} ID: @{{ test_question.tq_code }}</div>
+                                          
+                                          <div class="mb-1" style="font-weight: 600">
+                                            <i class="fa fa-file-alt"></i> @{{ test_question.title }}
+                                          </div> 
+                                        </div>
+                                        <div  class="text-muted mb-1">@{{ getDifficulty(test_question.difficulty_level_id) }} - @{{ test_question.choices.length }} choices | Correct Answer &mdash; <span class="text-success font-weight-bold">@{{ test_question.correct_answer }}</span></div>
+                                        <div class="text-muted mb-1" style="font-size: 14px"><i class="fa fa-book"></i> @{{ test_question.course.description }} </div>
                                     </div>   
                                 </div>
                                 <div>
-                                    <a v-on:click="getPreview(test_question.id)" href="#" data-toggle="modal" data-target="#previewModal" class="btn btn-sm btn-secondary"><i class="fa fa-search"></i></a>                           
+                                    <a v-on:click="getPreview(test_question.id)" href="#" data-toggle="modal" data-target="#previewModal" class="btn btn-sm">View <i class="fa fa-search"></i></a>                           
                                 </div>
                             </div>
                         </li>
@@ -158,9 +174,9 @@
                     </div>
                 </template>
 
-                <div class="text-muted mt-3">Showing @{{ paginated_test_questions.length }} records</div>
+                <div class="text-muted mt-3">Showing @{{ show_test_questions.length }} records</div>
 
-                <div v-if="!tableLoading" class="d-flex justify-content-end">
+{{--                 <div v-if="!tableLoading" class="d-flex justify-content-end">
                     <nav aria-label="..." >
                       <ul class="pagination">
                         <li class="page-item" :class="{'disabled': current_page <= 1}">
@@ -173,7 +189,7 @@
                         </li>
                       </ul>
                     </nav>
-                </div>
+                </div> --}}
 
                 {{-- <div class="card">
                     <div class="card-body">
@@ -377,17 +393,21 @@
             },
             methods: {
                 avatarStyle(difficulty_level_id) {
-                    var color = '';
+                    var backgroundColor = '';
                     if(difficulty_level_id == 1) {
-                        color = '#cbff90';
+                        backgroundColor = '#cbff90';
+                        color = '#4caf50';
                     } else if (difficulty_level_id == 2) {
-                        color = '#fff375';
+                        backgroundColor = '#fff375';
+                        color = '#ffc107';
                     } else if (difficulty_level_id == 3) {
-                        color = '#f28b82';
+                        backgroundColor = '#f28b82';
+                        color = '#d04b42';
                     }
                     
 
                     return {
+                        backgroundColor,
                         color
                     };
                 },
@@ -425,7 +445,7 @@
 
                     vm.tableLoading = true;
 
-                    setTimeout(() => {
+                    // setTimeout(() => {
                         vm.tableLoading = false;
                         if(vm.searchText == '') {
                             return vm.filterByCourse();
@@ -438,7 +458,7 @@
                         });
 
                         vm.paginate(1);
-                    },400);
+                    // },400);
                 }, 400),  
                 filterByCourse() {
                     this.tableLoading = true;
@@ -568,15 +588,41 @@
                       })
                     }
                   });
+                },
+                setNumber() {
+                  for(var i = 0; i < this.test_questions.length; i++) {
+                    //this.test_questions[i].counter = i + 1;
+                    Vue.set(this.test_questions[i], 'counter', i+1);
+                    this.getCorrectAnswer(this.test_questions[i]);
+                  }
+                },
+                getCorrectAnswer(test_question) {
+                  for(var i = 0; i < test_question.choices.length; i++) {
+                    if(test_question.choices[i].is_correct) {
+                      Vue.set(test_question, 'correct_answer', String.fromCharCode(i + 65));
+                      Vue.set(test_question, 'course', this.getCourse(test_question.course_id))
+                      break;
+                    }
+                  }
+                },
+                getCourse(course_id) {
+                  for(var i = 0; i < this.courses.length; i++) {
+                    if(this.courses[i].id == course_id) {
+                      return this.courses[i];
+                    }
+                  }
                 }
             },
             created() {
-                this.filter_course_id = this.courses[0].id;
+                //this.filter_course_id = this.courses[0].id;
+                this.filter_course_id = "";
                 this.filterByCourse();
 
                 this.pie_data.datasets[0].data[0] = this.countByDifficulty(1);
                 this.pie_data.datasets[0].data[1] = this.countByDifficulty(2);
                 this.pie_data.datasets[0].data[2] = this.countByDifficulty(3);
+
+                this.setNumber();
 
                 setInterval(() => {
                     MathLive.renderMathInDocument();

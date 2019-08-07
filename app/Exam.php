@@ -17,6 +17,10 @@ class Exam extends Model
         return $this->belongsTo('App\User');
     }
 
+    public function studentOutcome() {
+        return $this->belongsTo('App\StudentOutcome');
+    }
+
     public static function getRequirements($student_outcome_id='', $curriculum_id=''){
         $requirements = [];
         $student_outcome = StudentOutcome::find($student_outcome_id);
@@ -140,6 +144,7 @@ class Exam extends Model
             ->where('exam_test_questions.exam_id', $this->id)
             ->with('choices')
             ->with('user')
+            ->orderBy('exam_test_questions.pos_order', 'ASC')
             ->get();
     }
     public function getRandomTestQuestions() {

@@ -101,7 +101,7 @@
             </div>
           </template>
           <template v-else>
-            <ul class="list-group">
+            <ul class="list-group" id="list-exam-test-questions">
               <li v-for="test_question in test_questions" :key="test_question.id" class="list-group-item">
                     <div class="d-flex justify-content-between align-items-baseline">
                         <div class="d-flex">
@@ -109,9 +109,16 @@
                                 <div class="avatar bg-white" ><i class="fa fa-question-circle" :style="avatarStyle(test_question.difficulty_level_id)"></i></div>
                             </div>
                             <div>
-                                <div style="font-size: 18px"><span style="font-weight: 600">@{{ test_question.tq_code }}</span> - @{{ test_question.title }}</div>
+                                <div style="font-size: 18px">
+                                  <div class="mb-1">{{-- <i class="fa fa-fingerprint"></i> --}} ID: @{{ test_question.tq_code }}</div>
+                                  
+                                  <div class="mb-1" style="font-weight: 600">
+                                    <i class="fa fa-file-alt"></i> @{{ test_question.title }}
+                                  </div> 
+                                </div>
 
-                                <div class="text-muted">@{{ getDifficulty(test_question.difficulty_level_id) }} - @{{ test_question.choices.length }} choices </div>
+                                <div  class="text-muted mb-1">@{{ getDifficulty(test_question.difficulty_level_id) }} - @{{ test_question.choices.length }} choices | Correct Answer &mdash; <span class="text-success font-weight-bold">@{{ test_question.correct_answer }}</span></div>
+
                                 <div style="font-size: 13px" class="text-muted mt-1">
                                   <i class="fa fa-user"></i> @{{ test_question.user.first_name + ' ' + test_question.user.last_name }} | @{{ parseDate(test_question.created_at) }}
                                 </div>
@@ -387,6 +394,9 @@
                             this.links = response.data.links;
                             this.totalPagination = Math.ceil(this.meta.total / this.meta.per_page);
                             this.tableLoading = false;
+                            for(var i = 0 ; i < this.test_questions.length; i++) {
+                              this.getCorrectAnswer(this.test_questions[i]);
+                            }
                         })
                         .catch(err => {
                             console.log(err);
@@ -454,12 +464,23 @@
                         this.previewLoading = false;
 
                     })
+                },
+                getCorrectAnswer(test_question) {
+                  for(var i = 0; i < test_question.choices.length; i++) {
+                    if(test_question.choices[i].is_correct) {
+                      Vue.set(test_question, 'correct_answer', String.fromCharCode(i + 65));
+                      break;
+                    }
+                  }
                 }
             },
             created() {
+
+
                 setTimeout(() => {
                     this.getTestQuestions();
                     this.getCreators();
+
                 }, 1000);
                 setInterval(() => {
                     MathLive.renderMathInDocument();

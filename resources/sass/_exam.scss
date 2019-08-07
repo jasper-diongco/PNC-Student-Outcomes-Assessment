@@ -56,3 +56,9 @@
 .choice-correct {
     border: 1px solid #68ea68 !important;
 }
+
+#list-exam-test-questions li {
+    margin-bottom: 10px;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.13);
+    border: none;
+}
