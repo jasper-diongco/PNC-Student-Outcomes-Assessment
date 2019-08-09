@@ -124,4 +124,23 @@ class AssessmentResultsController extends Controller
 
         return view('assessment_results.show', compact('assessment', 'answer_sheet', 'courses', 'answer_sheet_test_questions'));
     }
+
+    public function print_assessment_result(Assessment $assessment) {
+        $answer_sheet = AnswerSheet::where('student_id', $assessment->student_id)
+                            ->where('exam_id', $assessment->exam_id)
+                            ->where('student_outcome_id', $assessment->student_outcome_id)
+                            ->first();
+
+        return view('assessment_results.print_assessment_result', compact('assessment', 'answer_sheet', 'answer_sheet'));
+    }
+
+
+    public function print_answer_key(Assessment $assessment) {
+        $answer_sheet = AnswerSheet::where('student_id', $assessment->student_id)
+                            ->where('exam_id', $assessment->exam_id)
+                            ->where('student_outcome_id', $assessment->student_outcome_id)
+                            ->first();
+
+        return view('assessment_results.print_answer_key', compact('assessment', 'answer_sheet'));
+    }
 }

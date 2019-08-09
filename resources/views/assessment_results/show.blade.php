@@ -15,7 +15,8 @@
                     <h1 class="page-header mb-3 mt-3">Assessment Result</h1>
                 </div>
                 <div>
-                    <a href="#" target="_blank" class="btn btn-sm btn-info"><i class="fa fa-print"></i> Print</a>
+                    <a href="{{ url('assessment_results/' . $assessment->id . '/print_answer_key') }}" target="_blank" class="btn btn-success btn-sm"><i class="fa fa-print"></i> Print Answer Key</a>
+                    <a href="{{ url('assessment_results/' . $assessment->id . '/print_assessment_result') }}" target="_blank" class="btn btn-sm btn-info"><i class="fa fa-print"></i> Print</a>
                 </div>
                 
             </div>
@@ -48,6 +49,7 @@
             <a class="nav-link active" data-toggle="tab" href="#details" role="tab" aria-selected="true">Details</a>
           </li>
           <li class="nav-item">
+
             <a class="nav-link" id="contact-tab" data-toggle="tab" href="#answers" role="tab" aria-controls="contact" aria-selected="false">Answers</a>
           </li>
         </ul>
@@ -66,7 +68,7 @@
                   </li>
                   <li class="list-group-item ">
 
-                    <i class="fa fa-calendar-alt"></i>  Date: <span style="font-weight: 600">{{ $assessment->created_at->format('M d Y h:m a') }} | {{ $assessment->created_at->diffForHumans() }}</span>
+                    <i class="fa fa-calendar-alt"></i>  Date: <span style="font-weight: 600">{{ $assessment->created_at->format('M d Y h:m a') }} &mdash; {{ $assessment->created_at->diffForHumans() }}</span>
                   </li>
                   <li class="list-group-item"><i class="fa fa-list"></i> {{ $assessment->assessmentDetails->count() }} total items </li>
 
@@ -92,9 +94,14 @@
                             <option value="all">All</option>
                             <option v-for="course in courses" :value="course.id" :key="course.id">@{{ course.course_code }}</option>
                         </select>
+
                     </div>
                     
                 </div>
+            </div>
+
+            <div>
+                
             </div>
             
             <div v-for="selected_test_question in selected_test_questions" :key="selected_test_question.id" class="card mb-4">

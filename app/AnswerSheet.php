@@ -13,6 +13,14 @@ class AnswerSheet extends Model
         return $this->hasMany('App\AnswerSheetTestQuestion')->with('answerSheetTestQuestionChoices');
     }
 
+    public function getAnswerSheetTestQuestionsOrig() {
+        //return AnswerSheetTestQuestion')->with('answerSheetTestQuestionChoices');
+        return AnswerSheetTestQuestion::where('answer_sheet_id', $this->id)
+                ->with('answerSheetTestQuestionChoices')
+                ->orderBy('pos_order', 'ASC')
+                ->get();
+    }
+
     public function exam() {
         return $this->belongsTo('App\Exam');
     }

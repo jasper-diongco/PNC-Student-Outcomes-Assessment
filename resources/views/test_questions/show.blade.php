@@ -79,13 +79,13 @@
             <hr>
             <div class="choices">
                 <div class="row">
-                    @foreach ($test_question->choices as $index => $choice)
+                    @foreach ($test_question->choices as $choice)
                     <div class="col-6 mb-3">
                         <div class="choice {{ $choice->is_correct ? 'correct-choice' : '' }}" style="height: 100%;">
                             <div class="d-flex">
                                 <div class="mr-2">
                                     <div class="choice-num {{ $choice->is_correct ? 'correct' : '' }}">
-                                        {{ $index + 1 }}
+                                        {{  chr($choice->pos_order + 64) }}
                                     </div>
                                 </div>
                                 <div>

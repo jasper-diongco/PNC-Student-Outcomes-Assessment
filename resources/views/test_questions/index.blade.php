@@ -106,7 +106,7 @@
                     <div class="d-flex justify-content-between align-items-baseline">
                         <div class="d-flex">
                             <div class="mr-3">
-                                <div class="avatar bg-white" ><i class="fa fa-question-circle" :style="avatarStyle(test_question.difficulty_level_id)"></i></div>
+                                <div class="avatar" :style="avatarStyle(test_question.difficulty_level_id)"><i class="fa fa-question" ></i></div>
                             </div>
                             <div>
                                 <div style="font-size: 18px">
@@ -173,7 +173,7 @@
                       <div class="d-flex justify-content-between align-items-baseline">
                           <div class="d-flex">
                               <div class="mr-3">
-                                  <div class="avatar bg-white" ><i class="fa fa-question-circle" :style="avatarStyle(test_question.difficulty_level_id)"></i></div>
+                                  <div class="avatar" :style="avatarStyle(test_question.difficulty_level_id)"><i class="fa fa-question" ></i></div>
                               </div>
                               <div>
                                   <div style="font-size: 18px"><span style="font-weight: 600">@{{ test_question.tq_code }}</span> - @{{ test_question.title }}</div>
@@ -418,6 +418,10 @@
                     .then(response => {
                       vm.test_questions = response.data.data;
                       vm.tableLoading = false;
+
+                      for(var i = 0; i < vm.test_questions.length; i++) {
+                        vm.getCorrectAnswer(vm.test_questions[i]);
+                      }
                     });
                 }, 300),
                 parseDate(date) {
@@ -433,17 +437,22 @@
                     this.getTestQuestions();
                 },
                 avatarStyle(difficulty_level_id) {
+                    var backgroundColor = '';
                     var color = '';
                     if(difficulty_level_id == 1) {
-                        color = '#cbff90';
+                        backgroundColor = '#cbff90';
+                        color = '#4caf50';
                     } else if (difficulty_level_id == 2) {
-                        color = '#fff375';
+                        backgroundColor = '#fff375';
+                        color = '#ff9800';
                     } else if (difficulty_level_id == 3) {
-                        color = '#f28b82';
+                        backgroundColor = '#f28b82';
+                        color = '#d2493f';
                     }
                     
 
                     return {
+                        backgroundColor,
                         color
                     };
                 },

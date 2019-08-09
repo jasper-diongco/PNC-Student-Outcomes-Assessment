@@ -45,6 +45,7 @@ class TestQuestionsController extends Controller
                 ->where('course_id', $course->id)
                 ->where('title', 'LIKE' ,'%' . request('q') . '%')
                 ->where('is_active', true)
+                ->with('choices')
                 ->latest()
                 ->get();
 

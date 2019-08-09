@@ -362,5 +362,8 @@ Route::post('/s/assessments/select_choice/{answer_sheet_test_question}', 's\Asse
 
 Route::get('/assessment_results', 'AssessmentResultsController@index');
 Route::get('/assessment_results/get_assessments', 'AssessmentResultsController@get_assessments');
+Route::get('/assessment_results/{assessment}/print_assessment_result', 'AssessmentResultsController@print_assessment_result');
+Route::get('/assessment_results/{assessment}/print_answer_key', 'AssessmentResultsController@print_answer_key');
 Route::get('/assessment_results/{assessment}', 'AssessmentResultsController@show');
+
 
