@@ -98,7 +98,7 @@
                                     <option v-if="form.program == ''" value="" disabled>Select program first</option>
                                     <option v-else-if="selectCurriculumsByProgram(form.program).length <= 0" value="" disabled>No Available curriculum</option>
                                     <template v-else>
-                                        <option v-for="curriculum in selectCurriculumsByProgram(form.program)" :value="curriculum.id">@{{ curriculum.name + ' - ' + curriculum.year }}</option>
+                                        <option v-for="curriculum in selectCurriculumsByProgram(form.program)" :value="curriculum.id">@{{ curriculum.name + ' - ' + curriculum.year + ' &mdash; revision no. ' + curriculum.revision_no }}.0</option>
                                     </template>
                                   </select>
                                   <has-error :form="form" field="curriculum"></has-error>

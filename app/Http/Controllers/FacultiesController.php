@@ -192,6 +192,7 @@ class FacultiesController extends Controller
             'address' => 'nullable|string|max:255',
             'college' => 'required',
             'email' => 'required|email|max:255|unique:users',
+            'username' => 'required|min:6|max:25|unique:users',
             'password' => 'required|min:8|max:20'
         ]);
 
@@ -206,6 +207,7 @@ class FacultiesController extends Controller
                 'sex' => request('sex'),
                 'date_of_birth' => request('date_of_birth'),
                 'email' => request('email'),
+                'username' => request('username'),
                 'password' => Hash::make(request('password')),
                 'user_type_id' => 'prof'
             ]);
@@ -330,7 +332,8 @@ class FacultiesController extends Controller
             'date_of_birth' => 'required|date',
             'contact_no' => 'nullable|regex:/^[0-9\s-]*$/',
             'address' => 'nullable|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,'.$id,
+            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'username' => 'required|min:6|max:25|unique:users,username,' . $user->id,
             'college' => 'required'
         ]);
 
@@ -357,6 +360,7 @@ class FacultiesController extends Controller
             $user->sex = request('sex');
             $user->date_of_birth = request('date_of_birth');
             $user->email = request('email');
+            $user->username = request('username');
             // $user->password = Hash::make(request('password'));
 
             $user->update();

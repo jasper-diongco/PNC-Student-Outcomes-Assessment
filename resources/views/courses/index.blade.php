@@ -64,7 +64,7 @@
             <tr>
               {{-- <th scope="col">Course ID</th> --}}
               <th scope="col">Course Code</th>
-              <th scope="col">Description</th>
+              <th scope="col" width="50%">Description</th>
               <th scope="col">Units</th>
               <th scope="col">College</th>
               {{-- <th scope="col">Privacy</th> --}}

@@ -10224,6 +10224,15 @@ card-header {
   border: none;
 }
 
+.courses-test-bank {
+  width: 100%;
+}
+
+@media only screen and (min-width: 768px) {
+  .courses-test-bank {
+    width: 30%;
+  }
+}
 .my-header {
   font-size: 32px;
 }

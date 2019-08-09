@@ -12,7 +12,7 @@
     <div class="card-body">
       <div class="d-flex justify-content-between mb-1">
         <div>
-          <h1 class="page-header">Students Management</h1>
+          <h1 class="page-header"><i class="fa fa-user text-info"></i> Student Management</h1>
         </div>
         <div>
           @if(Gate::check('isProf') || Gate::check('isDean') || Gate::check('isSAdmin'))
@@ -68,7 +68,7 @@
               <th scope="col">College</th>
               <th scope="col">Program</th>
               <th scope="col">OBE</th>
-              <th scope="col">Actions</th>
+              <th scope="col" class="text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -95,12 +95,14 @@
                     </a>
                   </td>
                   <td>
-                    <a title="View Details" class="btn btn-light btn-sm" :href=" 'students/' + student.id">
-                      <i class="fa fa-search"></i>
-                    </a>
+                    
                     <button title="Edit" v-on:click="openUpdateModal(student.id)" class="btn btn-success btn-sm">
-                      <i class="fa fa-edit"></i>
+                      Update <i class="fa fa-edit"></i>
                     </button>
+
+                    <a title="View Details" class="btn btn-info btn-sm" :href=" 'students/' + student.id">
+                      Info <i class="fa fa-search"></i>
+                    </a>
                     
                   </td>
               </tr>

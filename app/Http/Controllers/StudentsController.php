@@ -78,7 +78,7 @@ class StudentsController extends Controller
 
         $colleges = College::all();
         $programs = Program::all();
-        $curriculums = Curriculum::all();
+        $curriculums = Curriculum::latest()->get();
         
         return view('students.index', compact('colleges', 'programs', 'curriculums'));
     }
@@ -152,6 +152,7 @@ class StudentsController extends Controller
             'program' => 'required',
             'curriculum' => 'required',
             'email' => 'required|email|max:255|unique:users,email,'. $id,
+            'username' => 'required|min:6|max:25|unique:users,username,'. $id,
             'password' => 'required|min:8|max:20'
         ]);
 
@@ -178,7 +179,8 @@ class StudentsController extends Controller
             'middle_name' => 'required|regex:/^[\pL\s]+$/u',
             'sex' => 'required',
             'date_of_birth' => 'required|date',
-            'email' => 'required|email|max:255|unique:users,email,'. $student->user->id
+            'email' => 'required|email|max:255|unique:users,email,'. $student->user->id,
+            'username' => 'required|min:6|max:25|unique:users,username,'. $student->user->id
         ]);
 
         try {
@@ -191,6 +193,7 @@ class StudentsController extends Controller
             $student->user->sex = $data['sex'];
             $student->user->date_of_birth = $data['date_of_birth'];
             $student->user->email = $data['email'];
+            $student->user->username = $data['username'];
 
             $student->student_id = $data['student_id'];
 
@@ -258,6 +261,7 @@ class StudentsController extends Controller
                 'sex' => $data['sex'],
                 'date_of_birth' => $data['date_of_birth'],
                 'email' => $data['email'],
+                'username' => $data['username'],
                 'password' => Hash::make($data['password']),
                 'user_type_id' => 'stud'
             ]);

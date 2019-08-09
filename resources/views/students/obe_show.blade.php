@@ -15,9 +15,10 @@
             </div>
             
             <div class="mr-4"><i class="fa fa-user text-primary"></i> <label>Student:</label> <span class="text-info" style="font-size: 130%">{{ $student->user->getFullName() }}</span>, {{ $student->program->program_code }}</div>
-
+            
+            <div class="mr-4"><i class="fa fa-file text-primary"></i> <label>Curriculum:</label> {{ $curriculum->name }} &mdash; {{ $curriculum->year }} &mdash; revision no. {{ $curriculum->revision_no }}.0</div>
             <div class="mr-4"><i class="fa fa-calendar-check text-primary"></i> <label>Year:</label> {{ $curriculum->year }}</div>
-
+            
             <div class="mr-4"><i class="fa fa-file-alt text-primary"></i> <label>Description:</label> {{ $curriculum->description }}</div>
 
             <div class="d-flex justify-content-end">

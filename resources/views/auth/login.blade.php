@@ -170,8 +170,8 @@
                           <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1"><i class="fa fa-user"></i></span>
                           </div>
-                          <input v-model="email" type="email" class="form-control" :class="{ 'is-invalid': emailError }" placeholder="Enter your email" aria-describedby="basic-addon1">
-                          <div class="invalid-feedback ml-5">@{{ emailError }}</div>
+                          <input v-model="email" type="text" class="form-control" :class="{ 'is-invalid': emailError || usernameErr }" placeholder="Enter your username or email" aria-describedby="basic-addon1">
+                          <div class="invalid-feedback ml-5">@{{ emailError || usernameErr }}</div>
                         </div>
                         <div id="input-g-password" class="input-group mb-3">
                           <div class="input-group-prepend">
@@ -208,18 +208,23 @@
             data: {
                 email: '',
                 password: '',
+                login_str: '',
                 isError: false,
                 isLoading: false,
                 emailError: null,
-                passwordError: null
+                passwordError: null,
+                usernameErr: null
             },
             methods: {
                 login() {
                     this.isLoading = true;
                     this.emailError = null;
+                    this.usernameErr = null;
                     this.passwordError = null;
+                    this.login_str = this.email;
                     ApiClient.post('/login', {
                         email: this.email,
+                        login_str: this.login_str,
                         password: this.password
                     })
                     .then(response => {
@@ -236,6 +241,9 @@
                         }
                         if(response.errors.email) {
                             this.emailError = response.errors.email[0];
+                        }
+                        if(response.errors.username) {
+                            this.usernameErr = response.errors.username[0];
                         }
                         
                         //console.log(response);

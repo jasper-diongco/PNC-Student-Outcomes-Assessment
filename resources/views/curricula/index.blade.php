@@ -5,70 +5,17 @@
 
 @section('content')
   <div id="app" v-cloak>
-
-
-
-
-    {{-- <div class="row mb-3">
-      <div class="col-md-4 d-flex row">
-          <div class="col-3 text-right">
-            <label class="col-form-label "><b><i class="fa fa-calendar-alt"></i> Year : </b></label>
-          </div>
-          <div class="col-4">
-            <select class="form-control">
-              <option value="" selected>2019</option>
-              <option value="public">2018</option>
-              <option value="private">2017</option>
-            </select>
-          </div>   
-        </div>
-    </div> --}}
-
-    @if(count($curricula) > 0)
-      {{-- <div class="row">
-        @foreach($curricula as $curriculum)
-          <div class="col-md-4 mb-3">
-            <div class="card shadow" style="height: 100%;">
-              <!-- Card Header - Dropdown -->
-              <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-light">
-                <h6 class="m-0 font-weight-bold text-primary">{{ $curriculum->program->program_code }}</h6>
-                <div class="dropdown no-arrow">
-                  <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                  </a>
-                  <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(17px, 19px, 0px);">
-                    <div class="dropdown-header">Actions:</div>
-                    <a href="{{ url('/curricula/' . $curriculum->id) }}" class="dropdown-item"><i class="fa fa-eye"></i> View</a>
-                    <div class="dropdown-divider"></div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="card-body">
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item"> <i class="fa fa-book-open text-secondary"></i> {{ $curriculum->name }}</li>
-                  <li class="list-group-item"><i class="fa fa-file-alt text-primary"></i> {{ $curriculum->description}}</li>
-                  <li class="list-group-item"><i class="fa fa-calendar-alt text-secondary"></i> {{ $curriculum->year }}</li>
-                  <li class="list-group-item"><i class="fa fa-book text-success"></i> {{ count($curriculum->curriculumCourses) }} courses</li>
-                </ul>      
-              </div>
-              <div class="card-footer d-flex justify-content-end">
-                <a href="{{ url('/curricula/' . $curriculum->id) }}">View <i class="fa fa-chevron-right"></i></a>
-              </div>
-            </div>
-          </div>
-        @endforeach
-      </div> --}}
-      <div class="card">
-        <div class="card-body">
+      <div class="card mb-4">
+        <div class="card-body pt-4">
           <div class="d-flex justify-content-between mb-1">
             <div class="d-flex align-items-baseline">
               <div class="mr-2">
-                <h1 class="page-header"> Curricula</h1>
+                <img src="{{asset('img/29302.svg')}}" alt="" width="30px">
               </div>
-              <div>
-                <img src="{{asset('img/29302.svg')}}" alt="" width="35px">
+              <div class="mr-2">
+                <h1 class="page-header mb-1"> Curricula</h1>
               </div>
+              
             </div>
 
             <div>
@@ -79,67 +26,80 @@
               @endif
             </div>
           </div>
-          <div class="d-flex justify-content-end">
-            <div class="d-flex align-items-baseline">
-              <div class="mr-2">
-
-                <label class="text-dark">Filter By Program</label>
-              </div>
-              <div>
-                <select class="form-control" v-model="program_id" v-on:change="filterByProgram">
-                  <option value="">All</option>
-                  @foreach($programs as $program)
-                    <option value="{{ $program->id }}">{{ $program->program_code }}</option>
-                  @endforeach
-                </select>
-              </div>
-            </div>
-          </div>
           
-
-
-          <table class="table table-borderless">
-            <thead>
-              <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Name</th>
-                <th scope="col">Revision No</th>
-                <th scope="col">Program</th>
-                <th scope="col">Year</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <template v-if="curricula_show.length > 0">
-                <tr v-for="curriculum in curricula_show" :key="curriculum.id">
-                  <th>@{{ curriculum.id }}</th>
-                  <td>@{{ curriculum.name }}</td>
-                  <td>@{{ curriculum.revision_no }}.0</td>
-                  <td>@{{ curriculum.program.description }}</td>
-                  <td>@{{ curriculum.year }}</td>
-                  <td><a :href="'curricula/' + curriculum.id" class="btn btn-info btn-sm">View <i class="fa fa-search "></i></a></td>
-                </tr>
-              </template>
-              <template v-else>
-                <tr>
-                  <td colspan="6" align="center">
-                    No Record found in database.
-                  </td>
-                </tr>
-              </template>
-            </tbody>
-          </table>
+          
         </div>
+      </div>
+    
+{{--     <div class="d-flex justify-content-start mt-3 mb-3">
+        <div class="d-flex align-items-baseline">
+          <div class="mr-2">
+
+            <label class="text-dark">Filter By Program</label>
+          </div>
+          <div>
+            <select class="form-control" v-model="program_id" v-on:change="filterByProgram">
+              <option value="">All</option>
+              @foreach($programs as $program)
+                <option value="{{ $program->id }}">{{ $program->program_code }}</option>
+              @endforeach
+            </select>
+          </div>
+        </div>
+    </div> --}}
+
+
+    @if($curricula->count() > 0)
+      <div class="d-flex flex-wrap">
+          @foreach($curricula as $curriculum)
+            <div style="width: 31%" class="card shadow mb-4 mr-3">
+                <div class="card-body pt-3">
+                    <div class="d-flex justify-content-between align-items-baseline">
+                        <div class="d-flex">
+                            <div class="mr-2">
+                                <div class="avatar" style="background: #cbff90; color:#585858;"><i class="fa fa-map"></i></div>
+                            </div>
+                            <div>
+                              <div style="font-weight: 600">{{ $curriculum->name }} <i class="fa fa-check-circle {{ $curriculum->checkIfLatestVersion() ? 'text-success': 'text-dark' }}"></i></div>
+                              <div class="text-info">revision no. {{ $curriculum->revision_no }}.0</div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="ml-2" style="font-weight: 600">{{ $curriculum->year }}</div>
+                    <div style="font-size: 13px" class="text-muted ml-2 mt-2">
+                        {{ $curriculum->program->college->name }} &mdash; {{ $curriculum->program->program_code}}
+                    </div>
+                    <hr>          
+                    <div class="text-muted">
+                        <i class="fa fa-file-alt"></i> {{ $curriculum->description ?? 'No description' }}
+                    </div>
+                    <div class="text-muted">
+                        <i class="fa fa-book"></i> {{ $curriculum->curriculumCourses->count() }} courses
+                    </div>
+                    <div class="text-muted">
+                        <i class="fa fa-flag"></i> {{ $curriculum->program->studentOutcomes->count() }} Student Outcomes
+                    </div>
+
+
+                </div>
+                <div class="card-footer">
+                  <div class="d-flex justify-content-end align-items-end">
+                      <a class="btn btn-sm btn-info" href="{{ url('/curriculum_mapping/' . $curriculum->id) }}" class="btn btn-sm">
+                           View <i class="fa fa-angle-right"></i>
+                      </a>
+                    </div>
+                </div>
+            </div>
+          @endforeach
       </div>
     @else
-      <div class="col-12">
-        <div class="card">
-          <div class="card-body">
-            <h3 class="text-center">No Curriculum Found In Database.</h3>
-          </div>
-        </div>
+      <div class="p-3 bg-white text-muted">
+        No Curriculum found.
       </div>
-    @endif
+    @endif  
+  
+
   </div>
 @endsection
 

@@ -132,7 +132,7 @@
               <!-- Field for year email  -->
               <div class="form-group">
                 <label for="email">
-                  <b>Email</b>
+                  Email
                 </label>
 
                 <div>
@@ -151,6 +151,33 @@
                       placeholder="Enter Email"
                     />
                     <has-error :form="form" field="email"></has-error>
+                  </div>
+                </div>
+              </div>
+              <!-- /end Field for email -->
+
+              <!-- Field for year email  -->
+              <div class="form-group">
+                <label for="username">
+                  Username
+                </label>
+
+                <div>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon1">
+                        <i class="fa fa-user"></i>
+                      </span>
+                    </div>
+                    <input
+                      id="username"
+                      type="text"
+                      class="form-control"
+                      :class="{ 'is-invalid': form.errors.has('username') }"
+                      v-model="form.username"
+                      placeholder="Enter username"
+                    />
+                    <has-error :form="form" field="username"></has-error>
                   </div>
                 </div>
               </div>
@@ -228,6 +255,7 @@ export default {
         sex: "",
         date_of_birth: "",
         email: "",
+        username: "",
         college: "",
         password: "DefaultPass123"
       })
@@ -287,6 +315,7 @@ export default {
         this.form.date_of_birth = response.data.user.date_of_birth;
         this.form.email = response.data.user.email;
         this.form.college = response.data.college_id;
+        this.form.username = response.data.user.username;
       });
     },
     addFaculty() {

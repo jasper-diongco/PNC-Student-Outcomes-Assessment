@@ -65,7 +65,7 @@
               <th scope="col">Email</th>
               <th scope="col">College</th>
               <th scope="col">User Type</th>
-              <th scope="col">Actions</th>
+              <th scope="col" class="text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -86,12 +86,12 @@
                   <td>@{{ faculty.email }}</td>
                   <td>@{{ faculty.college_code }}</td>
                   <td>@{{ faculty.user_type }}</td>
-                  <td>
-                    <a title="View Details" class="btn btn-light btn-sm" :href=" 'faculties/' + faculty.id">
-                      <i class="fa fa-search"></i>
+                  <td align="right">
+                    <a title="View Details" class="btn btn-info btn-sm" :href=" 'faculties/' + faculty.id">
+                      View <i class="fa fa-search"></i>
                     </a>
                     <button title="Edit Information" v-on:click="openUpdateModal(faculty.id)" class="btn btn-success btn-sm">
-                      <i class="fa fa-edit"></i>
+                      Update <i class="fa fa-edit"></i>
                     </button>
                   </td>
               </tr>

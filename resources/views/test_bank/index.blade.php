@@ -81,13 +81,13 @@
         <div class="tab-content" id="myTabContent">
           <div class="tab-pane fade show active" id="test-questions" role="tabpanel" aria-labelledby="home-tab">
             <div class="p-3">
-                <h5 class="text-dark">List of Courses <i class="fa fa-book text-info"></i></h5>
+                <h5 class="text-dark mb-3"><i class="fa fa-book text-info"></i> List of Courses </h5>
                 <div v-if="isLoading" class="bg-white p-3">
                     <table-loading></table-loading>
                 </div>
                 <div v-else>
-                    <div v-if="courses_mapped.length > 0">
-                        <ul class="list-group">
+                    <div class="d-md-flex flex-wrap justify-content-between " v-if="courses_mapped.length > 0">
+                        {{-- <ul class="list-group">
                             <li v-for="course_mapped in courses_mapped" :key="course_mapped.id" class="list-group-item">
                                 <div class="d-flex justify-content-between align-items-baseline">
                                     <div class="d-flex">
@@ -100,11 +100,39 @@
                                         </div>   
                                     </div>
                                     <div>
-                                        <a :href="'/pnc_soa/public/test_questions?student_outcome_id=' + selected_student_outcome.id + '&course_id=' + course_mapped.id  + '&program_id=' + selected_student_outcome.program_id" class="btn btn-info btn-sm">Select</a>
+                                        <a :href="'/pnc_soa/public/test_questions?student_outcome_id=' + selected_student_outcome.id + '&course_id=' + course_mapped.id  + '&program_id=' + selected_student_outcome.program_id" class="btn btn-info btn-sm">Select <i class="fa fa-angle-right"></i></a>
                                     </div>
                                 </div>
                             </li>
-                        </ul>
+                        </ul> --}}
+                        <div class="card mr-4 mb-4 shadow courses-test-bank" v-for="course_mapped in courses_mapped" :key="course_mapped.id">
+                            <div class="card-body pt-3" >
+                                <div class="d-flex align-items-baseline">
+                                    <div class="mr-3">
+                                        <div class="avatar" style="color:white; background: #4caf50;"><i class="fa fa-book"></i></div>
+                                    </div>
+                                    <div>
+                                        <h5>@{{ course_mapped.course_code }}</h5>
+                                        <div class="text-info">@{{ course_mapped.description }}</div>
+                                    </div>    
+                                </div>  
+                                
+                                
+                                <div class="ml-1 mt-2 d-flex align-items-baseline">
+                                    <div class="mr-1">
+                                        <div class="avatar" style="background: #cbff90; color: #4caf50;"><i class="fa fa-question" ></i></div>
+                                    </div> 
+                                    <div style="font-weight: 600;">
+                                        <span class="text-warning">@{{ course_mapped.test_question_count }}</span> test questions
+                                    </div>
+                                </div>                   
+                            </div>
+                            <div class="card-footer">
+                                <div class="d-flex justify-content-end">
+                                    <a :href="'/pnc_soa/public/test_questions?student_outcome_id=' + selected_student_outcome.id + '&course_id=' + course_mapped.id  + '&program_id=' + selected_student_outcome.program_id" class="btn btn-info btn-sm">Select <i class="fa fa-angle-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div v-else class="bg-white p-3">
                         No Courses Mapped.

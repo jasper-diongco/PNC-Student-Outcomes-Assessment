@@ -99,7 +99,7 @@
                                 </li>
                                 <li class="list-group-item">
                                     <label>Curriculum: </label>
-                                    <span>{{ $student->curriculum->name }} &mdash; {{ $student->curriculum->year }}</span>
+                                    <span>{{ $student->curriculum->name }} &mdash; {{ $student->curriculum->year }} &dmash; revision no. {{ $student->curriculum->revision_no }}.0</span>
                                 </li>
                                 
                             </ul>

@@ -66,18 +66,25 @@
                             </div>
                             <div style="font-weight: 600">{{ $program->program_code }}</div>
                         </div>
-                        <div class="ml-3">
-                          <a class="btn btn-sm btn-info" href="{{ url('/programs/' . $program->id) }}" class="btn btn-sm">
-                              <i class="fa fa-search"></i> View
-                          </a>
-                        </div>
+                        
                     </div>
                     <div style="font-size: 13px" class="text-muted ml-2 mt-2">
                         {{ $program->college->name }}
                     </div>
                     <hr>
                     <div class="text-muted">
-                        {{ $program->description }}
+                       <i class="fa fa-file-alt"></i> {{ $program->description }}
+                    </div>
+                    <div class="mt-2 text-muted">
+                      <i class="fa fa-flag"></i> {{ $program->studentOutcomes->count() }} student outcomes
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                  <div class="d-flex justify-content-end">
+                      <a class="btn btn-sm btn-info" href="{{ url('/programs/' . $program->id) }}" class="btn btn-sm">
+                          View <i class="fa fa-angle-right"></i>
+                      </a>
                     </div>
                 </div>
             </div>

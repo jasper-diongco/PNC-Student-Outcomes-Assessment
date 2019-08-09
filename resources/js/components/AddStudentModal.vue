@@ -183,7 +183,7 @@
                                     <option v-if="form.program == ''" value="" disabled>Select program first</option>
                                     <option v-else-if="selectCurriculumsByProgram(form.program).length <= 0" value="" disabled>No Available curriculum</option>
                                     <template v-else>
-                                        <option v-for="curriculum in selectCurriculumsByProgram(form.program)" :value="curriculum.id">{{ curriculum.name + ' - ' + curriculum.year }}</option>
+                                        <option v-for="curriculum in selectCurriculumsByProgram(form.program)" :value="curriculum.id">{{ curriculum.name + ' - ' + curriculum.year + ' &mdash; revision no. ' + curriculum.revision_no + '.0' }}</option>
                                     </template>
                                 </select>
                                 <has-error :form="form" field="curriculum"></has-error>
@@ -216,6 +216,33 @@
                                 </div>
                             </div>
                             <!-- /end Field for email -->
+
+                            <!-- Field for year username  -->
+                            <div class="form-group">
+                                <label
+                                  for="username"
+                                  >Username</label
+                                >
+
+                                <div>
+                                    <div class="input-group">
+                                      <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1"><i class='fa fa-user'></i></span>
+                                      </div>
+                                      <input
+                                        id="username"
+                                        type="text"
+                                        class="form-control"
+                                        :class="{ 'is-invalid': form.errors.has('username') }"
+                                        v-model="form.username"
+                                        placeholder="Enter username"
+                                      />
+                                      <has-error :form="form" field="username"></has-error>
+                                    </div>
+                                  
+                                </div>
+                            </div>
+                            <!-- /end Field for username -->
                             
                         
                     </div>
@@ -257,6 +284,7 @@ export default {
                 program: '',
                 curriculum: '',
                 email: '',
+                username: '',
                 password: 'DefaultPass123'
             })
         }

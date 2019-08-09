@@ -4,79 +4,85 @@
 
 
 @section('content')
-    <div id="app" v-cloak>
-        <div>
-            <div>
-                
+    <div id="app" v-cloak>        
+        <div class="card mb-4">
+          <div class="card-body pt-4">
+            <h1 class="page-header mb-1"><i class="fa fa-map" style="color:#a1a1a1"></i> Curriculum Mapping</h1>
+            <div class="d-flex justify-content-end">
+              @can('isSAdmin')
+                <div class="d-flex align-items-center">
+                  <div class="mr-2">
+                    <i class="fa fa-graduation-cap text-success"></i>
+                    <label class="text-dark">Filter By Program</label>
+                  </div>
+                  <div>
+                    <select v-on:change="filterByProgram" class="form-control" v-model="program_id">
+                      <option value="">All</option>
+                      @foreach($programs as $program)
+                        <option value="{{ $program->id }}">{{ $program->program_code }}</option>
+                      @endforeach
+                    </select>
+                  </div> 
+                    
+                </div>
+              @endcan
+            </div>
+            
+          </div>
+        </div>
 
-                @if(count($curricula) > 0)
-                  <div class="card">
-                    <div class="card-body">
-                      <h1 class="page-header"><i class="fa fa-map" style="color:#a1a1a1"></i> Curriculum Mapping</h1>
-                      <div class="d-flex justify-content-end">
-                        @can('isSAdmin')
-                          <div class="d-flex align-items-center">
+
+      @if($curricula->count() > 0)
+      <div class="d-flex flex-wrap">
+          @foreach($curricula as $curriculum)
+            <div style="width: 31%" class="card shadow mb-4 mr-3">
+                <div class="card-body pt-3">
+                    <div class="d-flex justify-content-between align-items-baseline">
+                        <div class="d-flex">
                             <div class="mr-2">
-                              <i class="fa fa-graduation-cap text-success"></i>
-                              <label class="text-dark">Filter By Program</label>
+                                <div class="avatar" style="background: #cbff90; color:#585858;"><i class="fa fa-map"></i></div>
                             </div>
                             <div>
-                              <select v-on:change="filterByProgram" class="form-control" v-model="program_id">
-                                <option value="">All</option>
-                                @foreach($programs as $program)
-                                  <option value="{{ $program->id }}">{{ $program->program_code }}</option>
-                                @endforeach
-                              </select>
-                            </div> 
-                              
-                          </div>
-                        @endcan
-                      </div>
-                      
-
-
-                      <table class="table table-borderless">
-                        <thead>
-                          <tr>
-                            <th>ID</th>
-                            <th>Program</th>
-                            <th>Name</th>
-                            <th>Year</th>
-                            <th>Revision No.</th>
-                            <th>College</th>
-                            <th>Action</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                            <template v-if="curricula_show.length > 0">
-                              <tr v-for="curriculum in curricula_show">
-                                <td>@{{ curriculum.id }}</td>
-                                <td>@{{ curriculum.program.program_code }}</td>
-                                <td>@{{ curriculum.name }}</td>
-                                <td>@{{ curriculum.year }}</td>
-                                <td>@{{ curriculum.revision_no }}.0 
-                                </td>
-                                <td>@{{ curriculum.program.college.college_code }}</td>
-                                <td><a :href="'curriculum_mapping/' + curriculum.id" class="btn btn-sm btn-info">View <i class="fa fa-search"></i></a></td>
-                              </tr>
-                            </template>
-                            <template v-else>
-                                <tr>
-                                  <td colspan="7" align="center">No Record found in database.</td>
-                                </tr>
-                            </template>
-                            
-                        </tbody>
-                      </table>
+                              <div style="font-weight: 600">{{ $curriculum->name }} <i class="fa fa-check-circle {{ $curriculum->checkIfLatestVersion() ? 'text-success': 'text-dark' }}"></i></div>
+                              <div class="text-info">revision no. {{ $curriculum->revision_no }}.0</div>
+                            </div>
+                        </div>
+                        
                     </div>
-                  </div>
-                  
-                @else
-                  <div class="text-center bg-white p-3">No Curriculum Found in Database.</div>
-                @endif
+                    
+                    <div class="ml-2" style="font-weight: 600">{{ $curriculum->year }}</div>
+                    <div style="font-size: 13px" class="text-muted ml-2 mt-2">
+                        {{ $curriculum->program->college->name }} &mdash; {{ $curriculum->program->program_code}}
+                    </div>
+                    <hr>          
+                    <div class="text-muted">
+                        <i class="fa fa-file-alt"></i> {{ $curriculum->description ?? 'No description' }}
+                    </div>
+                    <div class="text-muted">
+                        <i class="fa fa-book"></i> {{ $curriculum->curriculumCourses->count() }} courses
+                    </div>
+                    <div class="text-muted">
+                        <i class="fa fa-flag"></i> {{ $curriculum->program->studentOutcomes->count() }} Student Outcomes
+                    </div>
 
+
+                </div>
+                <div class="card-footer">
+                  <div class="d-flex justify-content-end align-items-end">
+                      <a class="btn btn-sm btn-info" href="{{ url('/curriculum_mapping/' . $curriculum->id) }}" class="btn btn-sm">
+                           View <i class="fa fa-angle-right"></i>
+                      </a>
+                    </div>
+                </div>
             </div>
-        </div>
+          @endforeach
+      </div>
+    @else
+      <div class="p-3 bg-white text-muted">
+        No Curriculum found.
+      </div>
+    @endif    
+      
     </div>
 @endsection
 

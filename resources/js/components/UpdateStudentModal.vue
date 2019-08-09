@@ -168,6 +168,33 @@
                 </div>
               </div>
               <!-- /end Field for email -->
+
+              <!-- Field for year username  -->
+              <div class="form-group">
+                <label for="username">
+                  <b>Username</b>
+                </label>
+
+                <div>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon1">
+                        <i class="fa fa-user"></i>
+                      </span>
+                    </div>
+                    <input
+                      id="username"
+                      type="text"
+                      class="form-control"
+                      :class="{ 'is-invalid': form.errors.has('username') }"
+                      v-model="form.username"
+                      placeholder="Enter username"
+                    />
+                    <has-error :form="form" field="username"></has-error>
+                  </div>
+                </div>
+              </div>
+              <!-- /end Field for username -->
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -202,7 +229,8 @@ export default {
         middle_name: "",
         sex: "",
         date_of_birth: "",
-        email: ""
+        email: "",
+        username: ""
       })
     };
   },
@@ -251,6 +279,7 @@ export default {
           this.form.sex = response.data.user.sex;
           this.form.date_of_birth = response.data.user.date_of_birth;
           this.form.email = response.data.user.email;
+          this.form.username = response.data.user.username;
         }
       );
     }
