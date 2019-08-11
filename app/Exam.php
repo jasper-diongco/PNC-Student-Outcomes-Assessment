@@ -21,6 +21,10 @@ class Exam extends Model
         return $this->belongsTo('App\StudentOutcome');
     }
 
+    public function curriculum() {
+        return $this->belongsTo('App\Curriculum');
+    }
+
     public static function getRequirements($student_outcome_id='', $curriculum_id=''){
         $requirements = [];
         $student_outcome = StudentOutcome::find($student_outcome_id);
@@ -138,6 +142,13 @@ class Exam extends Model
         return $this->hasMany('App\ExamTestQuestion');
     }
 
+    public function getExamTestQuestionsSorted() {
+        return ExamTestQuestion::where('exam_id', $this->id)
+            ->orderBy('pos_order', 'ASC')
+            ->with('testQuestion')
+            ->get();
+    }
+
     public function getTestQuestions() {
         return TestQuestion::select('test_questions.*')
             ->join('exam_test_questions', 'exam_test_questions.test_question_id', '=',  'test_questions.id')
@@ -188,5 +199,46 @@ class Exam extends Model
             ->where('exam_test_questions.exam_id', $this->id)
             ->where('test_questions.course_id', $course_id)
             ->count();
+    }
+
+    public function countTaken() {
+        return Assessment::where('exam_id', $this->id)->count();
+    }
+
+    public function getAvailableForItemAnalysis() {
+        $count =  Assessment::where('exam_id', $this->id)
+                ->where('item_analysis', false)
+                ->count();
+        if($count % 2 == 0) {
+            return Assessment::where('exam_id', $this->id)
+                ->where('item_analysis', false)
+                ->with('student')
+                ->get();
+        } else {
+            return Assessment::where('exam_id', $this->id)
+                ->where('item_analysis', false)
+                ->inRandomOrder()
+                ->take($count - 1)
+                ->with('student')
+                ->get();
+        }
+    }
+
+    public function sortAssessments($assessments) {
+        foreach ($assessments as $assessment) {
+            $assessment->total_score = $assessment->countCorrectAnswers();
+        }
+
+        for($i = 0; $i < count($assessments); $i++) {
+            for($j = 0; $j < count($assessments) - 1; $j++) {
+                if($assessments[$j]->total_score < $assessments[$j + 1]->total_score) {
+                    $temp = $assessments[$j];
+                    $assessments[$j] = $assessments[$j + 1];
+                    $assessments[$j + 1] = $temp;
+                }
+            }
+        }
+
+        return $assessments;
     }
 }

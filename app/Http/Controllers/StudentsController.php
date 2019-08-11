@@ -32,6 +32,7 @@ class StudentsController extends Controller
                 $searched_students = Student::select('students.*')
                     ->join('users', 'users.id', '=', 'students.user_id')
                     ->where('first_name', 'LIKE', '%' . request('q') . '%')
+                    ->orWhere('student_id', '=', request('q'))
                     ->orWhere('middle_name', 'LIKE', '%' . request('q') . '%')
                     ->orWhere('last_name', 'LIKE', '%' . request('q') . '%')
                     ->orWhere('email', 'LIKE', '%' . request('q') . '%')
@@ -41,7 +42,7 @@ class StudentsController extends Controller
                 return StudentResource::collection($searched_students); 
             } else {
                 if(Gate::check('isSAdmin')) {
-                    return StudentResource::collection(Student::paginate(10)); 
+                    return StudentResource::collection(Student::paginate(20)); 
                 } else {
 
                     $retrieved_students = Student::select('students.*')
@@ -49,7 +50,7 @@ class StudentsController extends Controller
                         ->join('colleges', 'colleges.id', '=', 'programs.college_id')
                         ->where('colleges.id', Session::get('college_id'))
                         ->latest()
-                        ->paginate(10);
+                        ->paginate(20);
 
                     if(request('filter_by_college') != '') {
                         $retrieved_students = Student::select('students.*')
@@ -57,7 +58,7 @@ class StudentsController extends Controller
                         ->join('colleges', 'colleges.id', '=', 'programs.college_id')
                         ->where('colleges.id', request('filter_by_college'))
                         ->latest()
-                        ->paginate(10);
+                        ->paginate(20);
                     }
 
                     if(request('filter_by_program') != '') {
@@ -66,7 +67,7 @@ class StudentsController extends Controller
                         ->join('colleges', 'colleges.id', '=', 'programs.college_id')
                         ->where('programs.id', request('filter_by_program'))
                         ->latest()
-                        ->paginate(10);
+                        ->paginate(20);
                     }
 
                     return StudentResource::collection($retrieved_students);

@@ -25,10 +25,17 @@ class Assessment extends Model
         return $this->hasMany('App\AssessmentDetail');
     }
 
+
     public function getCorrectAnswers() {
         return AssessmentDetail::where('is_correct', true)
                     ->where('assessment_id', $this->id)
                     ->get();
+    }
+
+    public function countCorrectAnswers() {
+        return AssessmentDetail::where('is_correct', true)
+                    ->where('assessment_id', $this->id)
+                    ->count();
     }
 
     public function getIncorrectAnswers() {

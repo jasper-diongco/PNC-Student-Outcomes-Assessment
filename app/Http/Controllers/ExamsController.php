@@ -9,6 +9,7 @@ use App\ExamTestQuestion;
 use App\Program;
 use App\Curriculum;
 use App\StudentOutcome;
+use App\AssessmentDetail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
@@ -258,6 +259,134 @@ class ExamsController extends Controller
         $student_outcome = StudentOutcome::findOrFail(request('student_outcome_id'));
 
         return view('exams.show', compact('exam', 'test_questions', 'courses', 'program', 'curriculum', 'student_outcome'));
+    }
+
+    public function item_analysis(Exam $exam) {
+
+        //authenticate
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
+
+        // $exam_test_questions = $exam->examTestQuestions;
+        // $courses = $exam->getCourses();
+
+        // // Session::flash('message', 'Exam preview is showing');
+
+        return view('exams.item_analysis', compact('exam'));
+    }
+
+    public function start_item_analysis(Exam $exam) {
+        //authenticate
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
+        $templates = [];
+        $exam_test_questions = $exam->exam_test_questions;
+        $assessments = $exam->getAvailableForItemAnalysis();
+        $assessments_count = count($assessments);
+        $sorted_assessments = [];
+
+        //sort the assessments
+        $sorted_assessments = $exam->sortAssessments($assessments);
+
+
+        //get upper group
+        $upper_group = [];
+        for($i = 0; $i < $assessments_count / 2; $i++) {
+            $upper_group[] = $sorted_assessments[$i];
+        }
+
+        //get lower group
+        $lower_group = [];
+        for($i = $assessments_count / 2; $i < $assessments_count; $i++) {
+            $lower_group[] = $sorted_assessments[$i];
+        }
+
+        // $templates['test_questions'] = [];
+        // foreach ($exam->examTestQuestions as $exam_test_question) {
+        //     $templates['test_questions'][] = getExamTestQuestionsSorted
+        // }
+        $templates['exam_test_questions'] = $exam->getExamTestQuestionsSorted();
+
+        $templates['upper_group'] = [];
+        $templates['lower_group'] = [];
+
+
+        //upper
+        foreach ($upper_group as $upper_assessment) {
+            $upper_assessment_details = [];
+
+            foreach ($templates['exam_test_questions'] as $exam_test_question) {
+                $upper_assessment_details[] = AssessmentDetail::where('test_question_id', $exam_test_question->test_question_id)
+                    ->where('assessment_id', $upper_assessment->id)
+                    ->first();
+            }
+
+            $templates['upper_group'][] = [
+                'assessment' => $upper_assessment,
+                'assessment_details' => $upper_assessment_details,
+                'total_score' => $upper_assessment->countCorrectAnswers()
+            ];
+        }
+
+        //lower
+        foreach ($lower_group as $lower_assessment) {
+            $lower_assessment_details = [];
+
+            foreach ($templates['exam_test_questions'] as $exam_test_question) {
+                $lower_assessment_details[] = AssessmentDetail::where('test_question_id', $exam_test_question->test_question_id)
+                    ->where('assessment_id', $lower_assessment->id)
+                    ->first();
+            }
+
+            $templates['lower_group'][] = [
+                'assessment' => $lower_assessment,
+                'assessment_details' => $lower_assessment_details,
+                'total_score' => $lower_assessment->countCorrectAnswers()
+            ];
+        }
+
+
+
+        //get the upper_group_totals
+        $templates['upper_group_totals'] = [];
+
+        foreach ($templates['exam_test_questions'] as $exam_test_question) {
+            $templates['upper_group_totals'][] = 0;
+        }
+
+        foreach ($templates['upper_group'] as $t) {
+            $index = 0;
+            foreach ($t['assessment_details'] as $t_assessment_detail) {
+                if($t_assessment_detail->is_correct) {
+                    $templates['upper_group_totals'][$index] += 1;
+                }
+                $index++;
+            }
+        }
+
+        //get the lower_group_totals
+        $templates['lower_group_totals'] = [];
+
+        foreach ($templates['exam_test_questions'] as $exam_test_question) {
+            $templates['lower_group_totals'][] = 0;
+        }
+
+        foreach ($templates['lower_group'] as $t) {
+            $index = 0;
+            foreach ($t['assessment_details'] as $t_assessment_detail) {
+                if($t_assessment_detail->is_correct) {
+                    $templates['lower_group_totals'][$index] += 1;
+                }
+                $index++;
+            }
+        }
+
+
+
+        return $templates;
+
     }
 
     public function preview(Exam $exam) {

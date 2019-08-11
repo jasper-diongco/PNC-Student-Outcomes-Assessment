@@ -63,8 +63,8 @@
           <thead>
             <tr>
               <th scope="col">Student ID</th>
-              <th scope="col">Full Name</th>
-              <th scope="col">Email</th>
+              <th scope="col" width="20%">Full Name</th>
+              <th scope="col" width="20%">Email</th>
               <th scope="col">College</th>
               <th scope="col">Program</th>
               <th scope="col">OBE</th>

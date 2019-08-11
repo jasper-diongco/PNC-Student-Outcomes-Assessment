@@ -13,6 +13,17 @@ class AnswerSheet extends Model
         return $this->hasMany('App\AnswerSheetTestQuestion')->with('answerSheetTestQuestionChoices');
     }
 
+    public function getAnswerSheetTestQuestionsRand() {
+        $answer_sheet_test_questions =  AnswerSheetTestQuestion::where('answer_sheet_id', $this->id)
+                ->get();
+
+        foreach ($answer_sheet_test_questions as $answer_sheet_test_question) {
+            $answer_sheet_test_question->loadAnswerSheetTestQuestionChoices();
+        }
+
+        return $answer_sheet_test_questions;
+    }
+
     public function getAnswerSheetTestQuestionsOrig() {
         //return AnswerSheetTestQuestion')->with('answerSheetTestQuestionChoices');
         return AnswerSheetTestQuestion::where('answer_sheet_id', $this->id)

@@ -32,16 +32,26 @@
                 <pie-chart :data="pie_data"></pie-chart>
             </div>
 
-            <div class="d-flex justify-content-end mt-3">
-              @if(!$exam->is_active)
-                <button v-on:click="activateExam" class="btn btn-sm btn-info mr-2"><i class="fa fa-history"></i> Activate</button>
-              @else
-                <button v-on:click="archiveExam" class="btn btn-sm mr-2"><i class="fa fa-archive"></i> Archive</button>
-                <a href="{{ url('/exams/' . $exam->id . '/print_answer_key' ) }}" target="_blank" class="btn btn-sm btn-info mr-2">Print Answer Key <i class="fa fa-print"></i></a>
+            <div class="d-flex justify-content-between mt-3 align-items-baseline">
+              <div>
+                <span class="d-inline-block mr-2 text-dark" style="font-weight: 600">Taken <span class="text-success">{{ $exam->countTaken() }}</span> times</span>
 
-                <a href="{{ url('/exams/'. $exam->id .'/preview?program_id='. request('program_id') .'&student_outcome_id=' . request('student_outcome_id'). '&curriculum_id='. request('curriculum_id')) }}" class="btn btn-primary btn-sm">Preview <i class="fa fa-external-link-alt"></i></a>
-                
-              @endif
+                @if ($exam->countTaken() >= 20)
+                  <a href="{{ url('/exams/'. $exam->id .'/item_analysis?program_id='. request('program_id') .'&student_outcome_id=' . request('student_outcome_id'). '&curriculum_id='. request('curriculum_id')) }}" class="btn btn-sm btn-success">Start Item analysis <i class="fa fa-align-left text-dark"></i></a>
+                @endif
+              </div>
+
+              <div>
+                @if(!$exam->is_active)
+                  <button v-on:click="activateExam" class="btn btn-sm btn-info mr-2"><i class="fa fa-history"></i> Activate</button>
+                @else
+                  <button v-on:click="archiveExam" class="btn btn-sm mr-2"><i class="fa fa-archive"></i> Archive</button>
+                  <a href="{{ url('/exams/' . $exam->id . '/print_answer_key' ) }}" target="_blank" class="btn btn-sm btn-info mr-2">Print Answer Key <i class="fa fa-print"></i></a>
+
+                  <a href="{{ url('/exams/'. $exam->id .'/preview?program_id='. request('program_id') .'&student_outcome_id=' . request('student_outcome_id'). '&curriculum_id='. request('curriculum_id')) }}" class="btn btn-primary btn-sm">Preview <i class="fa fa-external-link-alt"></i></a>
+                  
+                @endif
+              </div>
             </div>
         </div>
         
@@ -69,6 +79,7 @@
                   <li class="list-group-item">
                       <label class="mb-0"><i class="fa fa-fingerprint"></i> Exam ID:</label>  {{ $exam->exam_code }}
                   </li>
+
                   <li class="list-group-item">
                       <label><i class="fa fa-file-alt text-dark"></i> Description:</label> {{ $exam->description }}
                   </li>

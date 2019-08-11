@@ -12,6 +12,11 @@ class AnswerSheetTestQuestion extends Model
         return $this->hasMany('App\AnswerSheetTestQuestionChoice')->orderBy('pos_order', 'ASC');
     }
 
+    public function loadAnswerSheetTestQuestionChoices() {
+        $this->answer_sheet_test_question_choices = AnswerSheetTestQuestionChoice::where('answer_sheet_test_question_id', $this->id)
+            ->get();
+    }
+
     public function testQuestion() {
         return $this->belongsTo('App\TestQuestion');
     }

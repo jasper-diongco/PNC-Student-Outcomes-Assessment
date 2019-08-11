@@ -299,9 +299,11 @@ Route::get('/exams/get_exams', 'ExamsController@get_exams');
 Route::get('/exams/create', 'ExamsController@create');
 Route::post('/exams', 'ExamsController@store');
 Route::get('/exams/{exam}/preview', 'ExamsController@preview');
+Route::get('/exams/{exam}/item_analysis', 'ExamsController@item_analysis');
 Route::get('/exams/{exam}/print_answer_key', 'ExamsController@print_answer_key');
 Route::post('/exams/{exam}/deactivate', 'ExamsController@deactivate');
 Route::post('/exams/{exam}/activate', 'ExamsController@activate');
+Route::post('/exams/{exam}/start_item_analysis', 'ExamsController@start_item_analysis');
 Route::get('/exams/{exam}', 'ExamsController@show');
 
 // End Exam routes

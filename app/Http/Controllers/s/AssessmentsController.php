@@ -66,7 +66,9 @@ class AssessmentsController extends Controller
 
 
 
-            $answer_sheet->load('answerSheetTestQuestions');
+            //$answer_sheet->load('answerSheetTestQuestions');
+
+            $answer_sheet->answer_sheet_test_questions = $answer_sheet->getAnswerSheetTestQuestionsRand();
             $courses = $answer_sheet->exam->getCourses1($student_outcome->id, $student->curriculum_id);
             return view('s.assessments.show', compact('courses', 'answer_sheet'));
 
@@ -94,7 +96,7 @@ class AssessmentsController extends Controller
                 $answer_sheet->save();
 
                 foreach ($exam_test_questions as $exam_test_question) {
-                    $exam_test_question->testQuestion->random_choices = $exam_test_question->testQuestion->choicesRandom();
+                    $exam_test_question->testQuestion->random_choices = $exam_test_question->testQuestion->getRandomChoices();
                     $exam_test_question->testQuestion->html = $exam_test_question->testQuestion->getHtml();
 
                     $answer_sheet_test_question = new AnswerSheetTestQuestion();
@@ -131,7 +133,9 @@ class AssessmentsController extends Controller
 
                 DB::commit();
                 // all good
-                $answer_sheet->load('answerSheetTestQuestions');
+                //$answer_sheet->load('answerSheetTestQuestions');
+                $answer_sheet->answer_sheet_test_questions = $answer_sheet->getAnswerSheetTestQuestionsRand();
+
                 return view('s.assessments.show', compact('courses', 'answer_sheet'));
             } catch (\Exception $e) {
                 DB::rollback();

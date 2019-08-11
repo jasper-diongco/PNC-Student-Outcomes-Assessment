@@ -19,7 +19,7 @@ class AssessmentResultsController extends Controller
 
 
         $programs = Program::where('college_id', request('college_id'))->get();
-        $assessments = Assessment::with('student')->with('studentOutcome')->get();
+        $assessments = Assessment::with('student')->with('studentOutcome')->latest()->get();
 
         //$assessments = $this->get_assessments();
 
@@ -55,9 +55,10 @@ class AssessmentResultsController extends Controller
                     ->with('student')
                     ->with('studentOutcome')
                     ->where('students.program_id', $program_id)
+                    ->latest()
                     ->paginate(20);
         } else {
-            $assessments = Assessment::with('student')->with('studentOutcome')->paginate(20);
+            $assessments = Assessment::with('student')->with('studentOutcome')->latest()->paginate(20);
         }
 
         

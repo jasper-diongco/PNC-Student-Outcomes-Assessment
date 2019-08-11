@@ -57,7 +57,7 @@
                     <div class="d-flex justify-content-between align-items-baseline">
                         <div class="d-flex">
                             <div class="mr-2">
-                                <div class="avatar" style="background: #cbff90; color:#585858;"><i class="fa fa-map"></i></div>
+                                <div class="avatar" style="background: #cbff90; color:#585858;"><i class="fa fa-book-open"></i></div>
                             </div>
                             <div>
                               <div style="font-weight: 600">{{ $curriculum->name }} <i class="fa fa-check-circle {{ $curriculum->checkIfLatestVersion() ? 'text-success': 'text-dark' }}"></i></div>
@@ -85,7 +85,7 @@
                 </div>
                 <div class="card-footer">
                   <div class="d-flex justify-content-end align-items-end">
-                      <a class="btn btn-sm btn-info" href="{{ url('/curriculum_mapping/' . $curriculum->id) }}" class="btn btn-sm">
+                      <a class="btn btn-sm btn-info" href="{{ url('/curricula/' . $curriculum->id) }}" class="btn btn-sm">
                            View <i class="fa fa-angle-right"></i>
                       </a>
                     </div>

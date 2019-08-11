@@ -71,8 +71,8 @@
                     </div>
                     <hr>
                     <div class="choices">
-                        <div v-for="choice in selected_test_question.answer_sheet_test_question_choices" :key="choice.id" class="mb-3" v-on:click="selectChoice(selected_test_question.id, choice.id)">
-                            <div class="text-dark choice" style="height: 100%;">
+                        <div  v-for="choice in selected_test_question.answer_sheet_test_question_choices" :key="choice.id" class="mb-3" v-on:click="selectChoice(selected_test_question.id, choice.id)">
+                            <div class="text-dark choice" style="height: 100%;" :class="{'choice-correct': checkIfChoiceCorrect(choice)}">
                                 <div class="d-flex">
                                     <div class="mr-2">
                                         <div class="choice-num" :class="{ 'choice-selected': choice.is_selected }">
@@ -358,6 +358,9 @@
                 }
 
                 return is_answered;   
+            },
+            checkIfChoiceCorrect(choice) {
+                return choice.is_correct == 1;
             }
         },
         created() {

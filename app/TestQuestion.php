@@ -35,6 +35,13 @@ class TestQuestion extends Model
             ->get();
     }
 
+    public function getRandomChoices() {
+        return Choice::where('is_active', true)
+            ->where('test_question_id', $this->id)
+            ->inRandomOrder()   
+            ->get();
+    }
+
     public function difficultyLevel() {
         return $this->belongsTo('App\DifficultyLevel');
     }
