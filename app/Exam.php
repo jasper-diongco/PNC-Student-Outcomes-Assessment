@@ -207,21 +207,25 @@ class Exam extends Model
 
     public function getAvailableForItemAnalysis() {
         $count =  Assessment::where('exam_id', $this->id)
-                ->where('item_analysis', false)
                 ->count();
         if($count % 2 == 0) {
             return Assessment::where('exam_id', $this->id)
-                ->where('item_analysis', false)
                 ->with('student')
                 ->get();
         } else {
             return Assessment::where('exam_id', $this->id)
-                ->where('item_analysis', false)
                 ->inRandomOrder()
                 ->take($count - 1)
                 ->with('student')
                 ->get();
         }
+    }
+
+    public function getAssessmentsWithItemAnalysis() {
+        return Assessment::where('exam_id', $this->id)
+                ->where('item_analysis', true)
+                ->with('student')
+                ->get();
     }
 
     public function sortAssessments($assessments) {

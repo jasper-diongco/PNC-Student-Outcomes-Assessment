@@ -227,6 +227,8 @@ Route::get('/test_questions/get_creators', 'TestQuestionsController@getCreators'
 
 Route::get('/test_questions/{program}/list_student_outcomes', 'TestQuestionsController@listStudentOutcome');
 
+Route::get('/test_questions/get_test_question/{test_question}', 'TestQuestionsController@get_test_question');
+
 Route::get('/test_questions/{test_question}/edit', 'TestQuestionsController@edit');
 
 Route::get('/test_questions/{test_question}/preview', 'TestQuestionsController@preview');
@@ -234,6 +236,8 @@ Route::get('/test_questions/{test_question}/preview', 'TestQuestionsController@p
 Route::post('/test_questions/{test_question}/archive', 'TestQuestionsController@archive');
 
 Route::post('/test_questions/{test_question}/activate', 'TestQuestionsController@activate');
+
+
 
 Route::put('/test_questions/{test_question}', 'TestQuestionsController@update');
 
@@ -319,6 +323,14 @@ Route::post('/grades', 'GradesController@store');
 
 
 
+//Item Analysis Routes
+Route::post('/item_analysis/{test_question}/reject_test_question', 'ItemAnalysisController@reject_test_question');
+
+Route::post('/item_analysis/{test_question}/retain_test_question', 'ItemAnalysisController@retain_test_question');
+
+Route::post('/item_analysis/{test_question}/change_level_of_difficulty', 'ItemAnalysisController@change_level_of_difficulty');
+
+
 
 //route for deactivated user
 Route::get('/user_is_deactivated', function() {
@@ -367,5 +379,9 @@ Route::get('/assessment_results/get_assessments', 'AssessmentResultsController@g
 Route::get('/assessment_results/{assessment}/print_assessment_result', 'AssessmentResultsController@print_assessment_result');
 Route::get('/assessment_results/{assessment}/print_answer_key', 'AssessmentResultsController@print_answer_key');
 Route::get('/assessment_results/{assessment}', 'AssessmentResultsController@show');
+
+
+
+
 
 

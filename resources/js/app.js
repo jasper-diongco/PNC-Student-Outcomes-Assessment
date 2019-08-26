@@ -143,6 +143,11 @@ Vue.component("pie-chart", require("./components/PieChart.vue").default);
 
 Vue.component("exam-modal", require("./components/ExamModal.vue").default);
 
+Vue.component(
+    "revise-test-question-modal",
+    require("./components/ReviseTestQuestionModal.vue").default
+);
+
 Vue.component("datepicker", Datepicker);
 
 Vue.component("vue-select", VueSelect);

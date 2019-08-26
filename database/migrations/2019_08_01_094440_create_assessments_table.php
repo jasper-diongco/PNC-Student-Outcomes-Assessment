@@ -19,6 +19,7 @@ class CreateAssessmentsTable extends Migration
             $table->integer('student_id');
             $table->integer('student_outcome_id');
             $table->double('time_consumed');
+            $table->boolean('item_analysis')->default(false);
             $table->timestamps();
         });
     }

@@ -23,6 +23,7 @@ class CreateExamsTable extends Migration
             $table->double('passing_grade');
             $table->integer('user_id');
             $table->boolean('is_active');
+            $table->boolean('item_analysis')->default(false);
             $table->timestamps();
         });
     }

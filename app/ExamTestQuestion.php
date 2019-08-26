@@ -9,6 +9,6 @@ class ExamTestQuestion extends Model
     public $guarded = [];
 
     public function testQuestion() {
-        return $this->belongsTo('App\TestQuestion');
+        return $this->belongsTo('App\TestQuestion')->with('course');
     }
 }

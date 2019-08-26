@@ -14,6 +14,7 @@ use App\TestQuestion;
 use App\Choice;
 use App\User;
 use App\College;
+use App\ItemAnalysisDetail;
 use App\Rules\TextOnly;
 use App\Http\Resources\TestQuestionResource;
 
@@ -102,6 +103,12 @@ class TestQuestionsController extends Controller
                 ->get();
 
         return view('test_questions.index', compact('student_outcome', 'course', 'easy_count', 'average_count', 'difficult_count', 'deactivated_test_questions'));
+    }
+
+    public function get_test_question(TestQuestion $test_question) {
+        $test_question->load('choices');
+
+        return $test_question;
     }
 
     // public function set_choices_order() {
@@ -274,6 +281,9 @@ class TestQuestionsController extends Controller
                 'ref_id' => $data['ref_id']
             ]);
 
+            $test_question->parent_id = $test_question->id;
+            $test_question->save();
+
             $counter = 1;
 
             foreach (request('choices') as $choice) {
@@ -378,12 +388,31 @@ class TestQuestionsController extends Controller
                 }
             }
 
-            
+            if(request('is_revised') == true) {
+
+                $item_analysis_detail_id = request('item_analysis_detail_id');
+                
+                $item_analysis_detail = ItemAnalysisDetail::findOrFail($item_analysis_detail_id);
+
+                $item_analysis_detail->is_resolved = true;
+                $item_analysis_detail->action_resolved = "Item is revised";
+                $item_analysis_detail->save();
+
+                DB::commit();
+
+                return $item_analysis_detail;
+
+            } else {
+                Session::flash('message', 'Test question successfully updated from database');
+            }
 
             DB::commit();
             // all good
 
-            Session::flash('message', 'Test question successfully updated from database');
+
+            
+
+
             return $test_question;
 
         } catch (\Exception $e) {

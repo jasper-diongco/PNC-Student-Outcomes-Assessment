@@ -10,6 +10,9 @@ use App\Program;
 use App\Curriculum;
 use App\StudentOutcome;
 use App\AssessmentDetail;
+use App\ItemAnalysis;
+use App\ItemAnalysisDetail;
+use App\ItemAnalysisDetailAction;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
@@ -283,7 +286,28 @@ class ExamsController extends Controller
         }
         $templates = [];
         $exam_test_questions = $exam->exam_test_questions;
-        $assessments = $exam->getAvailableForItemAnalysis();
+
+        if($exam->item_analysis) {
+            $assessments = $exam->getAssessmentsWithItemAnalysis();
+        } else {
+            $assessments = $exam->getAvailableForItemAnalysis();
+
+            //update
+            // $exam->item_analysis = true;
+            // $exam->save();
+
+
+            foreach ($assessments as $assessment) {
+                $assessment->item_analysis = true;
+                $assessment->save();
+            }
+
+        }
+
+        
+
+
+
         $assessments_count = count($assessments);
         $sorted_assessments = [];
 
@@ -364,6 +388,7 @@ class ExamsController extends Controller
                 }
                 $index++;
             }
+            
         }
 
         //get the lower_group_totals
@@ -383,9 +408,218 @@ class ExamsController extends Controller
             }
         }
 
+        //maximum and minumum possible score
+        $maximum_possible_score = count($upper_group) * 1;
+        $minimum_possible_score = count($lower_group) * 0;
+        $range_scores_possible = $maximum_possible_score - $minimum_possible_score;
 
+        //get difficulty index
+        $templates['difficulty_index'] = [];
+        $templates['correct_answers'] = [];
+        $templates['difficulty_index_num'] = [];
+        $templates['difficulty_actions'] = [];
+        $templates['discrimination_index'] = [];
+        $templates['discrimination_actions'] = [];
+        $templates['recommended_actions'] = [];
+
+        for($i = 0; $i < count($templates['exam_test_questions']); $i++) {
+            $templates['correct_answers'][$i] = 0;
+            $templates['correct_answers'][$i] += $templates['upper_group_totals'][$i];
+            $templates['correct_answers'][$i] += $templates['lower_group_totals'][$i];
+
+            $templates['difficulty_index'][$i] = round(($templates['correct_answers'][$i] / count($sorted_assessments)) * 100);
+            $templates['difficulty_index_num'][$i] = $this->get_difficulty_index_num($templates['difficulty_index'][$i]);
+            $templates['difficulty_actions'][$i] = $this->get_recommended_action_for_diff($templates['difficulty_index_num'][$i], $templates['exam_test_questions'][$i]->testQuestion);
+
+
+            $templates['discrimination_index'][$i] = ($templates['upper_group_totals'][$i] - $templates['lower_group_totals'][$i]) / $range_scores_possible;
+
+            $templates['discrimination_actions'][$i] = $this->get_recommended_action_for_discrimination($templates['discrimination_index'][$i]);
+
+            
+            $templates['recommended_actions'][$i] = $this->get_recommendation($templates['difficulty_actions'][$i], $templates['discrimination_actions'][$i]);
+            
+
+        }
+
+
+
+
+        if($exam->item_analysis) {
+            $item_analysis = ItemAnalysis::where('exam_id', $exam->id)->first();
+            $item_analysis_details = ItemAnalysisDetail::where('item_analysis_id', $item_analysis->id)->get();
+        } else {
+
+            $item_analysis = ItemAnalysis::create([
+                'exam_id' => $exam->id,
+                'is_saved' => false
+            ]);
+
+            $item_analysis_details = [];
+
+            for($i = 0; $i < count($templates['exam_test_questions']); $i++) {
+                $item_analysis_detail = ItemAnalysisDetail::create([
+                    'item_analysis_id' => $item_analysis->id,
+                    'test_question_id' => $templates['exam_test_questions'][$i]->test_question_id,
+                    'is_resolved' => false,
+                    'action_resolved' => ''
+                ]);
+
+                $item_analysis_details[] = $item_analysis_detail;
+
+                foreach ($templates['recommended_actions'][$i] as $recommended_action) {
+                    $item_analysis_detail_action = ItemAnalysisDetailAction::create([
+                        'item_analysis_detail_id' => $item_analysis_detail->id,
+                        'recommended_action' => $recommended_action,
+                        'is_selected' => false
+                    ]);
+                }
+            }
+
+
+            //update exam and assessments
+            $exam->item_analysis = true;
+            $exam->save();
+
+
+            
+        }
+
+        $templates['item_analysis'] = $item_analysis;
+        $templates['item_analysis_details'] = $item_analysis_details;
 
         return $templates;
+
+    }
+
+    private function get_difficulty_index_num($index) {
+        if($index <= 20) {
+            return 5;//Very Difficult
+        } else if ($index >= 21 && $index <= 40) {
+            return 4;//Difficult
+        } else if ($index >= 41 && $index <= 60) {
+            return 3;//Average
+        } else if ($index >= 61 && $index <= 80) {
+            return 2;//Easy
+        } else if ($index >= 61 && $index <= 100) {
+            return 1;//Very Easy
+        } 
+    }
+
+    private function get_recommended_action_for_diff($index_num, $test_question) {
+        /*
+        **** ACTIONS FOR DIFFICULTY
+            1 - To be retain
+            2 - To be revised
+            3 - To be discard
+        */
+
+        if($index_num == 5 || $index_num == 1) {
+            return 3;
+        }
+        //for easy
+        else if($test_question->difficulty_level_id == 1 && $index_num == 2) {
+            return 1;
+        } else if ($test_question->difficulty_level_id == 1 && $index_num != 2) {
+            return 2;
+        }
+
+        //for average
+        else if($test_question->difficulty_level_id == 2 && $index_num == 3) {
+            return 1;
+        } else if ($test_question->difficulty_level_id == 2 && $index_num != 3) {
+            return 2;
+        }
+
+        //for difficult
+        else if($test_question->difficulty_level_id == 3 && $index_num == 4) {
+            return 1;
+        } else if ($test_question->difficulty_level_id == 3 && $index_num != 4) {
+            return 2;
+        }
+    }
+
+    private function get_recommended_action_for_discrimination($discrimination_index) {
+        /*
+        **** ACTIONS FOR DISCRMINATION
+            1 - VG retain
+            2 - G retain/revise
+            3 - F Improve
+            4 - P revise/ reject
+            5 - VP reject
+        */
+
+        if($discrimination_index < 0.09) {
+            return 5;
+        } else if ($discrimination_index >= 0.09 && $discrimination_index <= 0.19) {
+            return 4;
+        } else if ($discrimination_index >= 0.20 && $discrimination_index <= 0.29) {
+            return 3;
+        } else if ($discrimination_index >= 0.30 && $discrimination_index <= 0.39) {
+            return 2;
+        } else if ($discrimination_index >= 0.40) {
+            return 1;
+        }
+    }
+
+    private function get_recommendation($difficulty_action, $discrimination_action) {
+        /*
+        **** ACTIONS FOR DIFFICULTY
+            1 - To be retain
+            2 - To be revised
+            3 - To be discard
+        */
+
+        /*
+        **** ACTIONS FOR DISCRMINATION
+            1 - VG retain
+            2 - G retain/revise
+            3 - F Improve
+            4 - P revise/ reject
+            5 - VP reject
+        */
+
+        /*
+        **** ACTIONS
+            1 - RETAIN
+            2 - REVISE
+            3 - REJECT
+        */
+
+        $actions = [];
+
+        if($difficulty_action == 3 || $discrimination_action == 5) {
+            $actions[] = 3;
+        } else if ($difficulty_action == 1 && $discrimination_action == 1) {
+            $actions[] = 1;
+        } else {
+            if($difficulty_action == 2) {
+                $actions[] = 2;
+            }
+
+            if($discrimination_action == 2) {
+                $actions[] = 1;
+                $actions[] = 2;
+            }
+
+            if($discrimination_action == 3) {
+                $actions[] = 2;
+            }
+
+            if($discrimination_action == 4) {
+                $actions[] = 2;
+                $actions[] = 3;
+            }
+        }
+
+        //remove redundant
+        $actions = array_unique($actions);
+
+        return $actions;
+
+    }
+
+    private function getRecommendedAction() {
 
     }
 
@@ -408,7 +642,7 @@ class ExamsController extends Controller
         //authenticate
         if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
             return abort('401', 'Unauthorized');
-        }
+        } 
 
 
         return view('exams.print_answer_key', compact('exam'));

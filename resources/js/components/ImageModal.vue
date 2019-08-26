@@ -10,6 +10,7 @@
 			role="dialog"
 			aria-labelledby="exampleModalLabel"
 			aria-hidden="true"
+			style="z-index: 1400;"
 		>
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">

@@ -13,23 +13,23 @@
     {{-- <div class="mx-auto" style="width: 400px">
       <img src="{{ asset('svg/goals.svg') }}" class="w-100">
     </div> --}}
-        <div class="d-flex justify-content-between mb-0 mt-3">
-      <div>
-        <h1 class="page-header mt-0">Student Outcomes</h1>
-      </div>
-      <div>
-        @if(!$program->so_is_saved)
-          @if(Gate::check('isDean') || Gate::check('isSAdmin'))
-            <student-outcome-modal :programs='@json($programs)' :program-id="{{ $program->id }}"></student-outcome-modal>
+      <div class="d-flex justify-content-between mb-0 mt-3">
+        <div>
+          <h1 class="page-header mt-0">Student Outcomes</h1>
+        </div>
+        <div>
+          @if(!$program->so_is_saved)
+            @if(Gate::check('isDean') || Gate::check('isSAdmin'))
+              <student-outcome-modal :programs='@json($programs)' :program-id="{{ $program->id }}"></student-outcome-modal>
+            @endif
+          @else
+            <button :disabled="isLoading" class="btn btn-primary btn-sm" v-on:click="confirmRevise">
+              <div v-if="isLoading" class="spinner-border spinner-border-sm text-light" role="status">
+                <span class="sr-only">Loading...</span>
+              </div> Revise <i class="fa fa-edit"></i></button>
           @endif
-        @else
-          <button :disabled="isLoading" class="btn btn-primary btn-sm" v-on:click="confirmRevise">
-            <div v-if="isLoading" class="spinner-border spinner-border-sm text-light" role="status">
-              <span class="sr-only">Loading...</span>
-            </div> Revise <i class="fa fa-edit"></i></button>
-        @endif
+        </div>
       </div>
-    </div>
     <label class="text-dark"><i class="fa fa-graduation-cap"></i> Program: <span class="text-info fs-19">{{ $program->description }}</span></label> 
     <label class="text-dark"><i class="fa fa-code-branch"></i> Revision Number: <span class="text-info fs-19">{{ $program->so_rev_no }}.0</span></label>
 

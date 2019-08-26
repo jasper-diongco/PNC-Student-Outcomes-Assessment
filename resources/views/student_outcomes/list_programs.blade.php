@@ -4,8 +4,12 @@
 
 @section('content')
 
+<div class="card mb-4">
+  <div class="card-body pt-4">
+    <h1 class="page-header mb-0"><i class="fa fa-flag" style="color: #a1a1a1"></i> Student Outcomes</h1>
+  </div>
+</div>
 
-<h1 class="page-header"><i class="fa fa-flag" style="color: #a1a1a1"></i> Student Outcomes</h1>
 
 @if($programs->count() > 0)
   <h5 class="text-dark mb-3">Select Program</h5>
