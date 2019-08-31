@@ -1,4 +1,4 @@
-@extends('layout.app', ['active' => 'test_questions'])
+@extends('layout.app', ['active' => 'test_questions', 'container_fluid' => true])
 
 @section('title', 'Exam Details')
 
@@ -44,7 +44,7 @@
             
             <div>
                 <div style="font-size: 18px; font-weight: 600; text-decoration: underline;" class="text-success">UPPER GROUP</div>
-                <div class="table-responsive">
+                <div class="table-responsive double-scroll">
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -83,7 +83,7 @@
 
             <div class="mt-4">
                 <div style="font-size: 18px; font-weight: 600; text-decoration: underline;" class="text-success">LOWER GROUP</div>
-                <div class="table-responsive">
+                <div class="table-responsive double-scroll">
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -126,24 +126,25 @@
     
     
     <h5 class="text-info mt-5">Result</h5>
-    <div class="mb-2">
+    {{-- <div class="mb-2">
         <button class="btn btn-sm" :class="{ 'btn-success': viewStyle == 'list' }" v-on:click="viewStyle = 'list'"><i class="fa fa-list"></i> List View</button>
         <button class="btn btn-sm" :class="{ 'btn-success': viewStyle == 'table' }" v-on:click="viewStyle = 'table'"><i class="fa fa-table"></i> Table View</button>
-    </div>
-    <div class="card" v-if="viewStyle == 'table'">
+    </div> --}}
+    <div class="card">
         <div class="card-body">
             <div >
                 <table class="table table-bordered">
                     <thead>
                         <th width="3%">No.</th>
                         <th width="10%">Test Question</th>
-                        <th>Students with <br>Correct Answer</th>
-                        <th>Difficulty Index</th>
-                        <th>Difficulty Interpretation</th>
-                        <th>Difficulty Action</th>
-                        <th>Discrimination Index</th>
-                        <th>Discrmination Interpretation</th>
-                        <th>Discrimination Action</th>
+                        <th width="5%">Students with <br>Correct Answer</th>
+                        <th width="10%">Difficulty Index</th>
+                        <th width="10%">Difficulty Interpretation</th>
+                        <th width="10%">Difficulty Action</th>
+                        <th width="10%">Discrimination Index</th>
+                        <th width="10%">Discrmination Interpretation</th>
+                        <th width="10%">Discrimination Action</th>
+                        <th width="10%">Recommended Action</th>
                         {{-- <th>Recommended Action</th> --}}
                     </thead>
                     <tbody>
@@ -174,56 +175,8 @@
                             </td>
                             <td>@{{ discriminationInterpretation(templates.discrimination_index[index]) }}</td>
                             <td>@{{ discriminationAction(templates.discrimination_actions[index]) }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <ul class="list-group" id="list-exam-test-questions" v-else>
-          <li v-for="(exam_test_question, index) in templates.exam_test_questions" :key="exam_test_question.id" class="list-group-item">
-                <div class="d-flex justify-content-between align-items-baseline">
-                    <div class="d-flex">
-                        <div class="mr-3">
-
-                            <div class="avatar" :style="avatarStyle(exam_test_question.test_question.difficulty_level_id)">
-                              @{{ exam_test_question.pos_order }}
-                            </div>
-                        </div>
-                        <div>
-                            <div style="font-size: 18px">
-                            
-                                <div class="mb-1">{{-- <i class="fa fa-fingerprint"></i> --}} ID: @{{ exam_test_question.test_question.tq_code }}</div>
-
-                              
-                                <div class="mb-1" style="font-weight: 600">
-                                    <i class="fa fa-file-alt"></i> @{{ exam_test_question.test_question.title }}
-                                  </div> 
-                            </div>
-                            <div  class="text-muted mb-1">Current Level: @{{ getDifficulty(exam_test_question.test_question.difficulty_level_id) }}</div>
-                            <div><span class="text-dark" style="font-weight: 600">Students With Correct Answer: </span> <span class="text-success output-box fs-19" style="font-weight: 600">@{{ templates.correct_answers[index] }}</span></div>
-                            <div>
-                                <h5 style="text-decoration: underline;">Difficulty</h5>
-                                <div class="d-flex">
-                                    <div  class="mr-3 text-warning output-box"><span class="text-dark" style="font-weight: 600;">Difficulty Index:</span> <span>@{{ templates.difficulty_index[index] }}</span></div>
-                                    <div  class="mr-3 text-warning output-box"><span class="text-dark" style="font-weight: 600;">Difficulty Interpretation:</span> <span>@{{ difficultyIndexInterpretation(templates.difficulty_index_num[index]) }}</span></div>
-                                    <div  class="mr-3 text-warning output-box" :style="actionStyle('difficulty', templates.difficulty_actions[index])"><span class="text-dark" style="font-weight: 600;" >Difficulty Recommended Action:</span> <span>@{{ difficultyActionInterpretation(templates.difficulty_actions[index]) }}</span></div>
-                                </div>
-                            </div>
-
-                            <div>
-                                <h5 style="text-decoration: underline;">Discrmination</h5>
-                                <div class="d-flex">
-                                    <div  class="mr-3 text-warning output-box"><span class="text-dark" style="font-weight: 600;">Discrmination Index:</span> <span>@{{ templates.discrimination_index[index] }}</span></div>
-                                    <div  class="mr-3 text-warning output-box"><span class="text-dark" style="font-weight: 600;">Discrmination Interpretation:</span> <span>@{{ discriminationInterpretation(templates.discrimination_index[index]) }}</span></div>
-                                    <div :style="actionStyle('discrimination', templates.discrimination_actions[index])"  class="mr-3 text-warning output-box"><span class="text-dark" style="font-weight: 600;">Discrmination Recommended Action:</span> <span>@{{ discriminationAction(templates.discrimination_actions[index]) }}</span></div>
-                                </div>
-                            </div>
-
-                            <div>
-                                <h5 style="text-decoration: underline;">Recommended action</h5>
-                                <div class="d-flex" v-if="!checkIfResolved(exam_test_question.test_question_id)">
+                            <td>
+                                <div class="d-flex flex-column" v-if="!checkIfResolved(exam_test_question.test_question_id)">
                                     <button v-if="checkAction(templates.recommended_actions[index], 1)" v-on:click="retainTestQuestion(exam_test_question.test_question_id, templates.item_analysis_details[index].id)" class="btn btn-sm btn-success mr-2">Retain <i class="fa fa-check"></i></button>
                                     <button v-if="templates.difficulty_actions[index] == 2 && checkAction(templates.recommended_actions[index], 2)" v-on:click="changeLevelOfDifficulty(exam_test_question.test_question_id, templates.item_analysis_details[index].id, difficultyLevelId(difficultyIndexInterpretation(templates.difficulty_index_num[index])))" class="btn btn-sm btn-success mr-2">Change to @{{ difficultyIndexInterpretation(templates.difficulty_index_num[index]) }} <i class="fa fa-check"></i></button>
 
@@ -231,25 +184,26 @@
 
                                     <button class="btn btn-sm btn-info" v-if="checkAction(templates.recommended_actions[index], 2)" v-on:click="openReviseModal(exam_test_question.test_question_id, templates.item_analysis_details[index].id)">Revise <i class="fa fa-edit"></i></button>
                                 </div>
-                                <div v-else class="fs-19">
+                                <div v-else class="">
                                     <i class="fa fa-check-circle text-success"></i> Resolved :
                                     <span class="text-warning" style="text-decoration: underline;">
                                         @{{ checkIfResolved(exam_test_question.test_question_id).action_resolved }}
                                     </span>
                                 </div>
-                            </div>
-                        </div>   
-                    </div>
-                    <div>
-                        {{-- <a v-on:click="getPreview(test_question.id)" href="#" data-toggle="modal" data-target="#previewModal" class="btn btn-sm">View <i class="fa fa-search"></i></a> --}}                           
-                    </div>
-                </div>
-            </li>
-        </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    
     </div>
     
-    <div class="d-flex justify-content-end mt-3">
-        <button class="btn btn-info">Save <i class="fa fa-check"></i></button>
+    <div v-if="resultReceived" class="d-flex justify-content-end mt-3">
+        <a v-if="is_resolved_all" :href="resultLink" :disabled="!is_resolved_all" class="btn btn-info">Save <i class="fa fa-check"></i></a>
+        {{-- <a href="{{ url('/exams/item_analysis_result/4') }}">Result</a> --}}
     </div>
 
 
@@ -266,13 +220,38 @@
                 resultReceived: false,
                 validForItemAnalysis: {{ $exam->getAvailableForItemAnalysis()->count() >= 20 }},
                 templates: {
-                    exam_test_questions: []
+                    exam_test_questions: [],
+                    // item_analysis_details: []
                 },
-                viewStyle: 'list',
+                viewStyle: 'table',
                 selected_test_question_id: '',
-                selected_item_analysis_detail_id: ''
+                selected_item_analysis_detail_id: '',
+                is_resolved_all: false,
+                student_outcome_id: '{{ request('student_outcome_id') }}',
+                curriculum_id: '{{ request('curriculum_id') }}',
+                program_id: '{{ request('program_id') }}'
+            },
+            computed: {
+                resultLink() {
+                    return myRootURL + '/exams/item_analysis_result/' + this.templates.item_analysis.id + '?program_id='+ this.program_id +'&student_outcome_id=' + this.student_outcome_id + '&curriculum_id=' + this.curriculum_id;
+                }
             },
             methods: {
+                resolvedAll() {
+                    var is_resolved_all = true;
+
+                    for(var i = 0 ; i < this.templates.item_analysis_details.length; i++) {
+                        if(this.templates.item_analysis_details[i].is_resolved == 0) {
+                            is_resolved_all = false;
+                            break;
+                        }
+                        // console.log(this.templates.item_analysis_details[i].is_resolved);
+                    }
+
+                    this.is_resolved_all = is_resolved_all;
+
+                    return is_resolved_all;
+                },
                 getDifficulty(difficulty_id) {
                     if (difficulty_id == 1) {
                         return 'Easy';
@@ -345,6 +324,11 @@
                             this.templates = response.data;
                             this.isStartingItemAnalysis = false;
                             this.resultReceived = true;
+                            setTimeout(() => {
+                                $('.double-scroll').doubleScroll();
+                            }, 1000);
+                            this.resolvedAll();
+                            
                         })
                         .catch(err => {
                             this.resultReceived = false;
@@ -447,6 +431,8 @@
                                     type: 'success',
                                     title: 'Item is rejected'
                                 });
+
+                                this.resolvedAll();
                             })
                         }
                     });
@@ -469,6 +455,8 @@
                             type: 'success',
                             title: 'Item is retained'
                         });
+
+                        this.resolvedAll();
                     })
                 },
                 changeLevelOfDifficulty(test_question_id, item_analysis_detail_id, difficulty_level_id) {
@@ -497,6 +485,8 @@
                             type: 'success',
                             title: "Item's Difficulty Changed"
                         });
+
+                        this.resolvedAll();
                     })
                 },
                 openReviseModal(test_question_id, item_analysis_detail_id) {
@@ -514,10 +504,19 @@
                             break;
                         }
                     }
+
+                    this.resolvedAll();
                 }
             },
 
             created() {
+
+                // setTimeout(() => {
+                //     $('.double-scroll').doubleScroll();
+                // }, 1000);
+                
+
+
                 if(this.exam.item_analysis) {
                     this.startItemAnalysis();
                 }

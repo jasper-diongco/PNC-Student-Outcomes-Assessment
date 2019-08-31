@@ -396,6 +396,7 @@ class TestQuestionsController extends Controller
 
                 $item_analysis_detail->is_resolved = true;
                 $item_analysis_detail->action_resolved = "Item is revised";
+                $item_analysis_detail->action_resolved_id = 2;
                 $item_analysis_detail->save();
 
                 DB::commit();

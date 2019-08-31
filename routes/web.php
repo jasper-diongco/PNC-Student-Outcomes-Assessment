@@ -301,13 +301,17 @@ Route::get('/exams', 'ExamsController@index');
 // Route::get('/exams/generate_pos_order', 'ExamsController@generate_pos_order');
 Route::get('/exams/get_exams', 'ExamsController@get_exams');
 Route::get('/exams/create', 'ExamsController@create');
+Route::post('/exams/revise_exam/{exam}', 'ExamsController@revise_exam');
 Route::post('/exams', 'ExamsController@store');
+
 Route::get('/exams/{exam}/preview', 'ExamsController@preview');
 Route::get('/exams/{exam}/item_analysis', 'ExamsController@item_analysis');
 Route::get('/exams/{exam}/print_answer_key', 'ExamsController@print_answer_key');
 Route::post('/exams/{exam}/deactivate', 'ExamsController@deactivate');
+
 Route::post('/exams/{exam}/activate', 'ExamsController@activate');
 Route::post('/exams/{exam}/start_item_analysis', 'ExamsController@start_item_analysis');
+Route::get('/exams/item_analysis_result/{item_analysis}', 'ExamsController@item_analysis_result');
 Route::get('/exams/{exam}', 'ExamsController@show');
 
 // End Exam routes
@@ -329,6 +333,8 @@ Route::post('/item_analysis/{test_question}/reject_test_question', 'ItemAnalysis
 Route::post('/item_analysis/{test_question}/retain_test_question', 'ItemAnalysisController@retain_test_question');
 
 Route::post('/item_analysis/{test_question}/change_level_of_difficulty', 'ItemAnalysisController@change_level_of_difficulty');
+
+// Route::get('/item_analysis/result/{item_analysis}', 'ItemAnalysisController@item_analysis_result');
 
 
 

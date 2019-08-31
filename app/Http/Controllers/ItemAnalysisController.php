@@ -30,6 +30,7 @@ class ItemAnalysisController extends Controller
 
             $item_analysis_detail->is_resolved = true;
             $item_analysis_detail->action_resolved = "Item is rejected";
+            $item_analysis_detail->action_resolved_id = 3;
             $item_analysis_detail->save();
 
             
@@ -58,6 +59,7 @@ class ItemAnalysisController extends Controller
 
             $item_analysis_detail->is_resolved = true;
             $item_analysis_detail->action_resolved = "Item is retained";
+            $item_analysis_detail->action_resolved_id = 1;
             $item_analysis_detail->save();
 
             
@@ -94,6 +96,7 @@ class ItemAnalysisController extends Controller
 
             $item_analysis_detail->is_resolved = true;
             $item_analysis_detail->action_resolved = "Item's level of difficulty is changed from $current_diff to $change_diff";
+            $item_analysis_detail->action_resolved_id = 2;
             $item_analysis_detail->save();
 
             
@@ -112,4 +115,6 @@ class ItemAnalysisController extends Controller
 
         
     }
+
+    
 }

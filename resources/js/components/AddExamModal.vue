@@ -192,7 +192,15 @@
 
 <script>
 export default {
-    props: ["curriculumId", "studentOutcomeId", "courses"],
+    props: [
+        "curriculumId",
+        "studentOutcomeId",
+        "courses",
+        "is_revised",
+        "exam_id",
+        "item_analysis_id",
+        "program_id"
+    ],
     data() {
         return {
             form: new Form({
@@ -204,20 +212,34 @@ export default {
             }),
             courses_requirements: [],
             isLoading: false,
-            isFinished: false
+            isFinished: false,
+            response: ""
         };
     },
     methods: {
         addExam() {
             this.getRandomTestQuestions();
+
+            var url = myRootURL + "/exams";
+
+            if (this.is_revised) {
+                url =
+                    myRootURL +
+                    "/exams/revise_exam/" +
+                    this.exam_id +
+                    "?item_analysis_id=" +
+                    this.item_analysis_id;
+            }
+
             this.form
-                .post(myRootURL + "/exams")
+                .post(url)
                 .then(response => {
                     this.isFinished = true;
-
+                    this.response = response;
                     //$("#addExamModal").modal("hide");
 
                     // this.$emit("new-exam-added");
+                    console.log(response);
                 })
                 .catch(err => {
                     this.isFinished = false;
@@ -252,12 +274,26 @@ export default {
                         index == this.courses_requirements.length - 1 &&
                         this.isFinished
                     ) {
-                        this.$emit("new-exam-added");
-                        $("#addExamModal").modal("hide");
-                        toast.fire({
-                            type: "success",
-                            title: "New Exam Successfully Created"
-                        });
+                        if (this.is_revised) {
+                            window.location.replace(
+                                myRootURL +
+                                    "/exams/" +
+                                    this.response.data.exam.id +
+                                    "?student_outcome_id=" +
+                                    this.studentOutcomeId +
+                                    "&curriculum_id=" +
+                                    this.curriculumId +
+                                    "&program_id=" +
+                                    this.program_id
+                            );
+                        } else {
+                            this.$emit("new-exam-added");
+                            $("#addExamModal").modal("hide");
+                            toast.fire({
+                                type: "success",
+                                title: "New Exam Successfully Created"
+                            });
+                        }
                     }
                     index++;
                 }

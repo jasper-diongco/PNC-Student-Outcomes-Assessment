@@ -158,4 +158,15 @@ class TestQuestion extends Model
                 ->take($count)
                 ->get();
     }
+
+    public static function getRandTestQuestionsUnique($student_outcome_id='',$course_id='', $difficulty_level_id='', $count=0, $not_in=[]) {
+        return TestQuestion::where('student_outcome_id', $student_outcome_id)
+                ->where('course_id', $course_id)
+                ->where('is_active', true)
+                ->where('difficulty_level_id', $difficulty_level_id)
+                ->whereNotIn('test_questions.id', $not_in)
+                ->inRandomOrder()
+                ->take($count)
+                ->get();
+    }
 }

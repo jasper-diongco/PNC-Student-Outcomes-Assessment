@@ -13,6 +13,7 @@ use App\AssessmentDetail;
 use App\ItemAnalysis;
 use App\ItemAnalysisDetail;
 use App\ItemAnalysisDetailAction;
+use App\CurriculumCourse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
@@ -59,6 +60,8 @@ class ExamsController extends Controller
 
         return view('exams.index', compact('program', 'curriculum', 'student_outcome', 'exams', 'deactivated_exams', 'requirements_template'));
     }
+
+
 
     public function get_exams() {
         //authenticate
@@ -171,6 +174,9 @@ class ExamsController extends Controller
                     'is_active' => true
                 ]);
 
+                $exam->parent_id = $exam->id;
+                $exam->update();
+
 
                 $counter = 1;
 
@@ -182,7 +188,8 @@ class ExamsController extends Controller
                     $exam_test_question = ExamTestQuestion::create([
                         'exam_id' => $exam->id,
                         'test_question_id' => $test_q['id'],
-                        'pos_order' => $counter
+                        'pos_order' => $counter,
+                        'difficulty_level_id' => $test_q['difficulty_level_id']
                     ]);
 
                     $counter++;
@@ -193,6 +200,439 @@ class ExamsController extends Controller
                 DB::commit();
 
                Session::flash('message', 'Exam successfully created'); 
+
+               return response()->json(['exam' => $exam ,'test_questions' => $exam_test_questions], 201); 
+            } else {
+                return response()->json(['message' => 'Insufficient test questions!', 'my_code' => 'insufficient'] ,422);
+            }
+        }
+        catch (\Exception $e) {
+            DB::rollback();
+            // something went wrong
+            return response()->json(['message' => 'Internal server error!'] ,500);
+        }
+        
+        
+    }
+
+    private function getOriginalRequirements($curriculum_course_requirements) {
+        $requirements_template = [];
+
+        foreach ($curriculum_course_requirements as $curriculum_course_requirement) {
+            $requirement = [
+                'course' => $curriculum_course_requirement->curriculum_map->curriculumCourse->course,
+                'test_question_count' => $curriculum_course_requirement->total,
+                'easy' => $curriculum_course_requirement->easy,
+                'average' => $curriculum_course_requirement->average,
+                'difficult' => $curriculum_course_requirement->difficult,
+                'isLoading' => true
+            ];
+
+            $requirements_template[] = $requirement;
+        }
+
+        return $requirements_template;
+    }
+
+
+    public function revise_exam(Exam $exam) {
+
+        //authenticate
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
+
+        $is_valid = true;
+
+        $data = request()->validate([
+            'student_outcome_id' => 'required',
+            'curriculum_id' => 'required',
+            'description' => 'required',
+            'time_limit' => 'required|numeric|min:30|max:120',
+            'passing_grade' => 'required|numeric|min:40|max:100'
+        ]);
+
+
+        DB::beginTransaction();
+
+        try {
+            
+            $item_analysis = ItemAnalysis::find(request('item_analysis_id'));
+
+            $curriculum_course_requirements = Exam::getRequirements(request('student_outcome_id'), request('curriculum_id'));
+
+            
+
+            // return $curriculum_course_requirements;
+
+            $exam_test_questions = [];
+            $test_questions = [];
+
+            //start
+            $requirements_template = [];
+
+            foreach ($curriculum_course_requirements as $curriculum_course_requirement) {
+
+                $requirement = [
+                    'course' => $curriculum_course_requirement->curriculum_map->curriculumCourse->course,
+                    'test_question_count' => $curriculum_course_requirement->total,
+                    'easy' => $curriculum_course_requirement->easy,
+                    'average' => $curriculum_course_requirement->average,
+                    'difficult' => $curriculum_course_requirement->difficult,
+                    'isLoading' => true
+                ];
+
+                $requirements_template[] = $requirement;
+            }
+
+            $retained_items = $item_analysis->getRetainedItem();
+            $revised_items = $item_analysis->getRevisedItem();
+
+            // return $requirements_template;
+
+            foreach ($retained_items as $retained_item) {
+
+                for($i = 0; $i < count($requirements_template); $i++) {
+                    if($requirements_template[$i]['course']->id == $retained_item->testQuestion->course_id) {
+
+                        if($retained_item->testQuestion->difficulty_level_id == 1) {
+                            $requirements_template[$i]['easy'] -= 1;
+                        } else if($retained_item->testQuestion->difficulty_level_id == 2) {
+                            $requirements_template[$i]['average'] -= 1;
+                        } else if($retained_item->testQuestion->difficulty_level_id == 3) {
+                            $requirements_template[$i]['difficult'] -= 1;
+                        }
+
+                        $requirements_template[$i]['test_question_count'] = $requirements_template[$i]['easy'] + $requirements_template[$i]['average'] + $requirements_template[$i]['difficult'];
+                    }
+                }
+             }
+
+             foreach ($revised_items as $retained_item) {
+
+                for($i = 0; $i < count($requirements_template); $i++) {
+                    if($requirements_template[$i]['course']->id == $retained_item->testQuestion->course_id) {
+
+                        if($retained_item->testQuestion->difficulty_level_id == 1) {
+                            $requirements_template[$i]['easy'] -= 1;
+                        } else if($retained_item->testQuestion->difficulty_level_id == 2) {
+                            $requirements_template[$i]['average'] -= 1;
+                        } else if($retained_item->testQuestion->difficulty_level_id == 3) {
+                            $requirements_template[$i]['difficult'] -= 1;
+                        }
+
+                        $requirements_template[$i]['test_question_count'] = $requirements_template[$i]['easy'] + $requirements_template[$i]['average'] + $requirements_template[$i]['difficult'];
+                    }
+                }
+             }
+
+             // return $requirements_template;
+             //remove the negative
+             $remained_test_questions = [];
+             for($i = 0; $i < count($requirements_template); $i++) {
+                // return $requirements_template[$i]['course'];
+                $tq_easy = TestQuestion::select('test_questions.*')
+                        ->join('item_analysis_details', 'test_questions.id', '=', 'item_analysis_details.test_question_id')
+                        ->where('item_analysis_id', $item_analysis->id)
+                        ->where('test_questions.difficulty_level_id', 1)
+                        ->where('test_questions.course_id', $requirements_template[$i]['course']->id)
+                        ->where(function($q) {
+                            $q->where('item_analysis_details.action_resolved_id', 1)
+                            ->orWhere('item_analysis_details.action_resolved_id', 2);
+                        })
+                        ->get();
+
+                $tq_average = TestQuestion::select('test_questions.*')
+                        ->join('item_analysis_details', 'test_questions.id', '=', 'item_analysis_details.test_question_id')
+                        ->where('item_analysis_id', $item_analysis->id)
+                        ->where('test_questions.difficulty_level_id', 2)
+                        ->where('test_questions.course_id', $requirements_template[$i]['course']->id)
+                        ->where(function($q) {
+                            $q->where('item_analysis_details.action_resolved_id', 1)
+                            ->orWhere('item_analysis_details.action_resolved_id', 2);
+                        })
+                        ->get();
+
+                $tq_difficult = TestQuestion::select('test_questions.*')
+                        ->join('item_analysis_details', 'test_questions.id', '=', 'item_analysis_details.test_question_id')
+                        ->where('item_analysis_id', $item_analysis->id)
+                        ->where('test_questions.difficulty_level_id', 3)
+                        ->where('test_questions.course_id', $requirements_template[$i]['course']->id)
+                        ->where(function($q) {
+                            $q->where('item_analysis_details.action_resolved_id', 1)
+                            ->orWhere('item_analysis_details.action_resolved_id', 2);
+                        })
+                        ->get();
+
+
+                 if($requirements_template[$i]['easy'] < 0) {
+                    
+                    $less = $requirements_template[$i]['easy'] * -1;
+                    $new_tq_easy = [];
+
+                    for($x = 0; $x < count($tq_easy) - $less; $x++) {
+                        $new_tq_easy[] = $tq_easy[$x];
+                    }
+
+                    $requirements_template[$i]['easy'] = 0;
+
+
+                    $tq_easy = [];
+                    $tq_easy = $new_tq_easy;
+                 }
+                 if($requirements_template[$i]['average'] < 0) {
+
+                    $less = $requirements_template[$i]['average'] * -1;
+                    $new_tq_average = [];
+
+                    for($x = 0; $x < count($tq_average) - $less; $x++) {
+                        $new_tq_average[] = $tq_average[$x];
+                    }
+
+                    $requirements_template[$i]['average'] = 0;
+
+                    $tq_average = [];
+                    $tq_average = $new_tq_average;
+                 }
+                 if($requirements_template[$i]['difficult'] < 0) {
+
+                    $less = $requirements_template[$i]['difficult'] * -1;
+                    $new_tq_difficult = [];
+
+                    for($x = 0; $x < count($tq_difficult) - $less; $x++) {
+                        $new_tq_difficult[] = $tq_difficult[$x];
+                    }
+
+                    $requirements_template[$i]['difficult'] = 0;
+
+                    $tq_difficult = [];
+                    $tq_difficult = $new_tq_difficult;
+                 }
+
+                 $requirements_template[$i]['test_question_count'] = $requirements_template[$i]['easy'] + $requirements_template[$i]['average'] + $requirements_template[$i]['difficult'];
+
+                 $easy_ids = [];
+                 $average_ids = [];
+                 $difficult_ids = [];
+
+                 foreach ($tq_easy as $tq) {
+                     $easy_ids[] = $tq->id;
+                 }
+                 foreach ($tq_average as $tq) {
+                     $average_ids[] = $tq->id;
+                 }
+                 foreach ($tq_difficult as $tq) {
+                     $difficult_ids[] = $tq->id;
+                 }
+
+
+                 $remained_test_questions[] = [
+                    'course' => $requirements_template[$i]['course'],
+                    'easy_tq' => $tq_easy,
+                    'average_tq' => $tq_average,
+                    'difficult_tq' => $tq_difficult,
+                    'easy_ids' => $easy_ids,
+                    'average_ids' => $average_ids,
+                    'difficult_ids' => $difficult_ids
+                 ];
+            }
+
+            // return $remained_test_questions;
+
+            // $remained_test_questions_list = [];
+
+            // foreach ($tq_easy as $tq_easy1) {
+            //     $remained_test_questions_list[] = $tq_easy1;
+            // }
+
+            // foreach ($tq_average as $tq_average1) {
+            //     $remained_test_questions_list[] = $tq_average1;
+            // }
+
+            // foreach ($tq_difficult as $tq_difficult1) {
+            //     $remained_test_questions_list[] = $tq_difficult1;
+            // }
+
+            // return $remained_test_questions_list;
+
+            // return $remained_test_questions;
+            // return $requirements_template;
+
+            //end
+
+             foreach ($requirements_template as $t) {
+                 for($i = 0; $i < count($curriculum_course_requirements); $i++) {
+                    if($t['course']->id == CurriculumCourse::find($curriculum_course_requirements[$i]->curriculum_map->curriculum_course_id)->course->id) {
+
+                        // return $t;
+                        $curriculum_course_requirements[$i]->total = $t['test_question_count'];
+                        $curriculum_course_requirements[$i]->easy = $t['easy'];
+                        $curriculum_course_requirements[$i]->average = $t['average'];
+                        $curriculum_course_requirements[$i]->difficult = $t['difficult'];
+                    }
+                 }
+             }
+
+             // return $curriculum_course_requirements;
+
+            foreach ($curriculum_course_requirements as $requirement) {
+                $remained_tq;
+
+                foreach ($remained_test_questions as $remained_test_question) {
+                    if($remained_test_question['course']->id == $requirement->curriculum_map->curriculumCourse->course->id) {
+                        $remained_tq = $remained_test_question;
+                        break;
+                    }
+                }
+                // return $requirement->curriculum_map->curriculumCourse->course;
+
+
+
+                $rand_test_questions_easy = TestQuestion::getRandTestQuestionsUnique($data['student_outcome_id'],$requirement->curriculum_map->curriculumCourse->course->id, 1, $requirement->easy, $remained_tq['easy_ids']);
+
+                if($requirement->easy > $rand_test_questions_easy->count()) {
+                    $is_valid = false;
+                }
+
+                $rand_test_questions_average = TestQuestion::getRandTestQuestionsUnique($data['student_outcome_id'],$requirement->curriculum_map->curriculumCourse->course->id, 2, $requirement->average, $remained_tq['average_ids']);
+
+                if($requirement->average > $rand_test_questions_average->count()) {
+                    $is_valid = false;
+                }
+
+                $rand_test_questions_difficult = TestQuestion::getRandTestQuestionsUnique($data['student_outcome_id'],$requirement->curriculum_map->curriculumCourse->course->id, 3, $requirement->difficult, $remained_tq['difficult_ids']);
+
+                if($requirement->difficult > $rand_test_questions_difficult->count()) {
+                    $is_valid = false;
+                }
+
+                $test_questions = array_merge($test_questions, $rand_test_questions_easy->toArray());
+
+                $test_questions = array_merge($test_questions, $rand_test_questions_average->toArray());
+
+                $test_questions = array_merge($test_questions, $rand_test_questions_difficult->toArray());
+            }
+
+            
+
+            
+
+            if($is_valid) {
+                //create the exam
+                $old_exam = clone $exam;
+
+                $exam = Exam::create([
+                    'exam_code' => $this->generate_exam_code(),
+                    'student_outcome_id' => $data['student_outcome_id'],
+                    'curriculum_id' => $data['curriculum_id'],
+                    'description' => $data['description'],
+                    'time_limit' => $data['time_limit'],
+                    'passing_grade' => $data['passing_grade'],
+                    'user_id' => Auth::user()->id,
+                    'is_active' => true
+                ]);
+
+                $exam->parent_id = $old_exam->id;
+                $exam->update();
+
+
+                $counter = 1;
+
+                foreach ($test_questions as $test_q) {
+                    // $exam_test_question = new ExamTestQuestion();
+                    // $exam_test_question->exam_id = $exam->id;
+                    // $exam_test_question->test_question_id = $test_q['id'];
+                    // $exam_test_question->create();
+                    $exam_test_question = ExamTestQuestion::create([
+                        'exam_id' => $exam->id,
+                        'test_question_id' => $test_q['id'],
+                        'pos_order' => $counter,
+                        'difficulty_level_id' => $test_q['difficulty_level_id']
+                    ]);
+
+                    $counter++;
+
+                    $exam_test_questions[] = $exam_test_question;
+                }
+
+                //remaining test questions
+
+                foreach ($remained_test_questions as $remained_test_question) {
+                    //easy 
+                    foreach ($remained_test_question['easy_tq'] as $remained_easy) {
+                        $exam_test_question = ExamTestQuestion::create([
+                            'exam_id' => $exam->id,
+                            'test_question_id' => $remained_easy->id,
+                            'pos_order' => $counter,
+                            'difficulty_level_id' => $remained_easy->difficulty_level_id
+                        ]);
+
+                        $counter++;
+
+                        $exam_test_questions[] = $exam_test_question;
+                    }
+                    //average
+
+                    foreach ($remained_test_question['average_tq'] as $remained_average) {
+                        $exam_test_question = ExamTestQuestion::create([
+                            'exam_id' => $exam->id,
+                            'test_question_id' => $remained_average->id,
+                            'pos_order' => $counter,
+                            'difficulty_level_id' => $remained_average->difficulty_level_id
+                        ]);
+
+                        $counter++;
+
+                        $exam_test_questions[] = $exam_test_question;
+                    }
+
+                    //difficult
+
+                    foreach ($remained_test_question['difficult_tq'] as $remained_difficult) {
+                        $exam_test_question = ExamTestQuestion::create([
+                            'exam_id' => $exam->id,
+                            'test_question_id' => $remained_difficult->id,
+                            'pos_order' => $counter,
+                            'difficulty_level_id' => $remained_difficult->difficulty_level_id
+                        ]);
+
+                        $counter++;
+
+                        $exam_test_questions[] = $exam_test_question;
+                    }
+                }
+
+                // return $exam_test_questions;
+
+
+
+                /****************** RE-ORDER TEST QUESTIONS ******************/
+                $cntr = 1;
+
+                foreach ($requirements_template as $requirement) {
+                    foreach ($exam_test_questions as $exam_test_question) {
+                        if($exam_test_question->testQuestion->course_id == $requirement['course']->id) {
+                            $exam_test_question->pos_order = $cntr;
+                            $exam_test_question->update(); 
+                            $cntr++;
+                        }
+                    }
+
+                }
+
+                //deactivate the exam
+                $old_exam->is_active = false;
+                $old_exam->update();
+
+                //save item_analysis
+                $item_analysis->is_saved = true;
+                $item_analysis->update();
+
+                // return $remained_test_questions;
+
+                DB::commit();
+
+               Session::flash('message', 'Exam successfully revised!'); 
 
                return response()->json(['exam' => $exam ,'test_questions' => $exam_test_questions], 201); 
             } else {
@@ -277,6 +717,170 @@ class ExamsController extends Controller
         // // Session::flash('message', 'Exam preview is showing');
 
         return view('exams.item_analysis', compact('exam'));
+    }
+
+    private function get_items_remaining($item_analysis, $original_requirements_template) {
+        $items_remaining_template = [];
+
+        foreach ($original_requirements_template as $orig_requirement) {
+            $count_easy = ItemAnalysisDetail::select('item_analysis_details.*')
+            ->join('test_questions', 'test_questions.id', '=', 'item_analysis_details.test_question_id')
+            ->where('item_analysis_id', $item_analysis->id)
+            ->where('test_questions.difficulty_level_id', 1)
+            ->where('test_questions.course_id', $orig_requirement['course']->id)
+            ->where(function($q) {
+                $q->where('item_analysis_details.action_resolved_id', 1)
+                ->orWhere('item_analysis_details.action_resolved_id', 2);
+            })
+            ->count();
+
+            $count_average = ItemAnalysisDetail::select('item_analysis_details.*')
+            ->join('test_questions', 'test_questions.id', '=', 'item_analysis_details.test_question_id')
+            ->where('item_analysis_id', $item_analysis->id)
+            ->where('test_questions.difficulty_level_id', 2)
+            ->where('test_questions.course_id', $orig_requirement['course']->id)
+            ->where(function($q) {
+                $q->where('item_analysis_details.action_resolved_id', 1)
+                ->orWhere('item_analysis_details.action_resolved_id', 2);
+            })
+            ->count();
+
+            $count_difficult = ItemAnalysisDetail::select('item_analysis_details.*')
+            ->join('test_questions', 'test_questions.id', '=', 'item_analysis_details.test_question_id')
+            ->where('item_analysis_id', $item_analysis->id)
+            ->where('test_questions.difficulty_level_id', 3)
+            ->where('test_questions.course_id', $orig_requirement['course']->id)
+            ->where(function($q) {
+                $q->where('item_analysis_details.action_resolved_id', 1)
+                ->orWhere('item_analysis_details.action_resolved_id', 2);
+            })
+            ->count();
+
+
+            $items_remaining_template[] = [
+                'course' => $orig_requirement['course'],
+                'easy' => $count_easy,
+                'average' => $count_average,
+                'difficult' => $count_difficult
+            ];
+        }
+
+        return $items_remaining_template;
+    }
+
+    public function item_analysis_result(ItemAnalysis $item_analysis) {
+
+         $curriculum_course_requirements = Exam::getRequirements(request('student_outcome_id'), request('curriculum_id'));
+
+         // $item_analysis->requirementsAvailable($curriculum_course_requirements);
+
+        $original_requirements_template = $this->getOriginalRequirements($curriculum_course_requirements);
+
+        $items_remaining_template = $this->get_items_remaining($item_analysis, $original_requirements_template);
+
+        $requirements_template = [];
+
+        $courses = [];
+        $item_analysis_result = [];
+
+
+        foreach ($curriculum_course_requirements as $curriculum_course_requirement) {
+
+            $courses[] = CurriculumCourse::find($curriculum_course_requirement->curriculum_map->curriculum_course_id)->course;
+            $requirement = [
+                'course' => $curriculum_course_requirement->curriculum_map->curriculumCourse->course,
+                'test_question_count' => $curriculum_course_requirement->total,
+                'easy' => $curriculum_course_requirement->easy,
+                'average' => $curriculum_course_requirement->average,
+                'difficult' => $curriculum_course_requirement->difficult,
+                'isLoading' => true
+            ];
+
+            $requirements_template[] = $requirement;
+        }
+
+        $retained_items = $item_analysis->getRetainedItem();
+        $revised_items = $item_analysis->getRevisedItem();
+
+        // return $requirements_template;
+
+        foreach ($retained_items as $retained_item) {
+
+            for($i = 0; $i < count($requirements_template); $i++) {
+                if($requirements_template[$i]['course']->id == $retained_item->testQuestion->course_id) {
+
+                    if($retained_item->testQuestion->difficulty_level_id == 1) {
+                        $requirements_template[$i]['easy'] -= 1;
+                    } else if($retained_item->testQuestion->difficulty_level_id == 2) {
+                        $requirements_template[$i]['average'] -= 1;
+                    } else if($retained_item->testQuestion->difficulty_level_id == 3) {
+                        $requirements_template[$i]['difficult'] -= 1;
+                    }
+
+                    $requirements_template[$i]['test_question_count'] = $requirements_template[$i]['easy'] + $requirements_template[$i]['average'] + $requirements_template[$i]['difficult'];
+                }
+            }
+         }
+
+         foreach ($revised_items as $retained_item) {
+
+            for($i = 0; $i < count($requirements_template); $i++) {
+                if($requirements_template[$i]['course']->id == $retained_item->testQuestion->course_id) {
+
+                    if($retained_item->testQuestion->difficulty_level_id == 1) {
+                        $requirements_template[$i]['easy'] -= 1;
+                    } else if($retained_item->testQuestion->difficulty_level_id == 2) {
+                        $requirements_template[$i]['average'] -= 1;
+                    } else if($retained_item->testQuestion->difficulty_level_id == 3) {
+                        $requirements_template[$i]['difficult'] -= 1;
+                    }
+
+                    $requirements_template[$i]['test_question_count'] = $requirements_template[$i]['easy'] + $requirements_template[$i]['average'] + $requirements_template[$i]['difficult'];
+                }
+            }
+         }
+
+        //  $total = 0;
+
+        // foreach ($requirements_template as $t) {
+        //     $total += $t['test_question_count'];
+        // }
+
+        // return $total;
+
+        // foreach ($courses as $course) {
+        //     # code...
+        // }
+
+
+        // foreach ($curriculum_course_requirements as $requirement) {
+
+        //         $rand_test_questions_easy = TestQuestion::getRandTestQuestions($data['student_outcome_id'],$requirement->curriculum_map->curriculumCourse->course->id, 1, $requirement->easy);
+
+        //         if($requirement->easy > $rand_test_questions_easy->count()) {
+        //             $is_valid = false;
+        //         }
+
+        //         $rand_test_questions_average = TestQuestion::getRandTestQuestions($data['student_outcome_id'],$requirement->curriculum_map->curriculumCourse->course->id, 2, $requirement->average);
+
+        //         if($requirement->average > $rand_test_questions_average->count()) {
+        //             $is_valid = false;
+        //         }
+
+        //         $rand_test_questions_difficult = TestQuestion::getRandTestQuestions($data['student_outcome_id'],$requirement->curriculum_map->curriculumCourse->course->id, 3, $requirement->difficult);
+
+        //         if($requirement->difficult > $rand_test_questions_difficult->count()) {
+        //             $is_valid = false;
+        //         }
+
+        //         $test_questions = array_merge($test_questions, $rand_test_questions_easy->toArray());
+
+        //         $test_questions = array_merge($test_questions, $rand_test_questions_average->toArray());
+
+        //         $test_questions = array_merge($test_questions, $rand_test_questions_difficult->toArray());
+        // }
+
+        return view('exams.item_analysis_result', compact('item_analysis', 'requirements_template', 'original_requirements_template', 'items_remaining_template'));
     }
 
     public function start_item_analysis(Exam $exam) {
@@ -487,6 +1091,7 @@ class ExamsController extends Controller
 
         $templates['item_analysis'] = $item_analysis;
         $templates['item_analysis_details'] = $item_analysis_details;
+        $templates['item_analysis'] = $item_analysis;
 
         return $templates;
 
@@ -587,6 +1192,7 @@ class ExamsController extends Controller
         */
 
         $actions = [];
+        $actions_final = [];
 
         if($difficulty_action == 3 || $discrimination_action == 5) {
             $actions[] = 3;
@@ -615,7 +1221,11 @@ class ExamsController extends Controller
         //remove redundant
         $actions = array_unique($actions);
 
-        return $actions;
+        foreach ($actions as $action) {
+            $actions_final[] = $action;
+        }
+
+        return $actions_final;
 
     }
 

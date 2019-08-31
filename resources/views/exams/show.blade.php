@@ -375,6 +375,7 @@
             data: {
                 exam_id: '{{ $exam->id }}' ,
                 test_questions: @json($test_questions),
+                exam_test_questions: @json($exam->examTestQuestions),
                 show_test_questions: [],
                 paginated_test_questions: [],
                 courses: @json($courses),
@@ -543,7 +544,7 @@
                     })
                 },
                 countByDifficulty(difficulty_level_id) {
-                    return this.test_questions.filter(test_question => {
+                    return this.exam_test_questions.filter(test_question => {
                         return test_question.difficulty_level_id == difficulty_level_id
                     }).length;
                 },
