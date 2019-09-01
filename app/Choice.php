@@ -8,6 +8,10 @@ class Choice extends Model
 {
     public $fillable = ['test_question_id', 'body', 'is_correct', 'is_active', 'user_id', 'ch_code', 'pos_order'];
 
+    public function testQuestion() {
+        return $this->belongsTo('App\TestQuestion');
+    }
+
     public function getHtml() {
         $input = $this->body;
         $matches = [];
@@ -64,5 +68,19 @@ class Choice extends Model
         }
 
         return nl2br($input);
+    }
+
+    public function countSelectedByStudent() {
+        return AnswerSheetTestQuestionChoice::where('choice_id', $this->id)
+                ->where('is_selected', true)
+                ->count();
+    }
+
+    public function getPercentageSelectedByStudent() {
+        if($this->testQuestion->countTotalChoicesSelectedByStudent() > 0) {
+            return ($this->countSelectedByStudent() / $this->testQuestion->countTotalChoicesSelectedByStudent()) * 100;
+        }
+        
+        return 0;    
     }
 }

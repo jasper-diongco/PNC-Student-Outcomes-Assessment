@@ -39,6 +39,12 @@
               
             </ul>
 
+            <div class="d-flex mt-3">
+                <div>
+                    <bar-chart :data="scorePerCoursesData"></bar-chart>
+                </div>
+            </div>
+
             
         </div>
     </div>
@@ -51,6 +57,10 @@
           <li class="nav-item">
 
             <a class="nav-link" id="contact-tab" data-toggle="tab" href="#answers" role="tab" aria-controls="contact" aria-selected="false">Answers</a>
+          </li>
+          <li class="nav-item">
+
+            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#reports" role="tab" aria-controls="contact" aria-selected="false">Reports</a>
           </li>
         </ul>
         <div class="tab-content" id="myTabContent">
@@ -153,6 +163,9 @@
             </div>
 
           </div>
+          <div class="tab-pane fade show" id="reports" role="tabpanel">
+            <h1>Reports</h1>
+          </div>
         </div>
     </div>
 </div>
@@ -170,7 +183,48 @@ var vm = new Vue({
         answer_sheet: @json($answer_sheet),
         answer_sheet_test_questions: @json($answer_sheet_test_questions),
         selected_test_questions: [],
-        course_id: ''
+        course_id: '',
+        scorePerCoursesData: {
+                labels: [],
+                datasets: [
+                    {
+                        label: "Score",
+                        data: [],
+                        backgroundColor: [
+                            "rgba(52, 172, 224,0.2)",
+                            "rgba(51, 217, 178,0.2)",
+                            "rgba(252, 92, 101,0.2)",
+                            "rgba(75, 123, 236,0.2)",
+                            "rgba(253, 150, 68,0.2)",
+                            "rgba(254, 211, 48,0.2)",
+                            "rgba(38, 222, 129,0.2)",
+                            "rgba(43, 203, 186,0.2)",
+                            "rgba(69, 170, 242,0.2)", 
+                            "rgba(136, 84, 208,0.2)",
+                            "rgba(75, 101, 132,0.2)",
+                            "rgba(64, 64, 122,0.2)",
+                            "rgba(112, 111, 211,0.2)"
+                        ],
+                        borderColor: [
+                            "rgba(52, 172, 224,1.0)",
+                            "rgba(51, 217, 178,1.0)",
+                            "rgba(252, 92, 101,1.0)",
+                            "rgba(75, 123, 236,1.0)",
+                            "rgba(253, 150, 68,1.0)",
+                            "rgba(254, 211, 48,1.0)",
+                            "rgba(38, 222, 129,1.0)",
+                            "rgba(43, 203, 186,1.0)",
+                            "rgba(69, 170, 242,1.0)", 
+                            "rgba(136, 84, 208,1.0)",
+                            "rgba(75, 101, 132,1.0)",
+                            "rgba(64, 64, 122,1.0)",
+                            "rgba(112, 111, 211,1.0)"
+
+                        ],
+                        borderWidth: 1
+                    }
+                ]
+            }
     },
     methods: {
         getTestQuestionByCourse(course_id) {
@@ -271,6 +325,31 @@ var vm = new Vue({
                     return this.courses[i];
                 }
             }
+        },
+        fillScorePerCoursesData() {
+            for(var i = 0; i < this.courses.length; i++) {
+                this.scorePerCoursesData.labels.push(this.courses[i].course_code);
+            }
+            this.getScorePerCoursesData();
+        },
+        getScorePerCoursesData() {
+            var scores = [];
+            for(var i = 0; i < this.courses.length; i++) {
+                // console.log(this.courses[i].id);
+                var score = 0;
+                for(var j = 0; j < this.answer_sheet_test_questions.length; j++) {
+                    if(this.answer_sheet_test_questions[j].course_id == this.courses[i].id) {
+                        if(this.checkIfCorrect(this.answer_sheet_test_questions[j])) {
+                            score++;
+                        }
+                        
+                    }
+                }
+
+                scores.push(score);
+            }
+
+            this.scorePerCoursesData.datasets[0].data = scores;
         }
     },
     created() {
@@ -278,7 +357,7 @@ var vm = new Vue({
         this.selected_test_questions = this.getTestQuestionByCourse(this.templates[0].course.id);
         this.course_id = this.courses[0].id;
         //this.answer_sheet_test_questions = this.answer_sheet_test_questions;
-
+        this.fillScorePerCoursesData();
         setInterval(() => {
             MathLive.renderMathInDocument();
             Prism.highlightAll();

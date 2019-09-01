@@ -169,4 +169,47 @@ class TestQuestion extends Model
                 ->take($count)
                 ->get();
     }
+
+    public function countTotalChoicesSelectedByStudent() {
+        $choices = $this->choices;
+        $total = 0;
+
+        foreach ($choices as $choice) {
+            $total += $choice->countSelectedByStudent();
+        }
+
+        return $total;
+    }
+
+    public function countTotalAnswers() {
+        return AssessmentDetail::where('test_question_id', $this->id)
+                        ->count();
+    }
+
+    public function countCorrectAnswer() {
+        return AssessmentDetail::where('test_question_id', $this->id)
+                        ->where('is_correct', true)
+                        ->count();
+    }
+    public function countIncorrectAnswer() {
+        return AssessmentDetail::where('test_question_id', $this->id)
+                        ->where('is_correct', false)
+                        ->count();
+    }
+
+    public function correctPercentage() {
+        if($this->countTotalAnswers() > 0) {
+            return $this->countCorrectAnswer() / $this->countTotalAnswers() * 100;
+        }
+
+        return 0;
+    }
+
+    public function incorrectPercentage() {
+        if($this->countTotalAnswers() > 0) {
+            return $this->countIncorrectAnswer() / $this->countTotalAnswers() * 100;
+        }
+
+        return 0;
+    }
 }

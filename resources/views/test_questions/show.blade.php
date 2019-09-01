@@ -70,8 +70,49 @@
                 <div class="d-flex mr-3"><label class="mr-2">Student Outcome: </label><h5 class="text-success">{{ $test_question->studentOutcome->so_code }}</h5></div>
                 <div class="d-flex"><label class="mr-2">Course: </label><h5 class="text-success">{{ $test_question->course->course_code . ' - ' . $test_question->course->description }}</h5></div>
             </div>
+
+            <div class="mb-2 p-3 pb-2">
+            <h5><i class="fa fa-stream text-dark mb-3"></i> Count Answers</h5>
+            <div class="w-75">
+                <div>
+                    <label><i class="fa fa-check-circle text-success"></i> Correct</label>
+                    <div class="d-flex">
+                        <div class="progress w-100 mr-3" style="height: 20px;">
+                          <div class="progress-bar bg-success" role="progressbar" style="width: {{ $test_question->correctPercentage() }}%" aria-valuenow="{{ $test_question->correctPercentage() }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <div class="mr-2">
+                            {{ $test_question->correctPercentage() }}%
+                        </div>
+                        <div class="mr-2">
+                            ({{ $test_question->countCorrectAnswer() }})
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <label><i class="fa fa-times-circle text-danger"></i> Incorrect</label>
+                    <div class="d-flex">
+                        <div class="progress w-100 mr-3" style="height: 20px;">
+                          <div class="progress-bar bg-danger" role="progressbar" style="width: {{ $test_question->incorrectPercentage() }}%" aria-valuenow="{{ $test_question->incorrectPercentage() }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <div class="mr-2">
+                             {{ $test_question->incorrectPercentage() }}%
+                        </div>
+                        <div class="mr-2">
+                            ({{ $test_question->countIncorrectAnswer() }})
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2 d-flex justify-content-end mr-2">
+                    <span style="font-weight:600" class="mr-2">Total:</span> 100% ({{ $test_question->countTotalAnswers() }})
+                </div>
+            </div>
+        </div>
+            
+            
         </div>
     </div>
+
+    
     
     <div class="card question">
         <div class="card-body">
@@ -92,13 +133,34 @@
                                     {!! $choice->getHtml() !!}  
                                 </div>
                             </div>
+                            <div>
+                                <div class="d-flex mt-3 align-items-baseline">
+                                    <div class="progress w-100 mr-2">
+                                      <div class="progress-bar bg-success" role="progressbar" style="width: {{ $choice->getPercentageSelectedByStudent() }}%" aria-valuenow="{{ $choice->getPercentageSelectedByStudent() }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <div class="mr-2">{{ $choice->getPercentageSelectedByStudent() }}%</div>
+                                    <div>
+                                        ({{ $choice->countSelectedByStudent() }})
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                        
                     </div>
                     @endforeach
+
+                </div>
+                <div class="d-flex justify-content-end">
+                    <div class="mr-2" style="font-weight: 600">Total </div>
+                    <div class="mr-1">100%</div>
+                    <div>({{ $test_question->countTotalChoicesSelectedByStudent() }})</div>
                 </div>
             </div>
         </div>
     </div>
+
+
+    
 </div>
 
 @endsection
