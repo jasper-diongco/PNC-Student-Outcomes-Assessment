@@ -17,4 +17,10 @@
         padding: 0;
         text-align: center;
     }
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.dashboard-card:hover {
+    transform: scale(1.05);
 }

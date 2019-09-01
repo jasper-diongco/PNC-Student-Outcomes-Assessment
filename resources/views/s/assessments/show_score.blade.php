@@ -45,6 +45,13 @@
                 </ul>
                 
                 <div class="d-flex justify-content-end mt-4">
+                    @if(!$assessment->checkIfPassed())
+                        {{-- <a href="{{ url('s/assessments/' . request('student_outcome_id') . '?retake_exam=yes') }}" class="btn btn-warning mr-2">Take Again</a> --}}
+                        <form action="{{ url('s/assessments/retake_assessment/' . $student_outcome->id) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-warning mr-2" >Retake Assessment</button>
+                        </form>
+                    @endif
                     <a href="{{url('s/home') }}" class="btn btn-info">OK, Back to home</a>
                 </div>
             </div>

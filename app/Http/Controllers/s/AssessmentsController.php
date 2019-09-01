@@ -46,6 +46,7 @@ class AssessmentsController extends Controller
 
         $answer_sheet = AnswerSheet::where('student_id', $student->id)
                         ->where('student_outcome_id', $student_outcome->id)
+                        ->latest()
                         ->first();
 
         if($answer_sheet) {
@@ -149,6 +150,83 @@ class AssessmentsController extends Controller
         
     }
 
+    public function retake_assessment(StudentOutcome $student_outcome) {
+
+        $student = auth()->user()->getStudent();
+
+        $exam = $student_outcome->getRandomExam($student->curriculum_id);
+        $courses = $exam->getCourses1($student_outcome->id, $student->curriculum_id);
+        
+        //$test_questions = $exam->getRandomTestQuestions();
+        $exam_test_questions = $exam->getRandomExamTestQuestions();
+
+        //create answer sheet
+        DB::beginTransaction();
+
+        try {
+
+            $answer_sheet = new AnswerSheet();
+            $answer_sheet->exam_id = $exam->id;
+            $answer_sheet->student_id = $student->id;
+            $answer_sheet->student_outcome_id = $student_outcome->id;
+            $answer_sheet->curriculum_id = $student->curriculum_id;
+            $answer_sheet->time_limit = $exam->time_limit;
+            $answer_sheet->description = $exam->description;
+            $answer_sheet->passing_grade = $exam->passing_grade;
+
+            $answer_sheet->save();
+
+            foreach ($exam_test_questions as $exam_test_question) {
+                $exam_test_question->testQuestion->random_choices = $exam_test_question->testQuestion->getRandomChoices();
+                $exam_test_question->testQuestion->html = $exam_test_question->testQuestion->getHtml();
+
+                $answer_sheet_test_question = new AnswerSheetTestQuestion();
+                $answer_sheet_test_question->answer_sheet_id = $answer_sheet->id;
+                $answer_sheet_test_question->test_question_id = $exam_test_question->testQuestion->id;
+                $answer_sheet_test_question->title = $exam_test_question->testQuestion->title;
+                $answer_sheet_test_question->body = $exam_test_question->testQuestion->body;
+                $answer_sheet_test_question->body_html = $exam_test_question->testQuestion->html;
+                $answer_sheet_test_question->student_outcome_id = $answer_sheet->student_outcome_id;
+                $answer_sheet_test_question->course_id = $exam_test_question->testQuestion->course_id;
+                $answer_sheet_test_question->difficulty_level_id = $exam_test_question->testQuestion->difficulty_level_id;
+                $answer_sheet_test_question->performance_criteria_id = $exam_test_question->testQuestion->performance_criteria_id;
+                $answer_sheet_test_question->pos_order = $exam_test_question->pos_order;
+
+                $answer_sheet_test_question->save();
+
+                foreach ($exam_test_question->testQuestion->random_choices as $choice) {
+                    $choice->html = $choice->getHtml();
+
+                    $answer_sheet_test_question_choice = new AnswerSheetTestQuestionChoice();
+                    $answer_sheet_test_question_choice->choice_id = $choice->id;
+
+                    $answer_sheet_test_question_choice->answer_sheet_test_question_id = $answer_sheet_test_question->id;
+                    $answer_sheet_test_question_choice->test_question_id = $exam_test_question->testQuestion->id;
+                    $answer_sheet_test_question_choice->body = $choice->body;
+                    $answer_sheet_test_question_choice->body_html = $choice->html;
+                    $answer_sheet_test_question_choice->is_correct = $choice->is_correct;
+                    $answer_sheet_test_question_choice->pos_order = $choice->pos_order;
+
+                    $answer_sheet_test_question_choice->save();
+                }
+            }
+
+
+            DB::commit();
+            // all good
+            //$answer_sheet->load('answerSheetTestQuestions');
+
+            return redirect('s/assessments/' . $student_outcome->id);
+            // $answer_sheet->answer_sheet_test_questions = $answer_sheet->getAnswerSheetTestQuestionsRand();
+
+            // return view('s.assessments.show', compact('courses', 'answer_sheet', 'student_outcome'));
+        } catch (\Exception $e) {
+            DB::rollback();
+            // something went wrong
+            return abort('500', 'Server Error');
+        }
+    }
+
     public function store(AnswerSheet $answer_sheet) {
 
         if(!Gate::check('isStud')) {
@@ -208,9 +286,11 @@ class AssessmentsController extends Controller
             $total_duration = $answer_sheet->time_limit * 60;
         }
 
-        $assessment = Assessment::where('student_id', $answer_sheet->student_id)->where('student_outcome_id', $answer_sheet->student_outcome_id)->first();
+        // $assessment = Assessment::where('student_id', $answer_sheet->student_id)->where('student_outcome_id', $answer_sheet->student_outcome_id)
+        //     ->latest()
+        //     ->first();
 
-        if($assessment) {
+        /*if($assessment) {
             $assessment->update([
                 'assessment_code' => $this->generateAssessmentID(),
                 'exam_id' => $answer_sheet->exam_id,
@@ -255,6 +335,28 @@ class AssessmentsController extends Controller
                 ]);
             }
         }
+        */
+        $assessment = Assessment::create([
+                'assessment_code' => $this->generateAssessmentID(),
+                'exam_id' => $answer_sheet->exam_id,
+                'student_id' => $answer_sheet->student_id,
+                'student_outcome_id' => $answer_sheet->student_outcome_id,
+                'time_consumed' => $total_duration
+            ]);
+
+            foreach ($answer_sheet_test_questions as $answer_sheet_test_question) {
+                $choice_id = $this->getChoiceId($answer_sheet_test_question['answer_sheet_test_question_choices']);
+                $is_correct = $this->checkIfCorrect($answer_sheet_test_question['answer_sheet_test_question_choices'], $choice_id);
+                AssessmentDetail::create([
+                    'assessment_id' => $assessment->id,
+                    'test_question_id' => $answer_sheet_test_question['test_question_id'],
+                    'choice_id' => $choice_id,
+                    'is_correct' => $is_correct
+                ]);
+            }
+        $answer_sheet->assessment_id = $assessment->id;
+        $answer_sheet->update();
+        
     }
 
     private function generateAssessmentID() {
@@ -319,10 +421,12 @@ class AssessmentsController extends Controller
 
         $assessment = Assessment::where('student_id', $student_id)
                                 ->where('student_outcome_id', $student_outcome_id)
+                                ->latest()
                                 ->first();
         $answer_sheet = AnswerSheet::where('student_id', $student_id)
                                 ->where('student_outcome_id', $student_outcome_id)
                                 ->where('exam_id', $assessment->exam_id)
+                                ->latest()
                                 ->first();
 
         if($assessment) {

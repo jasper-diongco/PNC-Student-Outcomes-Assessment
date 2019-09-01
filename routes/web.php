@@ -373,7 +373,11 @@ Route::get('/s/assessments/show_score', 's\AssessmentsController@show_score');
 
 Route::get('/s/assessments/{student_outcome}', 's\AssessmentsController@show');
 
+Route::post('/s/assessments/retake_assessment/{student_outcome}', 's\AssessmentsController@retake_assessment');
+
 Route::post('/s/assessments/{answer_sheet}', 's\AssessmentsController@store');
+
+
 
 Route::post('/s/assessments/select_choice/{answer_sheet_test_question}', 's\AssessmentsController@select_choice');
 

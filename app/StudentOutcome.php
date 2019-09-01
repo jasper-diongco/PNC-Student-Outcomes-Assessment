@@ -107,6 +107,7 @@ class StudentOutcome extends Model
     public function checkIfExamOngoing($student_id) {
         $answer_sheet = AnswerSheet::where('student_id', $student_id)
                                 ->where('student_outcome_id', $this->id)
+                                ->latest()
                                 ->first();
         if($answer_sheet && !$answer_sheet->is_submitted) {
             

@@ -115,22 +115,23 @@
 
         {{-- test questions --}}
         <div class="col-md-3">
-          <div class="card shadow dashboard-card">
-            <div class="card-body py-2">
-              <img class="w-100" height="80px" src="{{ asset('img/icon_svg/questions.svg') }}" alt="assessment picture">
 
-              
+            <div class="card shadow dashboard-card" v-on:click="changeLocation('/test_bank?program_id=')">
+              <div class="card-body py-2">
+                <img class="w-100" height="80px" src="{{ asset('img/icon_svg/questions.svg') }}" alt="assessment picture">
+
+                
+              </div>
+              <div class="dashboard-card-footer">
+                  <div class="dashboard-count text-info">{{ $test_question_count }}</div>
+                  <h3 class="card-name">Test Questions</h3>
+              </div>
             </div>
-            <div class="dashboard-card-footer">
-                <div class="dashboard-count text-info">{{ $test_question_count }}</div>
-                <h3 class="card-name">Test Questions</h3>
-            </div>
-          </div>
         </div>
 
         {{-- exams --}}
         <div class="col-md-3">
-          <div class="card shadow dashboard-card">
+          <div class="card shadow dashboard-card" v-on:click="changeLocation('/test_bank?program_id=')">
             <div class="card-body py-2">
               <img class="w-100" height="80px" src="{{ asset('img/icon_svg/document.svg') }}" alt="assessment picture">
 
@@ -148,7 +149,7 @@
 
         {{-- students --}}
         <div class="col-md-3">
-          <div class="card shadow dashboard-card">
+          <div class="card shadow dashboard-card" v-on:click="changeLocation('/students')">
             <div class="card-body py-2">
               <img class="w-100" height="80px" src="{{ asset('img/icon_svg/student.svg') }}" alt="student picture">
 
@@ -163,7 +164,7 @@
 
         {{-- programs --}}
         <div class="col-md-3">
-          <div class="card shadow dashboard-card">
+          <div class="card shadow dashboard-card" v-on:click="changeLocation('/programs')">
             <div class="card-body py-2">
               <img class="w-100" height="80px" src="{{ asset('img/icon_svg/graduation.svg') }}" alt="programs picture">
 
@@ -178,7 +179,7 @@
 
         {{-- curricula --}}
         <div class="col-md-3 mt-4">
-          <div class="card shadow dashboard-card">
+          <div class="card shadow dashboard-card" v-on:click="changeLocation('/curricula')">
             <div class="card-body py-2">
               <img class="w-100" height="80px" src="{{ asset('img/icon_svg/folder.svg') }}" alt="curricula picture">
 
@@ -193,7 +194,7 @@
 
         {{-- courses --}}
         <div class="col-md-3 mt-4">
-          <div class="card shadow dashboard-card">
+          <div class="card shadow dashboard-card" v-on:click="changeLocation('/courses')">
             <div class="card-body py-2">
               <img class="w-100" height="80px" src="{{ asset('img/icon_svg/books.svg') }}" alt="courses picture">
 
@@ -208,7 +209,7 @@
 
         {{-- faculties --}}
         <div class="col-md-3 mt-4">
-          <div class="card shadow dashboard-card">
+          <div class="card shadow dashboard-card" v-on:click="changeLocation('/faculties')">
             <div class="card-body py-2">
               <img class="w-100" height="80px" src="{{ asset('img/icon_svg/group.svg') }}" alt="faculties picture">
 
@@ -223,7 +224,7 @@
 
         {{-- assessments --}}
         <div class="col-md-3 mt-4">
-          <div class="card shadow dashboard-card">
+          <div class="card shadow dashboard-card" v-on:click="changeLocation('/assessment_results?college_id=' + college_id)">
             <div class="card-body py-2">
               <img class="w-100" height="80px" src="{{ asset('img/icon_svg/assessment.svg') }}" alt="assessment picture">
 
@@ -244,7 +245,15 @@
 @push('scripts')
   <script>
     new Vue({
-      el: '#app'
+      el: '#app',
+      data: {
+        college_id: '{{ $college->id }}'
+      },
+      methods: {
+        changeLocation(url) {
+         window.location.href = myRootURL + url;
+        }
+      }
     });
   </script>
   

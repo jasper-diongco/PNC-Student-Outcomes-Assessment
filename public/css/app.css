@@ -10235,6 +10235,8 @@ card-header {
 }
 .dashboard-card {
   background: #dadada;
+  transition: all 0.2s;
+  cursor: pointer;
 }
 .dashboard-card .img-header {
   height: 80px;
@@ -10252,6 +10254,11 @@ card-header {
   margin: 0;
   padding: 0;
   text-align: center;
+}
+
+.dashboard-card:hover {
+  -webkit-transform: scale(1.05);
+          transform: scale(1.05);
 }
 
 .my-header {

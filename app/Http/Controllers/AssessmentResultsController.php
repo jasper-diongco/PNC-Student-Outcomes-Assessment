@@ -92,6 +92,7 @@ class AssessmentResultsController extends Controller
         $answer_sheet = AnswerSheet::where('student_id', $assessment->student_id)
                             ->where('exam_id', $assessment->exam_id)
                             ->where('student_outcome_id', $assessment->student_outcome_id)
+                            ->where('assessment_id', $assessment->id)
                             ->first();
         //$answer_sheet->load('answerSheetTestQuestions');
 
@@ -130,6 +131,7 @@ class AssessmentResultsController extends Controller
         $answer_sheet = AnswerSheet::where('student_id', $assessment->student_id)
                             ->where('exam_id', $assessment->exam_id)
                             ->where('student_outcome_id', $assessment->student_outcome_id)
+                            ->where('assessment_id', $assessment->id)
                             ->first();
 
         return view('assessment_results.print_assessment_result', compact('assessment', 'answer_sheet', 'answer_sheet'));
@@ -140,6 +142,7 @@ class AssessmentResultsController extends Controller
         $answer_sheet = AnswerSheet::where('student_id', $assessment->student_id)
                             ->where('exam_id', $assessment->exam_id)
                             ->where('student_outcome_id', $assessment->student_outcome_id)
+                            ->where('assessment_id', $assessment->id)
                             ->first();
 
         return view('assessment_results.print_answer_key', compact('assessment', 'answer_sheet'));
