@@ -34,80 +34,210 @@
       </div>
     </div> --}}
     
-    <div class="row">
+      {{-- <div class="row">
 
-      <!-- Programs -->
-      <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-primary h-100 py-2">
-          <div class="card-body">
-            <div class="row no-gutters align-items-center">
-              <div class="col mr-2">
-                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Programs</div>
-                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $program_count }}</div>
-              </div>
-              <div class="col-auto">
-                <i class="fas fa-graduation-cap fa-2x text-gray-300"></i>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Courses -->
-      <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-success h-100 py-2">
-          <div class="card-body">
-            <div class="row no-gutters align-items-center">
-              <div class="col mr-2">
-                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Courses</div>
-                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $courses_count }}</div>
-              </div>
-              <div class="col-auto">
-                <i class="fas fa-book fa-2x text-gray-300"></i>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Curricula -->
-      <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-info h-100 py-2">
-          <div class="card-body">
-            <div class="row no-gutters align-items-center">
-              <div class="col mr-2">
-                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Curricula</div>
-                <div class="row no-gutters align-items-center">
-                  <div class="col-auto">
-                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ $curriculum_count }}</div>
-                  </div>
+        <!-- Programs -->
+        <div class="col-xl-3 col-md-6 mb-4">
+          <div class="card h-100 py-2">
+            <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                  <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Programs</div>
+                  <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $program_count }}</div>
+                </div>
+                <div class="col-auto">
+                  <i class="fas fa-graduation-cap fa-2x text-gray-300"></i>
                 </div>
               </div>
-              <div class="col-auto">
-                <i class="fas fa-book-open fa-2x text-gray-300"></i>
-              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Students -->
-      <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-warning h-100 py-2">
-          <div class="card-body">
-            <div class="row no-gutters align-items-center">
-              <div class="col mr-2">
-                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Students</div>
-                <div class="h5 mb-0 font-weight-bold">{{ $student_count }}</div>
-              </div>
-              <div class="col-auto">
-                <i class="fas fa-users fa-2x"></i>
+        <!-- Courses -->
+        <div class="col-xl-3 col-md-6 mb-4">
+          <div class="card h-100 py-2">
+            <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                  <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Courses</div>
+                  <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $courses_count }}</div>
+                </div>
+                <div class="col-auto">
+                  <i class="fas fa-book fa-2x text-gray-300"></i>
+                </div>
               </div>
             </div>
           </div>
         </div>
+
+        <!-- Curricula -->
+        <div class="col-xl-3 col-md-6 mb-4">
+          <div class="card h-100 py-2">
+            <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                  <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Curricula</div>
+                  <div class="row no-gutters align-items-center">
+                    <div class="col-auto">
+                      <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ $curriculum_count }}</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <i class="fas fa-book-open fa-2x text-gray-300"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Students -->
+        <div class="col-xl-3 col-md-6 mb-4">
+          <div class="card h-100 py-2">
+            <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                  <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Students</div>
+                  <div class="h5 mb-0 font-weight-bold">{{ $student_count }}</div>
+                </div>
+                <div class="col-auto">
+                  <i class="fas fa-users fa-2x"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> --}}
+
+      
+
+      <div class="row">
+
+        {{-- test questions --}}
+        <div class="col-md-3">
+          <div class="card shadow dashboard-card">
+            <div class="card-body py-2">
+              <img class="w-100" height="80px" src="{{ asset('img/icon_svg/questions.svg') }}" alt="assessment picture">
+
+              
+            </div>
+            <div class="dashboard-card-footer">
+                <div class="dashboard-count text-info">{{ $test_question_count }}</div>
+                <h3 class="card-name">Test Questions</h3>
+            </div>
+          </div>
+        </div>
+
+        {{-- exams --}}
+        <div class="col-md-3">
+          <div class="card shadow dashboard-card">
+            <div class="card-body py-2">
+              <img class="w-100" height="80px" src="{{ asset('img/icon_svg/document.svg') }}" alt="assessment picture">
+
+              
+            </div>
+            <div class="dashboard-card-footer">
+                <div class="dashboard-count text-info">{{ $exams_count }}</div>
+                <h3 class="card-name">Exams</h3>
+            </div>
+          </div>
+        </div>
+
+        
+
+
+        {{-- students --}}
+        <div class="col-md-3">
+          <div class="card shadow dashboard-card">
+            <div class="card-body py-2">
+              <img class="w-100" height="80px" src="{{ asset('img/icon_svg/student.svg') }}" alt="student picture">
+
+              
+            </div>
+            <div class="dashboard-card-footer">
+                <div class="dashboard-count text-info">{{ $student_count }}</div>
+                <h3 class="card-name">Students</h3>
+            </div>
+          </div>
+        </div>
+
+        {{-- programs --}}
+        <div class="col-md-3">
+          <div class="card shadow dashboard-card">
+            <div class="card-body py-2">
+              <img class="w-100" height="80px" src="{{ asset('img/icon_svg/graduation.svg') }}" alt="programs picture">
+
+              
+            </div>
+            <div class="dashboard-card-footer">
+                <div class="dashboard-count text-info">{{ $program_count }}</div>
+                <h3 class="card-name">Programs</h3>
+            </div>
+          </div>
+        </div>
+
+        {{-- curricula --}}
+        <div class="col-md-3 mt-4">
+          <div class="card shadow dashboard-card">
+            <div class="card-body py-2">
+              <img class="w-100" height="80px" src="{{ asset('img/icon_svg/folder.svg') }}" alt="curricula picture">
+
+              
+            </div>
+            <div class="dashboard-card-footer">
+                <div class="dashboard-count text-info">{{ $curriculum_count }}</div>
+                <h3 class="card-name">Curricula</h3>
+            </div>
+          </div>
+        </div>
+
+        {{-- courses --}}
+        <div class="col-md-3 mt-4">
+          <div class="card shadow dashboard-card">
+            <div class="card-body py-2">
+              <img class="w-100" height="80px" src="{{ asset('img/icon_svg/books.svg') }}" alt="courses picture">
+
+              
+            </div>
+            <div class="dashboard-card-footer">
+                <div class="dashboard-count text-info">{{ $courses_count }}</div>
+                <h3 class="card-name">Courses</h3>
+            </div>
+          </div>
+        </div>
+
+        {{-- faculties --}}
+        <div class="col-md-3 mt-4">
+          <div class="card shadow dashboard-card">
+            <div class="card-body py-2">
+              <img class="w-100" height="80px" src="{{ asset('img/icon_svg/group.svg') }}" alt="faculties picture">
+
+              
+            </div>
+            <div class="dashboard-card-footer">
+                <div class="dashboard-count text-info">{{ $faculties_count }}</div>
+                <h3 class="card-name">Faculties</h3>
+            </div>
+          </div>
+        </div>
+
+        {{-- assessments --}}
+        <div class="col-md-3 mt-4">
+          <div class="card shadow dashboard-card">
+            <div class="card-body py-2">
+              <img class="w-100" height="80px" src="{{ asset('img/icon_svg/assessment.svg') }}" alt="assessment picture">
+
+              
+            </div>
+            <div class="dashboard-card-footer">
+                <div class="dashboard-count text-info">{{ $assessment_count }}</div>
+                <h3 class="card-name">Assessments</h3>
+            </div>
+          </div>
+        </div>
+
+        
       </div>
-    </div>
   </div>
 @endsection
 

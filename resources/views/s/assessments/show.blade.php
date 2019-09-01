@@ -6,7 +6,7 @@
 @section('content')
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-success shadow fixed-top">
-      <a class="navbar-brand" href="#"><i class="fa fa-file-alt"></i> Student Outcome A - Assessment</a>
+      <a class="navbar-brand" href="#"><i class="fa fa-file-alt"></i> Student Outcome {{ $student_outcome->so_code }} - Assessment</a>
     </nav>
     {{-- <div id="app" v-cloak>
         <div class="row">

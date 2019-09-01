@@ -678,7 +678,7 @@ class ExamsController extends Controller
             $num = intval($num);
             $num += 1;
 
-            $new_code = "EXAM" . sprintf("%'.06d\n", $num);
+            $new_code = "EXAM" . sprintf("%'.06d", $num);
 
             $code = $new_code;
         }
@@ -696,6 +696,9 @@ class ExamsController extends Controller
 
         $test_questions = $exam->getTestQuestions();
         $courses = $exam->getCourses();
+
+        // return $courses;
+        // return $test_questions;
 
         $program = Program::findOrFail(request('program_id'));
         $curriculum = Curriculum::findOrFail(request('curriculum_id'));

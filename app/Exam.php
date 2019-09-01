@@ -30,7 +30,8 @@ class Exam extends Model
         $student_outcome = StudentOutcome::find($student_outcome_id);
         $curriculum = Curriculum::find($curriculum_id);
 
-        $curriculum_maps = $student_outcome->curriculumMaps;
+        // $curriculum_maps = $student_outcome->curriculumMaps;
+        $curriculum_maps = $student_outcome->getCurriculumMaps($curriculum_id, $student_outcome_id);
         $curriculum_courses = $curriculum->curriculumCourses;
 
         $valid_curriculum_maps = [];
@@ -92,7 +93,11 @@ class Exam extends Model
         $student_outcome = StudentOutcome::find(request('student_outcome_id'));
         $curriculum = Curriculum::find(request('curriculum_id'));
 
-        $curriculum_maps = $student_outcome->curriculumMaps;
+        $curriculum_maps = $student_outcome->getCurriculumMaps($curriculum->id, $student_outcome->id);
+
+        // $curriculum_maps = $student_outcome->curriculumMaps;
+
+
         $curriculum_courses = $curriculum->curriculumCourses;
 
         $courses = [];
@@ -118,7 +123,8 @@ class Exam extends Model
         $student_outcome = StudentOutcome::find($student_outcome_id);
         $curriculum = Curriculum::find($curriculum_id);
 
-        $curriculum_maps = $student_outcome->curriculumMaps;
+        // $curriculum_maps = $student_outcome->curriculumMaps;
+        $curriculum_maps = $student_outcome->getCurriculumMaps($curriculum->id, $student_outcome->id);
         $curriculum_courses = $curriculum->curriculumCourses;
 
         $courses = [];

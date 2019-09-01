@@ -70,7 +70,7 @@ class AssessmentsController extends Controller
 
             $answer_sheet->answer_sheet_test_questions = $answer_sheet->getAnswerSheetTestQuestionsRand();
             $courses = $answer_sheet->exam->getCourses1($student_outcome->id, $student->curriculum_id);
-            return view('s.assessments.show', compact('courses', 'answer_sheet'));
+            return view('s.assessments.show', compact('courses', 'answer_sheet', 'student_outcome'));
 
         } else {
 
@@ -136,7 +136,7 @@ class AssessmentsController extends Controller
                 //$answer_sheet->load('answerSheetTestQuestions');
                 $answer_sheet->answer_sheet_test_questions = $answer_sheet->getAnswerSheetTestQuestionsRand();
 
-                return view('s.assessments.show', compact('courses', 'answer_sheet'));
+                return view('s.assessments.show', compact('courses', 'answer_sheet', 'student_outcome'));
             } catch (\Exception $e) {
                 DB::rollback();
                 // something went wrong
@@ -269,7 +269,7 @@ class AssessmentsController extends Controller
             $current_count = intval(substr($assessment->assessment_code, 6));
             $current_count += 1;
 
-            return $now->format('Ym') . sprintf("%'.04d\n", $current_count);
+            return $now->format('Ym') . sprintf("%'.04d", $current_count);
         }
 
         return $new_id;

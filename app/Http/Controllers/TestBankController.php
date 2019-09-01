@@ -35,9 +35,16 @@ class TestBankController extends Controller
     public function get_curriculum_courses_mapped($student_outcome_id) {
         $courses = [];
 
-        $curriculum_maps = CurriculumMap::where('is_checked', true)
+        $curriculum_id = request('curriculum_id');
+        // return $curriculum_id;
+
+        $curriculum_maps = CurriculumMap::select('curriculum_maps.*')
+                                    ->join('curriculum_courses', 'curriculum_courses.id', '=', 'curriculum_maps.curriculum_course_id')
+                                    ->where('is_checked', true)
                                     ->where('student_outcome_id', $student_outcome_id)
+                                    ->where('curriculum_courses.curriculum_id', $curriculum_id)
                                     ->get();
+        // return $curriculum_maps;
         foreach ($curriculum_maps as $key => $curriculum_map) {
             $found = false;
             foreach ($courses as $course) {

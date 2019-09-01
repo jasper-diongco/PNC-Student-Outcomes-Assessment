@@ -45,7 +45,9 @@ class TestQuestionsController extends Controller
                 $searched_test_questions = TestQuestion::where('student_outcome_id', $student_outcome->id)
                 ->where('course_id', $course->id)
                 ->where('title', 'LIKE' ,'%' . request('q') . '%')
+
                 ->where('is_active', true)
+                ->orWhere('tq_code', 'LIKE' ,'%' . request('q') . '%')
                 ->with('choices')
                 ->latest()
                 ->get();
@@ -465,7 +467,7 @@ class TestQuestionsController extends Controller
             $num = intval($num);
             $num += 1;
 
-            $new_code = "TQ" . sprintf("%'.07d\n", $num);
+            $new_code = "TQ" . sprintf("%'.07d", $num);
 
             $code = $new_code;
         }
@@ -485,7 +487,7 @@ class TestQuestionsController extends Controller
             $num = intval($num);
             $num += 1;
 
-            $new_code = "CH" . sprintf("%'.09d\n", $num);
+            $new_code = "CH" . sprintf("%'.09d", $num);
 
             $code = $new_code;
         }

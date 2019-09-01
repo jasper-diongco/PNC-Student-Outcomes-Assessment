@@ -69,6 +69,16 @@
     </div>
     
     <div id="main-nav-tabs">
+        <div class="d-flex justify-content-end">
+            <div class="d-flex align-items-baseline">
+                <div class="mr-2">  
+                   <div class="text-dark" style="font-weight: 600">Curriculum:</div>
+                </div>
+                <select v-on:change="getCoursesMapped" class="form-control" v-model="selected_curriculum_id">
+                    <option v-for="curriculum in curricula"  :key="curriculum.id" :value="curriculum.id">@{{ curriculum.name + ' ' + curriculum.year}}  &mdash; v@{{ curriculum.revision_no }}.0</option>
+                </select>
+            </div>
+        </div>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#test-questions" role="tab" aria-selected="true">Test Questions</a>
@@ -86,8 +96,8 @@
                     <table-loading></table-loading>
                 </div>
                 <div v-else>
-                    <div class="d-md-flex flex-wrap justify-content-between " v-if="courses_mapped.length > 0">
-                        {{-- <ul class="list-group">
+                    <div class="" v-if="courses_mapped.length > 0">
+                        <ul class="list-group">
                             <li v-for="course_mapped in courses_mapped" :key="course_mapped.id" class="list-group-item">
                                 <div class="d-flex justify-content-between align-items-baseline">
                                     <div class="d-flex">
@@ -104,8 +114,8 @@
                                     </div>
                                 </div>
                             </li>
-                        </ul> --}}
-                        <div class="card mr-4 mb-4 shadow courses-test-bank" v-for="course_mapped in courses_mapped" :key="course_mapped.id">
+                        </ul>
+                        {{-- <div class="card mr-4 mb-4 shadow courses-test-bank" v-for="course_mapped in courses_mapped" :key="course_mapped.id">
                             <div class="card-body pt-3" >
                                 <div class="d-flex align-items-baseline">
                                     <div class="mr-3">
@@ -132,7 +142,7 @@
                                     <a :href="'/pnc_soa/public/test_questions?student_outcome_id=' + selected_student_outcome.id + '&course_id=' + course_mapped.id  + '&program_id=' + selected_student_outcome.program_id" class="btn btn-info btn-sm">Select <i class="fa fa-angle-right"></i></a>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                     <div v-else class="bg-white p-3">
                         No Courses Mapped.
@@ -142,30 +152,32 @@
           </div>
           <div class="tab-pane fade" id="exams" role="tabpanel">
               <div class="p-3">
-                    <h5 class="text-dark">List of Curriculum <i class="fa fa-file-alt text-info"></i></h5>
+                    {{-- <h5 class="text-dark"><i class="fa fa-file-alt text-info"></i> List of Curriculum </h5> --}}
                     <div v-if="isLoading" class="bg-white p-3">
                         <table-loading></table-loading>
                     </div>
                     <div v-else>
                         <div v-if="curricula.length > 0">
                             <ul class="list-group">
-                                <li v-for="curriculum in curricula" :key="curriculum.id" class="list-group-item">
-                                    <div class="d-flex justify-content-between align-items-baseline">
-                                        <div class="d-flex">
-                                            <div class="mr-3">
-                                                <div class="avatar bg-success"><i class="fa fa-book-open"></i></div>
+                                <template v-for="curriculum in curricula" :key="curriculum.id">
+                                    <li v-if="curriculum.id == selected_curriculum_id" class="list-group-item">
+                                        <div class="d-flex justify-content-between align-items-baseline">
+                                            <div class="d-flex">
+                                                <div class="mr-3">
+                                                    <div class="avatar bg-success"><i class="fa fa-book-open"></i></div>
+                                                </div>
+                                                <div>
+                                                    <div style="font-size: 16px">@{{ curriculum.program.program_code }} - @{{ curriculum.name }}</div>
+                                                    <div class="text-warning" style="font-size: 14px">Revision no. @{{ curriculum.revision_no }}.0</div>
+                                                    <div class="text-muted">@{{ curriculum.exam_count }} exams</div>
+                                                </div>   
                                             </div>
                                             <div>
-                                                <div style="font-size: 16px">@{{ curriculum.program.program_code }} - @{{ curriculum.name }}</div>
-                                                <div class="text-warning" style="font-size: 14px">Revision no. @{{ curriculum.revision_no }}.0</div>
-                                                <div class="text-muted">@{{ curriculum.exam_count }} exams</div>
-                                            </div>   
+                                                <a :href="'/pnc_soa/public/exams?student_outcome_id=' + selected_student_outcome.id + '&program_id=' + selected_student_outcome.program_id + '&curriculum_id=' + curriculum.id" class="btn btn-sm btn-info">View Exams</a>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <a :href="'/pnc_soa/public/exams?student_outcome_id=' + selected_student_outcome.id + '&program_id=' + selected_student_outcome.program_id + '&curriculum_id=' + curriculum.id" class="btn btn-sm btn-info">Select</a>
-                                        </div>
-                                    </div>
-                                </li>
+                                    </li>
+                                </template>
                             </ul>
                         </div>
 
@@ -198,7 +210,8 @@
                 courses_mapped: [],
                 isLoading: false,
                 loadingStudentOutcomes: false,
-                curricula: []
+                curricula: [],
+                selected_curriculum_id: ''
             },
             methods: {
                 getStudentOutcomes() {
@@ -211,7 +224,7 @@
                         this.student_outcomes = response.data;
                         if(this.student_outcomes.length > 0) {
                             this.selected_student_outcome = this.student_outcomes[0];
-                            this.getCoursesMapped();
+                            // this.getCoursesMapped();
                             this.getCurricula();
                         } else {
                             this.selected_student_outcome = '';
@@ -230,7 +243,7 @@
                 },
                 getCoursesMapped() {
                     this.isLoading = true;
-                    ApiClient.get("test_bank/get_curriculum_courses_mapped/" + this.selected_student_outcome.id)
+                    ApiClient.get("test_bank/get_curriculum_courses_mapped/" + this.selected_student_outcome.id + '?curriculum_id=' + this.selected_curriculum_id)
                     .then(response => {
                         this.isLoading = false;
                         this.courses_mapped = response.data;
@@ -246,6 +259,12 @@
                     ApiClient.get("test_bank/" + this.program_id + "/get_curricula?student_outcome_id=" + this.selected_student_outcome.id)
                     .then(response => {
                         this.curricula = response.data;
+
+                        if(this.curricula.length > 0) {
+
+                            this.selected_curriculum_id = this.curricula[0].id;
+                            this.getCoursesMapped();
+                        }
                         this.isLoading = false;
                     })
                     .catch(err => {

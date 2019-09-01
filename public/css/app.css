@@ -10233,6 +10233,27 @@ card-header {
     width: 30%;
   }
 }
+.dashboard-card {
+  background: #dadada;
+}
+.dashboard-card .img-header {
+  height: 80px;
+}
+.dashboard-card .card-name {
+  font-size: 22px;
+  font-weight: 300;
+  text-align: center;
+}
+.dashboard-card .dashboard-card-footer {
+  background: #fff;
+}
+.dashboard-card .dashboard-count {
+  font-size: 30px;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
 .my-header {
   font-size: 32px;
 }

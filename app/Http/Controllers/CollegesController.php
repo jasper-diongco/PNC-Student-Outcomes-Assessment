@@ -9,6 +9,9 @@ use App\Program;
 use App\Course;
 use App\Curriculum;
 use App\Student;
+use App\Assessment;
+use App\Exam;
+use App\TestQuestion;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -74,6 +77,25 @@ class CollegesController extends Controller
             ->where('colleges.id', Session::get('college_id'))
             ->count();
 
+        $exams_count = Exam::select('exams.*')
+                    ->join('student_outcomes', 'student_outcomes.id', '=', 'exams.student_outcome_id')
+                    ->join('programs', 'programs.id', '=', 'student_outcomes.program_id')
+                    ->where('programs.college_id', $college->id)
+                    ->count();
+        $test_question_count = TestQuestion::select('test_questions.*')
+                    ->join('student_outcomes', 'student_outcomes.id', '=', 'test_questions.student_outcome_id')
+                    ->join('programs', 'programs.id', '=', 'student_outcomes.program_id')
+                    ->where('programs.college_id', $college->id)
+                    ->count();
+
+        $faculties_count = Faculty::where('college_id', $college->id)->count();
+
+        $assessment_count = Assessment::select('assessments.*')
+                            ->join('students', 'students.id', '=', 'assessments.student_id')
+                            ->join('programs', 'programs.id', '=', 'students.program_id')
+                            ->where('programs.college_id', $college->id)
+                            ->count();
+
         // return view('colleges.dashboard')
         //     ->with('college', $college)
         //     ->with('program_count', $program_count)
@@ -82,7 +104,7 @@ class CollegesController extends Controller
         //     ->with('password_changed', $password_changed)
         //     ->with('student_count', $student_count);
 
-        return view('colleges.dashboard', compact('college', 'program_count', 'courses_count', 'curriculum_count', 'password_changed', 'student_count'));
+        return view('colleges.dashboard', compact('college', 'program_count', 'courses_count', 'curriculum_count', 'password_changed', 'student_count', 'faculties_count', 'assessment_count', 'exams_count', 'test_question_count'));
     }
 
     /**

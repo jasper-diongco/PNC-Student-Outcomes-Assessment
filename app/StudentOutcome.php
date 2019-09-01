@@ -17,6 +17,21 @@ class StudentOutcome extends Model
         return $this->hasMany('App\CurriculumMap')->where('is_checked', true);
     }
 
+    public function getCurriculumMaps($curriculum_id='', $student_outcome_id='') {
+        // return CurriculumMap::select('curriculum_maps')
+        //         ->where('is_checked', true)
+        //         ->where('curriculum_id', $curriculum_id)
+        //         ->get();
+        $curriculum_maps = CurriculumMap::select('curriculum_maps.*')
+                            ->join('curriculum_courses', 'curriculum_courses.id', '=', 'curriculum_maps.curriculum_course_id')
+                            ->where('is_checked', true)
+                            ->where('student_outcome_id', $student_outcome_id)
+                            ->where('curriculum_courses.curriculum_id', $curriculum_id)
+                            ->get();
+
+        return $curriculum_maps;
+    }
+
     public function program() {
         return $this->belongsTo('App\Program');
     }
@@ -110,11 +125,15 @@ class StudentOutcome extends Model
         }
     }
 
-    public function getCoursesGrade() {
+    public function getCoursesGrade($curriculum_id, $student_outcome_id) {
 
-        $curriculum_maps = CurriculumMap::where('is_checked', true)
-            ->where('student_outcome_id', $this->id)
-            ->get();
+        // $curriculum_maps = CurriculumMap::where('is_checked', true)
+        //     ->where('student_outcome_id', $this->id)
+        //     ->get();
+
+        $curriculum_maps = $this->getCurriculumMaps($curriculum_id, $student_outcome_id);
+
+
         $courses = [];
 
         foreach ($curriculum_maps as $curriculum_map) {
@@ -153,12 +172,12 @@ class StudentOutcome extends Model
 
     public function getRandomExam($curriculum_id) {
         //need to consider the curriculum
-        /*return Exam::where('student_outcome_id', $this->id)
+        return Exam::where('student_outcome_id', $this->id)
             ->where('is_active', true)
             ->where('curriculum_id', $curriculum_id)
             ->inRandomOrder()
-            ->first();*/
-        return Exam::find(1);
+            ->first();
+        // return Exam::find(1);
     }
 
     public function getExams($curriculum_id) {

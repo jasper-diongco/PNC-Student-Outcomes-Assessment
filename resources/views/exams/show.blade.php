@@ -466,7 +466,7 @@
                         vm.show_test_questions = vm.test_questions.filter(test_question => {
                             var reg_exp = new RegExp(vm.searchText,'i');
                             return (
-                            test_question.title.search(reg_exp) > -1 );
+                            test_question.title.search(reg_exp) > -1 ||  test_question.tq_code.search(reg_exp) > -1);
                         });
 
                         vm.paginate(1);
