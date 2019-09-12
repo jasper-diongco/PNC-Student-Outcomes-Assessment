@@ -78,7 +78,10 @@
                             <div>Total Items: <span class="text-success">@{{ items_remaining.easy +  items_remaining.average + items_remaining.difficult }}</span></div>
                             <ul >
                                 <li>Easy: 
-                                    <strong v-if="checkIfExceed(original_requirements_template[index].easy, items_remaining.easy)" class="text-danger">(@{{ countExceed(original_requirements_template[index].easy, items_remaining.easy) }} item(s) to be removed)</strong>
+                                    <span class="text-success">
+                                    @{{ items_remaining.easy }}
+                                        <strong v-if="checkIfExceed(original_requirements_template[index].easy, items_remaining.easy)" class="text-danger">(@{{ countExceed(original_requirements_template[index].easy, items_remaining.easy) }} item(s) to be removed)</strong>
+                                    </span>
                                 </li>
                                 <li >Average: 
                                     <span class="text-success">@{{ items_remaining.average }}
@@ -97,7 +100,7 @@
                 
             </div>
 
-            @if ($item_analysis->is_saved)
+            @if (!$item_analysis->is_saved)
                 <div class="d-flex justify-content-end mt-3">
                     <button data-toggle="modal" data-target="#addExamModal" class="btn btn-info btn-sm">
                         Get random items from test bank & Save

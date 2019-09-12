@@ -137,6 +137,7 @@
                     <thead>
                         <th width="3%">No.</th>
                         <th width="10%">Test Question</th>
+                        <th width="10%">Current Difficulty Level</th>
                         <th width="5%">Students with <br>Correct Answer</th>
                         <th width="10%">Difficulty Index</th>
                         <th width="10%">Difficulty Interpretation</th>
@@ -159,6 +160,11 @@
                                 @{{ exam_test_question.test_question.tq_code }}
                             </td>
                             <td>
+                                @{{ exam_test_question.test_question.difficulty_level_id  == 1 ? 'Easy' : '' }}
+                                @{{ exam_test_question.test_question.difficulty_level_id  == 2 ? 'Average' : '' }}
+                                @{{ exam_test_question.test_question.difficulty_level_id  == 3 ? 'Difficult' : '' }}
+                            </td>
+                            <td>
                                 @{{ templates.correct_answers[index] }}
                             </td>
                             <td>
@@ -177,12 +183,22 @@
                             <td>@{{ discriminationAction(templates.discrimination_actions[index]) }}</td>
                             <td>
                                 <div class="d-flex flex-column" v-if="!checkIfResolved(exam_test_question.test_question_id)">
-                                    <button v-if="checkAction(templates.recommended_actions[index], 1)" v-on:click="retainTestQuestion(exam_test_question.test_question_id, templates.item_analysis_details[index].id)" class="btn btn-sm btn-success mr-2">Retain <i class="fa fa-check"></i></button>
-                                    <button v-if="templates.difficulty_actions[index] == 2 && checkAction(templates.recommended_actions[index], 2)" v-on:click="changeLevelOfDifficulty(exam_test_question.test_question_id, templates.item_analysis_details[index].id, difficultyLevelId(difficultyIndexInterpretation(templates.difficulty_index_num[index])))" class="btn btn-sm btn-success mr-2">Change to @{{ difficultyIndexInterpretation(templates.difficulty_index_num[index]) }} <i class="fa fa-check"></i></button>
 
-                                    <button v-if="checkAction(templates.recommended_actions[index], 3)" v-on:click="rejectTestQuestion(exam_test_question.test_question_id, templates.item_analysis_details[index].id)" class="btn btn-sm btn-warning mr-2">Reject <i class="fa fa-archive"></i></button>
+                                    <div class="mb-1">
+                                        <button v-if="checkAction(templates.recommended_actions[index], 1)" v-on:click="retainTestQuestion(exam_test_question.test_question_id, templates.item_analysis_details[index].id)" class="btn btn-block btn-sm btn-success mr-2">Retain <i class="fa fa-check"></i></button>
+                                    </div>
 
-                                    <button class="btn btn-sm btn-info" v-if="checkAction(templates.recommended_actions[index], 2)" v-on:click="openReviseModal(exam_test_question.test_question_id, templates.item_analysis_details[index].id)">Revise <i class="fa fa-edit"></i></button>
+                                    <div class="mb-1">
+                                        <button v-if="templates.difficulty_actions[index] == 2 && checkAction(templates.recommended_actions[index], 2)" v-on:click="changeLevelOfDifficulty(exam_test_question.test_question_id, templates.item_analysis_details[index].id, difficultyLevelId(difficultyIndexInterpretation(templates.difficulty_index_num[index])))" class="btn btn-block btn-sm btn-success mr-2">Change to @{{ difficultyIndexInterpretation(templates.difficulty_index_num[index]) }} <i class="fa fa-check"></i></button>
+                                    </div>
+                                    
+                                    <div class="mb-1">
+                                        <button v-if="checkAction(templates.recommended_actions[index], 3)" v-on:click="rejectTestQuestion(exam_test_question.test_question_id, templates.item_analysis_details[index].id)" class="btn btn-block btn-sm btn-warning mr-2">Reject <i class="fa fa-archive"></i></button>
+                                    </div>
+                                    
+                                    <div class="mb-1">
+                                        <button class="btn btn-block btn-sm btn-info" v-if="checkAction(templates.recommended_actions[index], 2)" v-on:click="openReviseModal(exam_test_question.test_question_id, templates.item_analysis_details[index].id)">Revise <i class="fa fa-edit"></i></button>
+                                    </div>
                                 </div>
                                 <div v-else class="">
                                     <i class="fa fa-check-circle text-success"></i> Resolved :

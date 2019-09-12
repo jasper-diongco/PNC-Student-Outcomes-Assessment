@@ -22,7 +22,7 @@ class Assessment extends Model
     }
 
     public function assessmentDetails() {
-        return $this->hasMany('App\AssessmentDetail');
+        return $this->hasMany('App\AssessmentDetail')->with('testQuestion');
     }
 
 

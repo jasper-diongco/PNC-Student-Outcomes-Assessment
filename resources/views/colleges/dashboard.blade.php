@@ -17,7 +17,7 @@
 
     <h1 class="page-header">{{ $college->name }}</h1>
 
-    <div class="w-25"><bar-chart :data="sampleData"></bar-chart></div>
+    {{-- <div class="w-25"><bar-chart :data="sampleData"></bar-chart></div> --}}
 
     {{-- <div class="card">
       <div class="card-header d-flex justify-content-between align-items-center">

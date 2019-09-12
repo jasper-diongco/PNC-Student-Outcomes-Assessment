@@ -31,6 +31,19 @@ export default {
                         top: 0,
                         bottom: 0
                     }
+                },
+                plugins: {
+                    labels: [
+                        {
+                            render: "percentage",
+                            position: "border",
+                            precision: 2
+                        },
+                        {
+                            render: "label",
+                            precision: 2
+                        }
+                    ]
                 }
             }
         };

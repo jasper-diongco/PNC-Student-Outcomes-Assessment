@@ -251,4 +251,42 @@ class Exam extends Model
 
         return $assessments;
     }
+
+    public function getAssessments() {
+        $assessments =  Assessment::where('exam_id', $this->id)
+                ->with('assessmentDetails')
+                ->get();
+
+        // foreach ($assessments as $assessment) {
+        //     foreach ($ass as $key => $value) {
+        //         # code...
+        //     }
+        // }
+
+        return $assessments;
+    }
+
+    public function countPassedAssessments() {
+        $assessments = Assessment::where('exam_id', $this->id)->get();
+        $count = 0;
+        foreach ($assessments as $assessment) {
+            if($assessment->checkIfPassed()) {
+                $count += 1;
+            }     
+        }
+
+        return $count;
+    }
+
+    public function countFailedAssessments() {
+        $assessments = Assessment::where('exam_id', $this->id)->get();
+        $count = 0;
+        foreach ($assessments as $assessment) {
+            if(!$assessment->checkIfPassed()) {
+                $count += 1;
+            }     
+        }
+
+        return $count;
+    }
 }

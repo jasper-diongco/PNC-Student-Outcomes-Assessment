@@ -38,11 +38,38 @@
               </li>
               
             </ul>
+            
+            <div class="d-flex">
+                <div class="py-0 mt-3 w-50">
+                    {{-- <div>
+                        <bar-chart :data="scorePerCoursesData"></bar-chart>
+                    </div>
+                    <div style="border: 1px solid #ededed; padding: 10px; margin-left: 20px;">
+                        <h5>Score Per subject</h5>
+                    </div> --}}
 
-            <div class="d-flex mt-3">
-                <div>
-                    <bar-chart :data="scorePerCoursesData"></bar-chart>
+                    <div>
+                        <h5 class="mt-3">Score per course</h5>
+                        <p class="text-info">This figures show the percentage of scores per course</p>
+                        <div v-for="courseScore in scorePerCourses" :key="courseScore.course.id" class="mb-3">
+                            <div class="mr-2 mb-2"><span class="font-weight-bold"> @{{ courseScore.course.course_code }}</span> - @{{ courseScore.course.description }} &mdash; <span class="font-weight-bold">@{{ courseScore.totalItemsInCourse }}</span> items</div>
+                            <div class="d-flex align-items-baseline">
+                                <div class="progress w-100 mr-2">
+                                  <div class="progress-bar bg-success" role="progressbar" :style="{ 'width': courseScore.scoreInPercentage + '%' }" :aria-valuenow="courseScore.scoreInPercentage" aria-valuemin="0" aria-valuemax="100">@{{ courseScore.scoreInPercentage.toFixed(2) }}%</div>
+                                </div>
+                                <div class="font-weight-bold text-dark">
+                                    (@{{courseScore.score}})
+                                </div>
+                            </div>
+                        </div>  
+                        
+                    </div>
                 </div>
+                {{-- <div class="py-0 mt-3 ml-3" style="width: 40%">
+                    <h5 class="mt-3">Percentage of scores in total score</h5>
+                        <p class="text-info">This figure shows the percentage of scores in total score</p>
+                    <pie-chart :data="scorePerCoursesData"></pie-chart>
+                </div> --}}
             </div>
 
             
@@ -164,7 +191,81 @@
 
           </div>
           <div class="tab-pane fade show" id="reports" role="tabpanel">
-            <h1>Reports</h1>
+            <h3 class="my-3">Reports</h3>
+            <div class="card mb-4">
+                <div class="card-body py-4">
+                    <div style="width: 40%">
+                        <h5 class="mt-3">Percentage of scores in total score</h5>
+                            <p class="text-info">This figure shows the percentage of scores in total score</p>
+                        <pie-chart :data="scorePerCoursesData"></pie-chart>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="card mb-4">
+                <div class="card-body py-4">
+                    <div>
+                        <h5 class="mt-3">Score per course</h5>
+                        <p class="text-info">This figures show the percentage of scores per course</p>
+                        <div v-for="courseScore in scorePerCourses" :key="courseScore.course.id" class="mb-3">
+                            <div class="mr-2 mb-2"><span class="font-weight-bold"> @{{ courseScore.course.course_code }}</span> - @{{ courseScore.course.description }} &mdash; <span class="font-weight-bold">@{{ courseScore.totalItemsInCourse }}</span> items</div>
+                            <div class="d-flex align-items-baseline">
+                                <div class="progress w-100 mr-2">
+                                  <div class="progress-bar bg-success" role="progressbar" :style="{ 'width': courseScore.scoreInPercentage + '%' }" :aria-valuenow="courseScore.scoreInPercentage" aria-valuemin="0" aria-valuemax="100">@{{ courseScore.scoreInPercentage.toFixed(2) }}%</div>
+                                </div>
+                                <div class="font-weight-bold text-dark">
+                                    (@{{courseScore.score}})
+                                </div>
+                            </div>
+                        </div>  
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body py-4">
+                    <div>
+                        <h5 class="mt-3">Score per course (table view)</h5>
+                        <p class="text-info">The table below shows the percentage of scores per course in more detailed.</p>
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Course</th>
+                                    <th>Total Items</th>
+                                    <th>Easy Score</th>
+                                    <th>Average Score</th>
+                                    <th>Difficult Score</th>
+                                    <th>Overall Score</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="scoreDetailed in scorePerCoursesDetailed">
+                                    <td>@{{ scoreDetailed.course.course_code }}</td>
+                                    <td>@{{ scoreDetailed.totalItemsInCourse }}</td>
+                                    <td>@{{ scoreDetailed.easyScore }} (@{{ scoreDetailed.easyPercentage.toFixed(2) }}%)</td>
+                                    <td>@{{ scoreDetailed.averageScore  }} (@{{ scoreDetailed.averagePercentage.toFixed(2) }}%)</td>
+                                    <td>@{{ scoreDetailed.difficultScore }} (@{{ scoreDetailed.difficultPercentage.toFixed(2) }}%)</td>
+                                    <td>@{{ scoreDetailed.score }} (@{{ scoreDetailed.scoreInPercentage.toFixed(2) }}%)</td>
+                                </tr>
+                            </tbody>
+                            <tfoot class="font-weight-bold">
+                                <tr>
+                                    <td>Total</td>
+                                    <td>@{{ scoreTotals.totalItems }}</td>
+                                    <td>@{{ scoreTotals.easy }} (@{{ scoreTotals.easyPercentage.toFixed(2) }}%)</td>
+                                    <td>@{{ scoreTotals.average }} (@{{ scoreTotals.averagePercentage.toFixed(2) }}%)</td>
+                                    <td>@{{ scoreTotals.difficult }} (@{{ scoreTotals.difficultPercentage.toFixed(2) }}%)</td>
+                                    <td>@{{ scoreTotals.overall }} (@{{ scoreTotals.overallPercentage.toFixed(2) }}%)</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
           </div>
         </div>
     </div>
@@ -172,6 +273,7 @@
 @endsection
 
 @push('scripts')
+<script src="{{ asset('js/chartjs-plugin-labels.js') }}"></script>
 <script>
 var vm = new Vue({
     el: '#app',
@@ -184,6 +286,16 @@ var vm = new Vue({
         answer_sheet_test_questions: @json($answer_sheet_test_questions),
         selected_test_questions: [],
         course_id: '',
+        scorePerCourses: [],
+        scorePerCoursesDetailed: [],
+        scoreTotals: {
+            totalItems: 0,
+            easy: 0,
+            average: 0,
+            difficult: 0,
+            overall: 0
+        },
+        correct_answers: {{ $assessment->getCorrectAnswers()->count() }},
         scorePerCoursesData: {
                 labels: [],
                 datasets: [
@@ -327,10 +439,13 @@ var vm = new Vue({
             }
         },
         fillScorePerCoursesData() {
+            this.getScorePerCoursesData();
             for(var i = 0; i < this.courses.length; i++) {
+                // var percent = (this.scorePerCoursesData.datasets[0].data[i] / this.correct_answers) * 100;
                 this.scorePerCoursesData.labels.push(this.courses[i].course_code);
             }
-            this.getScorePerCoursesData();
+            
+            // this.getScorePercentageInTotalScore();
         },
         getScorePerCoursesData() {
             var scores = [];
@@ -350,6 +465,128 @@ var vm = new Vue({
             }
 
             this.scorePerCoursesData.datasets[0].data = scores;
+        },
+        getScorePercentageInTotalScore() {
+            var scores = [];
+            for(var i = 0; i < this.courses.length; i++) {
+
+                var score = 0;
+                for(var j = 0; j < this.answer_sheet_test_questions.length; j++) {
+                    if(this.answer_sheet_test_questions[j].course_id == this.courses[i].id) {
+                        if(this.checkIfCorrect(this.answer_sheet_test_questions[j])) {
+                            score++;
+                        }
+
+                        
+                    }
+                }
+
+                var percent = (score / this.correct_answers) * 100;
+
+                scores.push(percent.toFixed(2));
+            }
+
+
+            this.scorePerCoursesData.datasets[0].data = scores;
+        },
+        getScorePerCourses() {
+            var scores = [];
+            for(var i = 0; i < this.courses.length; i++) {
+                // console.log(this.courses[i].id);
+                var totalItemsInCourse = 0;
+                var score = 0;
+                for(var j = 0; j < this.answer_sheet_test_questions.length; j++) {
+                    if(this.answer_sheet_test_questions[j].course_id == this.courses[i].id) {
+                        if(this.checkIfCorrect(this.answer_sheet_test_questions[j])) {
+                            score++;
+                        }
+                        totalItemsInCourse++;
+                        
+                    }
+                }
+
+                var scoreInPercentage = (score / totalItemsInCourse) * 100;
+
+                scores.push({
+                    course: this.courses[i],
+                    score: score,
+                    totalItemsInCourse: totalItemsInCourse,
+                    scoreInPercentage: scoreInPercentage
+                });
+            }
+
+            this.scorePerCourses = scores;
+            return scores;
+        },
+        getScorePerCoursesDetailed() {
+            var scores = [];
+            for(var i = 0; i < this.courses.length; i++) {
+                // console.log(this.courses[i].id);
+                var totalItemsInCourse = 0;
+                var easyScore = 0;
+                var averageScore = 0;
+                var difficultScore = 0;
+                var score = 0;
+                for(var j = 0; j < this.answer_sheet_test_questions.length; j++) {
+                    if(this.answer_sheet_test_questions[j].course_id == this.courses[i].id) {
+                        if(this.checkIfCorrect(this.answer_sheet_test_questions[j])) {
+                            score++;
+
+                            if(this.answer_sheet_test_questions[j].difficulty_level_id == 1) {
+                                easyScore++;
+                            } else if(this.answer_sheet_test_questions[j].difficulty_level_id == 2) {
+                                averageScore++;
+                            } else if(this.answer_sheet_test_questions[j].difficulty_level_id == 3) {
+                                difficultScore++;
+                            }
+
+                        }
+                        totalItemsInCourse++;
+                        
+                    }
+                }
+
+                var scoreInPercentage = (score / totalItemsInCourse || 0) * 100;
+
+                var easyPercentage = (easyScore / score || 0) * 100;
+                var averagePercentage = (averageScore / score || 0) * 100;
+                var difficultPercentage = (difficultScore / score || 0) * 100;
+
+                scores.push({
+                    course: this.courses[i],
+                    score: score,
+                    totalItemsInCourse: totalItemsInCourse,
+                    scoreInPercentage: scoreInPercentage,
+                    easyScore: easyScore,
+                    averageScore: averageScore,
+                    difficultScore: difficultScore,
+                    easyPercentage: easyPercentage,
+                    averagePercentage: averagePercentage,
+                    difficultPercentage: difficultPercentage
+                });
+            }
+
+            this.scorePerCoursesDetailed = scores;
+            // totalItems: 0,
+            // easy: 0,
+            // average: 0,
+            // difficult: 0,
+            // overall: 0
+            for(var i = 0; i < scores.length; i++) {
+                this.scoreTotals.totalItems += scores[i].totalItemsInCourse;
+                this.scoreTotals.easy += scores[i].easyScore;
+                this.scoreTotals.difficult += scores[i].difficultScore;
+                this.scoreTotals.average += scores[i].averageScore;
+                this.scoreTotals.overall += scores[i].score;
+            }
+
+            //get percentages
+            this.scoreTotals.easyPercentage = (this.scoreTotals.easy / this.scoreTotals.overall || 0) * 100;
+            this.scoreTotals.averagePercentage = (this.scoreTotals.average / this.scoreTotals.overall || 0) * 100;
+            this.scoreTotals.difficultPercentage = (this.scoreTotals.difficult / this.scoreTotals.overall || 0) * 100;
+            this.scoreTotals.overallPercentage = (this.scoreTotals.overall / this.scoreTotals.totalItems || 0) * 100;
+
+            return scores;
         }
     },
     created() {
@@ -358,6 +595,8 @@ var vm = new Vue({
         this.course_id = this.courses[0].id;
         //this.answer_sheet_test_questions = this.answer_sheet_test_questions;
         this.fillScorePerCoursesData();
+        this.getScorePerCourses();
+        this.getScorePerCoursesDetailed();
         setInterval(() => {
             MathLive.renderMathInDocument();
             Prism.highlightAll();
@@ -366,4 +605,6 @@ var vm = new Vue({
 });
 </script>
 @endpush
+
+
 

@@ -29,7 +29,7 @@
                 <div class="mr-3"><label>Curriculum: </label> <span class="text-info fs-19">{{ $curriculum->name . ' ' . $curriculum->year . ' - revision no. ' . $curriculum->revision_no }}.0</span></div>
             </div>
             <div style="width: 200px">
-                <pie-chart :data="pie_data"></pie-chart>
+                {{-- <pie-chart :data="pie_data"></pie-chart> --}}
             </div>
 
             <div class="d-flex justify-content-between mt-3 align-items-baseline">
@@ -70,9 +70,59 @@
               <li class="nav-item">
                 <a class="nav-link" id="profile-tab" data-toggle="tab" href="#test-questions" role="tab" aria-selected="false">Test Questions</a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#reports" role="tab" aria-selected="false">Reports</a>
+              </li>
             </ul>
             <div class="tab-content" id="myTabContent">
+
               <div class="tab-pane fade show active" id="exam-detail" role="tabpanel">
+                <div class="card mb-3">
+                  <div class="card-body py-3">
+                    <h5>Items Count</h5>
+
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Course</th>
+                          <th>Easy</th>
+                          <th>Average</th>
+                          <th>Difficult</th>
+                          <th>Total</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr v-for="itemCount in itemsCount" :key="itemCount.course.course_code">
+                          <td>
+                            @{{ itemCount.course.course_code }}
+                          </td>
+                          <td>
+                            @{{ itemCount.easyCount }} (@{{ (itemCount.easyCount / (itemCount.totalCount || 0) * 100).toFixed(2) }}%)
+                          </td>
+                          <td>
+                            @{{ itemCount.averageCount}} (@{{ (itemCount.averageCount / (itemCount.totalCount || 0) * 100).toFixed(2) }}%) 
+                          </td>
+                          <td>
+                            @{{ itemCount.difficultCount }} (@{{ (itemCount.difficultCount / (itemCount.totalCount || 0) * 100).toFixed(2) }}%) 
+                          </td>
+                          <td>
+                            @{{ itemCount.totalCount  }} (@{{ (itemCount.totalCount / (itemsCountSum.totalCount || 0) * 100).toFixed(2) }}%) 
+                          </td>
+                        </tr>
+                      </tbody>
+                      <tfoot class="font-weight-bold">
+                        <tr>
+                          <td>Total</td>
+                          <td>@{{ itemsCountSum.easyCount }} (@{{(itemsCountSum.easyCount / itemsCountSum.totalCount * 100).toFixed(2)}}%)</td>
+                          <td>@{{ itemsCountSum.averageCount }} (@{{(itemsCountSum.averageCount / itemsCountSum.totalCount * 100).toFixed(2)}}%)</td>
+                          <td>@{{ itemsCountSum.difficultCount }} (@{{(itemsCountSum.difficultCount / itemsCountSum.totalCount * 100).toFixed(2)}}%)</td>
+                          <td>@{{ itemsCountSum.totalCount }}</td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                </div>
+
                 {{-- exam details --}}
 
                 <ul class="list-group mt-2">
@@ -322,6 +372,62 @@
                     </div>
                 </div> --}}
               </div>
+              {{-- reports --}}
+              <div class="tab-pane fade" id="reports" role="tabpanel">
+                <h4 class="py-4">Exam Reports</h4>
+                
+                <div class="card mb-4">
+
+                  <div class="card-body py-4">
+                    <h5>Items Difficulties Percentage</h5>
+                    <p class="text-primary">This figure shows the percentage of difficulties of test questions. (Easy, Average, Difficult)</p>
+                    <div class="w-25">
+                        <pie-chart :data="pie_data"></pie-chart>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card mb-4">
+
+                  <div class="card-body py-4">
+                    <h5>Passing Percentage</h5>
+                    <p class="text-primary">This figure shows the percentage of passed and failed students took this exam.</p>
+                    <div class="w-25">
+                      <pie-chart :data="passing_percentage_pie"></pie-chart>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card mb-4">
+
+                  <div class="card-body py-4">
+                    <h5>Average Scores per course</h5>
+                    <p class="text-primary">This figures show the average percentage of scores per courses</p>
+                    <div v-for="averageScoresPerCourse in averageScoresPerCourses" class="mb-3">
+                          <div class="mr-2 mb-2"><span class="font-weight-bold"> @{{ averageScoresPerCourse.course_code }}</span> - @{{ averageScoresPerCourse.description }} &mdash; <span class="font-weight-bold">@{{ averageScoresPerCourse.totalItems }}</span> items</div>
+                          <div class="d-flex align-items-baseline">
+                              <div class="progress w-100 mr-2">
+                                <div class="progress-bar bg-success" role="progressbar" :style="{'width' : averageScoresPerCourse.percentage + '%'}" :aria-valuenow="averageScoresPerCourse.percentage" aria-valuemin="0" aria-valuemax="100">@{{ averageScoresPerCourse.percentage.toFixed(2) }}%</div>
+                              </div>
+                              <div class="font-weight-bold text-dark">
+                                  @{{ averageScoresPerCourse.average }}
+                              </div>
+                          </div>
+                      </div> 
+                  </div>
+                </div>
+
+                <div class="card mb-4">
+
+                  <div class="card-body py-4">
+                    <h5>Average percentage of scores in the total score</h5>
+                    <p class="text-primary">This figure shows the average percentage of scores in the total score</p>
+                    <div style="width: 40%">
+                      <pie-chart :data="pie_average_percentage_of_scores"></pie-chart>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
         </div>
 
@@ -369,6 +475,7 @@
 @endsection
 
 @push('scripts')
+    <script src="{{ asset('js/chartjs-plugin-labels.js') }}"></script>
     <script>
         var vm = new Vue({
             el: '#app',
@@ -395,7 +502,48 @@
                     ],
                     labels: ["Easy", "Ave", "Difficult"]
                 },
-                isLoading: false
+                passing_percentage_pie: {
+                  datasets: [
+                        {
+                            data: [],
+                            backgroundColor: ["#cbff90", "#ededed"]
+                        }
+                    ],
+                    labels: ["Passed", "Failed"]
+                },
+                pie_average_percentage_of_scores: {
+                  datasets: [
+                        {
+                            data: [],
+                            backgroundColor: ["rgba(52, 172, 224,1.0)",
+                            "rgba(51, 217, 178,1.0)",
+                            "rgba(252, 92, 101,1.0)",
+                            "rgba(75, 123, 236,1.0)",
+                            "rgba(253, 150, 68,1.0)",
+                            "rgba(254, 211, 48,1.0)",
+                            "rgba(38, 222, 129,1.0)",
+                            "rgba(43, 203, 186,1.0)",
+                            "rgba(69, 170, 242,1.0)", 
+                            "rgba(136, 84, 208,1.0)",
+                            "rgba(75, 101, 132,1.0)",
+                            "rgba(64, 64, 122,1.0)",
+                            "rgba(112, 111, 211,1.0)"]
+                        }
+                    ],
+                    labels: []
+                },
+                isLoading: false,
+                itemsCount: [],
+                itemsCountSum: {
+                  easyCount: 0,
+                  averageCount: 0,
+                  difficultCount: 0,
+                  totalCount: 0
+                },
+                assessmentsPassedCount: {{ $exam->countPassedAssessments() }},
+                assessmentsFailedCount: {{ $exam->countFailedAssessments() }},
+                assessments: @json($exam->getAssessments()),
+                averageScoresPerCourses: []
 
             },
             computed: {
@@ -623,6 +771,128 @@
                       return this.courses[i];
                     }
                   }
+                },
+                getItemsCount() {
+                  for(var i = 0; i < this.courses.length; i++) {
+                    var easyCount = 0;
+                    var averageCount = 0;
+                    var difficultCount = 0;
+                    var totalCount = 0;
+
+                    for(var j = 0; j < this.test_questions.length; j++) {
+                      if(this.courses[i].id == this.test_questions[j].course_id) {
+                        totalCount++;
+
+                        if(this.test_questions[j].difficulty_level_id == 1) {
+                          easyCount++;
+                        } else if (this.test_questions[j].difficulty_level_id == 2) {
+                          averageCount++;
+                        }
+                         else if (this.test_questions[j].difficulty_level_id == 3) {
+                          difficultCount++;
+                         }
+                      }
+                    }
+
+                    this.itemsCount.push({
+                      course: this.courses[i],
+                      easyCount: easyCount,
+                      averageCount: averageCount,
+                      difficultCount: difficultCount,
+                      totalCount: totalCount
+                    });
+
+                    
+                  }
+
+                  for(var i = 0; i < this.itemsCount.length; i++) {
+                    this.itemsCountSum.easyCount += this.itemsCount[i].easyCount;
+                    this.itemsCountSum.averageCount += this.itemsCount[i].averageCount;
+                    this.itemsCountSum.difficultCount += this.itemsCount[i].difficultCount;
+                    this.itemsCountSum.totalCount += this.itemsCount[i].totalCount;
+                  }
+                },
+                getAverageScorePerCourses() {
+                  templates = [];
+                  //initialize array
+                  var averageScoresPerCourses = [];
+                  for(var x = 0; x < this.courses.length; x++) {
+                    averageScoresPerCourses.push({
+                      course_id: this.courses[x].id,
+                      course_code: this.courses[x].course_code,
+                      description: this.courses[x].description,
+                      count: 0,
+                      average: 0,
+                      totalItems: 0,
+                      percentage: 0
+                    });
+                  }
+
+                  //count total items per course
+                  if(this.assessments.length > 0) {
+                    for(var i = 0; i < this.assessments[0].assessment_details.length; i++) {
+                      for(var j = 0; j < averageScoresPerCourses.length; j++) {
+                        if(averageScoresPerCourses[j].course_id == this.assessments[0].assessment_details[i].test_question.course_id) {
+                          averageScoresPerCourses[j].totalItems += 1;
+                        }
+                      }
+                    }
+                  }
+
+
+                  for(var i = 0; i < this.assessments.length; i++) {
+                    var scoresPerCourses = [];
+                    //initialize array
+                    for(var x = 0; x < this.courses.length; x++) {
+                      scoresPerCourses.push({
+                        course_id: this.courses[x].id,
+                        course_code: this.courses[x].course_code,
+                        count: 0
+                      });
+                    }
+
+                    for(var j = 0; j < this.assessments[i].assessment_details.length; j++) {
+                      for(var k = 0; k < this.courses.length; k++) {
+                        if(this.courses[k].id == this.assessments[i].assessment_details[j].test_question.course_id) {
+                          if(this.assessments[i].assessment_details[j].is_correct) {
+                            scoresPerCourses[k].count++;
+                          }
+                          //console.log(this.assessments[i].assessment_details[j].course.id);
+                        }
+                      }
+                    }
+
+                    templates.push(scoresPerCourses);
+                  }
+
+
+                  //get the average
+                  for(var i = 0; i < templates.length; i++) {
+                    for(var j = 0; j < templates[i].length; j++) {
+                      averageScoresPerCourses[j].count += templates[i][j].count;
+                    }
+                  }
+
+                  for(var i = 0; i < averageScoresPerCourses.length; i++) {
+                    averageScoresPerCourses[i].average = averageScoresPerCourses[i].count / (this.assessments.length || 0);
+
+                    //percentage
+                    averageScoresPerCourses[i].percentage = averageScoresPerCourses[i].average / (averageScoresPerCourses[i].totalItems || 0) * 100;
+                  }
+
+                  //console.log(averageScoresPerCourses);
+
+                  this.averageScoresPerCourses = averageScoresPerCourses;
+
+
+                  for(var i = 0; i < this.averageScoresPerCourses.length; i++) {
+                    this.pie_average_percentage_of_scores.labels[i] = this.averageScoresPerCourses[i].course_code
+                    this.pie_average_percentage_of_scores.datasets[0].data[i] = averageScoresPerCourses[i].average;
+                  }
+
+
+
+                  
                 }
             },
             created() {
@@ -634,7 +904,12 @@
                 this.pie_data.datasets[0].data[1] = this.countByDifficulty(2);
                 this.pie_data.datasets[0].data[2] = this.countByDifficulty(3);
 
+                this.passing_percentage_pie.datasets[0].data[0] = this.assessmentsPassedCount;
+                this.passing_percentage_pie.datasets[0].data[1] = this.assessmentsFailedCount;
+
                 this.setNumber();
+                this.getItemsCount();
+                this.getAverageScorePerCourses();
 
                 setInterval(() => {
                     MathLive.renderMathInDocument();
