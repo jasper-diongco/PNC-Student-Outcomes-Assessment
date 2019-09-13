@@ -67,7 +67,7 @@
                         @if(Auth::user()->user_type_id == 'dean' || Auth::user()->user_type_id == 'prof')
                         <a class="dropdown-item" href="{{ url('/profile/faculty/' . Auth::user()->getFaculty()->id ) }}"><i class="fa fa-user-circle"></i> My Profile</a>
                         @elseif (Auth::user()->user_type_id == 'stud')
-                            <a class="dropdown-item" href="#"><i class="fa fa-user-circle"></i> My Profile</a>
+                            <a class="dropdown-item" href="{{ url('/s/my_profile/' . Auth::user()->id ) }}"><i class="fa fa-user-circle"></i> My Profile</a>
                         @endif
                         <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                                      document.getElementById('logout-form').submit();">
