@@ -92,6 +92,9 @@
             </div>
             {{-- change password --}}
             <div class="tab-pane fade" id="change-password" role="tabpanel" aria-labelledby="profile-tab">
+                <div class="alert alert-warning mt-3">
+                    <strong>Remember</strong> to change your password regularly for better security.
+                </div>
                 <div class="mt-3">
                     <form v-on:submit.prevent="changePassword" v-on:keydown="formChangePassword.onKeydown($event)">
                         <div class="form-group">
