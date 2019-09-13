@@ -392,6 +392,18 @@ Route::get('/assessment_results/{assessment}', 'AssessmentResultsController@show
 
 
 
+//user profile routes
+
+Route::get('/s/my_profile/{user}', 'UserProfilesController@show');
+
+Route::post('/s/my_profile/{user}/update_account_information', 'UserProfilesController@updateAccountInformation');
+
+Route::post('/s/my_profile/{user}/update_password', 'UserProfilesController@updatePassword');
+
+Route::post('/s/my_profile/{user}/update_basic_info', 'UserProfilesController@updateBasicInformation');
+
+
+
 
 
 

@@ -39,6 +39,10 @@ class User extends Authenticatable
         return $this->belongsTo('App\UserType');
     }
 
+    public function getUserProfile() {
+        return UserProfile::where('user_id', $this->id)->first();
+    }
+
     public function getFullName() {
         $full_name = $this->last_name . ', ' . $this->first_name;
         $full_name .= ' ' . $this->middle_name ?? '';
