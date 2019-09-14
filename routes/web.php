@@ -396,11 +396,17 @@ Route::get('/assessment_results/{assessment}', 'AssessmentResultsController@show
 
 Route::get('/s/my_profile/{user}', 'UserProfilesController@show');
 
-Route::post('/s/my_profile/{user}/update_account_information', 'UserProfilesController@updateAccountInformation');
 
-Route::post('/s/my_profile/{user}/update_password', 'UserProfilesController@updatePassword');
 
-Route::post('/s/my_profile/{user}/update_basic_info', 'UserProfilesController@updateBasicInformation');
+Route::post('/user_profiles/{user}/update_account_information', 'UserProfilesController@updateAccountInformation');
+
+Route::post('/user_profiles/{user}/update_password', 'UserProfilesController@updatePassword');
+
+Route::post('/user_profiles/{user}/update_basic_info', 'UserProfilesController@updateBasicInformation');
+
+//for faculties
+
+Route::get('/faculties/{user}/profile', 'UserProfilesController@show');
 
 
 

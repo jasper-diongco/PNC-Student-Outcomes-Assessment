@@ -126,6 +126,103 @@
     
     
     <h5 class="text-info mt-5">Result</h5>
+    
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="alert alert-success mb-4">
+                <div class="card-body py-4">
+                    <h5>Difficulty Index</h5>
+
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Difficulty Index</th>
+                                    <th>Interpretation</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>20 & below</td>
+                                    <td>Very Difficult</td>
+                                    <td>Discard</td>
+                                </tr>
+                                <tr>
+                                    <td>21 - 40</td>
+                                    <td>Difficult</td>
+                                    <td>---</td>
+                                </tr>
+                                <tr>
+                                    <td>41 - 60</td>
+                                    <td>Average</td>
+                                    <td>---</td>
+                                </tr>
+                                <tr>
+                                    <td>61 - 80</td>
+                                    <td>Easy</td>
+                                    <td>---</td>
+                                </tr>
+                                <tr>
+                                    <td>81 & above</td>
+                                    <td>Very Easy</td>
+                                    <td>Discard</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="alert alert-success mb-4">
+                <div class="card-body py-4">
+                    <h5>Discrimination Index</h5>
+
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Discrimination Index</th>
+                                    <th>Interpretation</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Above - 0.40</td>
+                                    <td>Very Good</td>
+                                    <td>Retain</td>
+                                </tr>
+                                <tr>
+                                    <td>+0.30 - 0.39</td>
+                                    <td>Good</td>
+                                    <td>Retain/Revise</td>
+                                </tr>
+                                <tr>
+                                    <td>+0.20 - 0.29</td>
+                                    <td>Fair</td>
+                                    <td>Improve</td>
+                                </tr>
+                                <tr>
+                                    <td>+0.10 - 0.19</td>
+                                    <td>Poor</td>
+                                    <td>Revise/Reject</td>
+                                </tr>
+                                <tr>
+                                    <td>+0.00 - 0.09</td>
+                                    <td>Very Poor</td>
+                                    <td>Reject</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     {{-- <div class="mb-2">
         <button class="btn btn-sm" :class="{ 'btn-success': viewStyle == 'list' }" v-on:click="viewStyle = 'list'"><i class="fa fa-list"></i> List View</button>
         <button class="btn btn-sm" :class="{ 'btn-success': viewStyle == 'table' }" v-on:click="viewStyle = 'table'"><i class="fa fa-table"></i> Table View</button>

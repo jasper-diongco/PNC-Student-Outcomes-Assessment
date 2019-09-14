@@ -52,7 +52,7 @@
     @if($curricula->count() > 0)
       <div class="d-flex flex-wrap">
           @foreach($curricula as $curriculum)
-            <div style="width: 31%" class="card shadow mb-4 mr-3">
+            <div class="card shadow mb-4 mr-3 w-md-31">
                 <div class="card-body pt-3">
                     <div class="d-flex justify-content-between align-items-baseline">
                         <div class="d-flex">

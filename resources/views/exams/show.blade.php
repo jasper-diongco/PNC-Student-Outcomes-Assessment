@@ -73,6 +73,9 @@
               <li class="nav-item">
                 <a class="nav-link" data-toggle="tab" href="#reports" role="tab" aria-selected="false">Reports</a>
               </li>
+              <li class="nav-item" v-if="exam.id != exam.parent_id">
+                <a class="nav-link" data-toggle="tab" href="#removed-test-questions" role="tab" aria-selected="false">New & Removed Test Questions</a>
+              </li>
             </ul>
             <div class="tab-content" id="myTabContent">
 
@@ -212,7 +215,7 @@
                                     <div>
                                         <div style="font-size: 18px">
 
-                                          <div class="mb-1">{{-- <i class="fa fa-fingerprint"></i> --}} ID: @{{ test_question.tq_code }}</div>
+                                          <div class="mb-1">{{-- <i class="fa fa-fingerprint"></i> --}} ID: @{{ test_question.tq_code }} <span v-if="checkIfNew(test_question.id)" class="badge badge-success">New</span></div>
                                           
                                           <div class="mb-1" style="font-weight: 600">
                                             <i class="fa fa-file-alt"></i> @{{ test_question.title }}
@@ -373,6 +376,7 @@
                 </div> --}}
               </div>
               {{-- reports --}}
+
               <div class="tab-pane fade" id="reports" role="tabpanel">
                 <h4 class="py-4">Exam Reports</h4>
                 
@@ -387,7 +391,7 @@
                   </div>
                 </div>
 
-                <div class="card mb-4">
+                <div class="card mb-4" v-if="exam_count_taken > 0">
 
                   <div class="card-body py-4">
                     <h5>Passing Percentage</h5>
@@ -398,7 +402,7 @@
                   </div>
                 </div>
 
-                <div class="card mb-4">
+                <div class="card mb-4" v-if="exam_count_taken > 0">
 
                   <div class="card-body py-4">
                     <h5>Average Scores per course</h5>
@@ -417,7 +421,7 @@
                   </div>
                 </div>
 
-                <div class="card mb-4">
+                <div class="card mb-4" v-if="exam_count_taken > 0">
 
                   <div class="card-body py-4">
                     <h5>Average percentage of scores in the total score</h5>
@@ -427,6 +431,54 @@
                     </div>
                   </div>
                 </div>
+              </div>
+
+              <div class="tab-pane fade" id="removed-test-questions" role="tabpanel">
+                <div class="my-3 d-flex align-items-baseline">
+                  <div>
+                    <label class="mr-2">Filter By: </label>
+                  </div>
+                  <div>
+                    <select v-on:change="filterNewOrRemoved" class="form-control" v-model="is_removed_test_questions_show">
+                      <option value="1">Removed Test Questions</option>
+                      <option value="0">New Test Questions</option>
+                    </select>
+                  </div>
+                </div>
+                <ul class="list-group" id="list-exam-test-questions">
+                      
+
+                      <li v-for="test_question in new_removed_test_questions" :key="test_question.id" class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-baseline">
+                                <div class="d-flex">
+                                    <div class="mr-3">
+                                        {{-- <div class="avatar"><i class="fa fa-question-circle" :style="avatarStyle(test_question.difficulty_level_id)"></i></div> --}}
+                                        <div v-if="is_removed_test_questions_show == 1" class="avatar bg-secondary text-dark">
+                                          <i class="fa fa-question-circle"></i>
+                                        </div>
+                                        <div v-else class="avatar" :style="avatarStyle(test_question.difficulty_level_id)">
+                                          @{{ test_question.counter }}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 18px">
+
+                                          <div class="mb-1">{{-- <i class="fa fa-fingerprint"></i> --}} ID: @{{ test_question.tq_code }} <span v-if="checkIfNew(test_question.id)" class="badge badge-success">New</span></div>
+                                          
+                                          <div class="mb-1" style="font-weight: 600">
+                                            <i class="fa fa-file-alt"></i> @{{ test_question.title }}
+                                          </div> 
+                                        </div>
+                                        <div  class="text-muted mb-1">@{{ getDifficulty(test_question.difficulty_level_id) }} - @{{ test_question.choices.length }} choices | Correct Answer &mdash; <span class="text-success font-weight-bold">@{{ test_question.correct_answer }}</span></div>
+                                        <div class="text-muted mb-1" style="font-size: 14px"><i class="fa fa-book"></i> @{{ test_question.course.description }} </div>
+                                    </div>   
+                                </div>
+                                <div>
+                                    <a v-on:click="getPreview(test_question.id)" href="#" data-toggle="modal" data-target="#previewModal" class="btn btn-sm">View <i class="fa fa-search"></i></a>                           
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
               </div>
             </div>
         </div>
@@ -480,11 +532,15 @@
         var vm = new Vue({
             el: '#app',
             data: {
+                exam: @json($exam),
                 exam_id: '{{ $exam->id }}' ,
+                exam_count_taken: {{ $exam->countTaken() }} ,
                 test_questions: @json($test_questions),
                 exam_test_questions: @json($exam->examTestQuestions),
                 show_test_questions: [],
+                parent_test_questions: @json($parent_test_questions) ,
                 paginated_test_questions: [],
+                new_removed_test_questions: [],
                 courses: @json($courses),
                 searchText: '',
                 filter_course_id: '',
@@ -543,7 +599,8 @@
                 assessmentsPassedCount: {{ $exam->countPassedAssessments() }},
                 assessmentsFailedCount: {{ $exam->countFailedAssessments() }},
                 assessments: @json($exam->getAssessments()),
-                averageScoresPerCourses: []
+                averageScoresPerCourses: [],
+                is_removed_test_questions_show: 1
 
             },
             computed: {
@@ -552,6 +609,61 @@
                 }
             },
             methods: {
+                checkIfNew(test_question_id) {
+                  //return moment(created_at, "YYYY-MM-DD").fromNow();
+                  //find in exam_test_questions
+                  var is_new = false;
+
+                  for(var i = 0; i < this.exam_test_questions.length; i++) {
+                    if(test_question_id == this.exam_test_questions[i].test_question_id) {
+                      is_new = this.exam_test_questions[i].is_new;
+                      break;
+                    }
+                  }
+
+                  return is_new;
+
+                },
+                getRemovedTestQuestions() {
+                  var removed_test_questions = [];
+                  for(var i = 0; i < this.parent_test_questions.length; i++) {
+                    var is_found = false;
+                    for(var j = 0; j < this.test_questions.length; j++) {
+                      if(this.test_questions[j].id ==  this.parent_test_questions[i].id) {
+                        is_found = true;
+                        break;
+                      }
+                    }
+
+                    if(!is_found) {
+                      removed_test_questions.push(this.parent_test_questions[i]);
+                    }
+                  }
+                  this.new_removed_test_questions = removed_test_questions;
+                  return removed_test_questions;
+                },
+                filterNewOrRemoved() {
+                  if(this.is_removed_test_questions_show == 1) {
+                    this.getRemovedTestQuestions();
+                    this.getRemovedCorrectAnswer();
+                    // this.new_removed_test_questions = [];
+                  } else {
+                    this.new_removed_test_questions = [];
+
+                    for(var i = 0; i < this.exam_test_questions.length; i++) {
+                      if(this.exam_test_questions[i].is_new == 1) {
+                        this.new_removed_test_questions.push(this.getTestQuestion(this.exam_test_questions[i].test_question_id));
+                      }
+                    }
+                  }
+                },
+                getTestQuestion(test_question_id) {
+                  for(var i = 0; i < this.test_questions.length; i++) {
+                    if(test_question_id == this.test_questions[i].id) {
+                      return this.test_questions[i];
+                    } 
+                  }
+                },
                 avatarStyle(difficulty_level_id) {
                     var backgroundColor = '';
                     if(difficulty_level_id == 1) {
@@ -765,6 +877,19 @@
                     }
                   }
                 },
+                getRemovedCorrectAnswer() {
+                  for(var x = 0; x < this.new_removed_test_questions.length; x++) {
+                    var test_question = this.new_removed_test_questions[x];
+                    for(var i = 0; i < test_question.choices.length; i++) {
+                      if(test_question.choices[i].is_correct) {
+                        Vue.set(test_question, 'correct_answer', String.fromCharCode(i + 65));
+                        Vue.set(test_question, 'course', this.getCourse(test_question.course_id))
+                        break;
+                      }
+                    }
+                  }
+                  
+                },
                 getCourse(course_id) {
                   for(var i = 0; i < this.courses.length; i++) {
                     if(this.courses[i].id == course_id) {
@@ -910,6 +1035,8 @@
                 this.setNumber();
                 this.getItemsCount();
                 this.getAverageScorePerCourses();
+                this.getRemovedTestQuestions();
+                this.getRemovedCorrectAnswer();
 
                 setInterval(() => {
                     MathLive.renderMathInDocument();

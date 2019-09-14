@@ -8,14 +8,8 @@
         <h1 class="page-header"><i class="fa fa-user"></i> Profile</h1>
         <div class="card shadow">
             <div class="card-body py-4">
-                <h5 class="text-info mb-3"><i class="fa fa-graduation-cap"></i> Student Information</h5>
+                <h5 class="text-info mb-3"><i class="fa fa-user-tie"></i> Faculty Information</h5>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        <div class="d-flex">
-                            <div class="mr-2">Student ID: </div>
-                            <div class="font-weight-bold text-dark">@{{ student.student_id }}</div>
-                        </div>
-                    </li>
                     <li class="list-group-item">
                         <div class="d-flex">
                             <div class="mr-2">Last Name: </div>
@@ -43,10 +37,18 @@
 
                     <li class="list-group-item">
                         <div class="d-flex">
-                            <div class="mr-2">Program: </div>
-                            <div class="font-weight-bold text-dark">@{{ student.program.program_code }}</div>
+                            <div class="mr-2">College: </div>
+                            <div class="font-weight-bold text-dark">@{{ faculty.college.name }}</div>
                         </div>
                     </li>
+
+                    <li class="list-group-item">
+                        <div class="d-flex">
+                            <div class="mr-2">User Type: </div>
+                            <div class="font-weight-bold text-dark">@{{ user.user_type_id == 'dean' ?  'Dean' : 'Professor' }}</div>
+                        </div>
+                    </li>
+
                     
                 </ul>
                 
@@ -129,7 +131,7 @@
             {{-- basic info --}}
             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                 <form v-on:submit.prevent="changeBasicInformation" v-on:keydown="formBasicInfo.onKeydown($event)">
-                <h5 class="text-info mb-2">Student's Address</h5>
+                <h5 class="text-info mb-2">Address</h5>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
@@ -255,8 +257,8 @@
             el: '#app',
             data: {
                 user: @json($user),
-                student: @json($student),
                 user_profile: @json($user_profile),
+                faculty: @json($faculty),
                 formAccountInfo: new Form({
                     username: '',
                     email: ''

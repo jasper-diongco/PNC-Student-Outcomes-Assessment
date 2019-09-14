@@ -116,7 +116,7 @@
       <div class="row">
 
         {{-- test questions --}}
-        <div class="col-md-3">
+        <div class="col-md-3 mb-4">
 
             <div class="card shadow dashboard-card" v-on:click="changeLocation('/test_bank?program_id=')">
               <div class="card-body py-2">
@@ -132,7 +132,7 @@
         </div>
 
         {{-- exams --}}
-        <div class="col-md-3">
+        <div class="col-md-3 mb-4">
           <div class="card shadow dashboard-card" v-on:click="changeLocation('/test_bank?program_id=')">
             <div class="card-body py-2">
               <img class="w-100" height="80px" src="{{ asset('img/icon_svg/document.svg') }}" alt="assessment picture">
@@ -150,7 +150,7 @@
 
 
         {{-- students --}}
-        <div class="col-md-3">
+        <div class="col-md-3 mb-4">
           <div class="card shadow dashboard-card" v-on:click="changeLocation('/students')">
             <div class="card-body py-2">
               <img class="w-100" height="80px" src="{{ asset('img/icon_svg/student.svg') }}" alt="student picture">
@@ -165,7 +165,7 @@
         </div>
 
         {{-- programs --}}
-        <div class="col-md-3">
+        <div class="col-md-3 mb-4">
           <div class="card shadow dashboard-card" v-on:click="changeLocation('/programs')">
             <div class="card-body py-2">
               <img class="w-100" height="80px" src="{{ asset('img/icon_svg/graduation.svg') }}" alt="programs picture">
@@ -180,7 +180,7 @@
         </div>
 
         {{-- curricula --}}
-        <div class="col-md-3 mt-4">
+        <div class="col-md-3 mb-4">
           <div class="card shadow dashboard-card" v-on:click="changeLocation('/curricula')">
             <div class="card-body py-2">
               <img class="w-100" height="80px" src="{{ asset('img/icon_svg/folder.svg') }}" alt="curricula picture">
@@ -195,7 +195,7 @@
         </div>
 
         {{-- courses --}}
-        <div class="col-md-3 mt-4">
+        <div class="col-md-3 mb-4">
           <div class="card shadow dashboard-card" v-on:click="changeLocation('/courses')">
             <div class="card-body py-2">
               <img class="w-100" height="80px" src="{{ asset('img/icon_svg/books.svg') }}" alt="courses picture">
@@ -210,7 +210,7 @@
         </div>
 
         {{-- faculties --}}
-        <div class="col-md-3 mt-4">
+        <div class="col-md-3 mb-4">
           <div class="card shadow dashboard-card" v-on:click="changeLocation('/faculties')">
             <div class="card-body py-2">
               <img class="w-100" height="80px" src="{{ asset('img/icon_svg/group.svg') }}" alt="faculties picture">
@@ -225,7 +225,7 @@
         </div>
 
         {{-- assessments --}}
-        <div class="col-md-3 mt-4">
+        <div class="col-md-3 mb-4">
           <div class="card shadow dashboard-card" v-on:click="changeLocation('/assessment_results?college_id=' + college_id)">
             <div class="card-body py-2">
               <img class="w-100" height="80px" src="{{ asset('img/icon_svg/assessment.svg') }}" alt="assessment picture">

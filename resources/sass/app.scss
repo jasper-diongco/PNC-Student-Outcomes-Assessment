@@ -785,3 +785,29 @@ body,
   padding: 4px;
   background: #e1e2e1;
 }
+
+@media screen and (min-width: 768px) {
+  .w-md-31 {
+    width: 31%;
+  }
+
+  .w-md-25 {
+    width: 25%;
+  }
+
+  .w-md-50 {
+    width: 50%;
+  }
+
+  .w-md-75 {
+    width: 75%;
+  }
+
+  .w-md-40 {
+    width: 40%;
+  }
+
+  .w-md-100 {
+    width: 100%;
+  }
+}

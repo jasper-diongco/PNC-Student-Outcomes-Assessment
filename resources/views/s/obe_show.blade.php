@@ -45,36 +45,37 @@
 
                     <div :id="'collapse' + year_level + '' + semester" class="collapse" :class="{'show': (year_level == 1 && semester == 1) || expand_all }" data-parent="#accordionOBE">
                       <div class="card-body">
-
-                        <table class="table table-borderless">
-                            <thead>
-                                <tr>
-                                    <th>Course Code</th>
-                                    <th width="30%">Description</th>
-                                    <th>Units</th>
-                                    <th>Grade</th>
-                                    <th>Remarks</th>
-                                    <th>Professor</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="curriculum_course in getCoursesBySemester(year_level, semester)" :class="{'bg-success-light': getGradeOfCourse(curriculum_course.course.id).is_passed, 'bg-danger-light': getGradeOfCourse(curriculum_course.course.id).remarks == 'Failed' }">
-                                    <td>@{{ curriculum_course.course.course_code }}</td>
-                                    <td>@{{ curriculum_course.course.description }}</td>
-                                    <td>@{{ curriculum_course.course.lec_unit + curriculum_course.course.lab_unit  }}</td>
-                                    <td>@{{ getGradeOfCourse(curriculum_course.course.id).grade_text }}</td>
-                                    <td>@{{ getGradeOfCourse(curriculum_course.course.id).remarks }}</td>
-                                    <td>@{{ getGradeOfCourse(curriculum_course.course.id).professor_name }}</td>
-                                    <td>
-                                        <i class="fa fa-check text-success" v-if="getGradeOfCourse(curriculum_course.course.id).is_passed"></i>
-                                        <i class="fa fa-times text-dark" v-else></i>
-                                        
-                                    </td>
-                                    {{-- <td><i class="fa fa-check text-success"></i></td> --}}
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table table-borderless">
+                                <thead>
+                                    <tr>
+                                        <th>Course Code</th>
+                                        <th width="30%">Description</th>
+                                        <th>Units</th>
+                                        <th>Grade</th>
+                                        <th>Remarks</th>
+                                        <th>Professor</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="curriculum_course in getCoursesBySemester(year_level, semester)" :class="{'bg-success-light': getGradeOfCourse(curriculum_course.course.id).is_passed, 'bg-danger-light': getGradeOfCourse(curriculum_course.course.id).remarks == 'Failed' }">
+                                        <td>@{{ curriculum_course.course.course_code }}</td>
+                                        <td>@{{ curriculum_course.course.description }}</td>
+                                        <td>@{{ curriculum_course.course.lec_unit + curriculum_course.course.lab_unit  }}</td>
+                                        <td>@{{ getGradeOfCourse(curriculum_course.course.id).grade_text }}</td>
+                                        <td>@{{ getGradeOfCourse(curriculum_course.course.id).remarks }}</td>
+                                        <td>@{{ getGradeOfCourse(curriculum_course.course.id).professor_name }}</td>
+                                        <td>
+                                            <i class="fa fa-check text-success" v-if="getGradeOfCourse(curriculum_course.course.id).is_passed"></i>
+                                            <i class="fa fa-times text-dark" v-else></i>
+                                            
+                                        </td>
+                                        {{-- <td><i class="fa fa-check text-success"></i></td> --}}
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                       </div>
                     </div>
                   </div>

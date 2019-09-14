@@ -547,7 +547,8 @@ class ExamsController extends Controller
                         'exam_id' => $exam->id,
                         'test_question_id' => $test_q['id'],
                         'pos_order' => $counter,
-                        'difficulty_level_id' => $test_q['difficulty_level_id']
+                        'difficulty_level_id' => $test_q['difficulty_level_id'],
+                        'is_new' => true
                     ]);
 
                     $counter++;
@@ -695,6 +696,7 @@ class ExamsController extends Controller
         }
 
         $test_questions = $exam->getTestQuestions();
+        $parent_test_questions = $exam->getParentTestQuestions();
         $courses = $exam->getCourses();
 
         // return $courses;
@@ -704,7 +706,8 @@ class ExamsController extends Controller
         $curriculum = Curriculum::findOrFail(request('curriculum_id'));
         $student_outcome = StudentOutcome::findOrFail(request('student_outcome_id'));
 
-        return view('exams.show', compact('exam', 'test_questions', 'courses', 'program', 'curriculum', 'student_outcome'));
+
+        return view('exams.show', compact('exam', 'test_questions', 'courses', 'program', 'curriculum', 'student_outcome', 'parent_test_questions'));
     }
 
     public function item_analysis(Exam $exam) {

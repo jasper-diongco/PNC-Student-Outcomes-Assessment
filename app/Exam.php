@@ -161,9 +161,23 @@ class Exam extends Model
             ->where('exam_test_questions.exam_id', $this->id)
             ->with('choices')
             ->with('user')
+            ->with('course')
             ->orderBy('exam_test_questions.pos_order', 'ASC')
             ->get();
     }
+
+    public function getParentTestQuestions() {
+        return TestQuestion::select('test_questions.*')
+            ->join('exam_test_questions', 'exam_test_questions.test_question_id', '=',  'test_questions.id')
+            ->where('exam_test_questions.exam_id', $this->parent_id)
+            ->with('choices')
+            ->with('user')
+            ->with('course')
+            ->orderBy('exam_test_questions.pos_order', 'ASC')
+            ->get();
+    }
+
+
     public function getRandomTestQuestions() {
         return TestQuestion::select('test_questions.*')
             ->join('exam_test_questions', 'exam_test_questions.test_question_id', '=',  'test_questions.id')

@@ -38,38 +38,40 @@
                                         </button>
                                       </div>
                                       <div class="modal-body">
-                                        <table class="table table-borderless">
-                                            <thead>
-                                                <tr>
-                                                    <th>Course Code</th>
-                                                    <th >Description</th>
-                                                    <th>Units</th>
-                                                    <th>Grade</th>
-                                                    <th>Remarks</th>
-                                                    <th>Status</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody style="font-weight: 400">
-                                                @foreach($student_outcome->getCoursesGrade($student->curriculum_id, $student_outcome->id) as $course_grade)
-                                                <tr class="{{ $course_grade['is_passed'] ? 'bg-success-light' : '' }} {{ $course_grade['remarks'] == 'Failed' ? 'bg-danger-light' : '' }}">
-                                                    <td>{{ $course_grade['course_code'] }}</td>
-                                                    <td>{{ $course_grade['course_desc'] }}</td>
-                                                    <td>{{ $course_grade['lec_unit'] +  $course_grade['lab_unit'] }}</td>
-                                                    <td>{{ $course_grade['grade_text'] }}</td>
-                                                    <td>{{ $course_grade['remarks'] }}</td>
-                                                    
-                                                    <td>
-                                                        @if($course_grade['is_passed'])
-                                                        <i class="fa fa-check text-success"></i>
-                                                        @else
-                                                        <i class="fa fa-times"></i>
-                                                        @endif
-                                                    </td>
+                                        <div class="table-responsive">
+                                            <table class="table table-borderless">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Course Code</th>
+                                                        <th >Description</th>
+                                                        <th>Units</th>
+                                                        <th>Grade</th>
+                                                        <th>Remarks</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody style="font-weight: 400">
+                                                    @foreach($student_outcome->getCoursesGrade($student->curriculum_id, $student_outcome->id) as $course_grade)
+                                                    <tr class="{{ $course_grade['is_passed'] ? 'bg-success-light' : '' }} {{ $course_grade['remarks'] == 'Failed' ? 'bg-danger-light' : '' }}">
+                                                        <td>{{ $course_grade['course_code'] }}</td>
+                                                        <td>{{ $course_grade['course_desc'] }}</td>
+                                                        <td>{{ $course_grade['lec_unit'] +  $course_grade['lab_unit'] }}</td>
+                                                        <td>{{ $course_grade['grade_text'] }}</td>
+                                                        <td>{{ $course_grade['remarks'] }}</td>
+                                                        
+                                                        <td>
+                                                            @if($course_grade['is_passed'])
+                                                            <i class="fa fa-check text-success"></i>
+                                                            @else
+                                                            <i class="fa fa-times"></i>
+                                                            @endif
+                                                        </td>
 
-                                                </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
+                                                    </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
                                       </div>
                                       <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

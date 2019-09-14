@@ -40,7 +40,7 @@
             </ul>
             
             <div class="d-flex">
-                <div class="py-0 mt-3 w-50">
+                <div class="py-0 mt-3 w-md-50">
                     {{-- <div>
                         <bar-chart :data="scorePerCoursesData"></bar-chart>
                     </div>
@@ -194,7 +194,7 @@
             <h3 class="my-3">Reports</h3>
             <div class="card mb-4">
                 <div class="card-body py-4">
-                    <div style="width: 40%">
+                    <div class="w-md-40">
                         <h5 class="mt-3">Percentage of scores in total score</h5>
                             <p class="text-info">This figure shows the percentage of scores in total score</p>
                         <pie-chart :data="scorePerCoursesData"></pie-chart>
@@ -229,39 +229,41 @@
                     <div>
                         <h5 class="mt-3">Score per course (table view)</h5>
                         <p class="text-info">The table below shows the percentage of scores per course in more detailed.</p>
-
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Course</th>
-                                    <th>Total Items</th>
-                                    <th>Easy Score</th>
-                                    <th>Average Score</th>
-                                    <th>Difficult Score</th>
-                                    <th>Overall Score</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="scoreDetailed in scorePerCoursesDetailed">
-                                    <td>@{{ scoreDetailed.course.course_code }}</td>
-                                    <td>@{{ scoreDetailed.totalItemsInCourse }}</td>
-                                    <td>@{{ scoreDetailed.easyScore }} (@{{ scoreDetailed.easyPercentage.toFixed(2) }}%)</td>
-                                    <td>@{{ scoreDetailed.averageScore  }} (@{{ scoreDetailed.averagePercentage.toFixed(2) }}%)</td>
-                                    <td>@{{ scoreDetailed.difficultScore }} (@{{ scoreDetailed.difficultPercentage.toFixed(2) }}%)</td>
-                                    <td>@{{ scoreDetailed.score }} (@{{ scoreDetailed.scoreInPercentage.toFixed(2) }}%)</td>
-                                </tr>
-                            </tbody>
-                            <tfoot class="font-weight-bold">
-                                <tr>
-                                    <td>Total</td>
-                                    <td>@{{ scoreTotals.totalItems }}</td>
-                                    <td>@{{ scoreTotals.easy }} (@{{ scoreTotals.easyPercentage.toFixed(2) }}%)</td>
-                                    <td>@{{ scoreTotals.average }} (@{{ scoreTotals.averagePercentage.toFixed(2) }}%)</td>
-                                    <td>@{{ scoreTotals.difficult }} (@{{ scoreTotals.difficultPercentage.toFixed(2) }}%)</td>
-                                    <td>@{{ scoreTotals.overall }} (@{{ scoreTotals.overallPercentage.toFixed(2) }}%)</td>
-                                </tr>
-                            </tfoot>
-                        </table>
+                        
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Course</th>
+                                        <th>Total Items</th>
+                                        <th>Easy Score</th>
+                                        <th>Average Score</th>
+                                        <th>Difficult Score</th>
+                                        <th>Overall Score</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="scoreDetailed in scorePerCoursesDetailed">
+                                        <td>@{{ scoreDetailed.course.course_code }}</td>
+                                        <td>@{{ scoreDetailed.totalItemsInCourse }}</td>
+                                        <td>@{{ scoreDetailed.easyScore }} (@{{ scoreDetailed.easyPercentage.toFixed(2) }}%)</td>
+                                        <td>@{{ scoreDetailed.averageScore  }} (@{{ scoreDetailed.averagePercentage.toFixed(2) }}%)</td>
+                                        <td>@{{ scoreDetailed.difficultScore }} (@{{ scoreDetailed.difficultPercentage.toFixed(2) }}%)</td>
+                                        <td>@{{ scoreDetailed.score }} (@{{ scoreDetailed.scoreInPercentage.toFixed(2) }}%)</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot class="font-weight-bold">
+                                    <tr>
+                                        <td>Total</td>
+                                        <td>@{{ scoreTotals.totalItems }}</td>
+                                        <td>@{{ scoreTotals.easy }} (@{{ scoreTotals.easyPercentage.toFixed(2) }}%)</td>
+                                        <td>@{{ scoreTotals.average }} (@{{ scoreTotals.averagePercentage.toFixed(2) }}%)</td>
+                                        <td>@{{ scoreTotals.difficult }} (@{{ scoreTotals.difficultPercentage.toFixed(2) }}%)</td>
+                                        <td>@{{ scoreTotals.overall }} (@{{ scoreTotals.overallPercentage.toFixed(2) }}%)</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

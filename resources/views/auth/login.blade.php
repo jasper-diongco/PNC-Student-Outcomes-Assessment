@@ -231,6 +231,7 @@
                         //this.isLoading = false;
                         if(response.data.auth) {
                             window.location.replace(response.data.intended);
+                            // console.log(response.data.intended);
                         }
                     })
                     .catch(error => {

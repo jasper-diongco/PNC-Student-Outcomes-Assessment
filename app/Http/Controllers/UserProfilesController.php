@@ -33,6 +33,10 @@ class UserProfilesController extends Controller
             $student = $user->getStudent();
             $student->load('program');
             return view('s.user_profile', compact('user', 'student', 'user_profile'));
+        } else if ($user->user_type_id == 'dean' || $user->user_type_id == 'prof') {
+            $faculty = $user->getFaculty();
+            $faculty->load('college');
+            return view('faculties.profile', compact('user', 'user_profile', 'faculty'));
         }
     }
 

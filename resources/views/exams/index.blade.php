@@ -106,7 +106,7 @@
                     <template v-if="exams.length > 0">           
                         <div class="d-flex align-items-stretch flex-wrap" :class="{ 'justify-content-between': exams.length > 2 }">
 
-                            <div v-for="exam in exams" :key="exam.id" style="flex-basis: 32%" class="card shadow mb-4" :class="{ 'mr-4': exams.length <= 2 }">
+                            <div v-for="exam in exams" :key="exam.id" class="card shadow mb-4 w-md-31" :class="{ 'mr-4': exams.length <= 2 }">
                                 <div class="card-body pt-3">
                                     <div class="d-flex justify-content-between align-items-baseline">
                                         <div class="d-flex">
@@ -151,7 +151,7 @@
                     <template v-if="deactivated_exams.length > 0">
                         <div class="d-flex align-items-stretch flex-wrap" :class="{ 'justify-content-between': deactivated_exams.length > 2 }">
 
-                            <div v-for="exam in deactivated_exams" :key="exam.id" style="flex-basis: 32%" class="card shadow mb-4" :class="{ 'mr-4': deactivated_exams.length <= 2 }">
+                            <div v-for="exam in deactivated_exams" :key="exam.id" class="card shadow mb-4 w-md-31" :class="{ 'mr-4': deactivated_exams.length <= 2 }">
                                 <div class="card-body pt-3">
                                     <div class="d-flex justify-content-between align-items-baseline">
                                         <div class="d-flex">
