@@ -283,7 +283,7 @@
             },
             methods: {
                 parseDate(date) {
-                    return moment().format('MMMM D, YYYY');
+                    return moment(date).format('MMMM D, YYYY');
                 },
                 formAccountInfoHasChanged() {
                     this.formAccountInfoChanged = true;
