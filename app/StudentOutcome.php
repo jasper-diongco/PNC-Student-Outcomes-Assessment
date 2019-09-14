@@ -38,16 +38,15 @@ class StudentOutcome extends Model
 
     public function checkIfAvailableForExam() {
         $is_available = true;
-        $curriculum_maps = CurriculumMap::where('is_checked', true)
-            ->where('student_outcome_id', $this->id)
-            ->get();
+        $student = Student::find(auth()->user()->getStudent()->id);
+        $curriculum_maps = $this->getCurriculumMaps($student->curriculum_id, $this->id);
         $courses = [];
 
         foreach ($curriculum_maps as $curriculum_map) {
             $courses[] = $curriculum_map->curriculumCourse->course;
         }
 
-        $student = Student::find(auth()->user()->getStudent()->id);
+        
 
         $curriculum = $student->curriculum;
         $curriculum_courses = $curriculum->curriculumCourses;
