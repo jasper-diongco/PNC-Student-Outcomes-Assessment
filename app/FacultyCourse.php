@@ -18,6 +18,9 @@ class FacultyCourse extends Model
 
         return TestQuestion::where('user_id', $faculty->user->id)
                         ->where('course_id', $this->course_id)
+                        ->with('course')
+                        ->with('choices')
+                        ->with('user')
                         ->latest()
                         ->get();
     }

@@ -137,6 +137,9 @@ class FacultiesController extends Controller
     }
 
     public function dashboard() {
+        if(!Gate::check('isProf')) {
+            return abort(404, 'Page not found');
+        }
 
         //check if password is already changed
         if(Hash::check('DefaultPass123', Auth::user()->password)) {

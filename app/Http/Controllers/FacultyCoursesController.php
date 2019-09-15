@@ -32,6 +32,14 @@ class FacultyCoursesController extends Controller
         return $faculty_courses;
     }
 
+    public function getFacultyCourseTestQuestions(FacultyCourse $faculty_course) {
+
+        return response()->json([
+            'course' => $faculty_course->course,
+            'test_questions' => $faculty_course->getFacultyCourseTestQuestions()
+        ], 200);
+    }
+
     public function store() {
         $faculty_course = FacultyCourse::create([
             'faculty_id' => request('faculty_id'),
