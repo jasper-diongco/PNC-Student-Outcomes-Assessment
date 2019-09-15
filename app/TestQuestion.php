@@ -199,7 +199,7 @@ class TestQuestion extends Model
 
     public function correctPercentage() {
         if($this->countTotalAnswers() > 0) {
-            return $this->countCorrectAnswer() / $this->countTotalAnswers() * 100;
+            return round($this->countCorrectAnswer() / $this->countTotalAnswers() * 100, 2);
         }
 
         return 0;
@@ -207,7 +207,7 @@ class TestQuestion extends Model
 
     public function incorrectPercentage() {
         if($this->countTotalAnswers() > 0) {
-            return $this->countIncorrectAnswer() / $this->countTotalAnswers() * 100;
+            return round($this->countIncorrectAnswer() / $this->countTotalAnswers() * 100, 2);
         }
 
         return 0;

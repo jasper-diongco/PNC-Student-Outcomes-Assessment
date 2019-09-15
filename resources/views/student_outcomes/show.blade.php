@@ -6,7 +6,7 @@
 
 
 
-<div id="app" class="mt-3">
+<div id="app" v-cloak class="mt-3">
   
   <div class="d-flex justify-content-between mb-3">
     <a href="{{ url('/student_outcomes?program_id='. request('program_id')) }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
@@ -42,6 +42,22 @@
     <div class="card-body">
       <h3>Performance Criteria</h3>
       <p>{{ $student_outcome->performanceCriterias[0]->description }}</p>
+      
+
+      <div class="assessment-type p-3">
+        <h5 class="text-info">Assessment Type</h5>
+        <div class="d-flex">
+          <select class="form-control" v-model="assessment_type_id">
+            <template v-for="assessment_type in assessment_types">
+              <option v-if="checkIfAvailable(assessment_type.id)"  :value="assessment_type.id">@{{ assessment_type.description }}</option>
+            </template>
+          </select>
+        </div>
+        <div class="d-flex mt-3 justify-content-end">
+          <button class="btn btn-success" v-on:click="changeAssessmentType">Save</button>
+        </div>
+        
+      </div>
       <hr>
       <h3 class="mb-3">Performance Indicators</h3>
       <div class="row">
@@ -96,8 +112,37 @@
 
 @push('scripts')
   <script>
-    new Vue({
-      el: '#app'
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        student_outcome: @json($student_outcome),
+        assessment_types: @json($assessment_types),
+        assessment_type_id: '',
+        college: @json($college)
+      },
+      methods: {
+        changeAssessmentType() {
+          ApiClient.post('/student_outcomes/' + this.student_outcome.id + '/change_assessment_type', {
+            assessment_type_id: this.assessment_type_id
+          })
+          .then(response => {
+            toast.fire({
+              type:'success',
+              title: 'Assessment Type Successfully Updated.'
+            });
+          })
+        },
+        checkIfAvailable(assessment_type_id) {
+          if(assessment_type_id == 3 && this.college.college_code != 'CCS') {
+            return false;
+          }
+
+          return true;
+        }
+      },
+      created() {
+        this.assessment_type_id = this.student_outcome.assessment_type_id;
+      }
     });
   </script>
   @if(Session::has('message'))

@@ -106,6 +106,8 @@ Route::put('/student_outcomes/{student_outcome}', 'StudentOutcomesController@upd
 Route::delete('/student_outcomes/{student_outcome}', 'StudentOutcomesController@delete');
 Route::post('/student_outcomes/{student_outcome}/activate', 'StudentOutcomesController@activate');
 
+Route::post('/student_outcomes/{student_outcome}/change_assessment_type', 'StudentOutcomesController@change_assessment_type');
+
 
 // StudentOutcomes Routes
 
@@ -415,7 +417,6 @@ Route::get('/faculties/{user}/profile', 'UserProfilesController@show');
 Route::get('/faculty_courses', 'FacultyCoursesController@index');
 
 
-
 Route::post('/faculty_courses', 'FacultyCoursesController@store');
 
 Route::get('/faculty_courses/{faculty_course}/get_faculty_course_test_questions', 'FacultyCoursesController@getFacultyCourseTestQuestions');
@@ -423,6 +424,20 @@ Route::get('/faculty_courses/{faculty_course}/get_faculty_course_test_questions'
 Route::post('/faculty_courses/{faculty_course}/activate', 'FacultyCoursesController@activate');
 
 Route::post('/faculty_courses/{faculty_course}/deactivate', 'FacultyCoursesController@deactivate');
+
+
+//test questions problem routes
+Route::get('/test_question_problems', 'TestQuestionProblemsController@index');
+
+Route::get('/test_question_problems/get_test_question_problems', 'TestQuestionProblemsController@get_test_question_problems');
+
+Route::post('/test_question_problems/{test_question_problem}/resolve', 'TestQuestionProblemsController@resolve');
+
+Route::post('/test_question_problems', 'TestQuestionProblemsController@store');
+
+
+
+
 
 
 

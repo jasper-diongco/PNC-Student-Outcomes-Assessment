@@ -125,6 +125,11 @@ Vue.component(
     require("./components/AddExamModal.vue").default
 );
 
+Vue.component(
+    "report-test-question-modal",
+    require("./components/ReportTestQuestionModal.vue").default
+);
+
 Vue.component("my-table", require("./components/Table.vue").default);
 
 Vue.component(

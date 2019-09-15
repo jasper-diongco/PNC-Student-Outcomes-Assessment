@@ -93,6 +93,71 @@ class Assessment extends Model
         return gmdate('H:i:s', $totalDuration);
     }
 
+    public function getScoreLabel() {
+        $performance_criterias = $this->studentOutcome->performanceCriterias;
+
+        if($performance_criterias->count() <= 0) {
+            return '';
+        }
+
+        $performance_indicators = $performance_criterias[0]->performanceCriteriaIndicators;
+
+        $score = $this->computeScore();
+
+        // foreach ($performance_indicators as $performance_indicator) {
+        //     if($score >= $performance_indicator->score_percentage) {
+        //         return $performance_indicator->description;
+        //     }
+        // }
+
+        for($i = 0; $i < count($performance_indicators) - 1; $i++) {
+            if($score >= $performance_indicators[$i]->score_percentage && $score < $performance_indicators[$i + 1]->score_percentage) {
+                return $performance_indicators[$i]->performanceIndicator->description;
+            }
+        }
+
+        return  $performance_indicators[count($performance_indicators) - 1]->performanceIndicator->description;
+    }
+
+    public function getScoreDescription() {
+        $performance_criterias = $this->studentOutcome->performanceCriterias;
+
+        if($performance_criterias->count() <= 0) {
+            return '';
+        }
+
+        $performance_indicators = $performance_criterias[0]->performanceCriteriaIndicators;
+
+        $score = $this->computeScore();
+
+        // foreach ($performance_indicators as $performance_indicator) {
+        //     if($score >= $performance_indicator->score_percentage) {
+        //         return $performance_indicator->description;
+        //     }
+        // }
+
+        for($i = 0; $i < count($performance_indicators) - 1; $i++) {
+            if($score >= $performance_indicators[$i]->score_percentage && $score < $performance_indicators[$i + 1]->score_percentage) {
+                return $performance_indicators[$i]->description;
+            }
+        }
+
+        return  $performance_indicators[count($performance_indicators) - 1]->description;
+
+    }
+
+    public function getPerformanceCriteriaText() {
+        $performance_criterias = $this->studentOutcome->performanceCriterias;
+
+        if($performance_criterias->count() <= 0) {
+            return '';
+        }
+
+        return $performance_criterias[0]->description;
+    }
+
+
+
     
 
 }

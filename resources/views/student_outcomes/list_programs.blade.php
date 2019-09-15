@@ -26,7 +26,7 @@
                     </div>
                     <div class="ml-3">
                       <a class="btn btn-sm btn-info" href="{{ url('/student_outcomes?program_id=' . $program->id) }}"class="btn btn-sm">
-                          <i class="fa fa-search"></i> Select
+                          <i class="fa fa-search"></i> View
                       </a>
                     </div>
                 </div>

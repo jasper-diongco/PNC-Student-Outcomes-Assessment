@@ -429,8 +429,16 @@ class AssessmentsController extends Controller
                                 ->latest()
                                 ->first();
 
+
+        $courses = $answer_sheet->exam->getCourses1($assessment->student_outcome_id, $assessment->student->curriculum_id);
+
+        $answer_sheet_test_questions = AnswerSheetTestQuestion::where('answer_sheet_id', $answer_sheet->id)
+                ->orderBy('pos_order', 'ASC')
+                ->with('answerSheetTestQuestionChoices')
+                ->get();
+
         if($assessment) {
-            return view('s.assessments.show_score', compact('student_outcome', 'student', 'assessment', 'answer_sheet'));
+            return view('s.assessments.show_score', compact('student_outcome', 'student', 'assessment', 'answer_sheet', 'answer_sheet_test_questions', 'courses'));
         } else {
             abort(404, 'Page not found');
         }

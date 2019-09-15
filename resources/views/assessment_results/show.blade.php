@@ -38,6 +38,13 @@
               </li>
               
             </ul>
+
+            <div class="alert mt-4 mb-0" style="background: #f1f1f1">
+
+             <h5><strong>Performance Criteria:</strong> {{ $assessment->getPerformanceCriteriaText() }}<br>
+              <br>
+              Score: <strong>{{ $assessment->computeScore() }}% ({{ $assessment->getScoreLabel() }})</strong> &mdash; {{ $assessment->getScoreDescription() }}</h5>
+            </div>
             
             <div class="d-flex">
                 <div class="py-0 mt-3 w-md-50">

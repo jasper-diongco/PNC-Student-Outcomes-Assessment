@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Gate;
 use App\Rules\TextOnly;
 use App\StudentOutcomeArchiveVersion;
+use App\AssessmentType;
 
 class StudentOutcomesController extends Controller
 {
@@ -162,8 +163,14 @@ class StudentOutcomesController extends Controller
         $student_outcome = StudentOutcome::findOrFail($id);
         $programs = Program::all();
 
+        $college = $student_outcome->program->college;
+
+        $assessment_types = AssessmentType::all();
+
         return view('student_outcomes.show')->with('student_outcome', $student_outcome)
-            ->with('programs', $programs);
+            ->with('programs', $programs)
+            ->with('college', $college)
+            ->with('assessment_types', $assessment_types);
 
     }
 
@@ -239,6 +246,14 @@ class StudentOutcomesController extends Controller
 
     public function activate(StudentOutcome $student_outcome) {
         $student_outcome->is_active = true;
+        $student_outcome->save();
+
+        return $student_outcome;
+    }
+
+    public function change_assessment_type(StudentOutcome $student_outcome) {
+        $student_outcome->assessment_type_id = request('assessment_type_id');
+
         $student_outcome->save();
 
         return $student_outcome;

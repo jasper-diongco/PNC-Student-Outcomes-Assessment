@@ -78,7 +78,7 @@ class Choice extends Model
 
     public function getPercentageSelectedByStudent() {
         if($this->testQuestion->countTotalChoicesSelectedByStudent() > 0) {
-            return ($this->countSelectedByStudent() / $this->testQuestion->countTotalChoicesSelectedByStudent()) * 100;
+            return round(($this->countSelectedByStudent() / $this->testQuestion->countTotalChoicesSelectedByStudent()) * 100, 2);
         }
         
         return 0;    

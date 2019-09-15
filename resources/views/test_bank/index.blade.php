@@ -81,10 +81,14 @@
         </div>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li class="nav-item">
-            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#test-questions" role="tab" aria-selected="true">Test Questions</a>
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#test-questions" role="tab" aria-selected="true"><i class="fa fa-question-circle"></i> Test Questions</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#exams" role="tab" aria-controls="profile" aria-selected="false">Exams</a>
+            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#exams" role="tab" aria-controls="profile" aria-selected="false"><i class="fa fa-file-alt"></i> Exams</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#test_question_problem_reports" role="tab" aria-controls="profile" aria-selected="false"><i class="fa fa-exclamation-circle"></i> Problem Reports <span v-if="countReportedNotification() > 0" class="badge badge-danger">@{{ countReportedNotification() }}</span></a>
           </li>
 
         </ul>
@@ -105,7 +109,7 @@
                                             <div class="avatar" style="color:white; background: #4caf50;"><i class="fa fa-book"></i></div>
                                         </div>
                                         <div>
-                                            <div style="font-size: 16px">@{{ course_mapped.course_code }} - @{{ course_mapped.description }} <i v-if="checkIfAssigned(course_mapped.id)" class="fa fa-check-circle text-success"></i></div>
+                                            <div style="font-size: 16px">@{{ course_mapped.course_code }} - @{{ course_mapped.description }} <i v-if="checkIfAssigned(course_mapped.id) && (user.user_type_id != 'dean' && user.user_type_id != 's_admin')" class="fa fa-check-circle text-success"></i></div>
                                             <div class="text-muted">@{{ course_mapped.test_question_count }} questions</div>
                                         </div>   
                                     </div>
@@ -188,6 +192,38 @@
                     </div>
                 </div>
           </div>
+          <div class="tab-pane fade" id="test_question_problem_reports" role="tabpanel">
+                <h5 class="my-3"><i class="fa fa-exclamation-circle text-info"></i> Problem Reports</h5>
+
+                <div v-if="reported_test_questions.length > 0">
+                <ul class="list-group">
+                    <ul class="list-group">
+                        <div v-for="reported_test_question in reported_test_questions">
+                            <li v-if="checkIfAssigned(reported_test_question.test_question.course_id)"  :key="reported_test_question.id" class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-baseline">
+                                    <div class="d-flex">
+                                        <div class="mr-3">
+                                            <div class="avatar" style="color:white; background: #4caf50;"><i class="fa fa-question"></i></div>
+                                        </div>
+                                        <div>
+                                            <div style="font-size: 16px"><strong>@{{ reported_test_question.test_question.tq_code }}</strong></div>
+                                            <div class="text-muted">(@{{ reported_test_question.student.student_id }}) @{{ reported_test_question.student.user.first_name }} @{{ reported_test_question.student.user.last_name }}: @{{ reported_test_question.message }}</div>
+                                        </div>   
+                                    </div>
+                                    <div>
+                                        <button v-on:click="resolveProblem(reported_test_question.id)" v-if="!reported_test_question.is_resolved" class="btn btn-success btn-sm">Resolve <i class="fa fa-check"></i></button>
+                                        <span class="mr-2" v-else>Resolved <i class="fa fa-check-circle text-success"></i></span>
+                                        <a :href="myRootURL + '/test_questions/' + reported_test_question.test_question_id + '?student_outcome_id=' + reported_test_question.test_question.student_outcome_id + '&course_id=' +  reported_test_question.test_question.course_id" class="btn btn-info btn-sm">View <i class="fa fa-chevron-right"></i></a>
+                                    </div>
+                                </div>
+                            </li>
+                        </div>
+                </ul>
+                </div>
+                <div v-else class="p-3 bg-white">
+                    <h5>No report found.</h5>
+                </div>
+          </div>
         </div>
     </div>
 
@@ -214,10 +250,28 @@
                 curricula: [],
                 selected_curriculum_id: '',
                 user: @json(Auth::user()),
-
-                course_loads: []
+                course_loads: [],
+                reported_test_questions: [],
+                myRootURL: ''
             },
             methods: {
+                resolveProblem(test_question_problem_id) {
+                    ApiClient.post('/test_question_problems/' + test_question_problem_id +'/resolve')
+                    .then(response => {
+                        this.getReportedTestQuestions();
+                    })
+                },
+                countReportedNotification() {
+                    var count = 0;
+
+                    for(var i = 0; i < this.reported_test_questions.length; i++) {
+                        if(!this.reported_test_questions[i].is_resolved) {
+                            count++;
+                        }
+                    }
+
+                    return count;
+                },
                 getStudentOutcomes() {
                     this.isLoading = true;
                     this.loadingStudentOutcomes = true;
@@ -234,6 +288,8 @@
                             this.selected_student_outcome = '';
                             this.courses_mapped = [];
                         }
+
+                        this.getReportedTestQuestions();
                     })
                 },
                 toggleDropDown() {
@@ -294,6 +350,12 @@
                     }
 
                     return false;
+                },
+                getReportedTestQuestions() {
+                    ApiClient.get('/test_question_problems?program_id=' + this.program_id)
+                    .then(response => {
+                        this.reported_test_questions = response.data;
+                    })
                 }
             },
             created() {
@@ -302,9 +364,13 @@
                     this.getStudentOutcomes();
                 }
 
+                // this.getReportedTestQuestions();
+
                 if(this.user.user_type_id == 'prof') {
                     this.getCourseLoad();
                 }
+
+                this.myRootURL = myRootURL;
                 
             }
         });

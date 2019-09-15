@@ -19,6 +19,7 @@
         </div>
     </div> --}}
     <div id="app" v-cloak>
+        <report-test-question-modal v-on:reported="addReportedTestQuestion" :test_question_id="report_test_question_id" :student_id="student_id"></report-test-question-modal>
         <div class="exam-sidenav">
             <div class="card shadow">
                 <div class="card-body pt-3 text-center ">
@@ -86,13 +87,17 @@
                         </div>
                     </div>
         
-                        <div class="d-flex justify-content-end">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <button v-if="!checkIfReported(selected_test_question.test_question_id)" v-on:click="reportTestQuestion(selected_test_question.test_question_id)" class="btn btn-sm"><i class="fa fa-exclamation-circle"></i> Report problem</button>
+                            </div>
+                            <div>
+                                <button v-if="selected_test_question.is_marked"  v-on:click="unmarkTestQuestion" class="btn btn-primary mr-2"><i class="fa fa-bookmark"></i> Unmark</button>
+                                <button v-else v-on:click="markTestQuestion" class="btn btn-info mr-2"><i class="fa fa-bookmark"></i> Mark for review</button>
+                                <button :disabled="selected_test_question.counter == 1" v-on:click="prevQuestion" class="btn btn-info mr-2" ><i class="fa fa-arrow-circle-left"></i> Back </button>
 
-                            <button v-if="selected_test_question.is_marked"  v-on:click="unmarkTestQuestion" class="btn btn-primary mr-2"><i class="fa fa-bookmark"></i> Unmark</button>
-                            <button v-else v-on:click="markTestQuestion" class="btn btn-info mr-2"><i class="fa fa-bookmark"></i> Mark for review</button>
-                            <button v-on:click="prevQuestion" class="btn btn-info mr-2" ><i class="fa fa-arrow-circle-left"></i> Back </button>
-
-                            <button v-on:click="nextQuestion" class="btn btn-info">Next <i class="fa fa-arrow-circle-right"></i></button>
+                                <button :disabled="selected_test_question.counter >= answer_sheet.answer_sheet_test_questions.length" v-on:click="nextQuestion" class="btn btn-info">Next <i class="fa fa-arrow-circle-right"></i></button>
+                            </div>
                         </div>
                 </div>
             </div>
@@ -115,9 +120,29 @@
             selected_course: '',
             remaining_time: 0,
             interval_id: '',
-            submitLoading: false
+            submitLoading: false,
+            report_test_question_id: '',
+            student_id: '',
+            reported_test_questions: []
         },
         methods: {
+            reportTestQuestion(test_question_id) {
+                $('#reportTestQuestionModal').modal('show');
+                this.report_test_question_id = test_question_id;
+                this.student_id = this.answer_sheet.student_id;
+            },
+            addReportedTestQuestion(test_question_id) {
+                this.reported_test_questions.push(test_question_id);
+            },
+            checkIfReported(test_question_id) {
+                for(var i = 0; i < this.reported_test_questions.length; i++) {
+                    if(this.reported_test_questions[i] == test_question_id) {
+                        return true;
+                    }
+                }
+
+                return false;
+            },
             getTestQuestionByCourse(course_id) {
                 return this.answer_sheet.answer_sheet_test_questions.filter(answer_sheet_test_question => {
                     return answer_sheet_test_question.course_id == course_id;

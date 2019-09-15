@@ -21,7 +21,7 @@
     @endif
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
-            <h5 class="py-0 my-0">{{ $test_question->title }}</h5>
+            <h5 class="py-0 my-0">{{ $test_question->title }} <span class="badge badge-danger" v-if="countReportedNotification() > 0">@{{ countReportedNotification() }} reported problem</span></h5>
         </div>
         <div>
             @if((Auth::user()->user_type_id == 'dean' || Auth::user()->user_type_id == 's_admin') || (Auth::user()->user_type_id == 'prof' && Auth::user()->id == $test_question->user_id))
@@ -91,10 +91,10 @@
                     </div>
                 </div>
                 <div class="mt-2">
-                    <label><i class="fa fa-times-circle text-danger"></i> Incorrect</label>
+                    <label><i class="fa fa-times-circle text-dark"></i> Incorrect</label>
                     <div class="d-flex">
                         <div class="progress w-100 mr-3" style="height: 20px;">
-                          <div class="progress-bar bg-danger" role="progressbar" style="width: {{ $test_question->incorrectPercentage() }}%" aria-valuenow="{{ $test_question->incorrectPercentage() }}" aria-valuemin="0" aria-valuemax="100"></div>
+                          <div class="progress-bar"  role="progressbar" style="width: {{ $test_question->incorrectPercentage() }}%; background: #9c9c9c;" aria-valuenow="{{ $test_question->incorrectPercentage() }}" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                         <div class="mr-2">
                              {{ $test_question->incorrectPercentage() }}%
@@ -162,6 +162,41 @@
     </div>
 
 
+    <div class="card my-4">
+        <div class="card-body pt-1 pb-4">
+            <h5 class="my-3"><i class="fa fa-exclamation-circle text-info"></i> Problem Reports</h5>
+
+            <div v-if="reported_test_questions.length > 0">
+            <ul class="list-group">
+                <ul class="list-group">
+                    <div v-for="reported_test_question in reported_test_questions">
+                        <li :key="reported_test_question.id" class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-baseline">
+                                <div class="d-flex">
+                                    <div class="mr-3">
+                                        <div class="avatar" style="color:white; background: #4caf50;"><i class="fa fa-question"></i></div>
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 16px"><strong>@{{ reported_test_question.test_question.tq_code }}</strong></div>
+                                        <div class="text-muted">(@{{ reported_test_question.student.student_id }}) @{{ reported_test_question.student.user.first_name }} @{{ reported_test_question.student.user.last_name }}: @{{ reported_test_question.message }}</div>
+                                    </div>   
+                                </div>
+                                <div>
+                                    <button v-on:click="resolveProblem(reported_test_question.id)" v-if="!reported_test_question.is_resolved" class="btn btn-success btn-sm">Resolve <i class="fa fa-check"></i></button>
+                                    <span class="mr-2" v-else>Resolved <i class="fa fa-check-circle text-success"></i></span>
+                                </div>
+                            </div>
+                        </li>
+                    </div>
+            </ul>
+            </div>
+            <div v-else class="p-3 bg-white">
+                <h5>No report found.</h5>
+            </div>
+        </div>
+    </div>
+
+
     
 </div>
 
@@ -173,7 +208,8 @@
             el: '#app',
             data: {
                 isLoading: false,
-                test_question: @json($test_question)
+                test_question: @json($test_question),
+                reported_test_questions: []
             },
             methods: {
                 archiveTestQuestion() {
@@ -238,10 +274,38 @@
                     }
                   });
 
+                },
+                getReportedTestQuestions() {
+                    ApiClient.get('/test_question_problems/get_test_question_problems?test_question_id=' + this.test_question.id)
+                    .then(response => {
+                        this.reported_test_questions = response.data;
+                    })
+                },
+                resolveProblem(test_question_problem_id) {
+                    ApiClient.post('/test_question_problems/' + test_question_problem_id +'/resolve')
+                    .then(response => {
+                        this.getReportedTestQuestions();
+                        toast.fire({
+                            type: 'success',
+                            title: 'Successfully Resolved'
+                        });
+                    })
+                },
+                countReportedNotification() {
+                    var count = 0;
+
+                    for(var i = 0; i < this.reported_test_questions.length; i++) {
+                        if(!this.reported_test_questions[i].is_resolved) {
+                            count++;
+                        }
+                    }
+
+                    return count;
                 }
             },
             created() {
                 MathLive.renderMathInDocument();
+                this.getReportedTestQuestions();
             }
         });
     </script>
