@@ -65,7 +65,9 @@ class LoginController extends Controller
             return url('/colleges');
         } else if(Auth::user()->user_type_id == 'prof') {
             Session::put('college_id', Auth::user()->getFaculty()->college_id);
-            return url('/colleges/' . Auth::user()->getFaculty()->college_id . '/dashboard');
+            // return url('/colleges/' . Auth::user()->getFaculty()->college_id . '/dashboard');
+
+            return url('/faculties/dashboard');
         } else if(Auth::user()->user_type_id == 'stud') {
             Session::put('college_id', Auth::user()->getStudent()->college_id);
             return url('/s/home');

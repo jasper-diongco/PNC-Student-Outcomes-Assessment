@@ -129,7 +129,7 @@
                   <!-- Nav Item - Dashboard -->
                   @if(Gate::check('isDean') || Gate::check('isProf'))
                     <li class="nav-item {{ $active == 'dashboard' ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ url('/colleges/' . Auth::user()->getFaculty()->college_id . '/dashboard') }}">
+                        <a class="nav-link" @if(Gate::check('isDean')) href="{{ url('/colleges/' . Auth::user()->getFaculty()->college_id . '/dashboard') }}" @elseif(Gate::check('isProf')) href="{{ url('/faculties/dashboard') }}" @endif>
                             <div class="d-flex flex-column justify-content-center text-center">
                                 <i class="fa fa-columns icon-nav"></i> 
                                 <span>Dashboard</span>

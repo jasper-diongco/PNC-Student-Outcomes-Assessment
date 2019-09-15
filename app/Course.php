@@ -11,4 +11,8 @@ class Course extends Model
     public function college() {
       return $this->belongsTo('App\College');
     }
+
+    public function testQuestions() {
+        return $this->hasMany('App\TestQuestion')->where('is_active', true);
+    }
 }

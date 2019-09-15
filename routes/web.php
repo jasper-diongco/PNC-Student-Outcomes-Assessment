@@ -47,6 +47,8 @@ Route::get('/faculties', 'FacultiesController@index');
 
 Route::get('/faculties/search_faculties', 'FacultiesController@searchFaculties');
 
+Route::get('/faculties/dashboard', 'FacultiesController@dashboard');
+
 Route::get('/faculties/create', 'FacultiesController@create');
 
 Route::post('/faculties', 'FacultiesController@store');
@@ -407,6 +409,16 @@ Route::post('/user_profiles/{user}/update_basic_info', 'UserProfilesController@u
 //for faculties
 
 Route::get('/faculties/{user}/profile', 'UserProfilesController@show');
+
+
+//faculty_course routes
+Route::get('/faculty_courses', 'FacultyCoursesController@index');
+
+Route::post('/faculty_courses', 'FacultyCoursesController@store');
+
+Route::post('/faculty_courses/{faculty_course}/activate', 'FacultyCoursesController@activate');
+
+Route::post('/faculty_courses/{faculty_course}/deactivate', 'FacultyCoursesController@deactivate');
 
 
 

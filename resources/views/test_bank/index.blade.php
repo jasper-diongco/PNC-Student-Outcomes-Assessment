@@ -105,12 +105,13 @@
                                             <div class="avatar" style="color:white; background: #4caf50;"><i class="fa fa-book"></i></div>
                                         </div>
                                         <div>
-                                            <div style="font-size: 16px">@{{ course_mapped.course_code }} - @{{ course_mapped.description }}</div>
+                                            <div style="font-size: 16px">@{{ course_mapped.course_code }} - @{{ course_mapped.description }} <i v-if="checkIfAssigned(course_mapped.id)" class="fa fa-check-circle text-success"></i></div>
                                             <div class="text-muted">@{{ course_mapped.test_question_count }} questions</div>
                                         </div>   
                                     </div>
                                     <div>
-                                        <a :href="'/pnc_soa/public/test_questions?student_outcome_id=' + selected_student_outcome.id + '&course_id=' + course_mapped.id  + '&program_id=' + selected_student_outcome.program_id" class="btn btn-info btn-sm">Select <i class="fa fa-angle-right"></i></a>
+                                        <a v-if="checkIfAssigned(course_mapped.id)" :href="'/pnc_soa/public/test_questions?student_outcome_id=' + selected_student_outcome.id + '&course_id=' + course_mapped.id  + '&program_id=' + selected_student_outcome.program_id" class="btn btn-info btn-sm">Select <i class="fa fa-angle-right"></i></a>
+                                        <button v-else class="btn btn-secondary btn-sm" disabled>Select <i class="fa fa-angle-right"></i></button>
                                     </div>
                                 </div>
                             </li>
@@ -159,7 +160,7 @@
                     <div v-else>
                         <div v-if="curricula.length > 0">
                             <ul class="list-group">
-                                <template v-for="curriculum in curricula" :key="curriculum.id">
+                                <div v-for="curriculum in curricula" :key="curriculum.id">
                                     <li v-if="curriculum.id == selected_curriculum_id" class="list-group-item">
                                         <div class="d-flex justify-content-between align-items-baseline">
                                             <div class="d-flex">
@@ -177,7 +178,7 @@
                                             </div>
                                         </div>
                                     </li>
-                                </template>
+                                </div>
                             </ul>
                         </div>
 
@@ -211,7 +212,10 @@
                 isLoading: false,
                 loadingStudentOutcomes: false,
                 curricula: [],
-                selected_curriculum_id: ''
+                selected_curriculum_id: '',
+                user: @json(Auth::user()),
+
+                course_loads: []
             },
             methods: {
                 getStudentOutcomes() {
@@ -271,12 +275,35 @@
                         alert("An Error has occured. Please try again");
                         this.isLoading = false;
                     })
+                },
+                getCourseLoad() {
+                    ApiClient.get('/faculty_courses?user_id=' + this.user.id)
+                    .then(response => {
+                        this.course_loads = response.data;
+                    })
+                },
+                checkIfAssigned(course_id) {
+                    if(this.user.user_type_id != 'prof') {
+                        return true;
+                    }
+
+                    for(var i = 0; i < this.course_loads.length; i++) {
+                        if(this.course_loads[i].course_id == course_id) {
+                            return true;
+                        }
+                    }
+
+                    return false;
                 }
             },
             created() {
                 if(this.programs.length > 0) {
                     this.program_id = this.programs[0].id;
                     this.getStudentOutcomes();
+                }
+
+                if(this.user.user_type_id == 'prof') {
+                    this.getCourseLoad();
                 }
                 
             }

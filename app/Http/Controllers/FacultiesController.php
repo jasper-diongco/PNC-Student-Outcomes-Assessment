@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 use App\College;
 use App\User;
 use App\Faculty;
+use App\Program;
+use App\FacultyCourse;
 use App\Http\Resources\Faculty as FacultyResource;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
@@ -132,6 +134,24 @@ class FacultiesController extends Controller
         $colleges = College::all();
 
         return view('faculties.index', compact('deactivated_faculties_count', 'colleges'));
+    }
+
+    public function dashboard() {
+
+        //check if password is already changed
+        if(Hash::check('DefaultPass123', Auth::user()->password)) {
+            $password_changed = false;
+        } else {
+            $password_changed = true;
+        }
+
+        $faculty_courses = FacultyCourse::where('faculty_id', auth()->user()->getFaculty()->id)
+                        ->where('is_active', true)
+                        ->latest()
+                        ->get();
+
+
+        return view('faculties.dashboard', compact('password_changed', 'faculty_courses'));
     }
 
     public function searchFaculties() {

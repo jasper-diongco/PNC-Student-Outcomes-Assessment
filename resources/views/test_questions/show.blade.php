@@ -24,23 +24,25 @@
             <h5 class="py-0 my-0">{{ $test_question->title }}</h5>
         </div>
         <div>
-            @if($test_question->is_active)
-                <button :disabled="isLoading" v-on:click="archiveTestQuestion" class="btn btn-sm mr-2">
-                    <i class="fa fa-archive"></i> 
-                    Archive
-                    <div v-if="isLoading" class="spinner-border spinner-border-sm text-dark" role="status">
-                      <span class="sr-only">Loading...</span>
-                    </div>
-                </button>
-                <a href="{{ url('/test_questions/' . $test_question->id . '/edit?student_outcome_id='. request('student_outcome_id') . '&course_id=' . request('course_id') . '&program_id=' . request('program_id')) }}" class="btn btn-sm btn-success"><i class="fa fa-edit"></i> Edit</a>
-            @else
-                <button :disabled="isLoading" v-on:click="activateTestQuestion" class="btn btn-sm mr-2 btn-info">
-                    <i class="fa fa-history"></i> 
-                    Activate 
-                    <div v-if="isLoading" class="spinner-border spinner-border-sm text-light" role="status">
-                      <span class="sr-only">Loading...</span>
-                    </div>
-                </button>
+            @if((Auth::user()->user_type_id == 'dean' || Auth::user()->user_type_id == 's_admin') || (Auth::user()->user_type_id == 'prof' && Auth::user()->id == $test_question->user_id))
+                @if($test_question->is_active)
+                    <button :disabled="isLoading" v-on:click="archiveTestQuestion" class="btn btn-sm mr-2">
+                        <i class="fa fa-archive"></i> 
+                        Archive
+                        <div v-if="isLoading" class="spinner-border spinner-border-sm text-dark" role="status">
+                          <span class="sr-only">Loading...</span>
+                        </div>
+                    </button>
+                    <a href="{{ url('/test_questions/' . $test_question->id . '/edit?student_outcome_id='. request('student_outcome_id') . '&course_id=' . request('course_id') . '&program_id=' . request('program_id')) }}" class="btn btn-sm btn-success"><i class="fa fa-edit"></i> Edit</a>
+                @else
+                    <button :disabled="isLoading" v-on:click="activateTestQuestion" class="btn btn-sm mr-2 btn-info">
+                        <i class="fa fa-history"></i> 
+                        Activate 
+                        <div v-if="isLoading" class="spinner-border spinner-border-sm text-light" role="status">
+                          <span class="sr-only">Loading...</span>
+                        </div>
+                    </button>
+                @endif
             @endif
             
         </div>

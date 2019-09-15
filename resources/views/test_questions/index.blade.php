@@ -17,10 +17,8 @@
               <h1 class="page-header mb-3">Test Questions</h1>
             </div>
             <div>
-              @if(Gate::check('isDean') || Gate::check('isSAdmin'))
                 {{-- <student-outcome-modal :programs='@json($programs)' :program-id="{{ $program->id }}"></student-outcome-modal> --}}
                 <a href="{{ url('/test_questions/create?student_outcome_id='. request('student_outcome_id') . '&course_id=' . request('course_id') . '&program_id=' . request('program_id')) }}" class="btn btn-success-b">Add new Test Question</a>
-              @endif
             </div>
         </div>
 
@@ -133,7 +131,7 @@
                                   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <a class="dropdown-item" v-on:click="getPreview(test_question.id)" href="#" data-toggle="modal" data-target="#previewModal"><i class="fa fa-eye"></i> Preview </a>
                                     <a :href="'test_questions/' + test_question.id + '?student_outcome_id=' + student_outcome_id + '&course_id=' + course_id + '&program_id=' + program_id" class="dropdown-item"><i class="fa fa-search"></i> View Details</a>
-                                    <a :href="'test_questions/' + test_question.id + '/edit?student_outcome_id=' + student_outcome_id + '&course_id=' + course_id + '&program_id=' + program_id" class="dropdown-item"><i class="fa fa-edit"></i> Update</a>
+                                    {{-- <a :href="'test_questions/' + test_question.id + '/edit?student_outcome_id=' + student_outcome_id + '&course_id=' + course_id + '&program_id=' + program_id" class="dropdown-item"><i class="fa fa-edit"></i> Update</a> --}}
                                   </div>
                                 </div>
                             </td>                          
