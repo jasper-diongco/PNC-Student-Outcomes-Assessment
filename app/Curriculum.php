@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\CurriculumCourse;
 use App\CurriculumMap;
 use App\Exam;
+use App\Grades;
 
 class Curriculum extends Model
 {
@@ -31,6 +32,38 @@ class Curriculum extends Model
         ->where('is_active', 1)
         ->join('courses', 'courses.id', '=', 'curriculum_courses.course_id')
         ->sum('lab_unit') ;
+    }
+
+    public function getDoneCurriculumCourses($student_id) {
+        $grades = Grade::where('student_id', $student_id)
+                    ->where('is_passed', true)
+                    ->get();
+
+        $curriculum_courses = $this->curriculumCourses;
+
+        $done_curriculum_courses = [];
+
+        foreach ($curriculum_courses as $curriculum_course) {
+            foreach ($grades as $grade) {
+                if($curriculum_course->course_id == $grade->course_id) {
+                    $done_curriculum_courses[] = $curriculum_course;
+                    break;
+                }
+            }
+        }
+
+        return $done_curriculum_courses;
+    }
+
+    public function getDoneUnits($student_id) {
+        $done_curriculum_courses = $this->getDoneCurriculumCourses($student_id);
+        $total_units = 0;
+
+        foreach ($done_curriculum_courses as $done_curriculum_course) {
+            $total_units += $done_curriculum_course->course->lec_unit + $done_curriculum_course->course->lab_unit;
+        }
+
+        return $total_units;
     }
 
     public function getSemCourses($year, $sem) {
