@@ -436,6 +436,13 @@ Route::post('/test_question_problems/{test_question_problem}/resolve', 'TestQues
 Route::post('/test_question_problems', 'TestQuestionProblemsController@store');
 
 
+//custom recorded assessment routes
+
+Route::get('/custom_recorded_assessments', 'CustomRecordedAssessmentsController@index');
+
+Route::post('/custom_recorded_assessments', 'CustomRecordedAssessmentsController@store');
+
+
 
 
 

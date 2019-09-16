@@ -426,6 +426,7 @@ class AssessmentsController extends Controller
         $answer_sheet = AnswerSheet::where('student_id', $student_id)
                                 ->where('student_outcome_id', $student_outcome_id)
                                 ->where('exam_id', $assessment->exam_id)
+                                ->where('assessment_id', $assessment->id)
                                 ->latest()
                                 ->first();
 
@@ -436,6 +437,13 @@ class AssessmentsController extends Controller
                 ->orderBy('pos_order', 'ASC')
                 ->with('answerSheetTestQuestionChoices')
                 ->get();
+
+
+        // $answer_sheet = AnswerSheet::where('student_id', $assessment->student_id)
+        //                     ->where('exam_id', $assessment->exam_id)
+        //                     ->where('student_outcome_id', $assessment->student_outcome_id)
+        //                     ->where('assessment_id', $assessment->id)
+        //                     ->first();
 
         if($assessment) {
             return view('s.assessments.show_score', compact('student_outcome', 'student', 'assessment', 'answer_sheet', 'answer_sheet_test_questions', 'courses'));

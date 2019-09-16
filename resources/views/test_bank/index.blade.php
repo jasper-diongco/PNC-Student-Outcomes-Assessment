@@ -4,6 +4,7 @@
 
 @section('content')
 <div id="app" v-cloak>
+    <custom-recorded-assessment-modal :curriculum_id="selected_curriculum_id" :student_outcome_id="selected_student_outcome.id" v-on:custom_recorded_assessment_added="getCustomRecordedAssessments"></custom-recorded-assessment-modal>
     <div class="card p-4 px-4 mb-3">
         {{-- <div class="mx-auto" style="width: 400px">
           <img src="{{ asset('svg/updates.svg') }}" class="w-100">
@@ -68,17 +69,18 @@
         </ul>
     </div>
     
-    <div id="main-nav-tabs">
-        <div class="d-flex justify-content-end">
-            <div class="d-flex align-items-baseline">
-                <div class="mr-2">  
-                   <div class="text-dark" style="font-weight: 600">Curriculum:</div>
-                </div>
-                <select v-on:change="getCoursesMapped" class="form-control" v-model="selected_curriculum_id">
-                    <option v-for="curriculum in curricula"  :key="curriculum.id" :value="curriculum.id">@{{ curriculum.name + ' ' + curriculum.year}}  &mdash; v@{{ curriculum.revision_no }}.0</option>
-                </select>
+    <div class="d-flex justify-content-end">
+        <div class="d-flex align-items-baseline">
+            <div class="mr-2">  
+               <div class="text-dark" style="font-weight: 600">Curriculum:</div>
             </div>
+            <select v-on:change="getCoursesMapped" class="form-control" v-model="selected_curriculum_id">
+                <option v-for="curriculum in curricula"  :key="curriculum.id" :value="curriculum.id">@{{ curriculum.name + ' ' + curriculum.year}}  &mdash; v@{{ curriculum.revision_no }}.0</option>
+            </select>
         </div>
+    </div>
+    <div v-if="selected_student_outcome.assessment_type_id == 1" id="main-nav-tabs">
+        
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#test-questions" role="tab" aria-selected="true"><i class="fa fa-question-circle"></i> Test Questions</a>
@@ -226,6 +228,61 @@
           </div>
         </div>
     </div>
+    <div class="mt-3" v-else>
+        <div class="d-flex justify-content-between mb-3">
+            <div>
+                <h5><i class="fa fa-external-link-alt text-info"></i> Custom Recorded Assessment</h5>
+            </div>
+            <div >
+                <button v-on:click="openCustomRecordedAssessment" class="btn btn-info">Add Assessment</button>
+            </div>
+        </div>
+        
+        <template v-if="custom_recorded_assessment_loading">
+            <table-loading></table-loading>
+        </template>
+        <template v-else>
+            
+        
+            <template v-if="custom_recorded_assessments.length > 0">           
+                <div class="d-flex align-items-stretch flex-wrap" :class="{ 'justify-content-between': custom_recorded_assessments.length > 2 }">
+
+                    <div v-for="custom_recorded_assessment in custom_recorded_assessments" :key="custom_recorded_assessment.id" class="card shadow mb-4 w-md-31 mr-4" :class="{ 'mr-4': custom_recorded_assessment.length <= 2 }">
+                        <div class="card-body pt-3">
+                            <div class="d-flex justify-content-between align-items-baseline">
+                                <div class="d-flex">
+                                    <div class="mr-2">
+                                        <div class="avatar" style="background: #cbff90; color:#585858;"><i class="fa fa-file-alt"></i></div>
+                                    </div>
+                                    <div style="font-weight: 600">test</div>
+                                </div>
+                                <div class="ml-3">
+                                  <a class="btn btn-sm" href="#" class="btn btn-sm">
+                                      <i class="fa fa-search"></i> View
+                                  </a>
+                                </div>
+                            </div>
+                            <div class="text-muted ml-2 mt-2"><i class="fa fa-file-alt"></i> @{{ custom_recorded_assessment.description }}</div>
+                            <div style="font-size: 13px" class="text-muted ml-2 mt-2">
+                                <i class="fa fa-user"></i> Jasper Diongco | Sept 14 2019
+                            </div>
+                            <hr>
+
+                            <div class="text-muted mt-2">
+                                <span class="mb-0">Passing Grade: </span>
+                                60%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <template v-else>
+                <div class="bg-white p-3 text-center text-muted">
+                    No record found
+                </div>
+            </template>
+        </template>
+    </div>
 
     <div class="mt-3 card">
 
@@ -252,7 +309,9 @@
                 user: @json(Auth::user()),
                 course_loads: [],
                 reported_test_questions: [],
-                myRootURL: ''
+                myRootURL: '',
+                custom_recorded_assessments: [],
+                custom_recorded_assessment_loading: false
             },
             methods: {
                 resolveProblem(test_question_problem_id) {
@@ -290,6 +349,8 @@
                         }
 
                         this.getReportedTestQuestions();
+
+                        
                     })
                 },
                 toggleDropDown() {
@@ -300,6 +361,9 @@
                     this.selected_student_outcome = student_outcome;
                     this.getCoursesMapped();
                     this.getCurricula();
+                    if(this.selected_student_outcome.assessment_type_id == 2) {
+                        this.getCustomRecordedAssessments();
+                    }
                 },
                 getCoursesMapped() {
                     this.isLoading = true;
@@ -356,6 +420,17 @@
                     .then(response => {
                         this.reported_test_questions = response.data;
                     })
+                },
+                openCustomRecordedAssessment() {
+                    $('#customRecordedAssessmentModal').modal('show');
+                },
+                getCustomRecordedAssessments() {
+                    this.custom_recorded_assessment_loading = true;
+                    ApiClient.get('/custom_recorded_assessments?curriculum_id=' + this.selected_curriculum_id + '&student_outcome_id=' + this.selected_student_outcome.id)
+                    .then(response => {
+                        this.custom_recorded_assessments = response.data;
+                        this.custom_recorded_assessment_loading = false;
+                    });
                 }
             },
             created() {
