@@ -10,8 +10,8 @@
             <a href="{{ url('s/home') }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
             <div class="mt-3">
                 <h1 class="page-header">Assessment Score</h1>
-                <div class="w-25">
-                    <img src="{{ asset('svg/undraw_done_checking_ty9a.svg') }}" alt="done checking" class="w-100">
+                <div class="w-md-31 mx-auto">
+                    <img src="{{ asset('svg/undraw_segmentation_uioo1.svg') }}" alt="done checking" class="w-100">
                 </div>
                 <h2 class="mt-3 text-info text-center" style="font-size: 25px">{{ $student_outcome->description }}</h2>
                 <div class="mt-4 d-flex flex-column align-items-center">
@@ -132,7 +132,7 @@
             <div class="d-flex justify-content-end">
                 <a href="{{ url('assessment_results/' . $assessment->id . '/print_assessment_result') }}" target="_blank" class="btn btn-sm btn-info mb-2"><i class="fa fa-print"></i> Print</a>
             </div>
-            
+
             <div>
                 
             </div>
