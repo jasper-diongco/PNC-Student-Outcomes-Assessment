@@ -443,6 +443,16 @@ Route::get('/custom_recorded_assessments', 'CustomRecordedAssessmentsController@
 Route::post('/custom_recorded_assessments', 'CustomRecordedAssessmentsController@store');
 
 
+//settings routes
+
+Route::get('/application_settings', 'SettingsController@index');
+
+Route::get('/application_settings/get_show_assessment_details_to_student', 'SettingsController@get_show_assessment_details_to_student');
+
+Route::post('/application_settings/update_settings', 'SettingsController@update');
+
+
+
 
 
 

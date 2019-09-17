@@ -67,8 +67,9 @@
             
         </div>
     </div>
+    
 
-    <div id="main-nav-tabs" class="mt-3">
+    <div v-if="show_assessment_details_to_student.value == 'true'" id="main-nav-tabs" class="mt-3">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           {{-- <li class="nav-item">
             <a class="nav-link active" data-toggle="tab" href="#details" role="tab" aria-selected="true">Details</a>
@@ -110,7 +111,7 @@
                 </ul>
           </div> --}}
           <div class="tab-pane fade show active" id="answers" role="tabpanel">
-            <div class="d-flex align-self-baseline justify-content-between">
+            <div class="d-md-flex align-self-baseline justify-content-between">
                 <div>
                     <h5 class="my-3 ml-2">Student's Answers</h5>
                 </div>
@@ -335,7 +336,8 @@
                                 borderWidth: 1
                             }
                         ]
-                    }
+                    },
+                    show_assessment_details_to_student: ''
             },
             methods: {
                 getTestQuestionByCourse(course_id) {
@@ -586,6 +588,12 @@
                     this.scoreTotals.overallPercentage = (this.scoreTotals.overall / this.scoreTotals.totalItems || 0) * 100;
 
                     return scores;
+                },
+                get_show_assessment_details_to_student() {
+                    ApiClient.get('/application_settings/get_show_assessment_details_to_student')
+                    .then(response => {
+                        this.show_assessment_details_to_student = response.data;
+                    })
                 }
             },
             created() {
@@ -596,6 +604,7 @@
                 this.fillScorePerCoursesData();
                 this.getScorePerCourses();
                 this.getScorePerCoursesDetailed();
+                this.get_show_assessment_details_to_student();
                 setInterval(() => {
                     MathLive.renderMathInDocument();
                     Prism.highlightAll();

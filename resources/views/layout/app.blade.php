@@ -253,7 +253,29 @@
                           </div>
                         </li>
 
-                      @endif
+                    @endif
+
+                    @if(Gate::check('isSAdmin')) 
+
+                        <!--Application Settings -->
+                        <li class="nav-item {{ $active == 'application_settings' ? 'active' : '' }}">
+                            <a class="nav-link " href="{{ url('/curriculum_mapping?college_id='. Session::get('college_id')) }}">
+                                <div class="d-flex flex-column justify-content-center text-center">
+                                    <i class="fas fa-cogs"></i>
+                                    <span>Settings</span>
+                                </div>
+                            </a>
+                        </li>
+                        <!--Application Settings -->
+                        <li class="nav-item {{ $active == 'maintenance' ? 'active' : '' }}">
+                            <a class="nav-link " href="{{ url('/curriculum_mapping?college_id='. Session::get('college_id')) }}">
+                                <div class="d-flex flex-column justify-content-center text-center">
+                                    <i class="fas fa-cog"></i>
+                                    <span>Maintenance</span>
+                                </div>
+                            </a>
+                        </li>
+                    @endif
 
 
             </ul>
