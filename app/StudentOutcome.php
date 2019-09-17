@@ -125,7 +125,7 @@ class StudentOutcome extends Model
         }
     }
 
-    public function getCoursesGrade($curriculum_id, $student_outcome_id) {
+    public function getCoursesGrade($curriculum_id, $student_outcome_id, $student_id='') {
 
         // $curriculum_maps = CurriculumMap::where('is_checked', true)
         //     ->where('student_outcome_id', $this->id)
@@ -140,7 +140,8 @@ class StudentOutcome extends Model
             $courses[] = $curriculum_map->curriculumCourse->course;
         }
 
-        $student = Student::find(auth()->user()->getStudent()->id);
+        // $student = Student::find(auth()->user()->getStudent()->id);
+        $student = Student::find($student_id);
 
         $curriculum = $student->curriculum;
         $curriculum_courses = $curriculum->curriculumCourses;

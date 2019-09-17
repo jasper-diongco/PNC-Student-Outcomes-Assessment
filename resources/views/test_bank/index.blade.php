@@ -234,7 +234,7 @@
                 <h5><i class="fa fa-external-link-alt text-info"></i> Custom Recorded Assessment</h5>
             </div>
             <div >
-                <button v-on:click="openCustomRecordedAssessment" class="btn btn-info">Add Assessment</button>
+                <button :disabled="custom_recorded_assessments.length > 0" v-on:click="openCustomRecordedAssessment" class="btn btn-info">Add Assessment</button>
             </div>
         </div>
         
@@ -254,7 +254,7 @@
                                     <div class="mr-2">
                                         <div class="avatar" style="background: #cbff90; color:#585858;"><i class="fa fa-file-alt"></i></div>
                                     </div>
-                                    <div style="font-weight: 600">test</div>
+                                    <div style="font-weight: 600">@{{ custom_recorded_assessment.name }}</div>
                                 </div>
                                 <div class="ml-3">
                                   <a class="btn btn-sm" href="#" class="btn btn-sm">
@@ -264,13 +264,18 @@
                             </div>
                             <div class="text-muted ml-2 mt-2"><i class="fa fa-file-alt"></i> @{{ custom_recorded_assessment.description }}</div>
                             <div style="font-size: 13px" class="text-muted ml-2 mt-2">
-                                <i class="fa fa-user"></i> Jasper Diongco | Sept 14 2019
+                                <i class="fa fa-user"></i> @{{ custom_recorded_assessment.user.first_name }} @{{ custom_recorded_assessment.user.last_name }} 
+                                &mdash; @{{ parseDate(custom_recorded_assessment.created_at) }}
                             </div>
                             <hr>
-
+                            
+                            <div class="text-muted mt-2">
+                                <span class="mb-0">Overall Score: </span>
+                                @{{ custom_recorded_assessment.overall_score }}
+                            </div>
                             <div class="text-muted mt-2">
                                 <span class="mb-0">Passing Grade: </span>
-                                60%
+                                @{{ custom_recorded_assessment.passing_percentage }}%
                             </div>
                         </div>
                     </div>
@@ -361,9 +366,7 @@
                     this.selected_student_outcome = student_outcome;
                     this.getCoursesMapped();
                     this.getCurricula();
-                    if(this.selected_student_outcome.assessment_type_id == 2) {
-                        this.getCustomRecordedAssessments();
-                    }
+                    
                 },
                 getCoursesMapped() {
                     this.isLoading = true;
@@ -371,6 +374,9 @@
                     .then(response => {
                         this.isLoading = false;
                         this.courses_mapped = response.data;
+                        if(this.selected_student_outcome.assessment_type_id == 2) {
+                            this.getCustomRecordedAssessments();
+                        }
                     })
                     .catch(err => {
                         alert("An Error has occured. Please try again");
@@ -431,6 +437,9 @@
                         this.custom_recorded_assessments = response.data;
                         this.custom_recorded_assessment_loading = false;
                     });
+                },
+                parseDate(date) {
+                    return moment(date).format('MMMM DD, YYYY');
                 }
             },
             created() {

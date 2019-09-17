@@ -135,6 +135,11 @@ Vue.component(
     require("./components/CustomRecordedAssessmentModal.vue").default
 );
 
+Vue.component(
+    "custom-recorded-assessment-record-modal",
+    require("./components/CustomRecordedAssessmentRecordModal.vue").default
+);
+
 Vue.component("my-table", require("./components/Table.vue").default);
 
 Vue.component(

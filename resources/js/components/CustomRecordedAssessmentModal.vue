@@ -30,6 +30,22 @@
                     >
                         <div class="modal-body px-3">
                             <div class="form-group">
+                                <label>Name</label>
+                                <input
+                                    v-model="form.name"
+                                    type="text"
+                                    name="name"
+                                    class="form-control"
+                                    :class="{
+                                        'is-invalid': form.errors.has('name')
+                                    }"
+                                />
+                                <has-error
+                                    :form="form"
+                                    field="name"
+                                ></has-error>
+                            </div>
+                            <div class="form-group">
                                 <label>Description</label>
                                 <textarea
                                     v-model="form.description"
@@ -116,6 +132,7 @@ export default {
     data() {
         return {
             form: new Form({
+                name: "",
                 description: "",
                 overall_score: "",
                 passing_percentage: "",

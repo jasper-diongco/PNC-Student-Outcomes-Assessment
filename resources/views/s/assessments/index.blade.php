@@ -51,7 +51,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody style="font-weight: 400">
-                                                    @foreach($student_outcome->getCoursesGrade($student->curriculum_id, $student_outcome->id) as $course_grade)
+                                                    @foreach($student_outcome->getCoursesGrade($student->curriculum_id, $student_outcome->id, $student->id) as $course_grade)
                                                     <tr class="{{ $course_grade['is_passed'] ? 'bg-success-light' : '' }} {{ $course_grade['remarks'] == 'Failed' ? 'bg-danger-light' : '' }}">
                                                         <td>{{ $course_grade['course_code'] }}</td>
                                                         <td>{{ $course_grade['course_desc'] }}</td>
