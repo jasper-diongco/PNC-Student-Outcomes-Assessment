@@ -35,6 +35,8 @@ class AssessmentResultsController extends Controller
     public function get_assessments() {
         $q = request('q');
         $program_id = request('program_id');
+        $student_outcome_id = request('student_outcome_id');
+        $curriculum_id = request('curriculum_id');
 
         
         if($q) {
@@ -49,6 +51,26 @@ class AssessmentResultsController extends Controller
                 ->orWhere('users.middle_name', 'LIKE', '%' . $q .'%' )
                 ->orWhere('students.student_id', 'LIKE', '%' . $q .'%' )
                 ->paginate(20);
+        }
+        else if($student_outcome_id && $curriculum_id) {
+            $assessments = Assessment::select('assessments.*')
+                    ->join('students', 'students.id', '=', 'assessments.student_id')
+                    ->with('student')
+                    ->with('studentOutcome')
+                    ->where('students.curriculum_id', $curriculum_id)
+                    ->where('assessments.student_outcome_id', $student_outcome_id)
+                    ->latest()
+                    ->paginate(20);
+
+
+        } else if($student_outcome_id) {
+            $assessments = Assessment::select('assessments.*')
+                    ->join('students', 'students.id', '=', 'assessments.student_id')
+                    ->with('student')
+                    ->with('studentOutcome')
+                    ->where('assessments.student_outcome_id', $student_outcome_id)
+                    ->latest()
+                    ->paginate(20);
         } else if ($program_id) {
             $assessments = Assessment::select('assessments.*')
                     ->join('students', 'students.id', '=', 'assessments.student_id')

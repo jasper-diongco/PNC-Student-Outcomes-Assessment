@@ -5,6 +5,86 @@
 
 @section('content')
 <div id="app" v-cloak>
+        <div class="card p-4 px-4 mb-3">
+        {{-- <div class="mx-auto" style="width: 400px">
+          <img src="{{ asset('svg/updates.svg') }}" class="w-100">
+        </div> --}}
+        <div>
+            <h1 class="page-header"><i class="fa fa-poll"></i> Assessment Results</h1>
+        </div>
+
+
+        <div class="d-lg-flex mb-2 ">
+
+          
+          <div class="d-flex align-items-baseline mr-3">
+            <div>
+                <label class="text-dark">Select Program</label>
+            </div>
+            <div class="ml-2">
+                <select v-on:change="getStudentOutcomes" v-model="program_id" class="form-control">
+                    @foreach($programs as $program)
+                        <option value="{{ $program->id }}">{{ $program->program_code }}</option>
+                    @endforeach
+                </select>
+                
+            </div>
+          </div>
+
+          <div class="d-flex align-items-baseline">
+            <div>
+                <label class="text-dark">Select Curriculum</label>
+            </div>
+            <div class="ml-2">
+                <select v-on:change="getAllAssessments" class="form-control" v-model="selected_curriculum_id">
+                    <option v-for="curriculum in curricula"  :key="curriculum.id" :value="curriculum.id">@{{ curriculum.name + ' ' + curriculum.year}}  &mdash; v@{{ curriculum.revision_no }}.0</option>
+                </select>
+                
+            </div>
+          </div>
+        </div>
+
+        <template v-if="!loadingStudentOutcomes">
+            <template v-if="selected_student_outcome != ''">
+                <div class="select-student-outcome d-flex align-items-center mt-1 justify-content-between" v-on:click="toggleDropDown">
+                    <div class="d-flex align-items-center">
+                        <div class="mr-3">
+                            <div class="avatar-student-outcome bg-success">@{{ selected_student_outcome.so_code }}</div>
+                        </div>
+                        <div style="font-weight: 400">
+                            @{{ selected_student_outcome.description }}
+                        </div>
+                    </div>
+                    <div><i class="fa fa-caret-down"></i></div>
+                </div>
+            </template>
+            <div v-else style="font-size: 18px;" class="text-center mt-4">
+                No Student Outcome
+            </div>
+        </template>
+        <template v-else>
+            <div class="d-flex text-muted">
+                <div class="spinner-grow text-dark text-center ml-2" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div> 
+            </div>
+            
+        </template>
+
+        <ul v-show="showDropDown" class="list-group list-dropdown-so mt-1">
+          <li v-on:click="selectStudentOutcome(student_outcome)" v-for="student_outcome in student_outcomes" :key="student_outcome.id" class="list-group-item d-flex align-items-center">
+            <div class="mr-3">
+                <div class="avatar-student-outcome bg-success">@{{ student_outcome.so_code }}</div>
+            </div>
+            <div>
+                @{{ student_outcome.description }}
+            </div>
+          </li>
+        </ul>
+    </div>
+    
+
+
     <ul class="nav nav-tabs" id="main-nav-tabs" role="tablist">
         <li class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#assessments" role="tab" aria-controls="home" aria-selected="true"><i class="fa fa-file-alt"></i> Assessments</a>
@@ -21,16 +101,14 @@
             
 
             <div class="d-flex justify-content-between align-items-baseline">
-                <div>
-                    <h1 class="page-header"><i class="fa fa-poll"></i> Assessment Results</h1>
-                </div>
-                <div class="d-flex align-items-baseline">
+                
+                {{-- <div class="d-flex align-items-baseline">
                     <label class="mr-2 text-dark">Program</label>
                     <select v-on:change="getAssessmentResults" v-model="program_id" class="form-control">
                         <option value="" class="d-none">Select Program</option>
                         <option v-for="program in programs" :key="program.id" :value="program.id">@{{ program.program_code }}</option>
                     </select>
-                </div>
+                </div> --}}
             </div>
             
             <div class="row">
@@ -109,80 +187,8 @@
                <!-- End Pagination -->
             </div>
         </div>
-        <div class="tab-pane fade" id="custom-assessments" role="tabpanel" aria-labelledby="profile-tab">
-            <div class="card p-4 px-4 mb-3">
-            {{-- <div class="mx-auto" style="width: 400px">
-              <img src="{{ asset('svg/updates.svg') }}" class="w-100">
-            </div> --}}
-
-            <div class="d-lg-flex mb-2 ">
-
-              
-              <div class="d-flex align-items-baseline mr-3">
-                <div>
-                    <label class="text-dark">Select Program</label>
-                </div>
-                <div class="ml-2">
-                    <select v-on:change="getStudentOutcomes" v-model="custom_assessment_program_id" class="form-control">
-                        @foreach($programs as $program)
-                            <option value="{{ $program->id }}">{{ $program->program_code }}</option>
-                        @endforeach
-                    </select>
-                    
-                </div>
-              </div>
-
-              <div class="d-flex align-items-baseline">
-                <div>
-                    <label class="text-dark">Select Curriculum</label>
-                </div>
-                <div class="ml-2">
-                    <select v-on:change="getCustomRecordedAssessments" class="form-control" v-model="selected_curriculum_id">
-                        <option v-for="curriculum in curricula"  :key="curriculum.id" :value="curriculum.id">@{{ curriculum.name + ' ' + curriculum.year}}  &mdash; v@{{ curriculum.revision_no }}.0</option>
-                    </select>
-                    
-                </div>
-              </div>
-            </div>
-
-            <template v-if="!loadingStudentOutcomes">
-                <template v-if="selected_student_outcome != ''">
-                    <div class="select-student-outcome d-flex align-items-center mt-1 justify-content-between" v-on:click="toggleDropDown">
-                        <div class="d-flex align-items-center">
-                            <div class="mr-3">
-                                <div class="avatar-student-outcome bg-success">@{{ selected_student_outcome.so_code }}</div>
-                            </div>
-                            <div style="font-weight: 400">
-                                @{{ selected_student_outcome.description }}
-                            </div>
-                        </div>
-                        <div><i class="fa fa-caret-down"></i></div>
-                    </div>
-                </template>
-                <div v-else style="font-size: 18px;" class="text-center mt-4">
-                    No Student Outcome
-                </div>
-            </template>
-            <template v-else>
-                <div class="d-flex text-muted">
-                    <div class="spinner-grow text-dark text-center ml-2" role="status">
-                      <span class="sr-only">Loading...</span>
-                    </div> 
-                </div>
-                
-            </template>
-
-            <ul v-show="showDropDown" class="list-group list-dropdown-so mt-1">
-              <li v-on:click="selectStudentOutcome(student_outcome)" v-for="student_outcome in student_outcomes" :key="student_outcome.id" class="list-group-item d-flex align-items-center">
-                <div class="mr-3">
-                    <div class="avatar-student-outcome bg-success">@{{ student_outcome.so_code }}</div>
-                </div>
-                <div>
-                    @{{ student_outcome.description }}
-                </div>
-              </li>
-            </ul>
-        </div>
+        <div class="tab-pane fade" id="custom-assessments" role="tabpanel">
+        
 
         <div class="mt-3">
             <div class="d-flex justify-content-between mb-3">
@@ -190,7 +196,7 @@
                     <h5><i class="fa fa-external-link-alt text-info"></i> Custom Recorded Assessment</h5>
                 </div>
             </div>
-            
+        
             <template v-if="custom_recorded_assessment_loading">
                 <table-loading></table-loading>
             </template>
@@ -200,7 +206,7 @@
                 <template v-if="custom_recorded_assessments.length > 0">           
                     <div class="d-flex align-items-stretch flex-wrap" :class="{ 'justify-content-between': custom_recorded_assessments.length > 2 }">
 
-                        <div v-for="custom_recorded_assessment in custom_recorded_assessments" :key="custom_recorded_assessment.id" class="card shadow mb-4 w-md-31 mr-4" :class="{ 'mr-4': custom_recorded_assessment.length <= 2 }">
+                        <div v-for="custom_recorded_assessment in custom_recorded_assessments" :key="custom_recorded_assessment.id" class="card shadow mb-4 w-md-31 mr-4" style="background: #f5f5f5;" :class="{ 'mr-4': custom_recorded_assessment.length <= 2 }">
                             <div class="card-body pt-3">
                                 <div class="d-flex justify-content-between align-items-baseline">
                                     <div class="d-flex">
@@ -210,7 +216,7 @@
                                         <div style="font-weight: 600">@{{ custom_recorded_assessment.name }}</div>
                                     </div>
                                     <div class="ml-3">
-                                      <a class="btn btn-sm btn-info" href="#">
+                                      <a class="btn btn-sm btn-info" :href="myRootURL + '/custom_recorded_assessments/' + custom_recorded_assessment.id">
                                           <i class="fa fa-edit"></i> Add Record
                                       </a>
                                     </div>
@@ -276,7 +282,8 @@
             showDropDown: false,
             isLoading: false,
             custom_recorded_assessments: [],
-            custom_recorded_assessment_loading: false
+            custom_recorded_assessment_loading: false,
+            myRootURL: ''
         },
         filters: {
             score(value) {
@@ -288,7 +295,7 @@
         },
         methods: {
             getAssessmentResults(page=1) {
-                ApiClient.get('/assessment_results/get_assessments?page=' + page + '&program_id=' + this.program_id)
+                ApiClient.get('/assessment_results/get_assessments?page=' + page + '&program_id=' + this.program_id + '&student_outcome_id=' + this.selected_student_outcome.id + '&curriculum_id=' + this.selected_curriculum_id)
                     .then(response => {
                       this.assessments = response.data.data;
                       this.tableLoading = false;
@@ -328,22 +335,23 @@
             getStudentOutcomes() {
                 this.isLoading = true;
                 this.loadingStudentOutcomes = true;
-                ApiClient.get("/test_bank/" + this.custom_assessment_program_id + "/get_student_outcomes")
+                ApiClient.get("/test_bank/" + this.program_id + "/get_student_outcomes")
                 .then(response => {
                     this.isLoading = false;
                     this.loadingStudentOutcomes = false;
-                    // this.student_outcomes = response.data;
-                    this.student_outcomes = [];
-                    for(var i = 0; i < response.data.length; i++) {
-                        if(response.data[i].assessment_type_id == 2) {
-                            this.student_outcomes.push(response.data[i]);
-                        }
-                    }
+                    this.student_outcomes = response.data;
+                    // this.student_outcomes = [];
+                    // for(var i = 0; i < response.data.length; i++) {
+                    //     if(response.data[i].assessment_type_id == 2) {
+                    //         this.student_outcomes.push(response.data[i]);
+                    //     }
+                    // }
 
                     if(this.student_outcomes.length > 0) {
                         this.selected_student_outcome = this.student_outcomes[0];
                         // this.getCoursesMapped();
                         this.getCurricula();
+                        
                     } else {
                         this.selected_student_outcome = '';
                         this.courses_mapped = [];
@@ -362,13 +370,13 @@
                 this.selected_student_outcome = student_outcome;
                 // this.getCoursesMapped();
                 this.getCurricula();
-                
+                this.getAssessmentResults();
                 
             },
             getCurricula() {
                 this.isLoading = true;
 
-                ApiClient.get("test_bank/" + this.custom_assessment_program_id + "/get_curricula?student_outcome_id=" + this.selected_student_outcome.id)
+                ApiClient.get("test_bank/" + this.program_id + "/get_curricula?student_outcome_id=" + this.selected_student_outcome.id)
                 .then(response => {
                     this.curricula = response.data;
 
@@ -376,8 +384,10 @@
 
                         this.selected_curriculum_id = this.curricula[0].id;
                         // this.getCoursesMapped();
+                        this.getAssessmentResults();
                         if(this.selected_student_outcome.assessment_type_id == 2) {
                             this.getCustomRecordedAssessments();
+
                         }
                     }
                     this.isLoading = false;
@@ -395,6 +405,10 @@
                     this.custom_recorded_assessment_loading = false;
                 });
             },
+            getAllAssessments() {
+                this.getCustomRecordedAssessments();
+                this.getAssessmentResults();
+            },
             parseDate(date) {
                 return moment(date).format('MMMM DD, YYYY');
             }
@@ -403,10 +417,11 @@
         created() {
             if(this.programs.length > 0) {
                 this.program_id = this.programs[0].id;
-                this.custom_assessment_program_id = this.programs[0].id;
+                // this.custom_assessment_program_id = this.programs[0].id;
                 this.getStudentOutcomes();
             }
             this.getAssessmentResults();
+            this.myRootURL = myRootURL;
         }
     });
 </script>
