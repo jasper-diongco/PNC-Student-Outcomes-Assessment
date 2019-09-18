@@ -16,6 +16,7 @@ export default {
             //     labels: ["Red", "Orange", "Yellow"]
             // },
             options: {
+                animation: false,
                 responsive: true,
                 legend: {
                     position: "top"

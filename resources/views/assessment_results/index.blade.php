@@ -86,14 +86,18 @@
 
 
     <ul class="nav nav-tabs" id="main-nav-tabs" role="tablist">
-        <li class="nav-item">
+        <li class="nav-item" v-if="selected_student_outcome.assessment_type_id == 1">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#assessments" role="tab" aria-controls="home" aria-selected="true"><i class="fa fa-file-alt"></i> Assessments</a>
         </li>
-        <li class="nav-item">
+        
+        <li class="nav-item" v-if="selected_student_outcome.assessment_type_id == 2">
             <a class="nav-link" id="profile-tab" data-toggle="tab" href="#custom-assessments" role="tab" aria-controls="profile" aria-selected="false"><i class="fa fa-external-link-alt"></i> Custom Recorded Assessments</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" v-if="selected_student_outcome.assessment_type_id == 3">
             <a class="nav-link" id="contact-tab" data-toggle="tab" href="#programming" role="tab" aria-controls="contact" aria-selected="false"><i class="fa fa-laptop-code"></i> Programming Assessments</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="report-tab" data-toggle="tab" href="#reports" role="tab" aria-controls="home" aria-selected="true"><i class="fa fa-chart-pie"></i> Reports</a>
         </li>
     </ul>
     <div class="tab-content" id="myTabContent">
@@ -205,6 +209,76 @@
                <!-- End Pagination -->
             </div>
         </div>
+        <div class="tab-pane fade" id="reports" role="tabpanel">
+            <div id="passingPercentage" class="card shadow mt-4" style="background: #fbfbfb">
+                <div class="card-body py-3">
+                    <h5>Passing Percentage</h5>
+                    <p class="text-info">This figure shows the percentage of passed and failed student</p>
+                    
+                    <div class="w-md-40">
+                        <pie-chart :data="pie_passing_percentage"></pie-chart>
+                    </div>
+                </div>
+            </div>
+
+            <div id="topStudents" class="card shadow mt-4" style="background: #fbfbfb">
+                <div class="card-body py-3">
+                    <div class="d-flex align-items-baseline justify-content-between">
+                        <div>
+                            <h5 class="mb-3">Top students</h5>
+                        </div>
+                        <div>
+                            <label class="mr-2">Filter</label>
+                            <select v-model="topValue" v-on:change="get_top_assessments">
+                                <option value="10">
+                                    Top 10 students
+                                </option>
+                                <option value="5">
+                                    Top 5 students
+                                </option>
+                                <option value="3">
+                                    Top 3 students
+                                </option>
+                                <option value="-3">
+                                    Top lower 3  students
+                                </option>
+                                <option value="-5">
+                                    Top lower 5  students
+                                </option>
+                                <option value="-10">
+                                    Top lower 10  students
+                                </option>
+                            </select>
+                        </div>
+                    
+                    </div>
+                    
+                    <div v-if="assessments.length > 0">
+                        <ul class="list-group">
+                            <li v-for="(top_assessment,index) in top_assessments" class="list-group-item">
+                                <div class="d-flex align-items-center mr-3">
+
+                                    <div>
+                                      <span class="avatar-student-outcome mr-3" style="background:#86db67">@{{ index + 1 }}</span>
+                                    </div>
+                                    <span class="mr-3">
+                                        <strong class="mr-2">@{{ top_assessment.score | score }}</strong>
+                                        &mdash;
+                                        @{{ top_assessment.student.student_id }} &mdash;
+                                         @{{ top_assessment.student.user.first_name + ' ' + top_assessment.student.user.last_name}}</span>
+                                     
+                                    
+
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div v-else class="p-3 bg-light text-center">
+                        <h5>No Assessment found</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="tab-pane fade" id="custom-assessments" role="tabpanel">
         
 
@@ -274,6 +348,7 @@
 @endsection
 
 @push('scripts')
+<script src="{{ asset('js/chartjs-plugin-labels.js') }}"></script>
 <script>
     var vm = new Vue({
         el: '#app',
@@ -282,6 +357,8 @@
             program_id: '',
             custom_assessment_program_id: '',
             assessments: @json($assessments),
+            top_assessments: [],
+            topValue: 10,
             college_id: '{{ request('college_id') }}',
             tableLoading: true,
             search: '',
@@ -303,7 +380,16 @@
             custom_recorded_assessment_loading: false,
             myRootURL: '',
             filter_grade: '',
-            sort_grade: ''
+            sort_grade: '',
+            pie_passing_percentage: {
+              datasets: [
+                    {
+                        data: [20, 80],
+                        backgroundColor: ["#cbff90", "#ededed"]
+                    }
+                ],
+                labels: ["Passed", "Failed"]
+            }   
         },
         filters: {
             score(value) {
@@ -336,6 +422,8 @@
                     .then(response => {
                       this.assessments = response.data;
                       this.tableLoading = false;
+                      this.get_passing_percentage();
+                      this.get_top_assessments();
                       // this.meta.total = response.data.total;
                       // this.meta.per_page = response.data.per_page;
                       // this.meta.last_page = response.data.last_page;
@@ -448,6 +536,52 @@
             },
             parseDate(date) {
                 return moment(date).format('MMMM DD, YYYY');
+            },
+            get_passing_percentage() {
+                var passed = 0;
+                var failed = 0;
+
+                for(var i = 0; i < this.assessments.length; i++) {
+                    if(this.assessments[i].is_passed) {
+                        passed++;
+                    } else {
+                        failed++;
+                    }
+                }
+
+                this.pie_passing_percentage.datasets[0].data[0] = passed;
+                this.pie_passing_percentage.datasets[0].data[1] = failed;
+            },
+            get_top_assessments() {
+                var result = [];
+                var toBeSorted = this.assessments;
+
+                if(this.topValue > 0) {
+                    toBeSorted.sort((a, b) => {
+                        return b.score - a.score;
+                    });
+
+                    var len = toBeSorted.length >= this.topValue ? this.topValue : toBeSorted.length;
+
+                
+                    for(var i = 0; i < len; i++) {
+                        result.push(toBeSorted[i]);
+                    }
+                } else {
+                    toBeSorted.sort((a, b) => {
+                        return a.score - b.score;
+                    });
+
+                    var len = toBeSorted.length >= Math.abs(this.topValue) ? Math.abs(this.topValue) : toBeSorted.length;
+
+                
+                    for(var i = 0; i < len; i++) {
+                        result.push(toBeSorted[i]);
+                    }
+                }
+                
+
+                this.top_assessments = result;
             }
         },
 
