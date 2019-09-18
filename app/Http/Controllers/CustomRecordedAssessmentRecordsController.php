@@ -40,6 +40,20 @@ class CustomRecordedAssessmentRecordsController extends Controller
             ], 422);
         }
 
+        //check if existing
+        $check_existing = CustomRecordedAssessmentRecord::where('student_id', $data['student_id'])
+                                ->where('custom_recorded_assessment_id', $data['custom_recorded_assessment_id'])
+                                ->get();
+                                
+        if($check_existing->count() > 0) {
+            return response()->json([
+                'message' => 'Already recorded!',
+                'errors' => [
+                    'student_id' => ['This student has already recorded.']
+                ]
+            ], 422);
+        }
+
         $custom_recorded_assessment_record = CustomRecordedAssessmentRecord::create([
             'code' => $this->generateAssessmentID(),
             'student_id' => $data['student_id'],
@@ -48,6 +62,32 @@ class CustomRecordedAssessmentRecordsController extends Controller
         ]);
 
         return $custom_recorded_assessment_record;
+    }
+
+    public function update(CustomRecordedAssessmentRecord $record) {
+
+
+        $data = request()->validate([
+            'score' => 'required|min:0'
+        ]);
+
+        $custom_recorded_assessment = CustomRecordedAssessment::find($record->custom_recorded_assessment_id);
+
+        if($data['score'] > $custom_recorded_assessment->overall_score) {
+            return response()->json([
+                'message' => 'Max score exceed!',
+                'errors' => [
+                    'score' => ['Overall score exceeded!']
+                ]
+            ], 422);
+        }
+
+        $record->update([
+            'score' => $data['score']
+        ]);
+
+        return $record;
+
     }
 
     public function getCoursesGrade() {
@@ -73,7 +113,7 @@ class CustomRecordedAssessmentRecordsController extends Controller
             ->first();
 
         if($custom_recorded_assessment_record) {
-            $current_count = intval(substr($custom_recorded_assessment_record->assessment_code, 6));
+            $current_count = intval(substr($custom_recorded_assessment_record->code, 6));
             $current_count += 1;
 
             return $now->format('Ym') . sprintf("%'.04d", $current_count);

@@ -5,7 +5,7 @@
 
 @section('content')
 <div id="app" v-cloak>
-    <custom-recorded-assessment-record-modal :custom_recorded_assessment_id="custom_recorded_assessment_id" :student_outcome_id="student_outcome_id" :max_score="overall_score"></custom-recorded-assessment-record-modal>
+    <custom-recorded-assessment-record-modal :custom_recorded_assessment_id="custom_recorded_assessment_id" :student_outcome_id="student_outcome_id" :max_score="overall_score" :custom_recorded_assessment_records="custom_recorded_assessment_records" v-on:record-added="get_custom_recorded_assessment_records"></custom-recorded-assessment-record-modal>
     <h1 class="page-header"><i class="fa fa-file-alt text-info"></i> Custom Recorded Assessment</h1>
 
     <div class="card">
@@ -62,7 +62,18 @@
                     <button class="btn btn-info" v-on:click="openAddRecord">Add Record <i class="fa fa-edit"></i></button>
                 </div>
             </div>
-
+            
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="input-group my-3" id="search-input">
+                    
+                        <input v-on:input="search" v-model="searchText" type="search" class="form-control" placeholder="Search assessment...">
+                        <div class="input-group-append">
+                          <span class="input-group-text"><i class="fa fa-search"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div v-if="custom_recorded_assessment_records.length > 0" class="table-responsive mt-3">
                 <table class="table">
@@ -74,10 +85,11 @@
                             <th>Score</th>
                             <th>Passed</th>
                             <th>Date</th>
+                            <td>Update</td>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="custom_recorded_assessment_record in custom_recorded_assessment_records">
+                        <tr v-for="custom_recorded_assessment_record in show_custom_recorded_assessment_records">
                             <th>
                                 @{{ custom_recorded_assessment_record.code }}
                             </th>
@@ -99,16 +111,54 @@
                             <td>
                                 @{{ parseDate(custom_recorded_assessment_record.created_at) }}
                             </td>
+                            <td>
+                                <button v-on:click="openUpdateModal(custom_recorded_assessment_record)" class="btn btn-sm btn-success">Update <i class="fa fa-edit"></i></button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
+            </div>
+            <div v-else class="p-3 bg-light text-center">
+                <h5>No Assessment</h5>
             </div>
             
 
             
         </div>
     </div>
-</div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="updateScore" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header" style="background: #8bc34a">
+            <h5 class="modal-title" id="exampleModalLabel">Update Score</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form v-on:submit.prevent="updateScore" v-on:keydown="form.onKeydown($event)">
+          <div class="modal-body">
+              
+                <div class="form-group">
+                  <label>New Score &mdash; Max - @{{ overall_score }}</label>
+                  <input v-model="form.score" type="number" name="score"
+                    class="form-control" :class="{ 'is-invalid': form.errors.has('score') }" min="0">
+                  <has-error :form="form" field="score"></has-error>
+                </div>
+
+                
+              
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button :disabled="form.busy" type="submit" class="btn btn-info">Update <i class="fa fa-edit"></i></button>
+          </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    </div>
 @endsection
 
 @push('scripts')
@@ -121,7 +171,13 @@
             student_outcome_id: '{{ $custom_recorded_assessment->student_outcome_id }}',
             overall_score: {{ $custom_recorded_assessment->overall_score }},
             passing_percentage: {{ $custom_recorded_assessment->passing_percentage }},
-            custom_recorded_assessment_records: []
+            custom_recorded_assessment_records: [],
+            show_custom_recorded_assessment_records: [],
+            searchText: '',
+            form: new Form({
+                score: ''
+            }),
+            selected_id: ''
         },
         methods: {
             openAddRecord() {
@@ -131,6 +187,7 @@
                 ApiClient.get('/custom_recorded_assessments/get_records/' + this.custom_recorded_assessment_id)
                 .then(response => {
                     this.custom_recorded_assessment_records = response.data;
+                    this.show_custom_recorded_assessment_records = this.custom_recorded_assessment_records;
                 })
             },
             parseDate(date) {
@@ -141,6 +198,38 @@
             },
             getGrade(score) {
                 return ((score / this.overall_score) * 100).toFixed(2);
+            },
+            search() {
+                if(this.textSearch == '' || this.textSearch == null) {
+                    this.show_custom_recorded_assessment_records = this.custom_recorded_assessment_records;
+                }
+                var searchResult = [];
+                var regExp = new RegExp(this.searchText, 'i');
+                for(var i = 0; i < this.custom_recorded_assessment_records.length; i++) {
+                    if(this.custom_recorded_assessment_records[i].student.user.first_name.search(regExp) > -1 || this.custom_recorded_assessment_records[i].student.user.last_name.search(regExp) > -1 || this.custom_recorded_assessment_records[i].student.student_id.search(regExp) > -1 || this.custom_recorded_assessment_records[i].code.search(regExp) > -1 ) {
+
+                        searchResult.push(this.custom_recorded_assessment_records[i]);
+                    }
+                }
+                
+                this.show_custom_recorded_assessment_records = searchResult;
+            },
+            updateScore() {
+                this.form.post(myRootURL + '/custom_recorded_assessment_records/' + this.selected_id)
+                .then(response => {
+                    $('#updateScore').modal('hide');
+                    toast.fire({
+                        type: 'success',
+                        title: 'Successfully updated!'
+                    });
+
+                    this.get_custom_recorded_assessment_records();
+                })
+            },
+            openUpdateModal(record) {
+                this.selected_id = record.id;
+                this.form.score = record.score;
+                $('#updateScore').modal('show');
             }
         },
         created() {

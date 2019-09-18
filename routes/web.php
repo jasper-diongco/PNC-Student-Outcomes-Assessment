@@ -450,6 +450,7 @@ Route::post('/custom_recorded_assessments', 'CustomRecordedAssessmentsController
 //custom recorded assessment records routes
 Route::get('/custom_recorded_assessment_records/get_courses_grade', 'CustomRecordedAssessmentRecordsController@getCoursesGrade');
 
+Route::post('/custom_recorded_assessment_records/{record}', 'CustomRecordedAssessmentRecordsController@update');
 
 Route::post('/custom_recorded_assessment_records', 'CustomRecordedAssessmentRecordsController@store');
 

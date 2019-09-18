@@ -56,6 +56,11 @@
                                                 </div>
                                                 <div>
                                                     <button
+                                                        v-if="
+                                                            !checkIfRecorded(
+                                                                student.id
+                                                            )
+                                                        "
                                                         @click="
                                                             selectStudent(
                                                                 student
@@ -197,7 +202,12 @@
 
 <script>
 export default {
-    props: ["custom_recorded_assessment_id", "student_outcome_id", "max_score"],
+    props: [
+        "custom_recorded_assessment_id",
+        "student_outcome_id",
+        "max_score",
+        "custom_recorded_assessment_records"
+    ],
     data() {
         return {
             form: new Form({
@@ -231,8 +241,9 @@ export default {
                         title: "Successfully Recorded"
                     });
 
-                    this.student_name = "";
-                    this.student_id = "";
+                    this.form.student_name = "";
+                    this.form.student_id = "";
+                    this.form.score = "";
                     this.coursesGrade = [];
                 })
                 .catch(err => {
@@ -278,6 +289,22 @@ export default {
             }
 
             return is_available;
+        },
+        checkIfRecorded(student_id) {
+            for (
+                var i = 0;
+                i < this.custom_recorded_assessment_records.length;
+                i++
+            ) {
+                if (
+                    this.custom_recorded_assessment_records[i].student_id ==
+                    student_id
+                ) {
+                    return true;
+                }
+            }
+
+            return false;
         }
     },
     created() {
