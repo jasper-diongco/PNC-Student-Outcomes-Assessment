@@ -37,6 +37,7 @@ class AssessmentResultsController extends Controller
         $program_id = request('program_id');
         $student_outcome_id = request('student_outcome_id');
         $curriculum_id = request('curriculum_id');
+        $filter_grade = request('filter_grade');
 
         
         if($q) {
@@ -50,7 +51,7 @@ class AssessmentResultsController extends Controller
                 ->orWhere('users.last_name', 'LIKE', '%' . $q .'%' )
                 ->orWhere('users.middle_name', 'LIKE', '%' . $q .'%' )
                 ->orWhere('students.student_id', 'LIKE', '%' . $q .'%' )
-                ->paginate(20);
+                ->get();
         }
         else if($student_outcome_id && $curriculum_id) {
             $assessments = Assessment::select('assessments.*')
@@ -60,7 +61,7 @@ class AssessmentResultsController extends Controller
                     ->where('students.curriculum_id', $curriculum_id)
                     ->where('assessments.student_outcome_id', $student_outcome_id)
                     ->latest()
-                    ->paginate(20);
+                    ->get();
 
 
         } else if($student_outcome_id) {
@@ -70,7 +71,7 @@ class AssessmentResultsController extends Controller
                     ->with('studentOutcome')
                     ->where('assessments.student_outcome_id', $student_outcome_id)
                     ->latest()
-                    ->paginate(20);
+                    ->get();
         } else if ($program_id) {
             $assessments = Assessment::select('assessments.*')
                     ->join('students', 'students.id', '=', 'assessments.student_id')
@@ -78,9 +79,9 @@ class AssessmentResultsController extends Controller
                     ->with('studentOutcome')
                     ->where('students.program_id', $program_id)
                     ->latest()
-                    ->paginate(20);
+                    ->get();
         } else {
-            $assessments = Assessment::with('student')->with('studentOutcome')->latest()->paginate(20);
+            $assessments = Assessment::with('student')->with('studentOutcome')->latest()->get();
         }
 
         
@@ -89,6 +90,24 @@ class AssessmentResultsController extends Controller
         foreach ($assessments as $assessment) {
             $assessment->score = $assessment->computeScore();
             $assessment->is_passed = $assessment->checkIfPassed();
+        }
+
+        if($filter_grade) {
+            $temp_assessments = [];
+
+            foreach ($assessments as $assessment) {
+               if($filter_grade == 1) {
+                    if($assessment->is_passed) {
+                        $temp_assessments[] = $assessment;
+                    }
+               } else if ($filter_grade == 2) {
+                    if(!$assessment->is_passed) {
+                        $temp_assessments[] = $assessment;
+                    }
+               }
+            }
+
+            $assessments = $temp_assessments;
         }
 
         return $assessments;

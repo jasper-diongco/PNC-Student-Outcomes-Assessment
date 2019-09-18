@@ -48,8 +48,25 @@ export default {
             }
         };
     },
+    computed: {
+        chartData: function() {
+            return this.data;
+        }
+    },
+    methods: {
+        renderPieChart() {
+            this.renderChart(this.data, this.options);
+        }
+    },
     mounted() {
-        this.renderChart(this.data, this.options);
+        this.renderPieChart(this.data, this.options);
+    },
+    watch: {
+        data: function() {
+            this._chart.destroy();
+            //this.renderChart(this.data, this.options);
+            this.renderPieChart();
+        }
     }
 };
 </script>

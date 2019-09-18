@@ -24,6 +24,18 @@
             <div class="d-flex justify-content-end">
                 <a href="{{ url('/students/' . $student->id . '/obe_curriculum_print') }}" target="_blank" class="btn btn-sm btn-info"><i class="fa fa-print"></i> Print</a>
             </div>
+
+            <div class="row mt-3">
+                <div class="col-md-4">
+                  <div class="input-group mb-3" id="search-input">
+                    
+                    <input type="search" v-model="textSearch" v-on:input="searchCourse" class="form-control" placeholder="Search course...">
+                    <div class="input-group-append">
+                      <span class="input-group-text"><i class="fa fa-search"></i></span>
+                    </div>
+                  </div>
+                </div>
+            </div>
         </div>
         
         {{-- <h5 class="mt-4 mb-2"><i class="fa fa-file-alt"></i> Grades</h5> --}}
@@ -34,9 +46,12 @@
             </div> 
         </div>
         
+        
+
         <div class="accordion" id="accordionOBE">
             <div v-for="year_level in parseInt(curriculum_year_level)">
                 <div v-for="semester in 3">
+                    {{-- <div ></div> --}}
                   <div v-if="semester == 1 || semester == 2 || (semester == 3 && getSummerCourses(year_level).length > 0)"  :key="'card-' + year_level + '-' + semester" class="card">
                     <div class="card-header">
                       <h2 class="mb-0">
@@ -48,36 +63,37 @@
 
                     <div :id="'collapse' + year_level + '' + semester" class="collapse" :class="{'show': (year_level == 1 && semester == 1) || expand_all }" data-parent="#accordionOBE">
                       <div class="card-body">
-
-                        <table class="table table-borderless">
-                            <thead>
-                                <tr>
-                                    <th>Course Code</th>
-                                    <th width="30%">Description</th>
-                                    <th>Units</th>
-                                    <th>Grade</th>
-                                    <th>Remarks</th>
-                                    <th>Professor</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="curriculum_course in getCoursesBySemester(year_level, semester)" :class="{'bg-success-light': getGradeOfCourse(curriculum_course.course.id).is_passed, 'bg-danger-light': getGradeOfCourse(curriculum_course.course.id).remarks == 'Failed' }">
-                                    <td>@{{ curriculum_course.course.course_code }}</td>
-                                    <td>@{{ curriculum_course.course.description }}</td>
-                                    <td>@{{ curriculum_course.course.lec_unit + curriculum_course.course.lab_unit  }}</td>
-                                    <td>@{{ getGradeOfCourse(curriculum_course.course.id).grade_text }}</td>
-                                    <td>@{{ getGradeOfCourse(curriculum_course.course.id).remarks }}</td>
-                                    <td>@{{ getGradeOfCourse(curriculum_course.course.id).professor_name }}</td>
-                                    <td>
-                                        <i class="fa fa-check text-success" v-if="getGradeOfCourse(curriculum_course.course.id).is_passed"></i>
-                                        <button v-else v-on:click="openGradeModal(curriculum_course.course.id, curriculum_course.course.course_code)" class="btn btn-success btn-sm"><i class="fa fa-edit"></i></button>
-                                        
-                                    </td>
-                                    {{-- <td><i class="fa fa-check text-success"></i></td> --}}
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table table-borderless">
+                                <thead>
+                                    <tr>
+                                        <th>Course Code</th>
+                                        <th width="30%">Description</th>
+                                        <th>Units</th>
+                                        <th>Grade</th>
+                                        <th>Remarks</th>
+                                        <th>Professor</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="curriculum_course in getCoursesBySemester(year_level, semester)" :class="{'bg-success-light': getGradeOfCourse(curriculum_course.course.id).is_passed, 'bg-danger-light': getGradeOfCourse(curriculum_course.course.id).remarks == 'Failed' }">
+                                        <td>@{{ curriculum_course.course.course_code }}</td>
+                                        <td>@{{ curriculum_course.course.description }}</td>
+                                        <td>@{{ curriculum_course.course.lec_unit + curriculum_course.course.lab_unit  }}</td>
+                                        <td>@{{ getGradeOfCourse(curriculum_course.course.id).grade_text }}</td>
+                                        <td>@{{ getGradeOfCourse(curriculum_course.course.id).remarks }}</td>
+                                        <td>@{{ getGradeOfCourse(curriculum_course.course.id).professor_name }}</td>
+                                        <td>
+                                            <i class="fa fa-check text-success" v-if="getGradeOfCourse(curriculum_course.course.id).is_passed"></i>
+                                            <button v-else v-on:click="openGradeModal(curriculum_course.course.id, curriculum_course.course.course_code)" class="btn btn-success btn-sm"><i class="fa fa-edit"></i></button>
+                                            
+                                        </td>
+                                        {{-- <td><i class="fa fa-check text-success"></i></td> --}}
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -94,6 +110,7 @@
         el: '#app',
         data: {
             curriculum_courses: @json($curriculum_courses),
+            show_curriculum_courses: @json($curriculum_courses),
             curriculum_year_level: '{{ $curriculum->year_level }}',
             grade_values: @json($grade_values),
             grades: @json($grades),
@@ -102,16 +119,33 @@
             course_code: '',
             student_id: '{{ $student->id }}',
             tableLoading: false,
-            expand_all: true
+            expand_all: true,
+            textSearch: ""
         },
         methods: {
+            searchCourse() {
+                if(this.textSearch == '' || this.textSearch == null) {
+                    return this.show_curriculum_courses = this.curriculum_courses;
+                }
+
+                var searchResult = [];
+                var regExp = new RegExp(this.textSearch, 'i');
+                for(var i = 0; i < this.curriculum_courses.length; i++) {
+                    if(this.curriculum_courses[i].course.description.search(regExp) > -1 || this.curriculum_courses[i].course.course_code.search(regExp) > -1) {
+                        searchResult.push(this.curriculum_courses[i]);
+                    }
+                }
+                
+                this.show_curriculum_courses = searchResult;
+
+            }, 
             getCoursesBySemester(year_level, semester) {
-                return this.curriculum_courses.filter(curriculum_course => {
+                return this.show_curriculum_courses.filter(curriculum_course => {
                     return (curriculum_course.year_level == year_level && curriculum_course.semester == semester);
                 });
             },
             getSummerCourses(year_level) {
-                return this.curriculum_courses.filter(curriculum_course => {
+                return this.show_curriculum_courses.filter(curriculum_course => {
                     return (curriculum_course.year_level == year_level && curriculum_course.semester == 3);
                 });
             },

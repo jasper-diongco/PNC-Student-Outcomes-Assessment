@@ -52,80 +52,184 @@
         </div>
     </div>
 
-    <div class="card mt-3">
-        <div class="card-body py-4">
-            <div class="d-flex align-self-baseline justify-content-between">
-                <div>
-                    <h5 class="text-info">Records</h5>
-                </div>
-                <div>
-                    <button class="btn btn-info" v-on:click="openAddRecord">Add Record <i class="fa fa-edit"></i></button>
+    <ul class="nav nav-tabs mt-3" id="main-nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="record-tab" data-toggle="tab" href="#record" role="tab"  aria-selected="true">Records</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="reports-tab" data-toggle="tab" href="#report" role="tab"  aria-selected="false">Reports</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="record" role="tabpanel" aria-labelledby="record-tab">
+            <div class="card mt-3">
+                <div class="">
+                    <div class="d-flex align-self-baseline justify-content-between">
+                        <div>
+                            <h5 class="text-info">Records</h5>
+                        </div>
+                        <div>
+                            <button class="btn btn-info" v-on:click="openAddRecord">Add Record <i class="fa fa-edit"></i></button>
+                        </div>
+                    </div>
+
+
+                    
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="input-group my-3" id="search-input">
+                            
+                                <input v-on:input="search" v-model="searchText" type="search" class="form-control" placeholder="Search assessment...">
+                                <div class="input-group-append">
+                                  <span class="input-group-text"><i class="fa fa-search"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        {{-- <div class="col-md-3"></div> --}}
+                        <div class="col-lg-7 d-md-flex justify-content-lg-end">
+                            <div class="mt-3 mr-3 d-flex justify-content-lg-end align-items-baseline">
+                                <label class="mr-2">Sort By Grade</label>
+                                <select v-model="sort_grade" v-on:change="sort_by_grade">
+                                    <option value="">Normal</option>
+                                    <option value="1">ASCENDING</option>
+                                    <option value="2">DESCENDING</option>
+                                </select>
+                            </div>
+                            <div class="mt-3 d-flex justify-content-lg-end align-items-baseline">
+                                <label class="mr-2">Filter Grade</label>
+                                <select v-model="filter_grade" v-on:change="filter_by_grade">
+                                    <option value="">All</option>
+                                    <option value="1">Passed</option>
+                                    <option value="2">Failed</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div v-if="show_custom_recorded_assessment_records.length > 0" class="table-responsive mt-3">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Student ID</th>
+                                    <th>Student Name</th>
+                                    <th>Score</th>
+                                    <th>Passed</th>
+                                    <th>Date</th>
+                                    <th>Update</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="custom_recorded_assessment_record in show_custom_recorded_assessment_records">
+                                    <th>
+                                        @{{ custom_recorded_assessment_record.code }}
+                                    </th>
+                                    <td>
+                                        @{{ custom_recorded_assessment_record.student.student_id }}
+                                    </td>
+                                    <td>
+                                        @{{ custom_recorded_assessment_record.student.user.first_name }} @{{ custom_recorded_assessment_record.student.user.last_name }}
+                                    </td>
+                                    <td>
+                                        @{{ custom_recorded_assessment_record.score }} (@{{ getGrade(custom_recorded_assessment_record.score) }}%)
+                                    </td>
+                                    <td v-if="checkIfPassed(custom_recorded_assessment_record.score)">
+                                        <strong class="text-success">Passed</strong>
+                                    </td>
+                                    <td v-else>
+                                        <strong class="text-danger">Failed</strong>
+                                    </td>
+                                    <td>
+                                        @{{ parseDate(custom_recorded_assessment_record.created_at) }}
+                                    </td>
+                                    <td>
+                                        <button v-on:click="openUpdateModal(custom_recorded_assessment_record)" class="btn btn-sm btn-success">Update <i class="fa fa-edit"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div v-else class="p-3 bg-light text-center">
+                        <h5>No Assessment</h5>
+                    </div>
+                    
+
+                    
                 </div>
             </div>
-            
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="input-group my-3" id="search-input">
+        </div>
+        <div class="tab-pane fade" id="report" role="tabpanel" aria-labelledby="report-tab">
+            <h5 class="mt-3"><i class="fa fa-chart-pie text-info"></i> Reports</h5>
+
+            <div id="passingPercentage" class="card shadow mt-4" style="background: #fbfbfb">
+                <div class="card-body py-3">
+                    <h5>Passing Percentage</h5>
+                    <p class="text-info">This figure shows the percentage of passed and failed student</p>
                     
-                        <input v-on:input="search" v-model="searchText" type="search" class="form-control" placeholder="Search assessment...">
-                        <div class="input-group-append">
-                          <span class="input-group-text"><i class="fa fa-search"></i></span>
-                        </div>
+                    <div class="w-md-40">
+                        <pie-chart :data="pie_passing_percentage"></pie-chart>
                     </div>
                 </div>
             </div>
 
-            <div v-if="custom_recorded_assessment_records.length > 0" class="table-responsive mt-3">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Student ID</th>
-                            <th>Student Name</th>
-                            <th>Score</th>
-                            <th>Passed</th>
-                            <th>Date</th>
-                            <td>Update</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="custom_recorded_assessment_record in show_custom_recorded_assessment_records">
-                            <th>
-                                @{{ custom_recorded_assessment_record.code }}
-                            </th>
-                            <td>
-                                @{{ custom_recorded_assessment_record.student.student_id }}
-                            </td>
-                            <td>
-                                @{{ custom_recorded_assessment_record.student.user.first_name }} @{{ custom_recorded_assessment_record.student.user.last_name }}
-                            </td>
-                            <td>
-                                @{{ custom_recorded_assessment_record.score }} (@{{ getGrade(custom_recorded_assessment_record.score) }}%)
-                            </td>
-                            <td v-if="checkIfPassed(custom_recorded_assessment_record.score)">
-                                <strong class="text-success">Passed</strong>
-                            </td>
-                            <td v-else>
-                                <strong class="text-danger">Failed</strong>
-                            </td>
-                            <td>
-                                @{{ parseDate(custom_recorded_assessment_record.created_at) }}
-                            </td>
-                            <td>
-                                <button v-on:click="openUpdateModal(custom_recorded_assessment_record)" class="btn btn-sm btn-success">Update <i class="fa fa-edit"></i></button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div v-else class="p-3 bg-light text-center">
-                <h5>No Assessment</h5>
-            </div>
-            
+            <div id="topStudents" class="card shadow mt-4" style="background: #fbfbfb">
+                <div class="card-body py-3">
+                    <div class="d-flex align-items-baseline justify-content-between">
+                        <div>
+                            <h5 class="mb-3">Top students</h5>
+                        </div>
+                        <div>
+                            <label class="mr-2">Filter</label>
+                            <select v-model="topValue" v-on:change="get_top_custom_recorded_assessment_records">
+                                <option value="10">
+                                    Top 10 students
+                                </option>
+                                <option value="5">
+                                    Top 5 students
+                                </option>
+                                <option value="3">
+                                    Top 3 students
+                                </option>
+                                <option value="-3">
+                                    Top lower 3  students
+                                </option>
+                                <option value="-5">
+                                    Top lower 5  students
+                                </option>
+                                <option value="-10">
+                                    Top lower 10  students
+                                </option>
+                            </select>
+                        </div>
+                    
+                    </div>
+                    
+                    <ul class="list-group">
+                        <li v-for="(record,index) in top_custom_recorded_assessment_records" class="list-group-item">
+                            <div class="d-flex align-items-center mr-3">
 
-            
+                                <div>
+                                  <span class="avatar-student-outcome mr-3" style="background:#86db67">@{{ index + 1 }}</span>
+                                </div>
+                                <span class="mr-3">
+                                    <strong class="mr-2">@{{ record.score }} (@{{ getGrade(record.score) }}%)</strong>
+                                    &mdash;
+                                    @{{ record.student.student_id }} &mdash;
+                                     @{{ record.student.user.first_name + ' ' + record.student.user.last_name}}</span>
+                                 
+                                
+
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
+
+    
 
     <!-- Modal -->
     <div class="modal fade" id="updateScore" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -173,22 +277,100 @@
             passing_percentage: {{ $custom_recorded_assessment->passing_percentage }},
             custom_recorded_assessment_records: [],
             show_custom_recorded_assessment_records: [],
+            top_custom_recorded_assessment_records: [],
+            topValue: 10,
             searchText: '',
             form: new Form({
                 score: ''
             }),
-            selected_id: ''
+            selected_id: '',
+            filter_grade: '',
+            sort_grade: '',
+            pie_passing_percentage: {
+              datasets: [
+                    {
+                        data: [20, 80],
+                        backgroundColor: ["#cbff90", "#ededed"]
+                    }
+                ],
+                labels: ["Passed", "Failed"]
+            }
         },
         methods: {
             openAddRecord() {
                 $('#customRecordedAssessmentRecordModal').modal('show');
+            },
+            get_top_custom_recorded_assessment_records() {
+                var result = [];
+                var toBeSorted = this.custom_recorded_assessment_records;
+
+                if(this.topValue > 0) {
+                    toBeSorted.sort((a, b) => {
+                        return b.score - a.score;
+                    });
+
+                    var len = toBeSorted.length >= this.topValue ? this.topValue : toBeSorted.length;
+
+                
+                    for(var i = 0; i < len; i++) {
+                        result.push(toBeSorted[i]);
+                    }
+                } else {
+                    toBeSorted.sort((a, b) => {
+                        return a.score - b.score;
+                    });
+
+                    var len = toBeSorted.length >= Math.abs(this.topValue) ? Math.abs(this.topValue) : toBeSorted.length;
+
+                
+                    for(var i = 0; i < len; i++) {
+                        result.push(toBeSorted[i]);
+                    }
+                }
+                
+
+                this.top_custom_recorded_assessment_records = result;
             },
             get_custom_recorded_assessment_records() {
                 ApiClient.get('/custom_recorded_assessments/get_records/' + this.custom_recorded_assessment_id)
                 .then(response => {
                     this.custom_recorded_assessment_records = response.data;
                     this.show_custom_recorded_assessment_records = this.custom_recorded_assessment_records;
+                    this.get_passing_percentage();
+                    this.get_top_custom_recorded_assessment_records();
                 })
+            },
+            filter_by_grade() {
+                var searchResult = [];
+                for(var i = 0; i < this.custom_recorded_assessment_records.length; i++) {
+                    if(this.filter_grade == "") {
+                        return this.show_custom_recorded_assessment_records = this.custom_recorded_assessment_records;
+                    } else if(this.filter_grade == 1) {
+                        if(this.checkIfPassed(this.custom_recorded_assessment_records[i].score)) {
+                            searchResult.push(this.custom_recorded_assessment_records[i]);
+                        }
+                    } else if(this.filter_grade == 2) {
+                        if(!this.checkIfPassed(this.custom_recorded_assessment_records[i].score)) {
+                            searchResult.push(this.custom_recorded_assessment_records[i]);
+                        }
+                    }
+                    
+                }
+                
+                this.show_custom_recorded_assessment_records = searchResult;
+            },
+            sort_by_grade() {
+                if(this.sort_grade == '') {
+                    this.show_custom_recorded_assessment_records = this.custom_recorded_assessment_records;
+                } else if(this.sort_grade == 1) {
+                    this.show_custom_recorded_assessment_records.sort((a, b) => {
+                        return a.score - b.score;
+                    });
+                } else if(this.sort_grade == 2) {
+                    this.show_custom_recorded_assessment_records.sort((a, b) => {  
+                        return b.score - a.score;
+                    });
+                }
             },
             parseDate(date) {
                 return moment(date).format('MMM DD, YYYY');
@@ -201,7 +383,7 @@
             },
             search() {
                 if(this.textSearch == '' || this.textSearch == null) {
-                    this.show_custom_recorded_assessment_records = this.custom_recorded_assessment_records;
+                    return this.show_custom_recorded_assessment_records = this.custom_recorded_assessment_records;
                 }
                 var searchResult = [];
                 var regExp = new RegExp(this.searchText, 'i');
@@ -230,9 +412,25 @@
                 this.selected_id = record.id;
                 this.form.score = record.score;
                 $('#updateScore').modal('show');
+            },
+            get_passing_percentage() {
+                var passed = 0;
+                var failed = 0;
+
+                for(var i = 0; i < this.custom_recorded_assessment_records.length; i++) {
+                    if(this.checkIfPassed(this.custom_recorded_assessment_records[i].score)) {
+                        passed++;
+                    } else {
+                        failed++;
+                    }
+                }
+
+                this.pie_passing_percentage.datasets[0].data[0] = passed;
+                this.pie_passing_percentage.datasets[0].data[1] = failed;
             }
         },
         created() {
+            this.get_top_custom_recorded_assessment_records();
             this.get_custom_recorded_assessment_records();
         }
     });

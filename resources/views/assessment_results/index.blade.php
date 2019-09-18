@@ -112,13 +112,31 @@
             </div>
             
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-5 mt-3">
                     <div class="input-group mb-3" id="search-input">
                     
                         <input v-on:input="searchAssessment" v-model="search" type="search" class="form-control" placeholder="Search student...">
                         <div class="input-group-append">
                           <span class="input-group-text"><i class="fa fa-search"></i></span>
                         </div>
+                    </div>
+                </div>
+                <div class="col-lg-7 d-md-flex justify-content-lg-end">
+                    <div class="mt-3 mr-3 d-flex justify-content-lg-end align-items-baseline">
+                        <label class="mr-2">Sort By Grade</label>
+                        <select v-on:change="sort_by_grade" v-model="sort_grade">
+                            <option value="">Normal</option>
+                            <option value="1">ASCENDING</option>
+                            <option value="2">DESCENDING</option>
+                        </select>
+                    </div>
+                    <div class="mt-3 d-flex justify-content-lg-end align-items-baseline">
+                        <label class="mr-2">Filter Grade</label>
+                        <select v-on:change="filter_by_grade" v-model="filter_grade">
+                            <option value="">All</option>
+                            <option value="1">Passed</option>
+                            <option value="2">Failed</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -169,7 +187,7 @@
                 </table>
                 <!-- Pagination -->
                   <div>Showing @{{ assessments.length }} records</div>
-                  <nav v-show="search.trim() == ''">
+{{--                   <nav v-show="search.trim() == ''">
                     <ul class="pagination justify-content-end">
                       <li class="page-item" :class="{ disabled: meta.current_page == 1 }">
                         <a class="page-link" href="#" v-on:click.prevent="paginate(meta.current_page - 1)">Previous</a>
@@ -183,7 +201,7 @@
                         <a class="page-link" href="#" v-on:click.prevent="paginate(meta.current_page + 1)">Next</a>
                       </li>
                     </ul>
-                  </nav>
+                  </nav> --}}
                <!-- End Pagination -->
             </div>
         </div>
@@ -283,7 +301,9 @@
             isLoading: false,
             custom_recorded_assessments: [],
             custom_recorded_assessment_loading: false,
-            myRootURL: ''
+            myRootURL: '',
+            filter_grade: '',
+            sort_grade: ''
         },
         filters: {
             score(value) {
@@ -294,17 +314,34 @@
             }
         },
         methods: {
+            sort_by_grade() {
+                if(this.sort_grade == "") {
+                    this.getAssessmentResults();
+                } else if(this.sort_grade == 1) {
+                    this.assessments.sort((a, b) => {
+                        return a.score - b.score;
+                    });
+                } else if (this.sort_grade == 2) {
+                    this.assessments.sort((a, b) => {
+                        return b.score - a.score;
+                    });
+                }
+                
+            },
+            filter_by_grade() {
+                this.getAssessmentResults();
+            },
             getAssessmentResults(page=1) {
-                ApiClient.get('/assessment_results/get_assessments?page=' + page + '&program_id=' + this.program_id + '&student_outcome_id=' + this.selected_student_outcome.id + '&curriculum_id=' + this.selected_curriculum_id)
+                ApiClient.get('/assessment_results/get_assessments?page=' + page + '&program_id=' + this.program_id + '&student_outcome_id=' + this.selected_student_outcome.id + '&curriculum_id=' + this.selected_curriculum_id + '&filter_grade=' + this.filter_grade)
                     .then(response => {
-                      this.assessments = response.data.data;
+                      this.assessments = response.data;
                       this.tableLoading = false;
-                      this.meta.total = response.data.total;
-                      this.meta.per_page = response.data.per_page;
-                      this.meta.last_page = response.data.last_page;
-                      this.meta.current_page = response.data.current_page;
-                      // this.links = response.data.links;
-                      this.totalPagination = Math.ceil(this.meta.total / this.meta.per_page);
+                      // this.meta.total = response.data.total;
+                      // this.meta.per_page = response.data.per_page;
+                      // this.meta.last_page = response.data.last_page;
+                      // this.meta.current_page = response.data.current_page;
+                      // // this.links = response.data.links;
+                      // this.totalPagination = Math.ceil(this.meta.total / this.meta.per_page);
                     }).
                     catch(err => {
                       console.log(err);
