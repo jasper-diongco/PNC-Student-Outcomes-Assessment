@@ -96,7 +96,7 @@
         <li class="nav-item" v-if="selected_student_outcome.assessment_type_id == 3">
             <a class="nav-link" id="contact-tab" data-toggle="tab" href="#programming" role="tab" aria-controls="contact" aria-selected="false"><i class="fa fa-laptop-code"></i> Programming Assessments</a>
         </li>
-        <li class="nav-item">
+        <li v-if="selected_student_outcome.assessment_type_id == 1" class="nav-item">
             <a class="nav-link" id="report-tab" data-toggle="tab" href="#reports" role="tab" aria-controls="home" aria-selected="true"><i class="fa fa-chart-pie"></i> Reports</a>
         </li>
     </ul>
@@ -308,7 +308,7 @@
                                         <div style="font-weight: 600">@{{ custom_recorded_assessment.name }}</div>
                                     </div>
                                     <div class="ml-3">
-                                      <a class="btn btn-sm btn-info" :href="myRootURL + '/custom_recorded_assessments/' + custom_recorded_assessment.id">
+                                      <a class="btn btn-sm btn-info" :href="myRootURL + '/custom_recorded_assessments/' + custom_recorded_assessment.id + '?college_id=' + college_id">
                                           <i class="fa fa-edit"></i> Add Record
                                       </a>
                                     </div>
@@ -449,7 +449,7 @@
                 vm.tableLoading = true;
                 ApiClient.get('/assessment_results/get_assessments/?q=' + vm.search)
                 .then(response => {
-                  vm.assessments = response.data.data;
+                  vm.assessments = response.data;
                   vm.tableLoading = false;
                 }).
                 catch(err => {

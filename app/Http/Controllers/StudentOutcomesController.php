@@ -252,7 +252,13 @@ class StudentOutcomesController extends Controller
     }
 
     public function change_assessment_type(StudentOutcome $student_outcome) {
+        $data = request()->validate([
+            'assessment_type_id' => 'required',
+            'assessment_items' => 'required|numeric|min:50|max:200'
+        ]);
+
         $student_outcome->assessment_type_id = request('assessment_type_id');
+        $student_outcome->assessment_items = request('assessment_items');
 
         $student_outcome->save();
 

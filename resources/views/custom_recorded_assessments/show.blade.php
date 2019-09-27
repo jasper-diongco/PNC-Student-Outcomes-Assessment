@@ -5,6 +5,10 @@
 
 @section('content')
 <div id="app" v-cloak>
+    <div class="mb-3">
+        <a href="{{ url('/assessment_results?college_id=' . request('college_id')) }}" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
+    </div>
+
     <custom-recorded-assessment-record-modal :custom_recorded_assessment_id="custom_recorded_assessment_id" :student_outcome_id="student_outcome_id" :max_score="overall_score" :custom_recorded_assessment_records="custom_recorded_assessment_records" v-on:record-added="get_custom_recorded_assessment_records"></custom-recorded-assessment-record-modal>
     <h1 class="page-header"><i class="fa fa-file-alt text-info"></i> Custom Recorded Assessment</h1>
 

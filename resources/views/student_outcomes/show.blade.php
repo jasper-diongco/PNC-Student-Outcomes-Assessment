@@ -46,18 +46,36 @@
 
       <div class="assessment-type p-3">
         <h5 class="text-info">Assessment Type</h5>
-        <div class="d-flex">
-          <select class="form-control" v-model="assessment_type_id">
-            <template v-for="assessment_type in assessment_types">
-              <option v-if="checkIfAvailable(assessment_type.id)"  :value="assessment_type.id">@{{ assessment_type.description }}</option>
-            </template>
-          </select>
+        <form v-on:submit.prevent="changeAssessmentType" v-on:keydown="form.onKeydown($event)">
+          <div>
+
+            <div class="form-group">
+              <select class="form-control" v-model="form.assessment_type_id">
+                <template v-for="assessment_type in assessment_types">
+                  <option v-if="checkIfAvailable(assessment_type.id)"  :value="assessment_type.id">@{{ assessment_type.description }}</option>
+                </template>
+              </select>
+            </div>
+{{--             <div class="form-group" v-if="assessment_type_id == 1">
+              <label>Asssessment Items</label>
+              <input type="number" v-model="assessment_items" class="form-control">
+            </div> --}}
+
+            <div class="form-group" v-if="form.assessment_type_id == 1">
+              <label>Asssessment Items</label>
+              <input v-model="form.assessment_items" type="number" name="assessment_items"
+                class="form-control" :class="{ 'is-invalid': form.errors.has('assessment_items') }">
+              <has-error :form="form" field="assessment_items"></has-error>
+            </div>
+
+
+          </div>
+          <div class="d-flex mt-3 justify-content-end">
+            <button class="btn btn-success" type="submit">Save</button>
+          </div>
+          
         </div>
-        <div class="d-flex mt-3 justify-content-end">
-          <button class="btn btn-success" v-on:click="changeAssessmentType">Save</button>
-        </div>
-        
-      </div>
+      </form>
       <hr>
       <h3 class="mb-3">Performance Indicators</h3>
       <div class="row">
@@ -117,14 +135,15 @@
       data: {
         student_outcome: @json($student_outcome),
         assessment_types: @json($assessment_types),
-        assessment_type_id: '',
+        form: new Form({
+          assessment_items: @json($student_outcome->assessment_items),
+          assessment_type_id: @json($student_outcome->assessment_type_id)
+        }),
         college: @json($college)
       },
       methods: {
         changeAssessmentType() {
-          ApiClient.post('/student_outcomes/' + this.student_outcome.id + '/change_assessment_type', {
-            assessment_type_id: this.assessment_type_id
-          })
+          this.form.post(myRootURL + '/student_outcomes/' + this.student_outcome.id + '/change_assessment_type')
           .then(response => {
             toast.fire({
               type:'success',
@@ -133,7 +152,7 @@
           })
         },
         checkIfAvailable(assessment_type_id) {
-          if(assessment_type_id == 3 && this.college.college_code != 'CCS') {
+          if(assessment_type_id == 3) {
             return false;
           }
 

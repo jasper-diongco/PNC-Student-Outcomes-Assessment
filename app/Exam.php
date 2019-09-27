@@ -27,8 +27,11 @@ class Exam extends Model
 
     public static function getRequirements($student_outcome_id='', $curriculum_id=''){
         $requirements = [];
+
         $student_outcome = StudentOutcome::find($student_outcome_id);
         $curriculum = Curriculum::find($curriculum_id);
+
+        $assessment_items = $student_outcome->assessment_items;
 
         // $curriculum_maps = $student_outcome->curriculumMaps;
         $curriculum_maps = $student_outcome->getCurriculumMaps($curriculum_id, $student_outcome_id);
@@ -47,7 +50,7 @@ class Exam extends Model
             }
         }
 
-        $each_courses = floor(100 / count($valid_curriculum_maps));
+        $each_courses = floor($assessment_items / count($valid_curriculum_maps));
         $sum_distribute = 0;
 
 
@@ -60,7 +63,7 @@ class Exam extends Model
             $requirements[] = $requirement;
         }
 
-        $left_distribute = 100 - $sum_distribute;
+        $left_distribute = $assessment_items - $sum_distribute;
 
         if($left_distribute > 0) {
             foreach ($requirements as $requirement) {
