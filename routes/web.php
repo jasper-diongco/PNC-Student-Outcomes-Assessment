@@ -292,6 +292,7 @@ Route::put('/math_objects/{math_object}', 'MathObjectsController@update');
 
 // Test bank Routes
 Route::get('/test_bank', 'TestBankController@index');
+Route::get('/test_bank/show_programming_test_bank', 'TestBankController@show_programming_test_bank');
 Route::get('/test_bank/list_programs', 'TestBankController@listProgram');
 Route::get('/test_bank/{program}/get_curricula', 'TestBankController@get_curricula');
 Route::get('/test_bank/{program}/list_student_outcomes', 'TestBankController@listStudentOutcome');

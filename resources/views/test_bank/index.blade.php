@@ -228,65 +228,79 @@
           </div>
         </div>
     </div>
+    
     <div class="mt-3" v-else>
-        <div class="d-flex justify-content-between mb-3">
-            <div>
-                <h5><i class="fa fa-external-link-alt text-info"></i> Custom Recorded Assessment</h5>
-            </div>
-            <div >
-                <button :disabled="custom_recorded_assessments.length > 0" v-on:click="openCustomRecordedAssessment" class="btn btn-info">Add Assessment</button>
+
+        <div class="mt-3" v-if="selected_student_outcome.assessment_type_id == 3">
+            <h5><i class="fa fa-code text-info"></i> Programming Assessment</h5>
+            
+            <div class="d-flex p-3 mt-5 bg-dark justify-content-between">
+                <div class="fs-19 text-success"><i class="fa fa-laptop-code"></i> 10 exams</div>
+                <a :href="'test_bank/show_programming_test_bank?program_id=' + program_id + '&student_outcome_id=' + this.selected_student_outcome.id + '&curriculum_id=' + selected_curriculum_id" class="btn btn-info">
+                    View Test Bank <i class="fa fa-chevron-right"></i>
+                </a>
             </div>
         </div>
-        
-        <template v-if="custom_recorded_assessment_loading">
-            <table-loading></table-loading>
-        </template>
-        <template v-else>
+        <div v-else>
+            <div class="d-flex justify-content-between mb-3">
+                <div>
+                    <h5><i class="fa fa-external-link-alt text-info"></i> Custom Recorded Assessment</h5>
+                </div>
+                <div >
+                    <button :disabled="custom_recorded_assessments.length > 0" v-on:click="openCustomRecordedAssessment" class="btn btn-info">Add Assessment</button>
+                </div>
+            </div>
             
-        
-            <template v-if="custom_recorded_assessments.length > 0">           
-                <div class="d-flex align-items-stretch flex-wrap" :class="{ 'justify-content-between': custom_recorded_assessments.length > 2 }">
+            <template v-if="custom_recorded_assessment_loading">
+                <table-loading></table-loading>
+            </template>
+            <template v-else>
+                
+            
+                <template v-if="custom_recorded_assessments.length > 0">           
+                    <div class="d-flex align-items-stretch flex-wrap" :class="{ 'justify-content-between': custom_recorded_assessments.length > 2 }">
 
-                    <div v-for="custom_recorded_assessment in custom_recorded_assessments" :key="custom_recorded_assessment.id" class="card shadow mb-4 w-md-31 mr-4" :class="{ 'mr-4': custom_recorded_assessment.length <= 2 }">
-                        <div class="card-body pt-3">
-                            <div class="d-flex justify-content-between align-items-baseline">
-                                <div class="d-flex">
-                                    <div class="mr-2">
-                                        <div class="avatar" style="background: #cbff90; color:#585858;"><i class="fa fa-file-alt"></i></div>
+                        <div v-for="custom_recorded_assessment in custom_recorded_assessments" :key="custom_recorded_assessment.id" class="card shadow mb-4 w-md-31 mr-4" :class="{ 'mr-4': custom_recorded_assessment.length <= 2 }">
+                            <div class="card-body pt-3">
+                                <div class="d-flex justify-content-between align-items-baseline">
+                                    <div class="d-flex">
+                                        <div class="mr-2">
+                                            <div class="avatar" style="background: #cbff90; color:#585858;"><i class="fa fa-file-alt"></i></div>
+                                        </div>
+                                        <div style="font-weight: 600">@{{ custom_recorded_assessment.name }}</div>
                                     </div>
-                                    <div style="font-weight: 600">@{{ custom_recorded_assessment.name }}</div>
+                                    <div class="ml-3">
+                                      <a class="btn btn-sm" href="#" class="btn btn-sm">
+                                          <i class="fa fa-search"></i> View
+                                      </a>
+                                    </div>
                                 </div>
-                                <div class="ml-3">
-                                  <a class="btn btn-sm" href="#" class="btn btn-sm">
-                                      <i class="fa fa-search"></i> View
-                                  </a>
+                                <div class="text-muted ml-2 mt-2"><i class="fa fa-file-alt"></i> @{{ custom_recorded_assessment.description }}</div>
+                                <div style="font-size: 13px" class="text-muted ml-2 mt-2">
+                                    <i class="fa fa-user"></i> @{{ custom_recorded_assessment.user.first_name }} @{{ custom_recorded_assessment.user.last_name }} 
+                                    &mdash; @{{ parseDate(custom_recorded_assessment.created_at) }}
                                 </div>
-                            </div>
-                            <div class="text-muted ml-2 mt-2"><i class="fa fa-file-alt"></i> @{{ custom_recorded_assessment.description }}</div>
-                            <div style="font-size: 13px" class="text-muted ml-2 mt-2">
-                                <i class="fa fa-user"></i> @{{ custom_recorded_assessment.user.first_name }} @{{ custom_recorded_assessment.user.last_name }} 
-                                &mdash; @{{ parseDate(custom_recorded_assessment.created_at) }}
-                            </div>
-                            <hr>
-                            
-                            <div class="text-muted mt-2">
-                                <span class="mb-0">Overall Score: </span>
-                                @{{ custom_recorded_assessment.overall_score }}
-                            </div>
-                            <div class="text-muted mt-2">
-                                <span class="mb-0">Passing Grade: </span>
-                                @{{ custom_recorded_assessment.passing_percentage }}%
+                                <hr>
+                                
+                                <div class="text-muted mt-2">
+                                    <span class="mb-0">Overall Score: </span>
+                                    @{{ custom_recorded_assessment.overall_score }}
+                                </div>
+                                <div class="text-muted mt-2">
+                                    <span class="mb-0">Passing Grade: </span>
+                                    @{{ custom_recorded_assessment.passing_percentage }}%
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </template>
+                <template v-else>
+                    <div class="bg-white p-3 text-center text-muted">
+                        No record found
+                    </div>
+                </template>
             </template>
-            <template v-else>
-                <div class="bg-white p-3 text-center text-muted">
-                    No record found
-                </div>
-            </template>
-        </template>
+        </div>
     </div>
 
     <div class="mt-3 card">

@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use Gate;
 use App\College;
 use App\Program;
+use App\StudentOutcome;
 use App\CurriculumMap;
+use App\Curriculum;
 
 class TestBankController extends Controller
 {
@@ -24,6 +26,19 @@ class TestBankController extends Controller
         $programs = Program::all();
         
         return view('test_bank.index', compact('programs'));
+    }
+
+    public function show_programming_test_bank() {
+        //authenticate
+        if(!Gate::allows('isDean') && !Gate::allows('isSAdmin') && !Gate::allows('isProf')) {
+            return abort('401', 'Unauthorized');
+        }
+
+        $student_outcome = StudentOutcome::findOrFail(request('student_outcome_id'));
+        $program = Program::findOrFail(request('program_id'));
+        $curriculum = Curriculum::findOrFail(request('curriculum_id'));
+
+        return view('programming_test_bank.show', compact('student_outcome', 'program', 'curriculum'));
     }
 
     public function get_student_outcomes(Program $program) {

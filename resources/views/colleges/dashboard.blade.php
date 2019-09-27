@@ -250,6 +250,12 @@
       el: '#app',
       data: {
         college_id: '{{ $college->id }}',
+        form: new Form({
+          code: "",
+          lang: "python",
+          inputRadio: false,
+          input: ""
+        }),
         sampleData: {
                 labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
                 datasets: [
@@ -280,6 +286,49 @@
       methods: {
         changeLocation(url) {
          window.location.href = myRootURL + url;
+        },
+        run() {
+          // const api = axios.create({ withCredentials: true, })
+
+          // api.get("http://localhost:8080", {
+          //     code: this.code,
+          //     lang: "python",
+          //     inputRadio: false
+          // })
+          // .then(response => {
+          //   console.log(response);
+          // })
+          // axios
+          // .post("/compilecode", {
+          //     lang: this.lang,
+          //     code: this.code,
+          //     input: this.input,
+          //     inputRadio: this.inputRadio
+          // })
+          // .then(response => {
+          //     console.log(response);
+          // });
+          axios.post("http://localhost:8080/compilecode", {
+            lang: "C++",
+            code: `#include<iostream>
+                using namespace std;
+                int main()
+                {
+                    cout<<"Hello World from C++";   
+                    return 0;
+                }`
+          })
+          .then(response => {
+            console.log(response);
+          })
+          .catch(err => {
+            console.log(err.response)
+          })
+
+          // axios.post("http://localhost:3000/compile_code", {
+          //   name: "Test",
+          //   price: 20
+          // });
         }
       }
     });

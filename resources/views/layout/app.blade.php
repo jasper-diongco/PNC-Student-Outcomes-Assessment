@@ -35,10 +35,10 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body>
+<body style="padding-top: 8rem">
 @if(!$custom_layout)
 <div class="d-flex flex-column sticky-footer-wrapper">
-    <header>
+    <header class="fixed-top">
         <!-- navbar -->
         @if(!$hide_header)
         <nav class="navbar navbar-expand-lg navbar-dark bg-success {{ $fixed_top ? 'fixed-top' : '' }} {{ $shadow ? 'shadow' : '' }}">

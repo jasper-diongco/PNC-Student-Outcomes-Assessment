@@ -184,4 +184,46 @@ class StudentOutcome extends Model
     public function getExams($curriculum_id) {
         return Exam::where('student_outcome_id', $this->id)->where('is_active', true)->where('curriculum_id', $curriculum_id)->get();
     }
+
+    public function getCoursesMapped($curriculum_id='') {
+        // $student_outcome = StudentOutcome::find($student_outcome_id);
+        $curriculum = Curriculum::find($curriculum_id);
+
+        // $curriculum_maps = $student_outcome->curriculumMaps;
+        $curriculum_maps = $this->getCurriculumMaps($curriculum->id, $this->id);
+        $curriculum_courses = $curriculum->curriculumCourses;
+
+        $courses = [];
+
+        foreach ($curriculum_maps as $curriculum_map) {
+
+            foreach ($curriculum_courses as $curriculum_course) {
+
+                if($curriculum_map->curriculumCourse->course->id == $curriculum_course->course_id) {
+                    $courses[] = $curriculum_map->curriculumCourse->course;
+                    break;
+                }
+            }
+        }
+
+        //remove duplication
+        // $courses_unique = [];
+
+        // foreach ($courses as $course) {
+        //     $found = false;
+
+        //     foreach ($courses_unique as $course_unique) {
+        //         if($course_unique->id == $course->id) {
+        //             $found = true;
+        //             break;
+        //         }
+        //     }
+
+        //     if(!$found) {
+        //         $courses_unique[] = $course;
+        //     }
+        // }
+
+        return $courses;
+    }
 }

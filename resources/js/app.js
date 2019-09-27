@@ -136,6 +136,11 @@ Vue.component(
 );
 
 Vue.component(
+    "machine-problem-modal",
+    require("./components/MachineProblemModal.vue").default
+);
+
+Vue.component(
     "custom-recorded-assessment-record-modal",
     require("./components/CustomRecordedAssessmentRecordModal.vue").default
 );

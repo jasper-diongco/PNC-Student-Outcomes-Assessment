@@ -414,7 +414,7 @@
                                 <div class="progress-bar bg-success" role="progressbar" :style="{'width' : averageScoresPerCourse.percentage + '%'}" :aria-valuenow="averageScoresPerCourse.percentage" aria-valuemin="0" aria-valuemax="100">@{{ averageScoresPerCourse.percentage.toFixed(2) }}%</div>
                               </div>
                               <div class="font-weight-bold text-dark">
-                                  @{{ averageScoresPerCourse.average }}
+                                  @{{ averageScoresPerCourse.average.toFixed(2) }}
                               </div>
                           </div>
                       </div> 
