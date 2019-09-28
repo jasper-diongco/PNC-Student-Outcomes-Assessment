@@ -190,9 +190,16 @@ class Exam extends Model
     }
 
     public function getRandomExamTestQuestions() {
-        return ExamTestQuestion::where('exam_id', $this->id)
-            ->inRandomOrder()
-            ->get();
+        if($this->studentOutcome->randomize_items) {
+            return ExamTestQuestion::where('exam_id', $this->id)
+                ->inRandomOrder()
+                ->get();
+        } else {
+            return ExamTestQuestion::where('exam_id', $this->id)
+                ->orderBy('pos_order', 'ASC')
+                ->get();
+        }
+        
     }
 
     public function getTestQuestionsByCourse($course_id='') {

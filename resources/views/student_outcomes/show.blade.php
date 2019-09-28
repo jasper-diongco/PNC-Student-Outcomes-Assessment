@@ -68,6 +68,13 @@
               <has-error :form="form" field="assessment_items"></has-error>
             </div>
 
+            <div class="form-group" v-if="form.assessment_type_id == 1">
+              <label>Randomize Items</label>
+              <input v-model="form.randomize_items" type="checkbox" name="randomize_items"
+               :class="{ 'is-invalid': form.errors.has('randomize_items') }">
+              <has-error :form="form" field="randomize_items"></has-error>
+            </div>
+
 
           </div>
           <div class="d-flex mt-3 justify-content-end">
@@ -137,7 +144,8 @@
         assessment_types: @json($assessment_types),
         form: new Form({
           assessment_items: @json($student_outcome->assessment_items),
-          assessment_type_id: @json($student_outcome->assessment_type_id)
+          assessment_type_id: @json($student_outcome->assessment_type_id),
+          randomize_items: @json($student_outcome->randomize_items)
         }),
         college: @json($college)
       },
@@ -148,7 +156,9 @@
             toast.fire({
               type:'success',
               title: 'Assessment Type Successfully Updated.'
-            });
+            })
+
+            window.location.reload();
           })
         },
         checkIfAvailable(assessment_type_id) {

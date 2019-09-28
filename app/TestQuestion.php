@@ -36,10 +36,19 @@ class TestQuestion extends Model
     }
 
     public function getRandomChoices() {
-        return Choice::where('is_active', true)
-            ->where('test_question_id', $this->id)
-            ->inRandomOrder()   
-            ->get();
+
+        if($this->studentOutcome->randomize_items) {
+            return Choice::where('is_active', true)
+                ->where('test_question_id', $this->id)
+                ->inRandomOrder()   
+                ->get();
+            } else {
+                return Choice::where('is_active', true)
+                ->where('test_question_id', $this->id)
+                ->orderBy('pos_order', 'ASC')   
+                ->get();
+            }
+        
     }
 
     public function difficultyLevel() {
