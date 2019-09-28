@@ -1,4 +1,4 @@
-@extends('layout.app', ['active' => 'users'])
+@extends('layout.app', ['active' => 'faculties'])
 
 @section('title', 'Update Faculty')
 
