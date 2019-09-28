@@ -16,9 +16,24 @@ class AssessmentResultsController extends Controller
     }
 
     public function index() {
+        $college_id = session('college_id');
+
+        if($college_id != "all") {
+            if(auth()->user()->getFaculty()->college_id != request('college_id')) {
+                return abort(404, 'Page not found.');
+            }
+        }
 
 
-        $programs = Program::where('college_id', request('college_id'))->get();
+        if(request('college_id') == "all") {
+            $programs = Program::all();
+        } else {
+            $programs = Program::where('college_id', request('college_id'))->get();
+        }
+        
+
+
+
         $assessments = Assessment::with('student')->with('studentOutcome')->latest()->get();
 
         //$assessments = $this->get_assessments();

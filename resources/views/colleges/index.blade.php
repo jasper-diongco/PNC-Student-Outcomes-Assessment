@@ -6,16 +6,23 @@
 
 <div id="app" v-cloak>
   <college-modal v-on:refresh-colleges="getColleges" is-update="true" :college-id="college_id"></college-modal>
-  <div class="d-flex justify-content-between mb-3">
-    <div>
-      <h1 class="page-header">List of Colleges</h1>
-    </div>
-    <div>
-      {{-- <a href="{{ url('colleges/create') }}" class="btn btn-success-b">Add New College</a> --}}
-      <college-modal v-on:refresh-colleges="getColleges"></college-modal>
 
+
+  <div class="card mb-3">
+    <div class="card-body py-4">
+      <div class="d-flex justify-content-between">
+        <div>
+          <h1 class="page-header"><i class="fa fa-university text-info"></i> Colleges</h1>
+        </div>
+        <div>
+          {{-- <a href="{{ url('colleges/create') }}" class="btn btn-success-b">Add New College</a> --}}
+          <college-modal v-on:refresh-colleges="getColleges"></college-modal>
+
+        </div>
+      </div>
     </div>
   </div>
+  
 
   @if(count($colleges) > 0) 
     {{-- <div class="list-group">
@@ -33,7 +40,7 @@
         <table class="table table-borderless">
           <thead>
             <tr>
-              <th>ID</th>
+              {{-- <th>ID</th> --}}
               <th>College Code</th>
               <th width="35%">Name</th>
               <th>Dean</th>
@@ -50,13 +57,13 @@
             </template>
             <template v-else>           
               <tr v-for="college in colleges" :key="college.id">
-                <td>@{{ college.id }}</td>
+                {{-- <td>@{{ college.id }}</td> --}}
                 <td>@{{ college.college_code }}</td>
                 <td>@{{ college.name }}</td>
                 <td>@{{ college.faculty.user.first_name + ' ' + college.faculty.user.last_name }}</td>
                 <td>
-                  <button v-on:click="selectCollege(college.id)" class="btn btn-sm btn-success"><i class="fa fa-edit"></i></button>
-                  <a :href="'colleges/' + college.id" class="btn btn-sm btn-secondary"><i class="fa fa-search"></i></a>
+                  <button v-on:click="selectCollege(college.id)" class="btn btn-sm btn-success">Update <i class="fa fa-edit"></i></button>
+                  <a :href="'colleges/' + college.id" class="btn btn-sm btn-info">View <i class="fa fa-search"></i></a>
                   
                 </td>
               </tr>

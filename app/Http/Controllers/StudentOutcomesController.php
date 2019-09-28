@@ -13,6 +13,7 @@ use Gate;
 use App\Rules\TextOnly;
 use App\StudentOutcomeArchiveVersion;
 use App\AssessmentType;
+use App\College;
 
 class StudentOutcomesController extends Controller
 {
@@ -69,9 +70,11 @@ class StudentOutcomesController extends Controller
             $programs = Program::where('college_id', request('college_id'))->paginate(10);
         }
 
+        $colleges = College::all();
+
         
 
-        return view('student_outcomes.list_programs')->with('programs', $programs);
+        return view('student_outcomes.list_programs')->with('programs', $programs)->with('colleges', $colleges);
     }
 
 

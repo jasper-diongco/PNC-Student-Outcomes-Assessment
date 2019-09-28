@@ -4,9 +4,32 @@
 
 @section('content')
 
-<div class="card mb-4">
+<div id="app" class="card mb-4">
   <div class="card-body pt-4">
-    <h1 class="page-header mb-0"><i class="fa fa-flag" style="color: #a1a1a1"></i> Student Outcomes</h1>
+    <div class="d-flex justify-content-between align-items-baseline">
+      <div>
+        <h1 class="page-header mb-0"><i class="fa fa-flag" style="color: #a1a1a1"></i> Student Outcomes</h1>
+      </div>
+      
+      <div>
+        @can('isSAdmin')
+          
+            <div class="d-flex mr-4 mb-2">
+              <div class="mr-2"><label class="col-form-label">Filter By College: </label></div>
+              <div>
+                <form v-on:change="filterByCollege" ref="filterForm" :action="myRootURL + '/student_outcomes/list_program?college_id=' + college_id">
+                  <select class="form-control" name="college_id"  v-model="college_id">
+                    <option value="all">All</option>
+                    @foreach ($colleges as $college)
+                      <option value="{{ $college->id }}">{{ $college->college_code }}</option>
+                    @endforeach
+                  </select>
+                </form>
+              </div>
+            </div>        
+        @endcan
+      </div>
+    </div>
   </div>
 </div>
 
@@ -25,9 +48,7 @@
                         <div style="font-weight: 600">{{ $program->program_code }}</div>
                     </div>
                     <div class="ml-3">
-                      <a class="btn btn-sm btn-info" href="{{ url('/student_outcomes?program_id=' . $program->id) }}"class="btn btn-sm">
-                          <i class="fa fa-search"></i> View
-                      </a>
+                      
                     </div>
                 </div>
                 <div style="font-size: 13px" class="text-muted ml-2 mt-2">
@@ -35,9 +56,19 @@
                 </div>
                 <hr>
                 <div class="text-muted">
-                    {{ $program->description }}
+                     <i class="fa fa-file-alt text-muted"></i> {{ $program->description }}
                 </div>
+                <div class="text-muted">
+                     <i class="fa fa-flag text-muted"></i> {{ $program->studentOutcomes->count() }} Student Outcomes
+                </div>
+
+                
             </div>
+            <div class="card-footer d-flex justify-content-end">
+                <a class="btn btn-sm btn-info" href="{{ url('/student_outcomes?program_id=' . $program->id) }}"class="btn btn-sm">
+                         View <i class="fa fa-chevron-right"></i>
+                    </a>
+              </div>
         </div>
       @endforeach
   </div>
@@ -53,3 +84,25 @@
 
   
 @endsection
+
+
+@push('scripts')
+
+  <script>
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        college_id: '{{ request('college_id') }}',
+        myRootURL: ''
+      },
+      methods: {
+        filterByCollege() {
+          this.$refs.filterForm.submit();
+        }
+      },
+      created() {
+        this.myRootURL = myRootURL;
+      }
+    });
+  </script>
+@endpush

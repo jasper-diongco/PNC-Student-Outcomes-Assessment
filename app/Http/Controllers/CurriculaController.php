@@ -54,12 +54,23 @@ class CurriculaController extends Controller
 
         if(Auth::user()->user_type_id == 's_admin') {
             $programs = Program::all();
-            $curricula = Curriculum::select('curricula.*')
+
+            if(request('program_id') == '') {
+                $curricula = Curriculum::select('curricula.*')
                                 ->join('programs', 'programs.id', '=', 'curricula.program_id')
                                 ->join('colleges', 'colleges.id', '=', 'programs.college_id')
                                 ->latest()
                                 ->with('program')
                                 ->get();
+            } else {
+                $curricula = Curriculum::select('curricula.*')
+                                ->join('programs', 'programs.id', '=', 'curricula.program_id')
+                                ->join('colleges', 'colleges.id', '=', 'programs.college_id')
+                                ->latest()
+                                ->where('program_id', request('program_id'))
+                                ->with('program')
+                                ->get();
+            }
         } else {
             $programs = Program::where('college_id', Session::get('college_id'))->get();
             $curricula = Curriculum::select('curricula.*')

@@ -80,7 +80,7 @@ class CoursesController extends Controller
                 }
             } else {
                 if(Gate::check('isSAdmin')) {
-                    return CourseResource::collection(Course::latest()->paginate(10));
+                    return CourseResource::collection(Course::latest()->paginate(20));
                 } else {
                     return CourseResource::collection(Course::where('college_id', Session::get('college_id'))
                         ->orWhere('is_public', true)

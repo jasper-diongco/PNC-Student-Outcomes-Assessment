@@ -20,7 +20,7 @@
                 <label class="text-dark">Select Program</label>
             </div>
             <div class="ml-2">
-                <select v-on:change="getStudentOutcomes" v-model="program_id" class="my-select">
+                <select v-on:change="getStudentOutcomes" v-model="program_id" class="form-control">
                     @foreach($programs as $program)
                         <option value="{{ $program->id }}">{{ $program->program_code }}</option>
                     @endforeach

@@ -31,7 +31,7 @@
             </div>
           </div>
 
-          <div class="d-flex align-items-baseline">
+          <div class="d-flex align-items-baseline" v-if="curricula.length > 0">
             <div>
                 <label class="text-dark">Select Curriculum</label>
             </div>
@@ -96,7 +96,7 @@
         <li class="nav-item" v-if="selected_student_outcome.assessment_type_id == 3">
             <a class="nav-link" id="contact-tab" data-toggle="tab" href="#programming" role="tab" aria-controls="contact" aria-selected="false"><i class="fa fa-laptop-code"></i> Programming Assessments</a>
         </li>
-        <li v-if="selected_student_outcome.assessment_type_id == 1" class="nav-item">
+        <li v-on:click="get_top_assessments" v-if="selected_student_outcome.assessment_type_id == 1" class="nav-item">
             <a class="nav-link" id="report-tab" data-toggle="tab" href="#reports" role="tab" aria-controls="home" aria-selected="true"><i class="fa fa-chart-pie"></i> Reports</a>
         </li>
     </ul>
@@ -423,7 +423,7 @@
                       this.assessments = response.data;
                       this.tableLoading = false;
                       this.get_passing_percentage();
-                      this.get_top_assessments();
+                      // this.get_top_assessments();
                       // this.meta.total = response.data.total;
                       // this.meta.per_page = response.data.per_page;
                       // this.meta.last_page = response.data.last_page;
@@ -480,6 +480,7 @@
                     } else {
                         this.selected_student_outcome = '';
                         this.courses_mapped = [];
+                        this.curricula = [];
                     }
 
                     // this.getReportedTestQuestions();

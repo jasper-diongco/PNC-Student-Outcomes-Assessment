@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Gate;
+use App\College;
 
 class CurriculumMapsController extends Controller
 {
@@ -30,7 +31,18 @@ class CurriculumMapsController extends Controller
       
 
       if(Auth::user()->user_type_id == 's_admin') {
-          $curricula = Curriculum::latest()->with('program')->get();        
+          if(request('college_id') == 'all' || request('college_id') == '') {
+            $curricula = Curriculum::latest()->with('program')->get();      
+          } else {
+            $curricula = Curriculum::join('programs', 'programs.id', '=', 'curricula.program_id')
+              ->join('colleges','colleges.id', '=', 'programs.college_id')
+              ->where('programs.college_id', request('college_id'))
+              ->select('curricula.*')
+              ->latest()
+              ->with('program')
+              ->where('college_id', request('college_id'))
+              ->get(); 
+          }  
       } else {
         //validate
         if(request('college_id') == '') {
@@ -54,8 +66,9 @@ class CurriculumMapsController extends Controller
       }
 
       $programs = Program::all();
+      $colleges = College::all();
 
-      return view('curriculum_maps.index', compact('curricula', 'programs'));
+      return view('curriculum_maps.index', compact('curricula', 'programs', 'colleges'));
     }
 
 

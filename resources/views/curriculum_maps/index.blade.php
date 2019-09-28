@@ -9,7 +9,7 @@
           <div class="card-body pt-4">
             <h1 class="page-header mb-1"><i class="fa fa-map" style="color:#a1a1a1"></i> Curriculum Mapping</h1>
             <div class="d-flex justify-content-end">
-              @can('isSAdmin')
+{{--               @can('isSAdmin')
                 <div class="d-flex align-items-center">
                   <div class="mr-2">
                     <i class="fa fa-graduation-cap text-success"></i>
@@ -25,7 +25,40 @@
                   </div> 
                     
                 </div>
-              @endcan
+              @endcan --}}
+{{--               @if(Gate::check('isSAdmin'))
+              <div class="d-flex mt-3">
+                <form v-on:change="filterByProgram" ref="filterForm" :action="myRootURL + '/curricula?program_id=' + program_id">
+                  <div class="form-group">
+                    <label>Filter by program</label>
+                    <select v-model="program_id" name="program_id">
+                        <option value="">All</option>
+                      @foreach($programs as $program)
+                        <option value="{{ $program->id }}">{{ $program->program_code }}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                </form>
+              </div>
+              @endif --}}
+              <div>
+                @can('isSAdmin')
+                  
+                    <div class="d-flex mr-4 mb-2">
+                      <div class="mr-2"><label class="col-form-label">Filter By College: </label></div>
+                      <div>
+                        <form v-on:change="filterByCollege" ref="filterForm" :action="myRootURL + '/curriculum_mapping?college_id=' + college_id">
+                          <select class="form-control" name="college_id"  v-model="college_id">
+                            <option value="all">All</option>
+                            @foreach ($colleges as $college)
+                              <option value="{{ $college->id }}">{{ $college->college_code }}</option>
+                            @endforeach
+                          </select>
+                        </form>
+                      </div>
+                    </div>        
+                @endcan
+              </div>
             </div>
             
           </div>
@@ -93,23 +126,19 @@
         data: {
           curricula: @json($curricula),
           curricula_show: [],
-          program_id: ''
+          program_id: '{{ request('program_id') }}',
+          myRootURL: '',
+          college_id: '{{ request('college_id') }}'
         },
         methods: {
-          filterByProgram() {
-            if(this.program_id == '') {
-              return this.curricula_show = this.curricula;
-            }
-
-            this.curricula_show = this.curricula.filter(curriculum => {
-              return curriculum.program_id == this.program_id;
-            });
-
+          filterByCollege() {
+            this.$refs.filterForm.submit();
           }
         },
 
         created() {
-          this.filterByProgram();
+          // this.filterByProgram();  
+          this.myRootURL = myRootURL;
         }
       });
   </script>

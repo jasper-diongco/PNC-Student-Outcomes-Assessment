@@ -27,8 +27,24 @@
             </div>
           </div>
           
-          
+        @if(Gate::check('isSAdmin'))
+        <div class="d-flex mt-3">
+          <form v-on:change="filterByProgram" ref="filterForm" :action="myRootURL + '/curricula?program_id=' + program_id">
+            <div class="form-group">
+              <label>Filter by program</label>
+              <select v-model="program_id" name="program_id">
+                  <option value="">All</option>
+                @foreach($programs as $program)
+                  <option value="{{ $program->id }}">{{ $program->program_code }}</option>
+                @endforeach
+              </select>
+            </div>
+          </form>
         </div>
+        @endif
+        </div>
+        
+        
       </div>
     
 {{--     <div class="d-flex justify-content-start mt-3 mb-3">
@@ -105,19 +121,21 @@
 
 @push('scripts')
   <script>
-    new Vue({
+    var vm = new Vue({
       el: '#app',
       data: {
             visible: false,
-            program_id: '',
+            program_id: '{{ request('program_id') }}',
             curricula: @json($curricula),
-            curricula_show: []
+            curricula_show: [],
+            myRootURL: '',
+            college_id: '{{ request('college_id') }}'
         },
         methods: {
             show: function () {
                 this.visible = true;
             },
-            filterByProgram() {
+            filterByProgram1() {
               if(this.program_id == '') {
                 return this.curricula_show = this.curricula;
               }
@@ -125,10 +143,14 @@
               this.curricula_show = this.curricula.filter(curriculum => {
                 return curriculum.program_id == this.program_id;
               });
+            },
+            filterByProgram() {
+              this.$refs.filterForm.submit();
             }
         },
         created() {
-          this.filterByProgram();
+          // this.filterByProgram();
+          this.myRootURL = myRootURL;
         }
     });
   </script>
