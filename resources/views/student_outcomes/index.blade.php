@@ -67,7 +67,9 @@
                 </div>
               <div>
                 <span>@{{ student_outcome.description }}</span>
-                <button v-if="!so_is_saved" v-on:click.prevent="confirmRemove(student_outcome.id)" class="btn btn-sm">Remove <i class="fa fa-archive text-warning"></i></button>
+                @if(Gate::check('isSAdmin') || Gate::check('isDean'))
+                  <button v-if="!so_is_saved" v-on:click.prevent="confirmRemove(student_outcome.id)" class="btn btn-sm">Remove <i class="fa fa-archive text-warning"></i></button>
+                @endif
               </div>
                 
                 
@@ -79,6 +81,7 @@
         </div>
         
         @if(!$program->so_is_saved)
+          @if(Gate::check('isSAdmin') || Gate::check('isDean'))
           <div class="d-flex justify-content-end mt-3">
             <button :disabled="isLoading" class="btn btn-primary" v-on:click="confirmSave">
               <div v-if="isLoading" class="spinner-border spinner-border-sm text-light" role="status">
@@ -87,6 +90,7 @@
               Save
             </button>
           </div>
+          @endif
         @endif
       @else
         <div class="text-center bg-white p-3">No Student Outcome Found in Database.</div>
@@ -103,7 +107,9 @@
                   </div>
                 <div>
                   <span>@{{ student_outcome.description }}</span>
-                  <button v-if="!so_is_saved"  v-on:click.prevent="confirmActivate(student_outcome.id)" class="btn btn-sm">Activate <i class="fa fa-arrow-left text-success"></i></button>
+                  @if(Gate::check('isSAdmin') || Gate::check('isDean'))
+                    <button v-if="!so_is_saved"  v-on:click.prevent="confirmActivate(student_outcome.id)" class="btn btn-sm">Activate <i class="fa fa-arrow-left text-success"></i></button>
+                  @endif
                 </div>
                   
                   

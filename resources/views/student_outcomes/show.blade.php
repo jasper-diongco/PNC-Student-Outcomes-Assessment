@@ -77,9 +77,11 @@
 
 
           </div>
-          <div class="d-flex mt-3 justify-content-end">
-            <button class="btn btn-success" type="submit">Save</button>
-          </div>
+          @if(Gate::check('isSAdmin') || Gate::check('isDean'))
+            <div class="d-flex mt-3 justify-content-end">
+              <button class="btn btn-success" type="submit">Save</button>
+            </div>
+          @endif
           
         </div>
       </form>

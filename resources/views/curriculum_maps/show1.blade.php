@@ -62,7 +62,9 @@
                     </div>
                     <div>
                         @if ($curriculum->checkIfLatestVersion())
-                        <button class="btn btn-info btn-sm" v-on:click="openLearningLevelModal">Add Learning Level <i class="fa fa-plus-circle"></i></button>
+                        @if(Gate::check('isSAdmin') || Gate::check('isDean'))
+                            <button class="btn btn-info btn-sm" v-on:click="openLearningLevelModal">Add Learning Level <i class="fa fa-plus-circle"></i></button>
+                        @endif
                         @endif
                     </div>
                     
@@ -75,7 +77,9 @@
                                 @{{ learning_level.name }} - <label>@{{ learning_level.letter }}</label>                        
                             </div>
                             <div>
+                                @if(Gate::check('isSAdmin') || Gate::check('isDean'))
                                 <button v-on:click="openUpdateModal(learning_level)" class="btn btn-sm"><i class="fa fa-edit"></i></button>
+                                @endif
                             </div>   
                         </li>
                     </ul>
@@ -228,7 +232,8 @@
                 curriculum_course: '',
                 student_outcome: '',
                 learning_level_id: '',
-                isLoading: false
+                isLoading: false,
+                isFaculty: '@if(Gate::check('isProf')) {{ 1 }} @else {{ 0 }} @endif'
             },
             methods: {
                 openLearningLevelModal() {
@@ -508,6 +513,10 @@
             },
             created() {
                 this.generateTemplate();
+
+                if(this.isFaculty) {
+                    this.curriculum_mapping_status.status = 1;
+                }
             }
         });
     </script>
