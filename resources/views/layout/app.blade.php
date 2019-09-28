@@ -38,7 +38,7 @@
 <body>
 @if(!$custom_layout)
 <div class="d-flex flex-column sticky-footer-wrapper">
-    <header>
+    <header class="sticky-top">
         <!-- navbar -->
         @if(!$hide_header)
         <nav class="navbar navbar-expand-lg navbar-dark bg-success {{ $fixed_top ? 'fixed-top' : '' }} {{ $shadow ? 'shadow' : '' }}">
@@ -95,7 +95,7 @@
             @else
                 <div class="container">
             @endif
-              <ul class="nav">
+              <ul id="nav-scroll-h" class="nav flex-row d-flex flex-nowrap" style="overflow-x: auto;">
 
                 @can('isStud')
                     <li class="nav-item {{ $active == 'home-student' ? 'active' : '' }}">
@@ -167,7 +167,7 @@
                           <a class="nav-link" href="{{ url('/test_bank?program_id=' . Session::get('program_id')) }}">
                                 <div class="d-flex flex-column justify-content-center text-center">
                                     <i class="fas fa-database icon-nav"></i>
-                                    <span>Test Bank</span>
+                                    <span style="white-space: nowrap">Test Bank</span>
                                 </div>
                             </a>   
                         </li>
@@ -214,7 +214,7 @@
                             <a class="nav-link" href="{{ url('/student_outcomes/list_program?college_id='. Session::get('college_id')) }}">
                                 <div class="d-flex flex-column justify-content-center text-center">
                                     <i class="fas fa-flag"></i>
-                                    <span>Student Outcomes</span>
+                                    <span style="white-space: nowrap">Student Outcomes</span>
                                 </div>
                             </a>
                         </li>
@@ -224,13 +224,33 @@
                             <a class="nav-link " href="{{ url('/curriculum_mapping?college_id='. Session::get('college_id')) }}">
                                 <div class="d-flex flex-column justify-content-center text-center">
                                     <i class="fas fa-map"></i>
-                                    <span>Curriculum Mapping</span>
+                                    <span style="white-space: nowrap">Curriculum Mapping</span>
+                                </div>
+                            </a>
+                        </li>
+
+                        <!-- Nav Item - Students -->
+                        <li class="nav-item {{ $active == 'students' ? 'active' : '' }}">
+                            <a class="nav-link " href="{{ url('/students') }}">
+                                <div class="d-flex flex-column justify-content-center text-center">
+                                    <i class="fas fa-users"></i>
+                                    <span style="white-space: nowrap">Students</span>
+                                </div>
+                            </a>
+                        </li>
+
+                        <!-- Nav Item - Students -->
+                        <li class="nav-item {{ $active == 'faculties' ? 'active' : '' }}">
+                            <a class="nav-link " href="{{ url('/faculties') }}">
+                                <div class="d-flex flex-column justify-content-center text-center">
+                                    <i class="fas fa-users"></i>
+                                    <span style="white-space: nowrap">Faculties</span>
                                 </div>
                             </a>
                         </li>
 
                         <!-- Nav Item - Users Collapse Menu -->
-                        <li class="nav-item dropdown {{ $active == 'users' ? 'active' : '' }}">
+                        {{-- <li class="nav-item dropdown {{ $active == 'users' ? 'active' : '' }}">
                           <a class="nav-link" href="#" data-toggle="dropdown" >
                                 <div class="d-flex flex-column justify-content-center text-center">
                                     <i class="fas fa-users"></i>
@@ -251,7 +271,7 @@
                                 </div>
                             </a>
                           </div>
-                        </li>
+                        </li> --}}
 
                     @endif
 

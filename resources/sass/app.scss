@@ -823,3 +823,28 @@ body,
     position: default;
   }
 }
+
+// #nav-scroll-h::-webkit-scrollbar {
+//   display: none;
+// }
+
+/* width */
+#nav-scroll-h::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+
+/* Track */
+#nav-scroll-h::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+#nav-scroll-h::-webkit-scrollbar-thumb {
+  background: #e4eaec;
+}
+
+/* Handle on hover */
+#nav-scroll-h::-webkit-scrollbar-thumb:hover {
+  background: #28d17c;
+}
