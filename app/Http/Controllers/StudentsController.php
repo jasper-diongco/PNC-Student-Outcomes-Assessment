@@ -146,7 +146,7 @@ class StudentsController extends Controller
             'student_id' => 'required|digits:7|unique:students,student_id,' . $id,
             'last_name' => 'required|regex:/^[\pL\s]+$/u',
             'first_name' => 'required|regex:/^[\pL\s]+$/u',
-            'middle_name' => 'required|regex:/^[\pL\s]+$/u',
+            'middle_name' => 'nullable|regex:/^[\pL\s]+$/u',
             'sex' => 'required',
             'date_of_birth' => 'required|date',
             'college' => 'required',

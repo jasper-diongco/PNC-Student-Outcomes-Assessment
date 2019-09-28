@@ -409,9 +409,14 @@ Route::post('/user_profiles/{user}/update_password', 'UserProfilesController@upd
 
 Route::post('/user_profiles/{user}/update_basic_info', 'UserProfilesController@updateBasicInformation');
 
+Route::post('/user_profiles/{user}/update_main_info', 'UserProfilesController@updateMainInfo');
+
 //for faculties
 
 Route::get('/faculties/{user}/profile', 'UserProfilesController@show');
+
+
+Route::get('/users/{user}/super_admin_profile', 'UserProfilesController@show');
 
 
 //faculty_course routes

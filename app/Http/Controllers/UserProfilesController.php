@@ -37,6 +37,8 @@ class UserProfilesController extends Controller
             $faculty = $user->getFaculty();
             $faculty->load('college');
             return view('faculties.profile', compact('user', 'user_profile', 'faculty'));
+        } else if ($user->user_type_id == 's_admin') {
+            return view('users.super_admin_profile', compact('user', 'user_profile'));
         }
     }
 
@@ -53,6 +55,31 @@ class UserProfilesController extends Controller
 
         $user->username = $data['username'];
         $user->email = $data['email'];
+
+        $user->save();
+
+        return $user;
+    }
+
+    public function updateMainInfo(User $user) {
+        if($user->id != auth()->user()->id) {
+            return abort(404, 'Page Not Found');
+        }
+
+        $data = request()->validate([
+            'last_name' => 'required|regex:/^[\pL\s]+$/u',
+            'first_name' => 'required|regex:/^[\pL\s]+$/u',
+            'middle_name' => 'nullable|regex:/^[\pL\s]+$/u',
+            'sex' => 'required',
+            'date_of_birth' => 'required|date'
+        ]);
+
+
+        $user->first_name = strtoupper($data['first_name']);
+        $user->last_name = strtoupper($data['last_name']);
+        $user->middle_name = strtoupper($data['middle_name']);
+        $user->sex = $data['sex'];
+        $user->date_of_birth = $data['date_of_birth'];
 
         $user->save();
 
