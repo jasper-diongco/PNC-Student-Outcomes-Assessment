@@ -282,7 +282,7 @@
 
                         <!--Application Settings -->
                         <li class="nav-item {{ $active == 'application_settings' ? 'active' : '' }}">
-                            <a class="nav-link " href="{{ url('/curriculum_mapping?college_id='. Session::get('college_id')) }}">
+                            <a class="nav-link " href="{{ url('/application_settings') }}">
                                 <div class="d-flex flex-column justify-content-center text-center">
                                     <i class="fas fa-cogs"></i>
                                     <span>Settings</span>
@@ -291,7 +291,7 @@
                         </li>
                         <!--Application Settings -->
                         <li class="nav-item {{ $active == 'maintenance' ? 'active' : '' }}">
-                            <a class="nav-link " href="{{ url('/curriculum_mapping?college_id='. Session::get('college_id')) }}">
+                            <a class="nav-link " href="{{ url('/maintenance') }}">
                                 <div class="d-flex flex-column justify-content-center text-center">
                                     <i class="fas fa-cog"></i>
                                     <span>Maintenance</span>

@@ -470,6 +470,11 @@ Route::get('/application_settings/get_show_assessment_details_to_student', 'Sett
 Route::post('/application_settings/update_settings', 'SettingsController@update');
 
 
+//backup and restore routes
+Route::get('/maintenance', 'BackupRestoreController@index');
+Route::get('/maintenance/backup', 'BackupRestoreController@backup');
+
+
 
 
 

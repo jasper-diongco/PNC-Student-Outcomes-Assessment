@@ -11024,6 +11024,10 @@ body,
   }
 }
 /* width */
+#nav-scroll-h {
+  transition: all 0.5s;
+}
+
 #nav-scroll-h::-webkit-scrollbar {
   width: 3px;
   height: 3px;

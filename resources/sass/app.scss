@@ -829,6 +829,9 @@ body,
 // }
 
 /* width */
+#nav-scroll-h {
+  transition: all 0.5s;
+}
 #nav-scroll-h::-webkit-scrollbar {
   width: 3px;
   height: 3px;
@@ -848,3 +851,14 @@ body,
 #nav-scroll-h::-webkit-scrollbar-thumb:hover {
   background: #28d17c;
 }
+
+// #main-nav:hover #nav-scroll-h::-webkit-scrollbar {
+//   width: 10px;
+//   height: 12px;
+//   transition: all 0.5s;
+// }
+
+// #main-nav:hover #nav-scroll-h::-webkit-scrollbar-thumb {
+//   background: #858585;
+//   transition: all 0.5s;
+// }

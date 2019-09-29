@@ -12,7 +12,7 @@
     <div class="card-body py-4">
       <div class="d-flex justify-content-between">
         <div>
-          <h1 class="page-header"><i class="fa fa-university text-info"></i> Colleges</h1>
+          <h1 class="page-header mb-0"><i class="fa fa-university text-info"></i> Colleges</h1>
         </div>
         <div>
           {{-- <a href="{{ url('colleges/create') }}" class="btn btn-success-b">Add New College</a> --}}
