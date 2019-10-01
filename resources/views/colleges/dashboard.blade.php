@@ -241,15 +241,52 @@
 
         
       </div>
+
+      
+      <div class="d-flex justify-content-end mb-1">
+          <button class="btn btn-info btn-sm" onclick="printJS('reports', 'html')">Print <i class="fa fa-print"></i></button>
+      </div>
+      <div id="reports">
+        <div class="card" id="college-passing">
+          <div class="card-body py-3">
+            <h5>{{ $college->name }} Passing Percentage</h5>
+            <div class="w-md-31">
+              <pie-chart :data="pie_passing_percentage"></pie-chart>
+            </div>
+          </div>
+        </div>
+        
+
+        <h4 class="my-3">Per Programs</h4>
+        <template v-for="(program, index) in programs">
+          <div  class="card mt-3">
+            <div class="card-body py-3">
+              <h5>@{{ program.program_code }} Passing Percentage</h5>
+              <div v-if="program.total_assessment_count" class="w-md-31">
+                <pie-chart :data="programs_pie_passing_percentage[index]"></pie-chart>
+              </div>
+              <div v-else>
+                <h5 class="text-muted">No Data</h5>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
   </div>
 @endsection
 
 @push('scripts')
+  <script src="{{ asset('js/chartjs-plugin-labels.js') }}"></script>
   <script>
-    new Vue({
+    var vm = new Vue({
       el: '#app',
       data: {
         college_id: '{{ $college->id }}',
+        assessments: @json($assessments),
+        passing_count: @json($passing_count) ,
+        total_assessment_count: @json($total_assessment_count),
+        failing_count: @json($failing_count),
+        programs: @json($programs),
         form: new Form({
           code: "",
           lang: "python",
@@ -281,7 +318,18 @@
                         borderWidth: 1
                     }
                 ]
-            }
+            },
+          pie_passing_percentage: {
+              datasets: [
+                    {
+                        data: [20, 80],
+                        backgroundColor: ["#cbff90", "#ededed"]
+                    }
+                ],
+                labels: ["Passed", "Failed"]
+            },
+          programs_pie_passing_percentage: [
+          ] 
       },
       methods: {
         changeLocation(url) {
@@ -329,6 +377,22 @@
           //   name: "Test",
           //   price: 20
           // });
+        }
+      },
+      created() {
+        this.pie_passing_percentage.datasets[0].data[0] = this.passing_count;
+        this.pie_passing_percentage.datasets[0].data[1] = this.failing_count;
+
+        for(var i = 0; i < this.programs.length; i++) {
+          this.programs_pie_passing_percentage.push({
+                datasets: [
+                      {
+                          data: [this.programs[i].passing_count, this.programs[i].failing_count],
+                          backgroundColor: ["#cbff90", "#ededed"]
+                      }
+                  ],
+                  labels: ["Passed", "Failed"]
+              });
         }
       }
     });

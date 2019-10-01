@@ -12,6 +12,7 @@ use App\Student;
 use App\Assessment;
 use App\Exam;
 use App\TestQuestion;
+use App\CustomRecordedAssessmentRecord;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -103,8 +104,85 @@ class CollegesController extends Controller
         //     ->with('curriculum_count', $curriculum_count)
         //     ->with('password_changed', $password_changed)
         //     ->with('student_count', $student_count);
+        $custom_recorded_assessments = CustomRecordedAssessmentRecord::select('custom_recorded_assessment_records.*')
+                ->join('custom_recorded_assessments', 'custom_recorded_assessments.id', '=', 'custom_recorded_assessment_records.custom_recorded_assessment_id')
+                ->join('student_outcomes', 'student_outcomes.id', '=', 'custom_recorded_assessments.student_outcome_id')
+                ->join('programs', 'programs.id', '=', 'student_outcomes.program_id')
+                ->where('programs.college_id', Session::get('college_id'))
+                ->get();
 
-        return view('colleges.dashboard', compact('college', 'program_count', 'courses_count', 'curriculum_count', 'password_changed', 'student_count', 'faculties_count', 'assessment_count', 'exams_count', 'test_question_count'));
+        $assessments = Assessment::select('assessments.*')
+                    ->join('student_outcomes', 'student_outcomes.id', '=', 'assessments.student_outcome_id')
+                    ->join('programs', 'programs.id', '=', 'student_outcomes.program_id')
+                    ->where('programs.college_id', Session::get('college_id'))
+                    ->get();
+        $passing_count = 0;
+        $failing_count = 0;
+
+        $total_assessment_count = $assessments->count() + $custom_recorded_assessments->count();
+
+        foreach ($assessments as $assessment) {
+            if($assessment->checkIfPassed()) {
+                $passing_count++;
+            }
+        }
+
+        foreach ($custom_recorded_assessments as $custom_recorded_assessment) {
+            if($custom_recorded_assessment->checkIfPassed()) {
+                $passing_count++;
+            }
+        }
+
+        $failing_count = $total_assessment_count - $passing_count;
+
+        $programs = Program::where('college_id', Session::get('college_id'))->get();
+
+        $programs = $this->getProgramsPassingPercentage($programs);
+
+        return view('colleges.dashboard', compact('college', 'program_count', 'courses_count', 'curriculum_count', 'password_changed', 'student_count', 'faculties_count', 'assessment_count', 'exams_count', 'test_question_count', 'assessments', 'passing_count', 'total_assessment_count', 'failing_count', 'programs'));
+    }
+
+    private function getProgramsPassingPercentage($programs) {
+        for($i = 0; $i < count($programs); $i++) {
+            $custom_recorded_assessments = CustomRecordedAssessmentRecord::select('custom_recorded_assessment_records.*')
+                ->join('custom_recorded_assessments', 'custom_recorded_assessments.id', '=', 'custom_recorded_assessment_records.custom_recorded_assessment_id')
+                ->join('student_outcomes', 'student_outcomes.id', '=', 'custom_recorded_assessments.student_outcome_id')
+                ->join('programs', 'programs.id', '=', 'student_outcomes.program_id')
+                // ->where('programs.college_id', Session::get('college_id'))
+                ->where('programs.id', '=', $programs[$i]->id)
+                ->get();
+
+            $assessments = Assessment::select('assessments.*')
+                        ->join('student_outcomes', 'student_outcomes.id', '=', 'assessments.student_outcome_id')
+                        ->join('programs', 'programs.id', '=', 'student_outcomes.program_id')
+                        // ->where('programs.college_id', Session::get('college_id'))
+                        ->where('programs.id', '=', $programs[$i]->id)
+                        ->get();
+            $passing_count = 0;
+            $failing_count = 0;
+
+            $total_assessment_count = $assessments->count() + $custom_recorded_assessments->count();
+
+            foreach ($assessments as $assessment) {
+                if($assessment->checkIfPassed()) {
+                    $passing_count++;
+                }
+            }
+
+            foreach ($custom_recorded_assessments as $custom_recorded_assessment) {
+                if($custom_recorded_assessment->checkIfPassed()) {
+                    $passing_count++;
+                }
+            }
+
+            $failing_count = $total_assessment_count - $passing_count;
+
+            $programs[$i]->passing_count = $passing_count;
+            $programs[$i]->failing_count = $failing_count;
+            $programs[$i]->total_assessment_count = $total_assessment_count;
+        }
+
+        return $programs;
     }
 
     /**
