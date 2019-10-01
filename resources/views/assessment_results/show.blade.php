@@ -46,6 +46,10 @@
               Score: <strong>{{ $assessment->computeScore() }}% ({{ $assessment->getScoreLabel() }})</strong> &mdash; {{ $assessment->getScoreDescription() }}</h5>
             </div>
             
+            @if(!$assessment->checkIfPassed() && !$assessment->take_again)
+              <button v-on:click="retakeAssessment" class="my-3 btn btn-info">Retake Assessment</button>
+            @endif
+            
             <div class="d-flex">
                 <div class="py-0 mt-3 w-md-50">
                     {{-- <div>
@@ -596,6 +600,12 @@ var vm = new Vue({
             this.scoreTotals.overallPercentage = (this.scoreTotals.overall / this.scoreTotals.totalItems || 0) * 100;
 
             return scores;
+        },
+        retakeAssessment() {
+          ApiClient.post("/assessment_results/retake_assessment/" + this.assessment.id)
+          .then(response => {
+            window.location.reload();
+          });
         }
     },
     created() {

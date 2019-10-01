@@ -12,6 +12,7 @@ use App\AnswerSheetTestQuestionChoice;
 use App\Assessment;
 use App\AssessmentDetail;
 use App\Student;
+use App\CustomRecordedAssessmentRecord;
 use Carbon\Carbon;
 use Gate;
 
@@ -453,6 +454,39 @@ class AssessmentsController extends Controller
 
 
         
+    }
+
+    public function show_custom_recorded_assessment_score() {
+        if(!Gate::check('isStud')) {
+            return abort('404', 'Page not found');
+        }
+
+        if(auth()->user()->getStudent()->id != request('student_id')) {
+            return abort('404', 'Page not found');
+        }
+
+        $student_id = request('student_id');
+        $student_outcome_id = request('student_outcome_id');
+
+        $student = Student::findOrFail($student_id);
+        $student_outcome = StudentOutcome::findOrFail($student_outcome_id);
+
+        $custom_recorded_assessment = CustomRecordedAssessmentRecord::select('custom_recorded_assessment_records.*')
+            ->join('custom_recorded_assessments', 'custom_recorded_assessment_records.custom_recorded_assessment_id', '=', 'custom_recorded_assessments.id')
+            ->where('custom_recorded_assessment_records.student_id', $student_id)
+            ->where('custom_recorded_assessments.student_outcome_id', $student_outcome_id)
+            ->latest()
+            ->first();
+
+
+        if(!$custom_recorded_assessment) {
+            return abort(404, 'Page not found');
+        }
+
+
+        return view('s.assessments.show_custom_assessment_score', compact('custom_recorded_assessment', 'student_outcome', 'student'));
+
+
     }
 
     private function getChoiceId($choices) {

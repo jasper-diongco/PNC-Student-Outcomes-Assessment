@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use App\CustomRecordedAssessmentRecord;
 
 class StudentOutcome extends Model
 {
@@ -225,5 +226,17 @@ class StudentOutcome extends Model
         // }
 
         return $courses;
+    }
+
+    public function checkIfHasCustomRecordedAssessment($student_id) {
+        $custom_recorded_assessment = CustomRecordedAssessmentRecord::where('student_id', $student_id)
+                                        ->latest()
+                                        ->first();
+
+        if(!$custom_recorded_assessment) {
+            return false;
+        }
+
+        return $custom_recorded_assessment;
     }
 }

@@ -81,7 +81,11 @@
                                 </div>
                             </div>
                             <div>
-                                @if($student_outcome->checkIfExamOngoing($student->id))
+                                @if($student_outcome->assessment_type_id == 2)
+                                    @if($student_outcome->checkIfHasCustomRecordedAssessment(Auth::user()->getStudent()->id))
+                                        <a href="{{ url('s/assessments/show_custom_recorded_assessment_score?student_id=' . $student->id . '&student_outcome_id=' . $student_outcome->id) }}" class="btn btn-success btn-sm">View Result <i class="fa fa-file-alt"></i></a>
+                                    @endif
+                                @elseif($student_outcome->checkIfExamOngoing($student->id))
                                     <a href="{{ url('/s/assessments/' . $student_outcome->id) }}" class="btn btn-info btn-sm">Continue Assessment <i class="fa fa-arrow-right"></i></a>
                                 @elseif($student_outcome->checkIfTaken($student->id))
                                     <a href="{{ url('s/assessments/show_score?student_id=' . $student->id . '&student_outcome_id=' . $student_outcome->id) }}" class="btn btn-success btn-sm">View Result <i class="fa fa-file-alt"></i></a>

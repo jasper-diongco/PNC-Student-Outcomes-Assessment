@@ -376,6 +376,8 @@ Route::get('/s/assessments', 's\AssessmentsController@index');
 
 Route::get('/s/assessments/show_score', 's\AssessmentsController@show_score');
 
+Route::get('/s/assessments/show_custom_recorded_assessment_score', 's\AssessmentsController@show_custom_recorded_assessment_score');
+
 Route::get('/s/assessments/{student_outcome}', 's\AssessmentsController@show');
 
 Route::post('/s/assessments/retake_assessment/{student_outcome}', 's\AssessmentsController@retake_assessment');
@@ -391,9 +393,13 @@ Route::post('/s/assessments/select_choice/{answer_sheet_test_question}', 's\Asse
 
 Route::get('/assessment_results', 'AssessmentResultsController@index');
 Route::get('/assessment_results/get_assessments', 'AssessmentResultsController@get_assessments');
+
+Route::post('/assessment_results/retake_assessment/{assessment}', 'AssessmentResultsController@retake_assessment');
 Route::get('/assessment_results/{assessment}/print_assessment_result', 'AssessmentResultsController@print_assessment_result');
 Route::get('/assessment_results/{assessment}/print_answer_key', 'AssessmentResultsController@print_answer_key');
 Route::get('/assessment_results/{assessment}', 'AssessmentResultsController@show');
+
+
 
 
 

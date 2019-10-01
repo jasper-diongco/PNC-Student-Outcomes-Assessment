@@ -203,4 +203,12 @@ class AssessmentResultsController extends Controller
 
         return view('assessment_results.print_answer_key', compact('assessment', 'answer_sheet'));
     }
+
+    public function retake_assessment(Assessment $assessment) {
+        $assessment->take_again = true;
+
+        $assessment->save();
+
+        return $assessment;
+    }
 }

@@ -110,6 +110,10 @@ class Assessment extends Model
         //     }
         // }
 
+        if($score < $performance_indicators[0]->score_percentage) {
+            return $performance_indicators[0]->performanceIndicator->description;
+        }
+
         for($i = 0; $i < count($performance_indicators) - 1; $i++) {
             if($score >= $performance_indicators[$i]->score_percentage && $score < $performance_indicators[$i + 1]->score_percentage) {
                 return $performance_indicators[$i]->performanceIndicator->description;
@@ -135,6 +139,10 @@ class Assessment extends Model
         //         return $performance_indicator->description;
         //     }
         // }
+
+        if($score < $performance_indicators[0]->score_percentage) {
+            return $performance_indicators[0]->description;
+        }
 
         for($i = 0; $i < count($performance_indicators) - 1; $i++) {
             if($score >= $performance_indicators[$i]->score_percentage && $score < $performance_indicators[$i + 1]->score_percentage) {

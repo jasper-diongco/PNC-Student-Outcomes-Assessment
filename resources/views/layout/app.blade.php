@@ -34,6 +34,8 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://printjs-4de6.kxcdn.com/print.min.css">
 </head>
 <body>
 @if(!$custom_layout)
@@ -342,6 +344,7 @@
 <!-- Scripts -->
 <script src="{{ asset('js/app.js') }}"></script>
 <script src="{{ asset('js/double-scroll.js') }}"></script>
+<script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
 
 
 @stack('scripts')

@@ -221,6 +221,10 @@
                 </div>
             </div>
 
+            <button type="button" onclick="printJS('passingPercentage', 'html')">
+                Print Form
+             </button>
+
             <div id="topStudents" class="card shadow mt-4" style="background: #fbfbfb">
                 <div class="card-body py-3">
                     <div class="d-flex align-items-baseline justify-content-between">

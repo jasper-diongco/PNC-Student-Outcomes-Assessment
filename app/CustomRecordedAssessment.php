@@ -12,6 +12,10 @@ class CustomRecordedAssessment extends Model
         return $this->belongsTo('App\User');
     }
 
+    public function studentOutcome() {
+        return $this->belongsTo('App\StudentOutcome');
+    }
+
     public function customRecordedAssessmentRecords() {
         return $this->hasMany('App\CustomRecordedAssessmentRecord')->with('student');
     }
