@@ -249,7 +249,7 @@
                             <a class="nav-link " href="{{ url('/faculties') }}">
                                 <div class="d-flex flex-column justify-content-center text-center">
                                     <i class="fas fa-users"></i>
-                                    <span style="white-space: nowrap">Faculties</span>
+                                    <span style="white-space: nowrap">Faculty Members</span>
                                 </div>
                             </a>
                         </li>

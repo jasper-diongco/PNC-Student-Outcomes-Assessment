@@ -386,7 +386,7 @@
                 return ((score / this.overall_score) * 100).toFixed(2);
             },
             search() {
-                if(this.textSearch == '' || this.textSearch == null) {
+                if(this.searchText == '' || this.searchText == null) {
                     return this.show_custom_recorded_assessment_records = this.custom_recorded_assessment_records;
                 }
                 var searchResult = [];

@@ -145,6 +145,16 @@ class StudentOutcomesController extends Controller
             'score_percentage' => request('exemplary_grade')
         ]);
 
+        //reorder
+        foreach (request('student_outcomes') as $so) {
+            if(isset($so["id"])) {
+                $so_update = StudentOutcome::find($so["id"]);
+                $so_update->so_code = $so["so_code"];
+                $so_update->save();
+            }
+            
+        }
+
         Session::flash('message', 'Student Outcome successfully added to database');
 
         return $student_outcome;
@@ -169,6 +179,8 @@ class StudentOutcomesController extends Controller
         $college = $student_outcome->program->college;
 
         $assessment_types = AssessmentType::all();
+
+        // $student_outcomes = StudentOutcome::where('');
 
         return view('student_outcomes.show')->with('student_outcome', $student_outcome)
             ->with('programs', $programs)
@@ -207,6 +219,9 @@ class StudentOutcomesController extends Controller
         ]);
 
         $student_outcome = StudentOutcome::findOrFail($id);
+
+        $prev_so_letter = $student_outcome->so_code;
+
         $student_outcome->so_code = strtoupper(request('so_code'));
         $student_outcome->description = request('description');
         $student_outcome->program_id = request('program');
@@ -233,6 +248,16 @@ class StudentOutcomesController extends Controller
             }
 
             $pci->update();
+        }
+
+        //reorder
+        foreach (request('student_outcomes') as $so) {
+            if($so["id"] != $student_outcome->id && $so["so_code"] == $student_outcome->so_code) {
+                $so_update = StudentOutcome::find($so["id"]);
+                $so_update->so_code = $prev_so_letter;
+                $so_update->save();
+            }
+            
         }
 
         Session::flash('message', 'Student Outcome successfully updated from database');

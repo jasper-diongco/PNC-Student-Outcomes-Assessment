@@ -22,7 +22,8 @@
             :programs='@json($programs)' 
             :student-outcome='@json($student_outcome)'
             :performance-criteria='@json($student_outcome->performanceCriterias[0])'
-            :performance-indicators='@json($student_outcome->performanceCriterias[0]->performanceCriteriaIndicators)'></student-outcome-modal>
+            :performance-indicators='@json($student_outcome->performanceCriterias[0]->performanceCriteriaIndicators)'
+            :student-outcomes='@json($student_outcome->program->studentOutcomes)'></student-outcome-modal>
         @endif
       </div>
     @endif

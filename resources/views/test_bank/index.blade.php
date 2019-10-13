@@ -19,7 +19,7 @@
             <div>
                 <label class="text-dark">Select Program</label>
             </div>
-            <div class="ml-2">
+            <div class="ml-2" v-cloak>
                 <select v-on:change="getStudentOutcomes" v-model="program_id" class="form-control">
                     @foreach($programs as $program)
                         <option value="{{ $program->id }}">{{ $program->program_code }}</option>
@@ -32,7 +32,7 @@
 
         <template v-if="!loadingStudentOutcomes">
             <template v-if="selected_student_outcome != ''">
-                <div class="select-student-outcome d-flex align-items-center mt-1 justify-content-between" v-on:click="toggleDropDown">
+                <div v-cloak class="select-student-outcome d-flex align-items-center mt-1 justify-content-between" v-on:click="toggleDropDown">
                     <div class="d-flex align-items-center">
                         <div class="mr-3">
                             <div class="avatar-student-outcome bg-success">@{{ selected_student_outcome.so_code }}</div>
@@ -69,7 +69,7 @@
         </ul>
     </div>
     
-    <div class="d-flex justify-content-end">
+    <div class="d-flex justify-content-end" v-cloak>
         <div class="d-flex align-items-baseline">
             <div class="mr-2">  
                <div class="text-dark" style="font-weight: 600">Curriculum:</div>

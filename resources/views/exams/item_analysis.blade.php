@@ -7,7 +7,7 @@
     <revise-test-question-modal :test_question_id="selected_test_question_id" :item_analysis_detail_id="selected_item_analysis_detail_id" v-on:update-revise-status="updateReviseStatus"></revise-test-question-modal>
     <div class="card">
         <div class="card-body pt-4">
-            <a href="#" class="text-success"><i class="fa fa-arrow-left"></i> Back</a>
+            {{-- <a href="#" class="text-success"><i class="fa fa-arrow-left"></i> Back</a> --}}
             <h1 class="page-header mt-3"><i class="fa fa-cog text-info"></i> Item Analysis</h1>
             <div class="d-flex mb-3 flex-wrap">
 
@@ -237,7 +237,7 @@
                         <th width="10%">Current Difficulty Level</th>
                         <th width="5%">Students with <br>Correct Answer</th>
                         <th width="10%">Difficulty Index</th>
-                        <th width="10%">Difficulty Interpretation</th>
+                        <th width="10%">Difficulty Interp<br>retation</th>
                         <th width="10%">Difficulty Action</th>
                         <th width="10%">Discrimination Index</th>
                         <th width="10%">Discrmination Interpretation</th>
@@ -274,7 +274,7 @@
                                 @{{ difficultyActionInterpretation(templates.difficulty_actions[index]) }}
                             </td>
                             <td>
-                                @{{ templates.discrimination_index[index] }}
+                                @{{ templates.discrimination_index[index].toFixed(2) }}
                             </td>
                             <td>@{{ discriminationInterpretation(templates.discrimination_index[index]) }}</td>
                             <td>@{{ discriminationAction(templates.discrimination_actions[index]) }}</td>

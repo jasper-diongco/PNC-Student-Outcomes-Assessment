@@ -52,9 +52,9 @@
             <div class="modal-body">
               <!-- Field for so code  -->
               <div class="form-group">
-                <label for="so_code">SO Code</label>
+                <label for="so_code">Letter</label>
 
-                <div>
+<!--                 <div>
                   <input
                     id="so_code"
                     type="text"
@@ -65,8 +65,19 @@
                     :class="{ 'is-invalid': form.errors.has('so_code') }"
                   />
                   <has-error :form="form" field="so_code"></has-error>
+                </div> -->
+                <div>
+                  <select id="so_code" type="text"
+                    class="form-control"
+                    name="so_code"
+                    v-model="form.so_code"
+                    :class="{ 'is-invalid': form.errors.has('so_code') }">
+                    <option v-for="so in student_outcomes" :value="so.so_code">{{ so.so_code }}</option>
+                  </select>
+                  <has-error :form="form" field="so_code"></has-error>
                 </div>
               </div>
+              <!-- <button @click="reorderPosition">Reorder</button> -->
               <!-- /end Field for so code -->
 
               <!-- Field for description  -->
@@ -471,7 +482,8 @@ export default {
     "studentOutcome",
     "performanceCriteria",
     "performanceIndicators",
-    "programId"
+    "programId",
+    "studentOutcomes"
   ],
   data() {
     return {
@@ -488,8 +500,11 @@ export default {
         satisfactory_desc: "",
         satisfactory_grade: "75.00",
         exemplary_desc: "",
-        exemplary_grade: "95.00"
-      })
+        exemplary_grade: "100.00",
+        student_outcomes: []
+      }),
+      student_outcomes: [],
+      prev_so: ''
     };
   },
   computed: {
@@ -511,6 +526,8 @@ export default {
       }
     },
     addStudentOutcome() {
+      var oldStudentOutcomes = this.reorderPosition();
+      this.form.student_outcomes = this.student_outcomes;
       this.form
         .post("student_outcomes")
         .then(({ data }) => {
@@ -523,10 +540,14 @@ export default {
             data.program_id;
         })
         .catch(err => {
+          this.student_outcomes = oldStudentOutcomes;
           console.log(err);
+          
         });
     },
     updateStudentOutcome() {
+      // var oldStudentOutcomes = this.reorderPositionUpdate();
+      this.form.student_outcomes = this.student_outcomes;
       this.form
         .put("../student_outcomes/" + this.form.id)
         .then(({ data }) => {
@@ -538,13 +559,73 @@ export default {
             data.program_id;
         })
         .catch(err => {
+          this.student_outcomes = oldStudentOutcomes;
           console.log(err);
         });
+    },
+    reorderPosition() {
+      var last_pos = this.student_outcomes.length - 1;
+      var last_student_outcome = this.student_outcomes[last_pos];
+
+
+      var oldStudentOutcomes = JSON.parse(JSON.stringify(this.student_outcomes));
+
+      if(!(this.form.so_code == last_student_outcome.so_code)) {
+        //find pos of selected letter
+        var pos = 0;
+        for(var i = 0; i < this.student_outcomes.length; i++) {
+          if(this.form.so_code == this.student_outcomes[i].so_code) {
+            pos = i;
+            break;
+          }
+        }
+
+        for(var i = pos; i < this.student_outcomes.length; i++) {
+          this.student_outcomes[i].so_code = String.fromCharCode((this.student_outcomes[i].so_code.charCodeAt(0) + 1));
+        }
+        // console.log(this.studentOutcomes);
+      }
+
+      return oldStudentOutcomes;
+    },
+    reorderPositionUpdate() {
+      // var last_pos = this.student_outcomes.length - 1;
+      // var last_student_outcome = this.student_outcomes[last_pos];
+
+      var end_index = 0;
+
+      for(var i = 0; i < this.studentOutcomes.length; i++) {
+        if(this.studentOutcomes.so_code == this.prev_so) {
+          end_index = i;
+          break;
+        }
+      }
+
+      var oldStudentOutcomes = JSON.parse(JSON.stringify(this.student_outcomes));
+
+
+      //find pos of selected letter
+      var pos = 0;
+      for(var i = 0; i < this.student_outcomes.length; i++) {
+        if(this.form.so_code == this.student_outcomes[i].so_code) {
+          pos = i;
+          break;
+        }
+      }
+
+      for(var i = pos; i < end_index; i++) {
+        this.student_outcomes[i].so_code = String.fromCharCode((this.student_outcomes[i].so_code.charCodeAt(0) + 1));
+      }
+      // console.log(this.studentOutcomes);
+
+      return oldStudentOutcomes;
     }
   },
   created() {
     this.form.program = this.programId;
+    this.student_outcomes = this.studentOutcomes;
     if (this.isUpdate) {
+      this.prev_so = this.studentOutcome.so_code;
       this.form.id = this.studentOutcome.id;
       this.form.so_code = this.studentOutcome.so_code;
       this.form.description = this.studentOutcome.description;
@@ -588,6 +669,13 @@ export default {
           ].score_percentage;
         }
       }
+    } else {
+      // console.log(this.studentOutcomes);
+      var letter = String.fromCharCode(this.studentOutcomes[this.studentOutcomes.length - 1].so_code.charCodeAt(0) + 1);
+      this.form.so_code = letter;
+      this.studentOutcomes.push({
+        so_code: letter
+      });
     }
   }
 };

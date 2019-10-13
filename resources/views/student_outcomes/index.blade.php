@@ -20,7 +20,7 @@
         <div>
           @if(!$program->so_is_saved)
             @if(Gate::check('isDean') || Gate::check('isSAdmin'))
-              <student-outcome-modal :programs='@json($programs)' :program-id="{{ $program->id }}"></student-outcome-modal>
+              <student-outcome-modal :programs='@json($programs)' :program-id="{{ $program->id }}" :student-outcomes='@json($program->studentOutcomes)'></student-outcome-modal>
             @endif
           @else
             <button :disabled="isLoading" class="btn btn-primary btn-sm" v-on:click="confirmRevise">
