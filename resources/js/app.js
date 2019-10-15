@@ -102,6 +102,10 @@ Vue.component(
     require("./components/CurriculumCourseModal.vue").default
 );
 Vue.component(
+    "add-curriculum-courses-modal",
+    require("./components/AddCurriculumCoursesModal.vue").default
+);
+Vue.component(
     "curriculum-modal",
     require("./components/CurriculumModal.vue").default
 );

@@ -8,6 +8,7 @@ use App\Curriculum;
 use App\College;
 use App\CurriculumCourse;
 use App\CourseRequisite;
+use App\Course;
 use App\Http\Resources\CurriculumResource;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
@@ -228,9 +229,19 @@ class CurriculaController extends Controller
      */
     public function show(Request $request, $id)
     {
-
+        $courses_id = [];
         $curriculum = Curriculum::findOrFail($id);
         $colleges = College::all();
+        $curriculum_courses = CurriculumCourse::where("curriculum_id", $curriculum->id)->get();
+
+        foreach ($curriculum_courses as $curriculum_course) {
+            $courses_id[] = $curriculum_course->course_id;
+        }
+
+        $courses = Course::select("courses.*")
+                        ->whereNotIn('id', $courses_id)
+                        ->latest()
+                        ->get();
 
         if($request->ajax() && request('json') == 'yes') {
             return new CurriculumResource($curriculum);
@@ -239,6 +250,7 @@ class CurriculaController extends Controller
 
         return view('curricula.show')
             ->with('curriculum', $curriculum)
+            ->with('courses', $courses)
             ->with('colleges', $colleges);
     }
 

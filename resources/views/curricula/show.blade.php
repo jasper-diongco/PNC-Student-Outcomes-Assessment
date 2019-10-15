@@ -4,6 +4,8 @@
 
 @section('content')
   <div id="app" v-cloak>
+    {{-- Add Courses --}}
+    <add-curriculum-courses-modal :year_level="year_level" :semester="semester" :curriculum_id="{{ $curriculum->id }}" :courses='@json($courses)'></add-curriculum-courses-modal>
     <!-- Add Modal -->
     <curriculum-course-modal 
       v-on:refresh-curriculum="courseAddedSuccessfully" 
@@ -199,9 +201,13 @@
                   </b>  
 
                 </button>
+                @if ($curriculum->checkIfLatestVersion())
+                <button v-on:click="openAddCurriculumCoursesModal(year,sem)" class="btn btn-sm btn-info">Add Courses <i class="fa fa-stream"></i></button>
+                @endif
               </h2>
             </div>
             <div>
+
               <button v-on:click="toggleExpand(year, sem)" class="btn btn-sm
                mr-3" :class="{ 'btn-success': !checkIfExpand(year, sem)  , 'btn-secondary': checkIfExpand(year, sem) }">
                 <i class="fa fa-arrows-alt-v "></i>
@@ -417,7 +423,9 @@
         isLoading: true,
         college_id: '{{ Session::get('college_id') }}',
         expanded_list: [],
-        is_saved: '{{ $curriculum->is_saved }}'
+        is_saved: '{{ $curriculum->is_saved }}',
+        year_level: "",
+        semester: ""
       },
       watch: {
         expanded_list(value) {
@@ -428,6 +436,11 @@
         }
       },
       methods: {
+        openAddCurriculumCoursesModal(year_level, semester) {
+          this.year_level = year_level;
+          this.semester = semester;
+          $("#addCurriculumCoursesModal").modal("show");
+        },
         searchCourses :_.debounce(() => {
             if(vm.searchCourseText == '') {
               vm.noCourseFound = false;

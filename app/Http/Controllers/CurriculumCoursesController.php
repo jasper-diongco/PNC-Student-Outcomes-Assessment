@@ -81,6 +81,20 @@ class CurriculumCoursesController extends Controller
         //return $request;
     }
 
+    public function storeCourses() {
+        
+        foreach (request('courses') as $course) {
+            $curriculum_course = CurriculumCourse::create([
+                'course_id' => $course["id"],
+                'curriculum_id' => request('curriculum_id'),
+                'year_level' => request('year_level'),
+                'semester' => request('semester')
+            ]);
+        }
+
+        return request("courses");
+    }
+
     /**
      * Display the specified resource.
      *

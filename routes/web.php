@@ -117,7 +117,7 @@ Route::post('/student_outcomes/{student_outcome}/change_assessment_type', 'Stude
 
 
 // CurriculumCourses Routes
-
+Route::post('/curriculum_courses/add_courses', 'CurriculumCoursesController@storeCourses');
 Route::post('/curriculum_courses', 'CurriculumCoursesController@store');
 
 Route::put('/curriculum_courses/{curriculum_course}', 'CurriculumCoursesController@update');
