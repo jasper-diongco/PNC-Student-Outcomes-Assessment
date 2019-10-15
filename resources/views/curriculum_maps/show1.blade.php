@@ -445,41 +445,95 @@
                     }
                 },
                 saveCurriculumMaps() {
-                  swal.fire({
-                    title: 'Do you want to save?',
-                    text: "Please confirm",
-                    type: 'question',
-                    showCancelButton: true,
-                    confirmButtonColor: '#1cc88a',
-                    cancelButtonColor: '#858796',
-                    confirmButtonText: 'Yes',
-                    width: '400px'
-                  }).then((result) => {
-                    if (result.value) {
-                      this.isLoading = true;
-                      for(var i = 0 ; i < this.curriculum_maps.length; i++) {
-                        this.curriculum_maps[i].curriculum_course = null;
-                      }
+                    // return alert(this.checkIfAllLearningLevelsInclude());
 
-                      ApiClient.post("/curriculum_mapping/save_maps", {
-                        curriculum_maps: this.curriculum_maps,
-                        curriculum_mapping_status: this.curriculum_mapping_status
-                      })
-                      .then(response => {
-                        // window.location.replace(myRootURL + "/curriculum_mapping/" + this.curriculum.id);
-                        this.curriculum_mapping_status.status = 1;
-                        this.isLoading = false;
-                        toast.fire({
-                            type: 'success',
-                            title: 'Curriculum mapping successfully saved.'
-                        });
-                      }).
-                      catch(error => {
-                        this.isLoading = false;
-                        alert("An Error has occured. Try to refresh the page");
-                      })
+                    if(this.checkIfAllLearningLevelsInclude()) {
+                        return swal.fire({
+                            type: 'warning',
+                            title: 'Warning! Please confirm',
+                            html: this.checkIfAllLearningLevelsInclude(),
+                            showCancelButton: true,
+                            confirmButtonColor: '#1cc88a',
+                            cancelButtonColor: '#858796',
+                            confirmButtonText: 'Confirm'
+                        }).then(result => {
+                            if(result.value) {
+                                swal.fire({
+                                    title: 'Do you want to save?',
+                                    text: "Please confirm",
+                                    type: 'question',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#1cc88a',
+                                    cancelButtonColor: '#858796',
+                                    confirmButtonText: 'Yes',
+                                    width: '400px'
+                                  }).then((result) => {
+                                    if (result.value) {
+                                      this.isLoading = true;
+                                      for(var i = 0 ; i < this.curriculum_maps.length; i++) {
+                                        this.curriculum_maps[i].curriculum_course = null;
+                                      }
+
+                                      ApiClient.post("/curriculum_mapping/save_maps", {
+                                        curriculum_maps: this.curriculum_maps,
+                                        curriculum_mapping_status: this.curriculum_mapping_status
+                                      })
+                                      .then(response => {
+                                        // window.location.replace(myRootURL + "/curriculum_mapping/" + this.curriculum.id);
+                                        this.curriculum_mapping_status.status = 1;
+                                        this.isLoading = false;
+                                        toast.fire({
+                                            type: 'success',
+                                            title: 'Curriculum mapping successfully saved.'
+                                        });
+                                      }).
+                                      catch(error => {
+                                        this.isLoading = false;
+                                        alert("An Error has occured. Try to refresh the page");
+                                      })
+                                    }
+                                  });
+
+                            }
+                        })
+                    } else {
+                        swal.fire({
+                            title: 'Do you want to save?',
+                            text: "Please confirm",
+                            type: 'question',
+                            showCancelButton: true,
+                            confirmButtonColor: '#1cc88a',
+                            cancelButtonColor: '#858796',
+                            confirmButtonText: 'Yes',
+                            width: '400px'
+                          }).then((result) => {
+                            if (result.value) {
+                              this.isLoading = true;
+                              for(var i = 0 ; i < this.curriculum_maps.length; i++) {
+                                this.curriculum_maps[i].curriculum_course = null;
+                              }
+
+                              ApiClient.post("/curriculum_mapping/save_maps", {
+                                curriculum_maps: this.curriculum_maps,
+                                curriculum_mapping_status: this.curriculum_mapping_status
+                              })
+                              .then(response => {
+                                // window.location.replace(myRootURL + "/curriculum_mapping/" + this.curriculum.id);
+                                this.curriculum_mapping_status.status = 1;
+                                this.isLoading = false;
+                                toast.fire({
+                                    type: 'success',
+                                    title: 'Curriculum mapping successfully saved.'
+                                });
+                              }).
+                              catch(error => {
+                                this.isLoading = false;
+                                alert("An Error has occured. Try to refresh the page");
+                              })
+                            }
+                          });
                     }
-                  });
+                  
                 },
                 editCurriculumMapping(event) {
                   swal.fire({
@@ -509,11 +563,43 @@
                       })
                     }
                   });
+                },
+                checkIfAllLearningLevelsInclude() {
+                    // var student_outcomes = [];
+                    var warningText = "";
+                    for(var i = 0; i < this.student_outcomes.length; i++) {
+                        for(var j = 0; j < this.learning_levels.length; j++) {
+                            Vue.set(this.student_outcomes[i], 'count'+ this.learning_levels[j].id, 0);
+                        }    
+                    }
+
+
+                    for(var i = 0; i < this.student_outcomes.length; i++) {
+                        for(var j = 0; j < this.curriculum_maps.length; j++) {
+                            if(this.student_outcomes[i].id == this.curriculum_maps[j].student_outcome_id) {
+                                this.student_outcomes[i]["count" + this.curriculum_maps[j].learning_level_id]++;
+                            }
+                        }
+                    }
+
+                    //check
+                    warningText += "<ul>";
+                    for(var i = 0; i < this.student_outcomes.length; i++) {
+                        for(var j = 0; j < this.learning_levels.length; j++) {
+                            if (this.student_outcomes[i]['count'+ this.learning_levels[j].id] <= 0) {
+                                warningText += `<li class="text-left"><strong>Student outcome ${this.student_outcomes[i].so_code}</strong> has no learning level <strong>${this.learning_levels[j].name}</strong></li>`;
+                            }
+                        } 
+                    }
+                    warningText += "</ul>";
+
+                    return warningText;
+                    
                 }
             },
             created() {
                 this.generateTemplate();
-
+                
                 if(this.isFaculty) {
                     this.curriculum_mapping_status.status = 1;
                 }
