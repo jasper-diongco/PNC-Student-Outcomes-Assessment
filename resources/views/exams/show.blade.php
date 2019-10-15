@@ -221,7 +221,7 @@
                                             <i class="fa fa-file-alt"></i> @{{ test_question.title }}
                                           </div> 
                                         </div>
-                                        <div  class="text-muted mb-1">@{{ getDifficulty(test_question.difficulty_level_id) }} - @{{ test_question.choices.length }} choices | Correct Answer &mdash; <span class="text-success font-weight-bold">@{{ test_question.correct_answer }}</span></div>
+                                        <div  class="text-muted mb-1">@{{ getDifficulty(test_question.difficulty_level_id) }} - @{{ test_question.choices.length }} choices {{-- | Correct Answer &mdash; <span class="text-success font-weight-bold">@{{ test_question.correct_answer }}</span> --}}</div>
                                         <div class="text-muted mb-1" style="font-size: 14px"><i class="fa fa-book"></i> @{{ test_question.course.description }} </div>
                                     </div>   
                                 </div>

@@ -108,14 +108,18 @@
                             </div>
                             <div>
                                 <div style="font-size: 18px">
-                                  <div class="mb-1">{{-- <i class="fa fa-fingerprint"></i> --}} ID: @{{ test_question.tq_code }}</div>
+                                  <div class="mb-1">{{-- <i class="fa fa-fingerprint"></i> --}} ID: @{{ test_question.tq_code }} 
+                                    <span class="badge badge-info" v-if="test_question.type_id == 1">Multiple Choice</span>
+                                    <span class="badge badge-info" v-else-if="test_question.type_id == 2">True or False</span>
+                                    <span class="badge badge-info" v-else-if="test_question.type_id == 3">Multiple Select</span>
+                                  </div>
                                   
                                   <div class="mb-1" style="font-weight: 600">
                                     <i class="fa fa-file-alt"></i> @{{ test_question.title }}
                                   </div> 
                                 </div>
 
-                                <div  class="text-muted mb-1">@{{ getDifficulty(test_question.difficulty_level_id) }} - @{{ test_question.choices.length }} choices | Correct Answer &mdash; <span class="text-success font-weight-bold">@{{ test_question.correct_answer }}</span></div>
+                                <div  class="text-muted mb-1">@{{ getDifficulty(test_question.difficulty_level_id) }} - @{{ test_question.choices.length }} choices {{-- | Correct Answer &mdash; <span class="text-success font-weight-bold">@{{ test_question.correct_answer }}</span> --}}</div>
 
                                 <div style="font-size: 13px" class="text-muted mt-1">
                                   <i class="fa fa-user"></i> @{{ test_question.user.first_name + ' ' + test_question.user.last_name }} | @{{ parseDate(test_question.created_at) }}

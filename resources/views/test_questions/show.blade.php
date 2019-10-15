@@ -13,7 +13,7 @@
   </div>
 </div>
 
-<div id="app">
+<div id="app" v-cloak>
     @if(!$test_question->is_active)
         <div class="alert alert-warning">
             <i class="fa fa-exclamation-triangle"></i> This test question is archived.
@@ -50,7 +50,7 @@
 
     <div class="card mb-3">
         <div class="card-body">
-            <div class="d-flex mb-3">
+            <div class="d-flex flex-wrap mb-3">
                 <div class="mr-3">
                     <label>ID:</label> {{ $test_question->tq_code }}
                 </div>
@@ -65,6 +65,20 @@
                 <div class="mr-3">
                     <i class="fa fa-calendar-plus text-dark"></i>
                     Date Created: {{ $test_question->created_at->format('M d, Y') .', ' . $test_question->created_at->diffForHumans() }}
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="mr-3">
+                    <label><i class="fa fa-question-circle"></i> Type: </label> 
+                    <span class="fs-19 text-info">
+                        @if($test_question->type_id == 1)
+                            Multiple choice
+                        @elseif($test_question->type_id == 2)
+                        True or False
+                        @elseif($test_question->type_id == 3)
+                        Multiple Select
+                        @endif
+                    </span>
                 </div>
             </div>
 
@@ -128,7 +142,11 @@
                             <div class="d-flex">
                                 <div class="mr-2">
                                     <div class="choice-num {{ $choice->is_correct ? 'correct' : '' }}">
+                                        @if($test_question->type_id == 1 || $test_question->type_id == 3)
                                         {{  chr($choice->pos_order + 64) }}
+                                        @else
+                                            <i class="fa fa-check-circle"></i>
+                                        @endif
                                     </div>
                                 </div>
                                 <div>

@@ -236,10 +236,10 @@ export default {
                 .then(response => {
                     this.isFinished = true;
                     this.response = response;
-                    //$("#addExamModal").modal("hide");
+                    $("#addExamModal").modal("hide");
 
-                    // this.$emit("new-exam-added");
-                    console.log(response);
+                    this.$emit("new-exam-added");
+                    // console.log(response);
                 })
                 .catch(err => {
                     this.isFinished = false;

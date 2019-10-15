@@ -259,6 +259,7 @@ class TestQuestionsController extends Controller
             return abort('401', 'Unauthorized');
         }
 
+
        $data = $this->validateData();
 
 
@@ -271,6 +272,7 @@ class TestQuestionsController extends Controller
             $so = StudentOutcome::findOrFail($data['student_outcome_id']);
 
             $test_question = TestQuestion::create([
+                'type_id' => $data['type_id'],
                 'tq_code' => $this->generate_test_question_code(),
                 'title' => $data['title'],
                 'body' => $data['question_body'],
@@ -280,7 +282,8 @@ class TestQuestionsController extends Controller
                 'user_id' => auth()->user()->id,
                 'is_active' => true,
                 'performance_criteria_id' => $so->performanceCriterias[0]->id,
-                'ref_id' => $data['ref_id']
+                'ref_id' => $data['ref_id'],
+                
             ]);
 
             $test_question->parent_id = $test_question->id;
@@ -431,7 +434,8 @@ class TestQuestionsController extends Controller
             'level_of_difficulty' => 'required',
             'course_id' => 'required',
             'student_outcome_id' => 'required',
-            'ref_id' => 'required'
+            'ref_id' => 'required',
+            'type_id' => ''
         ]);
     }
 

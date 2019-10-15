@@ -37,7 +37,11 @@
                         <div class="d-flex">
                             <div class="mr-2">
                                 <div class="choice-num {{ $choice->is_correct ? 'correct' : '' }}">
+                                    @if($test_question->type_id == 1 || $test_question->type_id == 3)
                                     {{ chr($index + 65) }}
+                                    @elseif($test_question->type_id == 2)
+                                        <i class="fa fa-check-circle"></i>
+                                    @endif
                                 </div>
                             </div>
                             <div>

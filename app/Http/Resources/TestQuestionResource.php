@@ -23,7 +23,8 @@ class TestQuestionResource extends JsonResource
             'user' => $this->user,
             'created_at' => $this->created_at,
             'choices' => $this->choices,
-            'tq_code' => $this->tq_code
+            'tq_code' => $this->tq_code,
+            'type_id' => $this->type_id
         ];
     }
 }
