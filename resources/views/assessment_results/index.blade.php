@@ -117,7 +117,7 @@
             
             <div class="row">
                 <div class="col-md-5 mt-3">
-                    <div class="input-group mb-3" id="search-input">
+                    <div class="input-group" id="search-input">
                     
                         <input v-on:input="searchAssessment" v-model="search" type="search" class="form-control" placeholder="Search student...">
                         <div class="input-group-append">
@@ -125,6 +125,7 @@
                         </div>
                     </div>
                 </div>
+                
                 <div class="col-lg-7 d-md-flex justify-content-lg-end">
                     <div class="mt-3 mr-3 d-flex justify-content-lg-end align-items-baseline">
                         <label class="mr-2">Sort By Grade</label>
@@ -142,6 +143,17 @@
                             <option value="2">Failed</option>
                         </select>
                     </div>
+
+                    
+                </div>
+            </div>
+            <div class="d-flex justify-content-end">
+                <div class="d-flex justify-content-lg-end align-items-baseline">
+                    <label class="mr-2">Filter By Year</label>
+                    <select v-on:change="filter_by_year" v-model="filter_year">
+                        <option value="">All Time</option>
+                        <option v-for="year in all_year" :value="year">@{{ year }}</option>
+                    </select>
                 </div>
             </div>
             
@@ -210,7 +222,21 @@
             </div>
         </div>
         <div class="tab-pane fade" id="reports" role="tabpanel">
-            <div id="passingPercentage" class="card shadow mt-4" style="background: #fbfbfb">
+            <div class="d-flex justify-content-end align-items-baseline">
+                <label class="mr-2">Filter By Year</label>
+                <select v-model="selected_year" v-on:change="filterByYear">
+                    <option value="">All Time</option>
+                    <option v-for="year in all_year" :value="year">@{{ year }}</option>
+                </select>
+            </div>
+            
+
+            <div class="d-flex justify-content-end mb-1 mt-4">
+                <button type="button" class="btn btn-sm btn-info" onclick="printJS('passingPercentage', 'html')">
+                    Print <i class="fa fa-print"></i>
+                 </button>
+            </div>
+            <div id="passingPercentage" class="card shadow " style="background: #fbfbfb">
                 <div class="card-body py-3">
                     <h5>Passing Percentage</h5>
                     <p class="text-info">This figure shows the percentage of passed and failed student</p>
@@ -221,11 +247,13 @@
                 </div>
             </div>
 
-            <button type="button" onclick="printJS('passingPercentage', 'html')">
-                Print Form
-             </button>
-
-            <div id="topStudents" class="card shadow mt-4" style="background: #fbfbfb">
+            
+            <div class="d-flex justify-content-end mb-1 mt-4">
+                <button type="button" class="btn btn-sm btn-info" onclick="printJS('topStudents', 'html')">
+                    Print <i class="fa fa-print"></i>
+                 </button>
+            </div>
+            <div id="topStudents" class="card shadow" style="background: #fbfbfb">
                 <div class="card-body py-3">
                     <div class="d-flex align-items-baseline justify-content-between">
                         <div>
@@ -393,7 +421,10 @@
                     }
                 ],
                 labels: ["Passed", "Failed"]
-            }   
+            },
+            all_year: [],
+            selected_year: "",
+            filter_year: ""  
         },
         filters: {
             score(value) {
@@ -404,6 +435,27 @@
             }
         },
         methods: {
+            filterByYear() {
+                this.get_passing_percentage();
+                this.get_top_assessments();
+            },
+            get_all_year() {
+                for(var i = 0; i < this.assessments.length; i++) {
+                    var year = moment(this.assessments[i].created_at).get("y");
+
+                    var is_found = false;
+                    for(var j = 0; j < this.all_year.length; j++) {
+
+                        if(this.all_year[j] == year) {
+                            is_found = true;
+                        }
+                    }
+
+                    if(!is_found) {
+                        this.all_year.push(year);
+                    }
+                }
+            },
             sort_by_grade() {
                 if(this.sort_grade == "") {
                     this.getAssessmentResults();
@@ -421,12 +473,32 @@
             filter_by_grade() {
                 this.getAssessmentResults();
             },
+            filter_by_year() {
+                this.getAssessmentResults();
+            },
             getAssessmentResults(page=1) {
+                this.tableLoading = true;
                 ApiClient.get('/assessment_results/get_assessments?page=' + page + '&program_id=' + this.program_id + '&student_outcome_id=' + this.selected_student_outcome.id + '&curriculum_id=' + this.selected_curriculum_id + '&filter_grade=' + this.filter_grade)
                     .then(response => {
-                      this.assessments = response.data;
+
+                      if(this.filter_year == "") {
+                          this.assessments = response.data;
+                      } else {
+                        this.assessments = [];
+                        for(var i = 0; i < response.data.length; i++) {
+                            console.log(moment(response.data[i].created_at).get("y"));
+                            if(moment(response.data[i].created_at).get("y") == this.filter_year) {
+                                this.assessments.push(response.data[i]);
+                            }
+                        }
+                      }
+                      
+
+
+
                       this.tableLoading = false;
                       this.get_passing_percentage();
+                      this.get_top_assessments();
                       // this.get_top_assessments();
                       // this.meta.total = response.data.total;
                       // this.meta.per_page = response.data.per_page;
@@ -546,11 +618,26 @@
                 var passed = 0;
                 var failed = 0;
 
-                for(var i = 0; i < this.assessments.length; i++) {
-                    if(this.assessments[i].is_passed) {
-                        passed++;
-                    } else {
-                        failed++;
+                var year = this.selected_year;
+
+                if(year == "") {
+                    for(var i = 0; i < this.assessments.length; i++) {
+                        if(this.assessments[i].is_passed) {
+                            passed++;
+                        } else {
+                            failed++;
+                        }
+                    }
+                } else {
+                    for(var i = 0; i < this.assessments.length; i++) {
+                        if(moment(this.assessments[i].created_at).get("y") == year) {
+                            if(this.assessments[i].is_passed) {
+                                passed++;
+                            } else {
+                                failed++;
+                            }
+                        }
+                        
                     }
                 }
 
@@ -559,7 +646,18 @@
             },
             get_top_assessments() {
                 var result = [];
-                var toBeSorted = this.assessments;
+                var toBeSorted = [];
+
+                if(this.selected_year == "") {
+                    toBeSorted = this.assessments;
+                } else {
+                    for(var i = 0; i < this.assessments.length; i++) {
+                        if(moment(this.assessments[i].created_at).get("y") == this.selected_year) {
+                            toBeSorted.push(this.assessments[i]);
+                        }
+                        
+                    }
+                }
 
                 if(this.topValue > 0) {
                     toBeSorted.sort((a, b) => {
@@ -596,6 +694,7 @@
                 // this.custom_assessment_program_id = this.programs[0].id;
                 this.getStudentOutcomes();
             }
+            this.get_all_year();
             this.getAssessmentResults();
             this.myRootURL = myRootURL;
         }

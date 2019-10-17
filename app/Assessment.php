@@ -110,17 +110,23 @@ class Assessment extends Model
         //     }
         // }
 
-        if($score < $performance_indicators[0]->score_percentage) {
-            return $performance_indicators[0]->performanceIndicator->description;
-        }
+        // if($score < $performance_indicators[0]->score_percentage) {
+        //     return $performance_indicators[0]->performanceIndicator->description;
+        // }
 
-        for($i = 0; $i < count($performance_indicators) - 1; $i++) {
-            if($score >= $performance_indicators[$i]->score_percentage && $score < $performance_indicators[$i + 1]->score_percentage) {
-                return $performance_indicators[$i]->performanceIndicator->description;
+        // for($i = 0; $i < count($performance_indicators) - 1; $i++) {
+        //     if($score >= $performance_indicators[$i]->score_percentage && $score < $performance_indicators[$i + 1]->score_percentage) {
+        //         return $performance_indicators[$i]->performanceIndicator->description;
+        //     }
+        // }
+
+        foreach ($performance_indicators as $performance_indicator) {
+            if($score <= $performance_indicator->score_percentage) {
+                return $performance_indicator->performanceIndicator->description;
             }
         }
 
-        return  $performance_indicators[count($performance_indicators) - 1]->performanceIndicator->description;
+        // return  $performance_indicators[count($performance_indicators) - 1]->performanceIndicator->description;
     }
 
     public function getScoreDescription() {
@@ -140,17 +146,23 @@ class Assessment extends Model
         //     }
         // }
 
-        if($score < $performance_indicators[0]->score_percentage) {
-            return $performance_indicators[0]->description;
-        }
+        // if($score < $performance_indicators[0]->score_percentage) {
+        //     return $performance_indicators[0]->description;
+        // }
 
-        for($i = 0; $i < count($performance_indicators) - 1; $i++) {
-            if($score >= $performance_indicators[$i]->score_percentage && $score < $performance_indicators[$i + 1]->score_percentage) {
-                return $performance_indicators[$i]->description;
+        // for($i = 0; $i < count($performance_indicators) - 1; $i++) {
+        //     if($score >= $performance_indicators[$i]->score_percentage && $score < $performance_indicators[$i + 1]->score_percentage) {
+        //         return $performance_indicators[$i]->description;
+        //     }
+        // }
+
+        foreach ($performance_indicators as $performance_indicator) {
+            if($score <= $performance_indicator->score_percentage) {
+                return $performance_indicator->description;
             }
         }
 
-        return  $performance_indicators[count($performance_indicators) - 1]->description;
+        // return  $performance_indicators[count($performance_indicators) - 1]->description;
 
     }
 

@@ -20,7 +20,7 @@
         </div>
     @endif
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <div>
+        <div v-cloak>
             <h5 class="py-0 my-0">{{ $test_question->title }} <span class="badge badge-danger" v-if="countReportedNotification() > 0">@{{ countReportedNotification() }} reported problem</span></h5>
         </div>
         <div>
@@ -211,8 +211,74 @@
             <div v-else class="p-3 bg-white">
                 <h5>No report found.</h5>
             </div>
+
+
         </div>
     </div>
+    
+    @if(count($test_question->getArchives()) > 0)
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#historyModal">
+          View History Changes
+        </button>
+    @endif
+
+    <!-- Modal -->
+    <div class="modal fade" id="historyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">History Changes</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            @foreach($test_question->getArchives() as $archive)
+            <div class="card question">
+                <div class="card-body pt-0">
+                    <div class="bg-secondary p-2">
+                        <h5>Changed on {{ $archive->created_at->format('M d, Y') .', ' . $archive->created_at->diffForHumans() }} by {{ $archive->user->first_name . ' ' . $archive->user->last_name}}</h5>
+                    </div>
+                    <div class="test-question-body">{!! $archive->html_body !!}</div>
+                    <hr>
+                    <div class="choices">
+                        <div class="row">
+                            @foreach ($archive->choiceArchives as $index => $choice)
+                            <div class="col-6 mb-3">
+                                <div class="choice {{ $choice->is_correct ? 'correct-choice' : '' }}" style="height: 100%;">
+                                    <div class="d-flex">
+                                        <div class="mr-2">
+                                            <div class="choice-num {{ $choice->is_correct ? 'correct' : '' }}">
+                                                @if($test_question->type_id == 1 || $test_question->type_id == 3)
+                                                {{ chr($index + 65) }}
+                                                @elseif($test_question->type_id == 2)
+                                                    <i class="fa fa-check-circle"></i>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div>
+                                            {!! $choice->html_body !!}  
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
 
 
     

@@ -313,4 +313,80 @@ class Exam extends Model
 
         return $count;
     }
+
+    public function getMostDifficultTestQuestion() {
+        $exam_test_questions = $this->examTestQuestions;
+        $test_questions = [];
+
+
+        foreach ($exam_test_questions as $exam_test_question) {
+            $test_questions[] = $exam_test_question->testQuestion;
+        }
+
+        foreach ($test_questions as $test_question) {
+            $test_question->incorrect_percentage = $test_question->incorrectPercentage();
+        }
+
+        $sorted_test_questions = $this->bubble_Sort($test_questions);
+
+
+        //get only 10
+
+        $top_10 = [];
+
+        for($i = count($sorted_test_questions) - 1; $i >= 90; $i--) {
+            $top_10[] = $sorted_test_questions[$i];
+        }
+
+        return $top_10;
+        // return $this->examTestQuestions;
+    }
+
+    public function getMostEasiestTestQuestion() {
+        $exam_test_questions = $this->examTestQuestions;
+        $test_questions = [];
+
+
+        foreach ($exam_test_questions as $exam_test_question) {
+            $test_questions[] = $exam_test_question->testQuestion;
+        }
+
+        foreach ($test_questions as $test_question) {
+            $test_question->incorrect_percentage = $test_question->incorrectPercentage();
+        }
+
+        $sorted_test_questions = $this->bubble_Sort($test_questions);
+
+
+        //get only 10
+
+        $top_10 = [];
+
+        for($i = 0; $i < 10; $i++) {
+            $top_10[] = $sorted_test_questions[$i];
+        }
+
+        return $top_10;
+        // return $this->examTestQuestions;
+    }
+
+    public function bubble_Sort($my_array)
+    {
+        do
+        {
+            $swapped = false;
+            for( $i = 0, $c = count( $my_array ) - 1; $i < $c; $i++ )
+            {
+                if( $my_array[$i]->incorrect_percentage > $my_array[$i + 1]->incorrect_percentage )
+                {
+                    list( $my_array[$i + 1], $my_array[$i] ) =
+                            array( $my_array[$i], $my_array[$i + 1] );
+                    $swapped = true;
+                }
+            }
+        }
+        while( $swapped );
+
+        return $my_array;
+    }
 }

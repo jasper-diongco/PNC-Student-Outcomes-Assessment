@@ -17,6 +17,8 @@ use App\College;
 use App\ItemAnalysisDetail;
 use App\Rules\TextOnly;
 use App\Http\Resources\TestQuestionResource;
+use App\TestQuestionArchive;
+use App\ChoiceArchive;
 
 
 class TestQuestionsController extends Controller
@@ -339,6 +341,43 @@ class TestQuestionsController extends Controller
         DB::beginTransaction();
 
         try {
+
+            if(request('is_revised') == true) {
+                //create a copy
+                $test_question_archive = TestQuestionArchive::create([
+                    'test_question_id' => $test_question->id,
+                    'title' => $test_question->title,
+                    'type_id' => $test_question->type_id,
+                    'tq_code' => $test_question->tq_code,
+                    'body' => $test_question->body,
+                    'html_body' => $test_question->getHtml(),
+                    'student_outcome_id' => $test_question->student_outcome_id,
+                    'course_id' => $test_question->course_id,
+                    'difficulty_level_id' => $test_question->difficulty_level_id,
+                    'user_id' => auth()->user()->id,
+                    'is_active' => $test_question->is_active,
+                    'performance_criteria_id' => $test_question->performance_criteria_id,
+                    'ref_id' => $test_question->ref_id,
+                    'parent_id' => $test_question->parent_id,
+                    'version_no' => $test_question->version_no,
+                ]);
+
+                //copy choices
+                for($i = 0; $i < $test_question->choices->count(); $i++) {
+                    ChoiceArchive::create([
+                        'choice_id' => $test_question->choices[$i]->id,
+                        'test_question_archive_id' => $test_question_archive->id,
+                        'ch_code' => $test_question->choices[$i]->ch_code,
+                        'test_question_id' => $test_question->choices[$i]->test_question_id,
+                        'body' => $test_question->choices[$i]->body,
+                        'html_body' => $test_question->choices[$i]->getHtml(),
+                        'is_correct' => $test_question->choices[$i]->is_correct,
+                        'is_active' => $test_question->choices[$i]->is_active,
+                        'user_id' => $test_question->choices[$i]->user_id,
+                        'pos_order' => $test_question->choices[$i]->pos_order,
+                    ]);
+                }
+            }
 
             $test_question->update([
                 'title' => $data['title'],

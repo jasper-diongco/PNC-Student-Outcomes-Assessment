@@ -69,13 +69,13 @@
         </ul>
     </div>
     
-    <div class="d-flex justify-content-end" v-cloak>
-        <div class="d-flex align-items-baseline">
+    <div class="mb-2" v-cloak>
+        <div class="align-items-baseline">
             <div class="mr-2">  
-               <div class="text-dark" style="font-weight: 600">Curriculum:</div>
+               <div class="text-dark" style="font-weight: 600">Curriculum</div>
             </div>
-            <select v-on:change="getCoursesMapped" class="form-control" v-model="selected_curriculum_id">
-                <option v-for="curriculum in curricula"  :key="curriculum.id" :value="curriculum.id">@{{ curriculum.name + ' ' + curriculum.year}}  &mdash; v@{{ curriculum.revision_no }}.0</option>
+            <select v-cloak v-on:change="getCoursesMapped" class="form-control" v-model="selected_curriculum_id">
+                <option v-cloak v-for="curriculum in curricula"  :key="curriculum.id" :value="curriculum.id">@{{ curriculum.name + ' ' + curriculum.year}}  &mdash; v@{{ curriculum.revision_no }}.0</option>
             </select>
         </div>
     </div>

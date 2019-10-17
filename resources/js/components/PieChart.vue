@@ -21,10 +21,6 @@ export default {
                 legend: {
                     position: "top"
                 },
-                animation: {
-                    animateScale: true,
-                    animateRotate: true
-                },
                 layout: {
                     padding: {
                         left: 0,
@@ -60,13 +56,14 @@ export default {
         }
     },
     mounted() {
-        this.renderPieChart(this.data, this.options);
+        setInterval(() => {
+           this.renderPieChart(this.data, this.options); 
+       }, 100);
+        
     },
     watch: {
         data: function() {
-            this._chart.destroy();
-            //this.renderChart(this.data, this.options);
-            this.renderPieChart();
+            this.renderPieChart(this.data, this.options);
         }
     }
 };
