@@ -110,8 +110,8 @@
                                 <div style="font-size: 18px">
                                   <div class="mb-1">{{-- <i class="fa fa-fingerprint"></i> --}} ID: @{{ test_question.tq_code }} 
                                     <span class="badge badge-info" v-if="test_question.type_id == 1">Multiple Choice</span>
-                                    <span class="badge badge-info" v-else-if="test_question.type_id == 2">True or False</span>
-                                    <span class="badge badge-info" v-else-if="test_question.type_id == 3">Multiple Select</span>
+                                    <span class="badge badge-success" v-else-if="test_question.type_id == 2">True or False</span>
+                                    <span class="badge badge-warning" v-else-if="test_question.type_id == 3">Multiple Select</span>
                                   </div>
                                   
                                   <div class="mb-1" style="font-weight: 600">

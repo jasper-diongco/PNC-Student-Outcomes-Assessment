@@ -168,8 +168,11 @@
                                 <div class="d-flex justify-content-between">
                                     <div class="d-flex">
                                         <div class="mr-2">
-                                            <div class="choice-num" :class="{ 'choice-selected': choice.is_selected }">
+                                            <div v-if="selected_test_question.test_question.type_id == 1 || selected_test_question.test_question.type_id == 3" class="choice-num" :class="{ 'choice-selected': choice.is_selected }">
                                                 @{{ choice.letter }}
+                                            </div>
+                                            <div v-if="selected_test_question.test_question.type_id == 2" class="choice-num" :class="{ 'choice-selected': choice.is_selected }">
+                                                <i class="fa fa-check-circle"></i>
                                             </div>
                                         </div>
                                         <div v-html="choice.body_html">
@@ -404,17 +407,30 @@
                 },
                 checkIfCorrect(test_question) {
                     var is_correct = false;
-                    
+                    // console.log(test_question)
                     if(!this.checkIfAnswered(test_question.id)) {
                         return false;
                     }
 
-                    for(var i = 0; i < test_question.answer_sheet_test_question_choices.length; i++) {
-                        if(test_question.answer_sheet_test_question_choices[i].is_selected && test_question.answer_sheet_test_question_choices[i].is_correct) {
-                            is_correct = true;
-                            break;
+                    if(test_question.test_question.type_id == 1 || test_question.test_question.type_id == 2) {
+                        for(var i = 0; i < test_question.answer_sheet_test_question_choices.length; i++) {
+                            if(test_question.answer_sheet_test_question_choices[i].is_selected && test_question.answer_sheet_test_question_choices[i].is_correct) {
+                                is_correct = true;
+                                break;
+                            }
+                        }
+                    } else if (test_question.test_question.type_id == 3) {
+
+                        is_correct = true;
+                        
+                        for(var i = 0; i < test_question.answer_sheet_test_question_choices.length; i++) {
+                            if(!(test_question.answer_sheet_test_question_choices[i].is_selected && test_question.answer_sheet_test_question_choices[i].is_correct)) {
+                                is_correct = false;
+                                break;
+                            }
                         }
                     }
+                    
 
                     return is_correct;
                 },

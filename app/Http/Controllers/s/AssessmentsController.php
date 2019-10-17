@@ -247,9 +247,12 @@ class AssessmentsController extends Controller
                 foreach ($answer_sheet_test_question['answer_sheet_test_question_choices'] as $choice) {
                     if($choice['is_selected']) {
                         $answer_sheet_test_question = AnswerSheetTestQuestion::find($choice['answer_sheet_test_question_id']);
-                        foreach ($answer_sheet_test_question->answerSheetTestQuestionChoices as $c) {
-                            $c->is_selected = false;
-                            $c->save();
+                        //////////////
+                        if($answer_sheet_test_question->testQuestion->type_id != 3) {
+                            foreach ($answer_sheet_test_question->answerSheetTestQuestionChoices as $c) {
+                                $c->is_selected = false;
+                                $c->save();
+                            }
                         }
 
                         $answer_sheet_test_question_choice = AnswerSheetTestQuestionChoice::find($choice['id']);
@@ -347,7 +350,7 @@ class AssessmentsController extends Controller
 
             foreach ($answer_sheet_test_questions as $answer_sheet_test_question) {
                 $choice_id = $this->getChoiceId($answer_sheet_test_question['answer_sheet_test_question_choices']);
-                $is_correct = $this->checkIfCorrect($answer_sheet_test_question['answer_sheet_test_question_choices'], $choice_id);
+                $is_correct = $this->checkIfCorrect($answer_sheet_test_question['answer_sheet_test_question_choices'], $choice_id, $answer_sheet_test_question['test_question']['type_id']);
                 AssessmentDetail::create([
                     'assessment_id' => $assessment->id,
                     'test_question_id' => $answer_sheet_test_question['test_question_id'],
@@ -437,6 +440,7 @@ class AssessmentsController extends Controller
         $answer_sheet_test_questions = AnswerSheetTestQuestion::where('answer_sheet_id', $answer_sheet->id)
                 ->orderBy('pos_order', 'ASC')
                 ->with('answerSheetTestQuestionChoices')
+                ->with('testQuestion')
                 ->get();
 
 
@@ -499,16 +503,29 @@ class AssessmentsController extends Controller
         return null;
     }
 
-    private function checkIfCorrect($choices, $choice_id) {
+    private function checkIfCorrect($choices, $choice_id, $type_id) {
         if($choice_id == null) {
             return false;
         }
 
-        foreach ($choices as $choice) {
-            if($choice['is_correct'] && $choice['choice_id'] == $choice_id) {
-                return true;
+        if($type_id == 1 || $type_id == 2) {
+            foreach ($choices as $choice) {
+                if($choice['is_correct'] && $choice['choice_id'] == $choice_id) {
+                    return true;
+                }
             }
+        } else if($type_id == 3) {
+            $is_correct = true;
+            foreach ($choices as $choice) {
+                if(!($choice['is_correct'] && $choice['is_selected'])) {
+                    $is_correct = false;
+                    break;
+                }
+            }
+
+            return $is_correct;
         }
+        
 
         return false;
     }

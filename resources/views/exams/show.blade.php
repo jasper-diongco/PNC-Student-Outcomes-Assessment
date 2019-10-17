@@ -215,7 +215,12 @@
                                     <div>
                                         <div style="font-size: 18px">
 
-                                          <div class="mb-1">{{-- <i class="fa fa-fingerprint"></i> --}} ID: @{{ test_question.tq_code }} <span v-if="checkIfNew(test_question.id)" class="badge badge-success">New</span></div>
+                                          <div class="mb-1">{{-- <i class="fa fa-fingerprint"></i> --}} ID: @{{ test_question.tq_code }} 
+                                            <span v-if="checkIfNew(test_question.id)" class="badge badge-success">New</span>
+                                            <span class="badge badge-info" v-if="test_question.type_id == 1">Multiple Choice</span>
+                                            <span class="badge badge-success" v-else-if="test_question.type_id == 2">True or False</span>
+                                            <span class="badge badge-warning" v-else-if="test_question.type_id == 3">Multiple Select</span>
+                                          </div>
                                           
                                           <div class="mb-1" style="font-weight: 600">
                                             <i class="fa fa-file-alt"></i> @{{ test_question.title }}
@@ -380,7 +385,10 @@
               <div class="tab-pane fade" id="reports" role="tabpanel">
                 <h4 class="py-4">Exam Reports</h4>
                 
-                <div class="card mb-4">
+                <div class="d-flex justify-content-end">
+                  <button class="btn btn-info btn-sm mb-1" onclick="printJS('difficultyPercentage', 'html')">Print <i class="fa fa-print"></i></button>
+                </div>
+                <div id="difficultyPercentage" class="card mb-4">
 
                   <div class="card-body py-4">
                     <h5>Items Difficulties Percentage</h5>
@@ -390,8 +398,11 @@
                     </div>
                   </div>
                 </div>
-
-                <div class="card mb-4" v-if="exam_count_taken > 0">
+                
+                <div class="d-flex justify-content-end">
+                  <button class="btn btn-info btn-sm mb-1" onclick="printJS('passingPercentage', 'html')">Print <i class="fa fa-print"></i></button>
+                </div>
+                <div id="passingPercentage" class="card mb-4" v-if="exam_count_taken > 0">
 
                   <div class="card-body py-4">
                     <h5>Passing Percentage</h5>
@@ -401,8 +412,11 @@
                     </div>
                   </div>
                 </div>
-
-                <div class="card mb-4" v-if="exam_count_taken > 0">
+                
+                <div class="d-flex justify-content-end">
+                  <button class="btn btn-info btn-sm mb-1" onclick="printJS('averageScore', 'html')">Print <i class="fa fa-print"></i></button>
+                </div>
+                <div id="averageScore" class="card mb-4" v-if="exam_count_taken > 0">
 
                   <div class="card-body py-4">
                     <h5>Average Scores per course</h5>
@@ -420,8 +434,11 @@
                       </div> 
                   </div>
                 </div>
-
-                <div class="card mb-4" v-if="exam_count_taken > 0">
+                
+                <div class="d-flex justify-content-end">
+                  <button class="btn btn-info btn-sm mb-1" onclick="printJS('averagePercentage', 'html')">Print <i class="fa fa-print"></i></button>
+                </div>
+                <div id="averagePercentage" class="card mb-4" v-if="exam_count_taken > 0">
 
                   <div class="card-body py-4">
                     <h5>Average percentage of scores in the total score</h5>
@@ -429,6 +446,71 @@
                     <div style="width: 40%">
                       <pie-chart :data="pie_average_percentage_of_scores"></pie-chart>
                     </div>
+                  </div>
+                </div>
+                
+                <div class="d-flex justify-content-end">
+                  <button class="btn btn-info btn-sm mb-1" onclick="printJS('mostDifficult', 'html')">Print <i class="fa fa-print"></i></button>
+                </div>
+                <div id="mostDifficult" class="card mb-4" v-if="exam_count_taken > 0">
+
+                  <div class="card-body py-4">
+                    <h5>Most Difficult Test Questions</h5>
+                    <p class="text-primary">This figure shows the most difficult questions. It shows the percentage of incorrect answer</p>
+
+                    <ul class="list-group">
+                      <?php $counter = 1 ?>
+                      @foreach($exam->getMostDifficultTestQuestion() as $tq1)
+                      <li class="list-group-item d-flex">
+
+                        <div class="avatar bg-success text-white">{{ $counter }}</div>
+                        <div class="w-100">
+                          <strong class="mb-3 ml-3">
+                            <a v-on:click="getPreview({{$tq1->id}})" href="#" data-toggle="modal" data-target="#previewModal">
+                              {{ $tq1->tq_code }} 
+                            </a>
+                          </strong>
+                          
+                          <div class="progress w-100 ml-3">
+                            <div class="progress-bar"  role="progressbar" style="width: {{ $tq1->incorrectPercentage()  }}%;background: #e47777" aria-valuenow="{{ $tq1->incorrectPercentage() }}" aria-valuemin="0" aria-valuemax="100">{{ $tq1->incorrectPercentage() }}%</div>
+                          </div>
+                        </div>
+                      </li>
+                      <?php $counter++ ?>
+                      @endforeach
+                    </ul>
+                  </div>
+                </div>
+                
+                <div class="d-flex justify-content-end">
+                  <button class="btn btn-info btn-sm mb-1" onclick="printJS('mostEasiest', 'html')">Print <i class="fa fa-print"></i></button>
+                </div>
+                <div id="mostEasiest" class="card mb-4" v-if="exam_count_taken > 0">
+
+                  <div class="card-body py-4">
+                    <h5>Most Easiest Test Questions</h5>
+                    <p class="text-primary">This figure shows the most easiest questions. It shows the percentage of correct answer</p>
+                    <ul class="list-group">
+                      <?php $counter = 1 ?>
+                      @foreach($exam->getMostEasiestTestQuestion() as $tq1)
+                      <li class="list-group-item d-flex">
+
+                        <div class="avatar bg-success text-white">{{ $counter }}</div>
+                        <div class="w-100">
+                          <strong class="mb-3 ml-3">
+                            <a v-on:click="getPreview({{$tq1->id}})" href="#" data-toggle="modal" data-target="#previewModal">
+                              {{ $tq1->tq_code }} 
+                            </a>
+                          </strong>
+                          
+                          <div class="progress w-100 ml-3">
+                            <div class="progress-bar bg-success"  role="progressbar" style="width: {{ $tq1->correctPercentage()  }}%" aria-valuenow="{{ $tq1->correctPercentage() }}" aria-valuemin="0" aria-valuemax="100">{{ $tq1->correctPercentage() }}%</div>
+                          </div>
+                        </div>
+                      </li>
+                      <?php $counter++ ?>
+                      @endforeach
+                    </ul>
                   </div>
                 </div>
               </div>
@@ -527,6 +609,7 @@
 @endsection
 
 @push('scripts')
+
     <script src="{{ asset('js/chartjs-plugin-labels.js') }}"></script>
     <script>
         var vm = new Vue({

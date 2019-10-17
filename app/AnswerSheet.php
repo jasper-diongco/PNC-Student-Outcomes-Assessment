@@ -15,6 +15,7 @@ class AnswerSheet extends Model
 
     public function getAnswerSheetTestQuestionsRand() {
         $answer_sheet_test_questions =  AnswerSheetTestQuestion::where('answer_sheet_id', $this->id)
+                ->with('testQuestion')
                 ->get();
 
         foreach ($answer_sheet_test_questions as $answer_sheet_test_question) {

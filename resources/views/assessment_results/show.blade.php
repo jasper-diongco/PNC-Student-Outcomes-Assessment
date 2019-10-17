@@ -157,7 +157,13 @@
                     <div class="d-flex justify-content-between">
                         <div class="text-muted">
                             <i class="fa fa-book text-info"></i> @{{ getCourse(selected_test_question.course_id).description }}
+                            <span class="badge badge-info ml-2" v-if="selected_test_question.test_question.type_id == 1">Multiple Choice</span>
+                            <span class="badge badge-success ml-2" v-else-if="selected_test_question.test_question.type_id == 2">True or False</span>
+                            <span class="badge badge-warning ml-2" v-else-if="selected_test_question.test_question.type_id == 3">Multiple Select</span>
                         </div>
+                        {{-- <div>
+                          
+                        </div> --}}
                         <div>
                             <h5 v-if="checkIfCorrect(selected_test_question)" class="mb-3" style="text-decoration: underline;">Correct Answer <i class="fa fa-check text-success"></i></h5>
                             <h5 v-else-if="!checkIfAnswered(selected_test_question.id)" class="mb-3" style="text-decoration: underline;">No Answer <i class="fa fa-times text-danger"></i></h5>
@@ -182,8 +188,14 @@
                                 <div class="d-flex justify-content-between">
                                     <div class="d-flex">
                                         <div class="mr-2">
-                                            <div class="choice-num" :class="{ 'choice-selected': choice.is_selected }">
+                                            {{-- <div class="choice-num" :class="{ 'choice-selected': choice.is_selected }">
                                                 @{{ choice.letter }}
+                                            </div> --}}
+                                            <div v-if="selected_test_question.test_question.type_id == 1 || selected_test_question.test_question.type_id == 3" class="choice-num" :class="{ 'choice-selected': choice.is_selected }">
+                                                @{{ choice.letter }}
+                                            </div>
+                                            <div v-if="selected_test_question.test_question.type_id == 2" class="choice-num" :class="{ 'choice-selected': choice.is_selected }">
+                                                <i class="fa fa-check-circle"></i>
                                             </div>
                                         </div>
                                         <div v-html="choice.body_html">
@@ -415,18 +427,45 @@ var vm = new Vue({
             return is_answered;   
         },
         checkIfCorrect(test_question) {
-            var is_correct = false;
+            // var is_correct = false;
             
+            // if(!this.checkIfAnswered(test_question.id)) {
+            //     return false;
+            // }
+
+            // for(var i = 0; i < test_question.answer_sheet_test_question_choices.length; i++) {
+            //     if(test_question.answer_sheet_test_question_choices[i].is_selected && test_question.answer_sheet_test_question_choices[i].is_correct) {
+            //         is_correct = true;
+            //         break;
+            //     }
+            // }
+
+            // return is_correct;
+            var is_correct = false;
+            // console.log(test_question)
             if(!this.checkIfAnswered(test_question.id)) {
                 return false;
             }
 
-            for(var i = 0; i < test_question.answer_sheet_test_question_choices.length; i++) {
-                if(test_question.answer_sheet_test_question_choices[i].is_selected && test_question.answer_sheet_test_question_choices[i].is_correct) {
-                    is_correct = true;
-                    break;
+            if(test_question.test_question.type_id == 1 || test_question.test_question.type_id == 2) {
+                for(var i = 0; i < test_question.answer_sheet_test_question_choices.length; i++) {
+                    if(test_question.answer_sheet_test_question_choices[i].is_selected && test_question.answer_sheet_test_question_choices[i].is_correct) {
+                        is_correct = true;
+                        break;
+                    }
+                }
+            } else if (test_question.test_question.type_id == 3) {
+
+                is_correct = true;
+                
+                for(var i = 0; i < test_question.answer_sheet_test_question_choices.length; i++) {
+                    if(!(test_question.answer_sheet_test_question_choices[i].is_selected && test_question.answer_sheet_test_question_choices[i].is_correct)) {
+                        is_correct = false;
+                        break;
+                    }
                 }
             }
+            
 
             return is_correct;
         },

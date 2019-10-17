@@ -178,6 +178,7 @@ class AssessmentResultsController extends Controller
         $answer_sheet_test_questions = AnswerSheetTestQuestion::where('answer_sheet_id', $answer_sheet->id)
                 ->orderBy('pos_order', 'ASC')
                 ->with('answerSheetTestQuestionChoices')
+                ->with('testQuestion')
                 ->get();
 
         return view('assessment_results.show', compact('assessment', 'answer_sheet', 'courses', 'answer_sheet_test_questions'));

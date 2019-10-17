@@ -4,7 +4,6 @@
 @section('title', 'Assessment')
 
 @section('content')
-
     <nav class="navbar navbar-expand-lg navbar-dark bg-success shadow fixed-top">
       <a class="navbar-brand" href="#"><i class="fa fa-file-alt"></i> Student Outcome {{ $student_outcome->so_code }} - Assessment</a>
     </nav>
@@ -59,7 +58,14 @@
         <div class="exam-main">
             <div class="card shadow">
                 <div class="card-body pt-3">
-                    <div class="text-muted mb-3 d-flex justify-content-start align-items-baseline"><i class="fa fa-book text-muted mr-2"></i> @{{ selected_course.course_code }} - @{{ selected_course.description }}</div>
+                    <div class="text-muted mb-3 d-flex justify-content-start align-items-baseline"><i class="fa fa-book text-muted mr-2"></i> @{{ selected_course.course_code }} - @{{ selected_course.description }} 
+                     <span v-if="selected_test_question.test_question.type_id == 1" class="badge ml-2 badge-info">Multiple Choice</span>
+                     <span v-else-if="selected_test_question.test_question.type_id == 2" class="badge ml-2 badge-success">True or False</span>
+                     <span v-else-if="selected_test_question.test_question.type_id == 3">
+                        <span  class="badge ml-2 badge-warning">Multiple Select</span>
+                        (Select all that apply)
+                     </span>
+                </div>
                     <div class="test-question-body text-dark d-flex">
 
                         <div class="mr-2">
@@ -76,11 +82,21 @@
                             {{-- :class="{'choice-correct': checkIfChoiceCorrect(choice)}" --}}
                             <div class="text-dark choice" style="height: 100%;" >
                                 <div class="d-flex">
+                                    <div v-if="selected_test_question.test_question.type_id == 3" class="mr-2 align-self-center">
+                                        <i v-if="!choice.is_selected" class="far fa-check-square" style="font-size: 25px;"></i>
+                                        <i v-else class="fa fa-check-square text-success" style="font-size: 25px;"></i>
+                                    </div>
                                     <div class="mr-2">
-                                        <div class="choice-num" :class="{ 'choice-selected': choice.is_selected }">
+                                        <div v-if="selected_test_question.test_question.type_id == 2" class="choice-num">
+                                            <i class="fa fa-check-circle" :class="{ 'text-success': choice.is_selected }"></i>
+                                        </div>
+                                        <div v-else class="choice-num" :class="{ 'choice-selected': choice.is_selected }">
+
                                             @{{ choice.letter }}
                                         </div>
+
                                     </div>
+                                    
                                     <div v-html="choice.body_html">
                                     </div>
                                 </div>
@@ -204,11 +220,26 @@
             },
             selectChoice(test_question_id, choice_id) {
                 var test_question = this.selected_test_question;
+                // console.log(test_question);
+
+
 
                 for(var i = 0; i < test_question.answer_sheet_test_question_choices.length; i++) {  if(test_question.answer_sheet_test_question_choices[i].id == choice_id) {
-                        test_question.answer_sheet_test_question_choices[i].is_selected = 1;
+                        if(test_question.test_question.type_id == 3) {
+                            if(test_question.answer_sheet_test_question_choices[i].is_selected == 1) {
+                                test_question.answer_sheet_test_question_choices[i].is_selected = 0;
+                            } else {
+                                test_question.answer_sheet_test_question_choices[i].is_selected = 1;
+                            }
+                        } else {
+                            test_question.answer_sheet_test_question_choices[i].is_selected = 1;
+                        }
+                        
                     } else {
-                        test_question.answer_sheet_test_question_choices[i].is_selected = 0;
+                        if(test_question.test_question.type_id != 3) {
+                            test_question.answer_sheet_test_question_choices[i].is_selected = 0;
+                        }
+                        
                     }         
                 }
 
@@ -219,7 +250,20 @@
                     //console.log(response);
                 })
 
-                test_question.is_answered = true;
+                if(test_question.test_question.type_id == 3) {
+                    for(var i = 0; i < test_question.answer_sheet_test_question_choices.length; i++) { 
+                        if(test_question.answer_sheet_test_question_choices[i].is_selected) {
+                            test_question.is_answered = true;
+                            break;
+                        } else {
+                            test_question.is_answered = false;
+                        }
+                    }
+                } else {
+                    test_question.is_answered = true;
+                }
+
+                
 
             },
             nextQuestion() {

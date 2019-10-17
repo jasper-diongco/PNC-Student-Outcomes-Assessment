@@ -221,4 +221,8 @@ class TestQuestion extends Model
 
         return 0;
     }
+
+    public function getArchives() {
+        return TestQuestionArchive::where('test_question_id', $this->id)->latest()->get();
+    }
 }
