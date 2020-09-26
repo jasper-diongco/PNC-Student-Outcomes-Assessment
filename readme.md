@@ -1,5 +1,10 @@
 # STUDENT OUTCOMES ASSESSMENT SYSTEM FOR PAMANTASAN NG CABUYAO
 
+**A Thesis**
+Submitted to
+The Faculty of College of Computer Studies
+**PAMANTASAN NG CABUYAO**
+
 ## ABSTRACT
 The adaptation and shift from traditional teaching methods to
 outcome-based education wherein decision about curriculum are driven
@@ -34,13 +39,14 @@ ensuring that outcome achieved is aligned with the mission and vision
 of the university. 
 
 ## Features
+- Assessments of Student Outcomes
 - Test Bank Management
 - Programs Management
 - Courses Management
 - Student Outcomes Management
 - Curriculum Mapping Management
 - Users Management
-- Assessments of Student Outcomes
+
 
 
 ## Screenshots
