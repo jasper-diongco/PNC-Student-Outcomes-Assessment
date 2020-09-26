@@ -33,6 +33,15 @@ improvement of the university courses instructional programs and
 ensuring that outcome achieved is aligned with the mission and vision
 of the university. 
 
+## Features
+- Test Bank Management
+- Programs Management
+- Courses Management
+- Student Outcomes Management
+- Curriculum Mapping Management
+- Users Management
+- Assessments of Student Outcomes
 
-# Screenshots
+
+## Screenshots
 <img src="/images/dashboard.png" width="700">
