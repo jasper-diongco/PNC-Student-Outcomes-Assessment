@@ -1,3 +1,3 @@
 # Pamantasan ng Cabuyao Student Outcomes Assessment
 
-<img src="/images/dashboard.png" width="500">
+<img src="/images/dashboard.png" width="700">
