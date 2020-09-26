@@ -49,13 +49,13 @@ of the university.
 
 ## Demo
 **Accounts:**
-Dean:
-User: glohernandez
-Password: 123456789
-
-Student:
-User: marklopez@gmail.com
-Password: DefaultPass123
+Dean:  
+User: glohernandez  
+Password: 123456789  
+<br>
+Student:  
+User: marklopez  
+Password: DefaultPass123  
 
 
 
