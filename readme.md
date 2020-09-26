@@ -47,15 +47,6 @@ of the university.
 - Curriculum Mapping Management
 - Users Management
 
-## Demo
-**Accounts**  
-**Dean**    
-User: glohernandez  
-Password: 123456789  
-  
-**Student**    
-User: marklopez  
-Password: DefaultPass123  
 
 
 
