@@ -1,71 +1,74 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+# STUDENT OUTCOMES ASSESSMENT SYSTEM FOR PAMANTASAN NG CABUYAO
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+**A Thesis**
+Submitted to
+The Faculty of College of Computer Studies
+**PAMANTASAN NG CABUYAO**
 
-## About Laravel
+## ABSTRACT
+The adaptation and shift from traditional teaching methods to
+outcome-based education wherein decision about curriculum are driven
+by the exit learning outcomes that the student display at the end of the
+course. Assessment of learning outcomes is an important aspect of any
+educational landscape. At every point in a student’s life, they face
+assessment it is an inseparable part of every student’s career trajectory
+that becomes a lens for understanding student learning and identifying
+invisible barriers, and helps to improve teaching approaches.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+In this study, researchers developed a system entitled “Student
+Outcomes Assessment System for Pamantasan ng Cabuyao”. The
+system is useful in a way that it would help the university to improve
+the current practices in terms of managing the curriculum and mapping
+of the curriculum in respective student outcomes. 
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+The system also has a test bank which is used to put all the test
+question needed for the examination. The assessment of the student is
+used to know whether the student acquired the intended goals and
+outcomes at the end of their cou rse or program. The system provides
+accurate reports regarding the result of the student assessment.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+The researchers used the descriptive research methods for this
+study which are useful to gather all the information in the design and
+development of the system. The method includes the use of the
+questionnaire to assess the system in terms of its functionalities and to
+answer questions to evaluate the system requirements and its purpose .
 
-## Learning Laravel
+The system desire outcome is to help and contribute
+improvement of the university courses instructional programs and
+ensuring that outcome achieved is aligned with the mission and vision
+of the university. 
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Features
+- Assessments of Student Outcomes
+- Test Bank Management
+- Programs Management
+- Courses Management
+- Student Outcomes Management
+- Curriculum Mapping Management
+- Users Management
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1100 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost you and your team's skills by digging into our comprehensive video library.
 
-## Laravel Sponsors
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+## Screenshots
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
+### Administrator
+<img src="/images/dashboard.png" width="700">
+<img src="/images/Screenshot (122).png" width="700">
+<img src="/images/Screenshot (123).png" width="700">
+<img src="/images/Screenshot (124).png" width="700">
+<img src="/images/Screenshot (125).png" width="700">
+<img src="/images/Screenshot (126).png" width="700">
+<img src="/images/Screenshot (127).png" width="700">
 
-## Contributing
+### Student
+<img src="/images/Screenshot (128).png" width="700">
+<img src="/images/Screenshot (129).png" width="700">
+<img src="/images/Screenshot (130).png" width="700">
+<img src="/images/Screenshot (131).png" width="700">
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-## Security Vulnerabilities
+# Built Using
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+<img src="https://logos-download.com/wp-content/uploads/2016/09/Laravel_logo_wordmark_logotype.png" width="700">
+<img src="https://hackernoon.com/hn-images/1*ACR0gj0wbx91V_xgURifWg.png" width="700">
 
-## License
-
-The Laravel framework is open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT).
