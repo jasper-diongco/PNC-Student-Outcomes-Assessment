@@ -50,7 +50,8 @@ of the university.
 
 
 ## Screenshots
-**Administrator**
+
+### Administrator
 <img src="/images/dashboard.png" width="700">
 <img src="/images/Screenshot (122).png" width="700">
 <img src="/images/Screenshot (123).png" width="700">
@@ -59,7 +60,7 @@ of the university.
 <img src="/images/Screenshot (126).png" width="700">
 <img src="/images/Screenshot (127).png" width="700">
 
-**Student**
+### Student
 <img src="/images/Screenshot (128).png" width="700">
 <img src="/images/Screenshot (129).png" width="700">
 <img src="/images/Screenshot (130).png" width="700">
