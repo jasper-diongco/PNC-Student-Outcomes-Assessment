@@ -48,12 +48,12 @@ of the university.
 - Users Management
 
 ## Demo
-**Accounts:**
-Dean:  
+**Accounts**
+**Dean**    
 User: glohernandez  
 Password: 123456789  
-<br>
-Student:  
+  
+**Student**    
 User: marklopez  
 Password: DefaultPass123  
 
