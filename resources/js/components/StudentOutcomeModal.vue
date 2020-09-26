@@ -671,11 +671,17 @@ export default {
       }
     } else {
       // console.log(this.studentOutcomes);
-      var letter = String.fromCharCode(this.studentOutcomes[this.studentOutcomes.length - 1].so_code.charCodeAt(0) + 1);
-      this.form.so_code = letter;
-      this.studentOutcomes.push({
-        so_code: letter
-      });
+      if(this.studentOutcomes.length <= 0) {
+        this.studentOutcomes.push({
+          so_code: "A"
+        });
+      } else {
+        var letter = String.fromCharCode(this.studentOutcomes[this.studentOutcomes.length - 1].so_code.charCodeAt(0) + 1);
+        this.form.so_code = letter;
+        this.studentOutcomes.push({
+          so_code: letter
+        });
+      }
     }
   }
 };

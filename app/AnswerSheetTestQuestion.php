@@ -20,7 +20,7 @@ class AnswerSheetTestQuestion extends Model
     public function testQuestion() {
         return $this->belongsTo('App\TestQuestion');
     }
-
+    
     public function getAnswer() {
         $choices = $this->answerSheetTestQuestionChoices;
         $answer = null;

@@ -47,7 +47,6 @@
             
         </div>
     </div>
-
     <div class="card mb-3">
         <div class="card-body">
             <div class="d-flex flex-wrap mb-3">
@@ -238,7 +237,7 @@
             <div class="card question">
                 <div class="card-body pt-0">
                     <div class="bg-secondary p-2">
-                        <h5>Changed on {{ $archive->created_at->format('M d, Y') .', ' . $archive->created_at->diffForHumans() }} by {{ $archive->user->first_name . ' ' . $archive->user->last_name}}</h5>
+                        <h5>Changed on {{ $archive->created_at->format('M d, Y') .', ' . $archive->created_at->diffForHumans() }} by    {{ $archive->user->first_name . ' ' . $archive->user->last_name}}</h5>
                     </div>
                     <div class="test-question-body">{!! $archive->html_body !!}</div>
                     <hr>
