@@ -1,7 +1,7 @@
 # STUDENT OUTCOMES ASSESSMENT SYSTEM FOR PAMANTASAN NG CABUYAO
 
 ## ABSTRACT
-The adaptation and shift from traditio nal teaching methods to
+The adaptation and shift from traditional teaching methods to
 outcome-based education wherein decision about curriculum are driven
 by the exit learning outcomes that the student display at the end of the
 course. Assessment of learning outcomes is an important aspect of any
