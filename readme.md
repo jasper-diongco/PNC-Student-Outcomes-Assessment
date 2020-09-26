@@ -51,4 +51,11 @@ of the university.
 
 ## Screenshots
 <img src="/images/dashboard.png" width="700">
+<img src="/images/Screenshot (122).png" width="700">
+<img src="/images/Screenshot (123).png" width="700">
+<img src="/images/Screenshot (124).png" width="700">
+<img src="/images/Screenshot (125).png" width="700">
+<img src="/images/Screenshot (126).png" width="700">
+<img src="/images/Screenshot (127).png" width="700">
+
 
