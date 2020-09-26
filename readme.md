@@ -34,5 +34,5 @@ ensuring that outcome achieved is aligned with the mission and vision
 of the university. 
 
 
-# ScreenShots
+# Screenshots
 <img src="/images/dashboard.png" width="700">
