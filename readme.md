@@ -45,3 +45,4 @@ of the university.
 
 ## Screenshots
 <img src="/images/dashboard.png" width="700">
+
